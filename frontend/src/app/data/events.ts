@@ -17,6 +17,7 @@ export type PublicEvent = {
   description: string;
   highlight: string;
   banner: string;
+  bannerImageUrl?: string;
   reward: string;
   status: "upcoming" | "past";
   couponCode?: string;

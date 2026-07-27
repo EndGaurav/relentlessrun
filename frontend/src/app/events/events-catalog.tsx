@@ -31,17 +31,27 @@ function FadeIn({ children, className, delay = 0 }: { children: React.ReactNode;
 
 function EventCard({ event, variant = "upcoming" }: { event: PublicEvent; variant?: "upcoming" | "past" }) {
   const isPast = variant === "past" || event.status === "past";
+  const hasBannerImage = Boolean(event.bannerImageUrl);
 
   return (
     <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-(--line) bg-(--panel) transition-all duration-300 hover:border-(--sage)/30 hover:shadow-lg">
-      <div className={`relative overflow-hidden ${isPast ? "bg-(--panel-soft)" : "bg-gradient-to-br from-(--sage) to-emerald-600"}`}>
-        <div className="relative z-10 px-4 py-3 sm:px-5 sm:py-3.5">
+      <div className={`relative overflow-hidden ${hasBannerImage ? "min-h-36 bg-(--panel-soft)" : isPast ? "bg-(--panel-soft)" : "bg-gradient-to-br from-(--sage) to-emerald-600"}`}>
+        {event.bannerImageUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            alt={`${event.name} banner`}
+            className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            src={event.bannerImageUrl}
+          />
+        ) : null}
+        {hasBannerImage ? <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/35 to-black/10" /> : null}
+        <div className={`relative z-10 px-4 py-3 sm:px-5 sm:py-3.5 ${hasBannerImage ? "flex min-h-36 flex-col justify-end" : ""}`}>
           <div className="flex items-start justify-between gap-2">
-            <p className={`text-[0.6rem] font-semibold uppercase tracking-widest ${isPast ? "text-(--muted)" : "text-white/70"}`}>
+            <p className={`text-[0.6rem] font-semibold uppercase tracking-widest ${hasBannerImage ? "text-white/80" : isPast ? "text-(--muted)" : "text-white/70"}`}>
               {event.banner}
             </p>
             {isPast ? (
-              <span className="shrink-0 inline-flex items-center gap-1.5 rounded-full border border-(--line) bg-(--panel-soft)/80 px-2.5 py-0.5 text-[0.6rem] font-bold uppercase tracking-wider text-(--muted)">
+              <span className={`shrink-0 inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[0.6rem] font-bold uppercase tracking-wider ${hasBannerImage ? "border-white/20 bg-black/35 text-white backdrop-blur-sm" : "border-(--line) bg-(--panel-soft)/80 text-(--muted)"}`}>
                 <span className="h-1.5 w-1.5 rounded-full bg-(--muted-soft)" />
                 Registration Closed
               </span>
@@ -61,9 +71,9 @@ function EventCard({ event, variant = "upcoming" }: { event: PublicEvent; varian
               </motion.span>
             )}
           </div>
-          <p className={`mt-1 text-xs font-medium ${isPast ? "text-(--muted)" : "text-white/80"}`}>{event.reward}</p>
+          <p className={`mt-1 text-xs font-medium ${hasBannerImage ? "text-white/90" : isPast ? "text-(--muted)" : "text-white/80"}`}>{event.reward}</p>
         </div>
-        {!isPast && <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent pointer-events-none" />}
+        {!isPast && !hasBannerImage && <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent pointer-events-none" />}
       </div>
 
       <div className="flex flex-1 flex-col p-4 sm:p-5">

@@ -282,20 +282,37 @@ export async function adminUpdateEvent(request: AuthenticatedRequest, response: 
 
 export async function adminDeleteEvent(request: AuthenticatedRequest, response: Response) {
   const id = routeParam(request, "id");
-  const regs = await prisma.registration.count({ where: { eventId: id } });
-  if (regs > 0) {
-    throw new ApiError(
-      409,
-      `Cannot delete event with ${regs} registration(s). Set status to CANCELLED instead.`,
-    );
+  const event = await prisma.event.findUnique({
+    where: { id },
+    select: { id: true, title: true },
+  });
+
+  if (!event) {
+    throw new ApiError(404, "Event not found");
   }
 
-  await prisma.event.delete({ where: { id } });
+  const registrations = await prisma.registration.findMany({
+    where: { eventId: id },
+    select: { id: true },
+  });
+  const registrationIds = registrations.map((registration) => registration.id);
+
+  await prisma.$transaction(async (tx) => {
+    if (registrationIds.length > 0) {
+      await tx.certificate.deleteMany({ where: { registrationId: { in: registrationIds } } });
+      await tx.medalDelivery.deleteMany({ where: { registrationId: { in: registrationIds } } });
+      await tx.proofUpload.deleteMany({ where: { registrationId: { in: registrationIds } } });
+      await tx.payment.deleteMany({ where: { registrationId: { in: registrationIds } } });
+      await tx.registration.deleteMany({ where: { id: { in: registrationIds } } });
+    }
+    await tx.event.delete({ where: { id } });
+  });
+
   await writeAdminAudit(request, {
     action: "event.delete",
     entityType: "Event",
     entityId: id,
-    summary: "Deleted event",
+    summary: `Deleted event ${event.title} with ${registrationIds.length} registration(s)`,
   });
 
   response.status(204).send();

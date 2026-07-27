@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { CalendarDays, MapPin, IndianRupee, Trophy, BadgeCheck, Sparkles, ArrowRight, Users, Timer, Target, ShieldCheck, Route, CheckCircle, ChevronRight } from "lucide-react";
+import { CalendarDays, MapPin, IndianRupee, Trophy, BadgeCheck, Sparkles, ArrowRight, Users, Timer, Target, ShieldCheck, Route, CheckCircle } from "lucide-react";
 import { PageShell } from "../../components/app-shell";
 import { Breadcrumb } from "../../components/breadcrumb";
 import { allPublicEvents } from "../../data/events";
@@ -88,6 +88,17 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
           <div className="mt-6 grid gap-8 lg:grid-cols-[1fr_360px] lg:gap-12">
             {/* ─── Main ─── */}
             <div>
+              {event.bannerImageUrl ? (
+                <div className="mb-6 overflow-hidden rounded-2xl border border-(--line) bg-(--panel) shadow-sm">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    alt={`${event.name} banner`}
+                    className="aspect-[16/7] w-full object-cover"
+                    src={event.bannerImageUrl}
+                  />
+                </div>
+              ) : null}
+
               <div className="flex flex-wrap items-center gap-3">
                 <span className="eyebrow">{isPast ? "Past Event" : "Open Event"}</span>
                 <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider ${

@@ -11,7 +11,7 @@ import {
 } from "../../../lib/admin-api";
 import { authHeaders, getApiUrl } from "../../../lib/api";
 import { AdminEmpty, AdminPageHeader } from "../ui";
-import { validateMinLength, validatePositiveInt } from "../../../lib/validation";
+import { validateMinLength } from "../../../lib/validation";
 import {
   Star,
   StarOff,
@@ -499,7 +499,7 @@ export default function AdminEventsPage() {
                     <span className="field-label">{label}</span>
                     <input className="input" inputMode="numeric" placeholder="0"
                       onChange={(e) => setForm((f) => ({ ...f, [field]: e.target.value }))}
-                      value={(form as any)[field] ?? ""} />
+                      value={form[field] ?? ""} />
                   </label>
                 ))}
               </div>
