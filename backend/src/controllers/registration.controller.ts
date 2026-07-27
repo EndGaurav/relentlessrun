@@ -1,5 +1,4 @@
 import type { Response } from "express";
-import { defaultEvents } from "../data/default-events.js";
 import { prisma } from "../lib/prisma.js";
 import type { AuthenticatedRequest } from "../middleware/clerk-auth.js";
 import { createBibNumber } from "../services/bib.service.js";
@@ -25,17 +24,6 @@ export async function createRegistration(request: AuthenticatedRequest, response
   let event = payload.eventId
     ? await prisma.event.findUnique({ where: { id: payload.eventId } })
     : await prisma.event.findUnique({ where: { slug: payload.eventSlug } });
-
-  if (!event && payload.eventSlug) {
-    const defaultEvent = defaultEvents.find((item) => item.slug === payload.eventSlug);
-    if (defaultEvent) {
-      event = await prisma.event.upsert({
-        where: { slug: defaultEvent.slug },
-        create: defaultEvent,
-        update: defaultEvent,
-      });
-    }
-  }
 
   if (!event) {
     throw new ApiError(404, "Event not found");

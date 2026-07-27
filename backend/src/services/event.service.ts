@@ -45,26 +45,17 @@ export function withEventMeta<T extends Pick<Event, "status" | "startsAt" | "end
   };
 }
 
-/** Upsert catalog events so list/register always have data. */
+/** Seed starter catalog only when the database has no events yet. */
 export async function ensureDefaultEvents() {
+  const existingEvents = await prisma.event.count();
+  if (existingEvents > 0) {
+    return;
+  }
+
   for (const event of defaultEvents) {
-    await prisma.event.upsert({
-      where: { slug: event.slug },
-      create: {
+    await prisma.event.create({
+      data: {
         ...event,
-        medalIncluded: event.medalIncluded ?? true,
-        benefits: event.benefits ?? [],
-      },
-      update: {
-        title: event.title,
-        description: event.description,
-        startsAt: event.startsAt,
-        endsAt: event.endsAt,
-        proofClosesAt: event.proofClosesAt,
-        distances: event.distances,
-        priceInPaise: event.priceInPaise,
-        status: event.status,
-        city: event.city,
         medalIncluded: event.medalIncluded ?? true,
         benefits: event.benefits ?? [],
       },
