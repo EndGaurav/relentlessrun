@@ -3,8 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
-const PHONE = "+916006755787";
-const WHATSAPP = "https://wa.me/916006755787";
+const PHONE = "+917518418960";
+const WHATSAPP = "https://wa.me/917518418960";
 
 function PhoneIcon() {
   return (
@@ -71,7 +71,7 @@ export function FloatingContact() {
             >
               <CallIcon />
               <span>Call</span>
-              <span className="hidden text-xs opacity-75 transition-opacity group-hover:opacity-100 sm:inline">+91 6006 755 787</span>
+              <span className="hidden text-xs opacity-75 transition-opacity group-hover:opacity-100 sm:inline">+91 7518 418 960</span>
             </a>
             <a
               href={WHATSAPP}
@@ -82,7 +82,7 @@ export function FloatingContact() {
             >
               <WhatsAppIcon />
               <span>WhatsApp</span>
-              <span className="hidden text-xs opacity-75 transition-opacity group-hover:opacity-100 sm:inline">+91 6006 755 787</span>
+              <span className="hidden text-xs opacity-75 transition-opacity group-hover:opacity-100 sm:inline">+91 7518 418 960</span>
             </a>
           </motion.div>
         ) : null}
