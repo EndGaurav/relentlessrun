@@ -33,6 +33,7 @@ import {
   adminUpdateCoupon,
   adminUpdateEvent,
   adminUpdateMedal,
+  adminSyncPayments,
   adminUpdatePayment,
   adminUpdateRegistration,
   adminUpdateUserRole,
@@ -62,6 +63,7 @@ adminRouter.post("/registrations/:id/mark-paid", asyncHandler(adminMarkRegistrat
 
 adminRouter.get("/payments", asyncHandler(adminListPayments));
 adminRouter.patch("/payments/:id", asyncHandler(adminUpdatePayment));
+adminRouter.post("/payments/sync", asyncHandler(adminSyncPayments));
 
 adminRouter.get("/users", asyncHandler(adminListUsers));
 adminRouter.get("/users/:id", asyncHandler(adminGetUser));

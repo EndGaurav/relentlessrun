@@ -15,6 +15,7 @@ import {
   issueCertificateAfterApproval,
 } from "../services/certificate-issue.service.js";
 import { sendRegistrationConfirmationEmail } from "../services/email.service.js";
+import { fetchPaymentsForOrder } from "../services/razorpay.service.js";
 import { ensureDefaultEvents } from "../services/event.service.js";
 import { ApiError } from "../utils/api-error.js";
 import { routeParam } from "../utils/params.js";
@@ -680,6 +681,86 @@ export async function adminUpdatePayment(request: AuthenticatedRequest, response
   });
 
   response.json({ data: payment });
+}
+
+// ── Sync ────────────────────────────────────────────────────────
+
+export async function adminSyncPayments(request: AuthenticatedRequest, response: Response) {
+  const createdPayments = await prisma.payment.findMany({
+    where: {
+      status: "CREATED",
+      razorpayOrderId: { startsWith: "order_" },
+    },
+    include: {
+      registration: { include: { user: true, event: true } },
+    },
+  });
+
+  if (createdPayments.length === 0) {
+    response.json({ data: { synced: 0, total: 0, message: "No pending payments to sync" } });
+    return;
+  }
+
+  let synced = 0;
+  const errors: Array<{ id: string; orderId: string; error: string }> = [];
+
+  for (const payment of createdPayments) {
+    try {
+      const razorpayPayments = await fetchPaymentsForOrder(payment.razorpayOrderId);
+      if (!razorpayPayments) {
+        errors.push({ id: payment.id, orderId: payment.razorpayOrderId, error: "Failed to fetch from Razorpay" });
+        continue;
+      }
+
+      const captured = razorpayPayments.find(
+        (p: { id: string; status: string }) => p.status === "captured",
+      );
+      if (!captured) continue;
+
+      await prisma.payment.update({
+        where: { id: payment.id },
+        data: {
+          status: "PAID",
+          razorpayPaymentId: captured.id,
+          paidAt: new Date(),
+          registration: { update: { status: "CONFIRMED" } },
+        },
+      });
+
+      await sendRegistrationConfirmationEmail({
+        to: payment.registration.user.email,
+        runnerName: payment.registration.user.name,
+        eventTitle: payment.registration.event.title,
+        distance: payment.registration.distance,
+        bibNumber: payment.registration.bibNumber,
+        amountInPaise: payment.amountInPaise,
+      }).catch(() => null);
+
+      synced++;
+    } catch (err) {
+      errors.push({
+        id: payment.id,
+        orderId: payment.razorpayOrderId,
+        error: err instanceof Error ? err.message : "Unknown error",
+      });
+    }
+  }
+
+  await writeAdminAudit(request, {
+    action: "payment.sync",
+    entityType: "Payment",
+    entityId: "bulk",
+    summary: `Synced ${synced}/${createdPayments.length} CREATED payments, ${errors.length} errors`,
+  });
+
+  response.json({
+    data: {
+      synced,
+      total: createdPayments.length,
+      errors: errors.length > 0 ? errors : undefined,
+      message: `${synced} payment${synced === 1 ? "" : "s"} marked as PAID out of ${createdPayments.length}`,
+    },
+  });
 }
 
 // ── Users ──────────────────────────────────────────────────────

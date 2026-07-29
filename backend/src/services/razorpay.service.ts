@@ -67,6 +67,25 @@ export function verifyCheckoutSignature(input: {
   );
 }
 
+export async function fetchPaymentsForOrder(orderId: string) {
+  requireRazorpayCredentials();
+
+  const auth = Buffer.from(`${env.razorpayKeyId}:${env.razorpayKeySecret}`).toString("base64");
+  const response = await fetch(`https://api.razorpay.com/v1/orders/${orderId}/payments`, {
+    headers: { Authorization: `Basic ${auth}` },
+  });
+
+  if (!response.ok) {
+    return null;
+  }
+
+  const json = (await response.json()) as {
+    items: Array<{ id: string; status: string }>;
+  };
+
+  return json.items ?? [];
+}
+
 export function verifyWebhookSignature(rawBody: Buffer, signature: string | undefined) {
   if (!env.razorpayWebhookSecret) {
     throw new ApiError(500, "Razorpay webhook secret is not configured");
