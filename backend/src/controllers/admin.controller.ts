@@ -14,6 +14,7 @@ import {
   generateCertificate,
   issueCertificateAfterApproval,
 } from "../services/certificate-issue.service.js";
+import { sendRegistrationConfirmationEmail } from "../services/email.service.js";
 import { ensureDefaultEvents } from "../services/event.service.js";
 import { ApiError } from "../utils/api-error.js";
 import { routeParam } from "../utils/params.js";
@@ -470,6 +471,15 @@ export async function adminMarkRegistrationPaid(
     },
   });
 
+  const emailResult = await sendRegistrationConfirmationEmail({
+    to: registration.user.email,
+    runnerName: registration.user.name,
+    eventTitle: registration.event.title,
+    distance: registration.distance,
+    bibNumber: registration.bibNumber,
+    amountInPaise: registration.payment!.amountInPaise,
+  }).catch(() => null);
+
   await writeAdminAudit(request, {
     action: "registration.mark_paid",
     entityType: "Registration",
@@ -477,7 +487,7 @@ export async function adminMarkRegistrationPaid(
     summary: `Marked paid ${amount} paise for ${registration.bibNumber}`,
   });
 
-  response.json({ data: { registration, payment } });
+  response.json({ data: { registration, payment, emailSent: emailResult?.sent ?? false } });
 }
 
 export async function adminExportRegistrationsCsv(
@@ -639,10 +649,20 @@ export async function adminUpdatePayment(request: AuthenticatedRequest, response
   });
 
   if (payload.status === "PAID") {
-    await prisma.registration.update({
+    const registration = await prisma.registration.update({
       where: { id: payment.registrationId },
       data: { status: "CONFIRMED" },
+      include: { user: true, event: true, payment: true },
     });
+
+    await sendRegistrationConfirmationEmail({
+      to: registration.user.email,
+      runnerName: registration.user.name,
+      eventTitle: registration.event.title,
+      distance: registration.distance,
+      bibNumber: registration.bibNumber,
+      amountInPaise: registration.payment!.amountInPaise,
+    }).catch(() => null);
   }
 
   if (payload.status === "REFUNDED") {

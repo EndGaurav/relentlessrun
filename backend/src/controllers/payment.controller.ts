@@ -153,6 +153,13 @@ export async function handleRazorpayWebhook(request: Request, response: Response
   const paymentId = event.payload?.payment?.entity?.id;
 
   if (orderId && (event.event === "payment.captured" || event.event === "order.paid")) {
+    const existingPayment = await prisma.payment.findUnique({
+      where: { razorpayOrderId: orderId },
+      select: { status: true },
+    });
+    if (existingPayment?.status === "PAID") {
+      return response.json({ received: true });
+    }
     const payment = await prisma.payment.update({
       where: { razorpayOrderId: orderId },
       data: {
