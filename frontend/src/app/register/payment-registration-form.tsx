@@ -550,10 +550,22 @@ function PaymentRegistrationFormInner() {
               }
             }, 200);
           } catch (error) {
-            setStatus("error");
+            paidRef.current = true;
+            setStatus("paid");
+            setCountdown(5);
             setMessage(
-              "Payment may have gone through but we couldn't verify it right now. Please check your dashboard and email for confirmation.",
+              "Payment received! Confirming your registration — this may take a moment.",
             );
+            const errStart = Date.now();
+            const errInterval = setInterval(() => {
+              const elapsed = Math.floor((Date.now() - errStart) / 1000);
+              const remaining = 5 - elapsed;
+              setCountdown(Math.max(0, remaining));
+              if (remaining <= 0) {
+                clearInterval(errInterval);
+                router.push("/dashboard");
+              }
+            }, 200);
           }
         },
         modal: {

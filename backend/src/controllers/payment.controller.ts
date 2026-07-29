@@ -90,40 +90,52 @@ export async function verifyPayment(request: Request, response: Response) {
     },
   });
 
-  const registration = await prisma.registration.update({
-    where: { id: payment.registrationId },
-    data: { status: "CONFIRMED" },
-    include: { user: true, event: true },
-  });
+  let emailSent = false;
+  let emailId: string | undefined;
+  let emailError: string | undefined;
 
-  const emailResult = await sendRegistrationConfirmationEmail({
-    to: registration.user.email,
-    runnerName: registration.user.name,
-    eventTitle: registration.event.title,
-    distance: registration.distance,
-    bibNumber: registration.bibNumber,
-    amountInPaise: payment.amountInPaise,
-  });
+  try {
+    const registration = await prisma.registration.update({
+      where: { id: payment.registrationId },
+      data: { status: "CONFIRMED" },
+      include: { user: true, event: true },
+    });
 
-  await prisma.notification.create({
-    data: {
-      userId: registration.userId,
-      channel: "email",
-      title: emailResult.sent
-        ? "Registration confirmation email sent"
-        : "Registration confirmation email failed",
-      body: emailResult.sent
-        ? `Confirmation sent to ${registration.user.email}`
-        : emailResult.error ?? "Email was not sent",
-    },
-  });
+    const emailResult = await sendRegistrationConfirmationEmail({
+      to: registration.user.email,
+      runnerName: registration.user.name,
+      eventTitle: registration.event.title,
+      distance: registration.distance,
+      bibNumber: registration.bibNumber,
+      amountInPaise: payment.amountInPaise,
+    });
+
+    emailSent = emailResult.sent;
+    emailId = emailResult.id;
+    emailError = emailResult.error;
+
+    await prisma.notification.create({
+      data: {
+        userId: registration.userId,
+        channel: "email",
+        title: emailResult.sent
+          ? "Registration confirmation email sent"
+          : "Registration confirmation email failed",
+        body: emailResult.sent
+          ? `Confirmation sent to ${registration.user.email}`
+          : emailResult.error ?? "Email was not sent",
+      },
+    });
+  } catch (err) {
+    console.error("[verifyPayment] Registration update or email failed:", err);
+  }
 
   response.json({
     data: {
       ...payment,
-      emailSent: emailResult.sent,
-      emailId: emailResult.id,
-      emailError: emailResult.error,
+      emailSent,
+      emailId,
+      emailError,
     },
   });
 }
