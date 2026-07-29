@@ -144,7 +144,9 @@ function PaymentRegistrationFormInner() {
 
   const [status, setStatus] = useState<"idle" | "creating" | "paying" | "paid" | "error">("idle");
   const [message, setMessage] = useState("Complete the form and continue to secure checkout.");
+  const [countdown, setCountdown] = useState(0);
   const paidRef = useRef(false);
+  const failedRef = useRef(false);
   const [events, setEvents] = useState<RegisterEventOption[]>(fallbackEvents);
   const [selectedEvent, setSelectedEvent] = useState(
     eventFromQuery || fallbackEvents[0].value,
@@ -380,9 +382,11 @@ function PaymentRegistrationFormInner() {
     setStatus("creating");
     setMessage(
       pendingSame
-        ? "Resuming your pending payment…"
-        : "Creating registration and secure Razorpay order…",
+        ? "Resuming your pending payment\u2026"
+        : "Creating registration and secure Razorpay order\u2026",
     );
+    paidRef.current = false;
+    failedRef.current = false;
 
     try {
       const token = await getToken();
@@ -508,10 +512,11 @@ function PaymentRegistrationFormInner() {
 
             paidRef.current = true;
             setStatus("paid");
+            setCountdown(3);
             setMessage(
               emailSent
-                ? "✅ Payment successful! Confirmation email sent. Redirecting to dashboard..."
-                : "✅ Payment verified! Registration confirmed. Redirecting to dashboard...",
+                ? "✅ Payment successful! Confirmation email sent."
+                : "✅ Payment successful! Registration confirmed.",
             );
 
             try {
@@ -526,7 +531,16 @@ function PaymentRegistrationFormInner() {
               /* ignore */
             }
 
-            setTimeout(() => router.push("/dashboard"), 3000);
+            const start = Date.now();
+            const interval = setInterval(() => {
+              const elapsed = Math.floor((Date.now() - start) / 1000);
+              const remaining = 3 - elapsed;
+              setCountdown(Math.max(0, remaining));
+              if (remaining <= 0) {
+                clearInterval(interval);
+                router.push("/dashboard");
+              }
+            }, 200);
           } catch (error) {
             setStatus("error");
             setMessage(
@@ -536,7 +550,7 @@ function PaymentRegistrationFormInner() {
         },
         modal: {
           ondismiss: () => {
-            if (paidRef.current) return;
+            if (paidRef.current || failedRef.current) return;
             setStatus("idle");
             setMessage("Checkout closed. You can retry when ready.");
           },
@@ -545,6 +559,7 @@ function PaymentRegistrationFormInner() {
 
       checkout.on("payment.failed", (response: unknown) => {
         const err = response as { error?: { description?: string } };
+        failedRef.current = true;
         setStatus("error");
         setMessage(
           err?.error?.description ?? "Payment failed. Try UPI again or another method.",
@@ -753,24 +768,65 @@ function PaymentRegistrationFormInner() {
         </div>
       </div>
 
-      <div className="mt-4 flex min-w-0 flex-col gap-2 rounded-xl border border-(--line) bg-(--sage-soft) p-3 sm:flex-row sm:items-center sm:justify-between sm:gap-3 sm:p-4">
-        <div className="min-w-0">
-          <p className="flex items-center gap-1.5 text-sm font-semibold text-(--foreground)">
-            <Lock className="h-3.5 w-3.5 text-(--sage)" strokeWidth={2} />
-            Secure checkout
-          </p>
-          <p
-            className={`mt-0.5 text-xs leading-snug ${
-              status === "error" ? "text-(--danger)" : "text-(--muted)"
-            }`}
-          >
-            {message}
+      {/* ── STATUS BANNER ──────────────────────────────────── */}
+      {status === "paid" ? (
+        <div className="mt-4 overflow-hidden rounded-xl border border-(--sage)/40 bg-(--sage-soft)">
+          <div className="flex items-center gap-3 bg-(--sage) px-4 py-3 sm:px-5">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/20 text-lg text-white">✅</span>
+            <div className="min-w-0">
+              <p className="text-sm font-bold text-white">Payment successful</p>
+              <p className="mt-0.5 text-xs text-white/80">Your registration is confirmed</p>
+            </div>
+          </div>
+          <div className="px-4 py-3 sm:px-5">
+            <p className="text-sm text-(--sage)">{message}</p>
+            <p className="mt-1.5 flex items-center gap-1.5 text-xs text-(--muted-soft)">
+              <span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-(--sage) border-t-transparent" />
+              Redirecting to dashboard in {countdown}s...
+            </p>
+          </div>
+        </div>
+      ) : status === "error" ? (
+        <div className="mt-4 overflow-hidden rounded-xl border border-(--danger)/30 bg-red-50 dark:bg-red-900/10">
+          <div className="flex items-center gap-3 bg-(--danger) px-4 py-3 sm:px-5">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/20 text-lg text-white">❌</span>
+            <div className="min-w-0">
+              <p className="text-sm font-bold text-white">Something went wrong</p>
+            </div>
+          </div>
+          <div className="px-4 py-3 sm:px-5">
+            <p className="text-sm text-(--danger)">{message}</p>
+            <p className="mt-2 text-xs text-(--muted-soft)">
+              Your money is safe. If amount was deducted, it will be refunded or shown as paid in dashboard within a few minutes.
+            </p>
+            <button
+              className="btn btn-primary mt-3 h-9 cursor-pointer text-xs"
+              onClick={() => { setStatus("idle"); setMessage("Complete the form and continue to secure checkout."); }}
+              type="button"
+            >
+              Try again
+            </button>
+          </div>
+        </div>
+      ) : status === "paying" || status === "creating" ? (
+        <div className="mt-4 flex items-center gap-3 rounded-xl border border-(--sage)/20 bg-(--sage-soft)/50 px-4 py-3 sm:px-5">
+          <span className="inline-block h-5 w-5 animate-spin rounded-full border-2 border-(--sage) border-t-transparent" />
+          <p className="text-sm text-(--muted)">{message}</p>
+        </div>
+      ) : (
+        <div className="mt-4 flex min-w-0 flex-col gap-2 rounded-xl border border-(--line) bg-(--panel-soft) p-3 sm:flex-row sm:items-center sm:justify-between sm:gap-3 sm:p-4">
+          <div className="min-w-0">
+            <p className="flex items-center gap-1.5 text-sm font-semibold text-(--foreground)">
+              <Lock className="h-3.5 w-3.5 text-(--sage)" strokeWidth={2} />
+              Secure checkout
+            </p>
+            <p className="mt-0.5 text-xs leading-snug text-(--muted)">{message}</p>
+          </div>
+          <p className="shrink-0 text-xl font-bold tracking-tight text-(--foreground) sm:text-right">
+            {selectedAmount}
           </p>
         </div>
-        <p className="shrink-0 text-xl font-bold tracking-tight text-(--foreground) sm:text-right">
-          {selectedAmount}
-        </p>
-      </div>
+      )}
 
       <button
         className="btn btn-primary btn-full mt-3 min-h-[2.75rem] touch-manipulation text-sm disabled:cursor-not-allowed disabled:opacity-50"
@@ -787,10 +843,12 @@ function PaymentRegistrationFormInner() {
           : status === "paying"
             ? "Payment in progress\u2026"
             : status === "paid"
-              ? "Paid"
-              : pendingSame
-                ? "Resume payment"
-                : "Continue to payment"}
+              ? "✅ Paid"
+              : status === "error"
+                ? "Retry payment"
+                : pendingSame
+                  ? "Resume payment"
+                  : "Continue to payment"}
       </button>
     </form>
   );
