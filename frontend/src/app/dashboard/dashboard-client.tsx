@@ -4,7 +4,7 @@ import { useAuth, useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { authHeaders, getApiUrl, readApiError } from "../../lib/api";
-import { CalendarDays, Target, ArrowUpRight, Users, Medal, FileBadge, Eye, Clock } from "lucide-react";
+import { CalendarDays, Target, ArrowUpRight, Users, Medal, FileBadge, Eye, Clock, IndianRupee, CheckCircle, AlertCircle } from "lucide-react";
 import { validateProofForm } from "../../lib/validation";
 
 type Registration = {
@@ -135,6 +135,10 @@ export function DashboardClient() {
   const isAdmin = dbUser?.role === "ADMIN" || dbUser?.role === "SUPER_ADMIN";
   const needsProof = useMemo(() => registrations.filter(canUpload), [registrations]);
   const waitingReview = useMemo(() => registrations.filter((r) => r.proofStatus === "SUBMITTED"), [registrations]);
+  const paidRegs = useMemo(() => registrations.filter((r) => r.payment?.status === "PAID"), [registrations]);
+  const pendingRegs = useMemo(() => registrations.filter((r) => r.payment?.status === "CREATED"), [registrations]);
+  const totalPaid = useMemo(() => paidRegs.reduce((s, r) => s + (r.payment?.amountInPaise ?? 0), 0), [paidRegs]);
+  const totalPending = useMemo(() => pendingRegs.reduce((s, r) => s + (r.payment?.amountInPaise ?? 0), 0), [pendingRegs]);
 
   async function onPickFile(file: File | null) {
     setProofError(null); setProofFileName(null); setProofUrl("");
@@ -230,10 +234,11 @@ export function DashboardClient() {
       ) : null}
 
       {/* ── STATS ──────────────────────────────────────────── */}
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
-        <StatCard icon={CalendarDays} label="Registrations" value={registeredCount} />
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-4 sm:gap-4">
+        <StatCard icon={CalendarDays} label="Events registered" value={registeredCount} />
+        <StatCard icon={IndianRupee} label="Paid" value={paidRegs.length > 0 ? `${paidRegs.length} (${formatMoney(totalPaid)})` : 0} />
+        <StatCard icon={AlertCircle} label="Pending payment" value={pendingRegs.length > 0 ? `${pendingRegs.length} (${formatMoney(totalPending)})` : 0} />
         <StatCard icon={Eye} label="Proofs submitted" value={proofedCount} />
-        <StatCard icon={FileBadge} label="Certificates" value={certCount} />
       </div>
 
       {/* ── REFERRAL ───────────────────────────────────────── */}
@@ -425,7 +430,7 @@ export function DashboardClient() {
               const uploadOk = canUpload(reg);
               const formOpen = proofRegId === reg.id;
               return (
-                <div key={reg.id} id={`reg-${reg.id}`} className="rounded-xl border border-(--line) bg-(--panel)">
+                <div key={reg.id} id={`reg-${reg.id}`} className={`rounded-xl border bg-(--panel) ${reg.payment?.status === "PAID" ? "border-l-[3px] border-l-(--sage) border-(--line)" : reg.payment?.status === "CREATED" ? "border-l-[3px] border-l-amber-400 border-(--line)" : "border-(--line)"}`}>
                   {/* Card header */}
                   <div className="flex flex-col gap-3 p-4 sm:flex-row sm:items-start sm:justify-between sm:p-5">
                     <div className="min-w-0 flex-1">
@@ -438,6 +443,14 @@ export function DashboardClient() {
                         Joined {new Date(reg.registeredAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
                       </p>
                     </div>
+                    {reg.payment?.amountInPaise ? (
+                      <div className={`shrink-0 rounded-lg px-3 py-1.5 text-right text-sm font-bold tabular-nums ${reg.payment?.status === "PAID" ? "bg-(--sage-soft) text-(--sage)" : "bg-amber-50 text-amber-600 dark:bg-amber-900/20 dark:text-amber-400"}`}>
+                        {formatMoney(reg.payment.amountInPaise)}
+                        <span className={`block text-[0.6rem] font-medium uppercase tracking-wider ${reg.payment?.status === "PAID" ? "text-(--sage)" : "text-amber-400"}`}>
+                          {reg.payment?.status === "PAID" ? "Paid" : "Pending"}
+                        </span>
+                      </div>
+                    ) : null}
                   </div>
 
                   {/* Badge row */}
