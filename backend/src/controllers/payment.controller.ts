@@ -87,38 +87,33 @@ export async function verifyPayment(request: Request, response: Response) {
       razorpaySignature: payload.razorpay_signature,
       status: "PAID",
       paidAt: new Date(),
-      registration: {
-        update: { status: "CONFIRMED" },
-      },
-    },
-    include: {
-      registration: {
-        include: {
-          user: true,
-          event: true,
-        },
-      },
     },
   });
 
+  const registration = await prisma.registration.update({
+    where: { id: payment.registrationId },
+    data: { status: "CONFIRMED" },
+    include: { user: true, event: true },
+  });
+
   const emailResult = await sendRegistrationConfirmationEmail({
-    to: payment.registration.user.email,
-    runnerName: payment.registration.user.name,
-    eventTitle: payment.registration.event.title,
-    distance: payment.registration.distance,
-    bibNumber: payment.registration.bibNumber,
+    to: registration.user.email,
+    runnerName: registration.user.name,
+    eventTitle: registration.event.title,
+    distance: registration.distance,
+    bibNumber: registration.bibNumber,
     amountInPaise: payment.amountInPaise,
   });
 
   await prisma.notification.create({
     data: {
-      userId: payment.registration.userId,
+      userId: registration.userId,
       channel: "email",
       title: emailResult.sent
         ? "Registration confirmation email sent"
         : "Registration confirmation email failed",
       body: emailResult.sent
-        ? `Confirmation sent to ${payment.registration.user.email}`
+        ? `Confirmation sent to ${registration.user.email}`
         : emailResult.error ?? "Email was not sent",
     },
   });
@@ -166,28 +161,27 @@ export async function handleRazorpayWebhook(request: Request, response: Response
         status: "PAID",
         razorpayPaymentId: paymentId,
         paidAt: new Date(),
-        registration: {
-          update: { status: "CONFIRMED" },
-        },
-      },
-      include: {
-        registration: {
-          include: {
-            user: true,
-            event: true,
-          },
-        },
       },
     });
 
-    await sendRegistrationConfirmationEmail({
-      to: payment.registration.user.email,
-      runnerName: payment.registration.user.name,
-      eventTitle: payment.registration.event.title,
-      distance: payment.registration.distance,
-      bibNumber: payment.registration.bibNumber,
-      amountInPaise: payment.amountInPaise,
-    });
+    try {
+      const registration = await prisma.registration.update({
+        where: { id: payment.registrationId },
+        data: { status: "CONFIRMED" },
+        include: { user: true, event: true },
+      });
+
+      await sendRegistrationConfirmationEmail({
+        to: registration.user.email,
+        runnerName: registration.user.name,
+        eventTitle: registration.event.title,
+        distance: registration.distance,
+        bibNumber: registration.bibNumber,
+        amountInPaise: payment.amountInPaise,
+      });
+    } catch (err) {
+      console.error("[webhook] Failed to update registration or send email:", err);
+    }
   }
 
   response.json({ received: true });

@@ -723,8 +723,12 @@ export async function adminSyncPayments(request: AuthenticatedRequest, response:
           status: "PAID",
           razorpayPaymentId: captured.id,
           paidAt: new Date(),
-          registration: { update: { status: "CONFIRMED" } },
         },
+      });
+
+      await prisma.registration.update({
+        where: { id: payment.registrationId },
+        data: { status: "CONFIRMED" },
       });
 
       await sendRegistrationConfirmationEmail({
