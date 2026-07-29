@@ -4,7 +4,7 @@ import { useAuth, useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { authHeaders, getApiUrl, readApiError } from "../../lib/api";
-import { CalendarDays, Target, ArrowUpRight, Users, Medal, FileBadge, Eye, Clock, IndianRupee, CheckCircle, AlertCircle, RefreshCw } from "lucide-react";
+import { CalendarDays, Target, ArrowUpRight, Users, Medal, FileBadge, Eye, Clock, IndianRupee, CheckCircle, AlertCircle, RefreshCw, Gift, Award, Package, Truck, Shirt } from "lucide-react";
 import { validateProofForm } from "../../lib/validation";
 
 type Registration = {
@@ -15,7 +15,7 @@ type Registration = {
   proofStatus: string;
   finishTimeSeconds?: number | null;
   registeredAt: string;
-  event: { title: string; slug: string };
+  event: { title: string; slug: string; benefits?: string[] };
   payment: { status: string; amountInPaise: number } | null;
   proofUpload?: { activityImageUrl: string; sourceApp: string; status: string; reviewerNote?: string | null } | null;
   certificate?: { certificateNumber: string; status: string; pdfUrl?: string | null } | null;
@@ -259,6 +259,63 @@ export function DashboardClient() {
         <StatCard icon={AlertCircle} label="Pending payment" value={pendingRegs.length > 0 ? `${pendingRegs.length} (${formatMoney(totalPending)})` : 0} />
         <StatCard icon={Eye} label="Proofs submitted" value={proofedCount} />
       </div>
+
+      {/* ── MY REWARDS ──────────────────────────────────────── */}
+      {registrations.filter((r) => r.certificate || r.medalDelivery || r.proofStatus === "APPROVED" || r.proofStatus === "SUBMITTED").length > 0 ? (
+        <div>
+          <div className="mb-4 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Gift className="h-4 w-4 text-(--sage)" />
+              <h2 className="text-sm font-bold tracking-tight text-(--foreground)">My Rewards</h2>
+            </div>
+            <Link className="text-xs text-(--sage) underline-offset-2 hover:underline" href={`/prize/${registrations[0]?.bibNumber ?? ""}`}>
+              View all →
+            </Link>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            {registrations.filter((r) => r.certificate || r.medalDelivery || r.proofStatus === "APPROVED" || r.proofStatus === "SUBMITTED").slice(0, 4).map((reg) => {
+              const certStatus = reg.certificate?.status === "SENT" ? "sent" as const
+                : reg.certificate?.status === "GENERATED" ? "ready" as const
+                : reg.certificate?.status === "QUEUED" ? "processing" as const
+                : null;
+              const medalStatus = reg.medalDelivery?.status === "DELIVERED" ? "delivered" as const
+                : reg.medalDelivery?.status === "DISPATCHED" ? "dispatched" as const
+                : reg.medalDelivery?.status === "PENDING" ? "processing" as const
+                : null;
+              const total = (certStatus ? 1 : 0) + (medalStatus ? 1 : 0);
+              const done = (certStatus === "sent" || certStatus === "ready" ? 1 : 0) + (medalStatus === "delivered" ? 1 : 0);
+
+              return (
+                <Link key={reg.id} className="group rounded-xl border border-(--line) bg-(--panel) p-4 transition-all hover:border-(--sage)/30 hover:shadow-sm" href={`/prize/${reg.bibNumber}`}>
+                  <div className="flex items-start justify-between gap-2">
+                    <p className="truncate text-sm font-semibold text-(--foreground) group-hover:text-(--sage) transition-colors">{reg.event.title}</p>
+                    {total > 0 ? (
+                      <span className={`shrink-0 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[0.55rem] font-bold uppercase tracking-wider ${done === total ? "bg-(--sage-soft) text-(--sage)" : "bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400"}`}>
+                        {done}/{total}
+                      </span>
+                    ) : null}
+                  </div>
+                  <p className="mt-0.5 text-xs text-(--muted)">{reg.distance}</p>
+                  <div className="mt-3 flex flex-wrap gap-1.5">
+                    {certStatus ? (
+                      <span className={`inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[0.55rem] font-semibold uppercase tracking-wider ${certStatus === "sent" ? "bg-(--sage-soft) text-(--sage)" : "bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400"}`}>
+                        <Award className="h-3 w-3" />
+                        Certificate {certStatus === "sent" ? "✅" : certStatus === "ready" ? "✓" : "⏳"}
+                      </span>
+                    ) : null}
+                    {medalStatus ? (
+                      <span className={`inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[0.55rem] font-semibold uppercase tracking-wider ${medalStatus === "delivered" ? "bg-(--sage-soft) text-(--sage)" : medalStatus === "dispatched" ? "bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400" : "bg-(--panel-soft) text-(--muted)"}`}>
+                        <Medal className="h-3 w-3" />
+                        Medal {medalStatus === "delivered" ? "✅" : medalStatus === "dispatched" ? "🚚" : "⏳"}
+                      </span>
+                    ) : null}
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      ) : null}
 
       {/* ── REFERRAL ───────────────────────────────────────── */}
       <Link
@@ -537,6 +594,32 @@ export function DashboardClient() {
                       <span className="text-xs text-(--muted-soft)">Pay to unlock proof upload</span>
                     ) : null}
                   </div>
+
+                  {/* Prize checklist */}
+                  {reg.payment?.status === "PAID" || reg.status === "CONFIRMED" ? (
+                    <div className="flex flex-wrap items-center gap-1.5 border-t border-(--line) px-4 py-2.5 sm:px-5">
+                      <span className="text-[0.55rem] font-semibold uppercase tracking-wider text-(--muted-soft) mr-1">Prizes:</span>
+                      <span className={`inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[0.5rem] font-semibold uppercase tracking-wider ${reg.certificate?.status === "SENT" || reg.certificate?.status === "GENERATED" ? "bg-(--sage-soft) text-(--sage)" : "bg-(--panel-soft) text-(--muted-soft)"}`}>
+                        <Award className="h-2.5 w-2.5" />
+                        {reg.certificate?.status === "SENT" ? "Emailed" : reg.certificate?.status === "GENERATED" ? "Ready" : reg.certificate?.status === "QUEUED" ? "Processing" : "Certificate"}
+                      </span>
+                      <span className={`inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[0.5rem] font-semibold uppercase tracking-wider ${reg.medalDelivery?.status === "DELIVERED" ? "bg-(--sage-soft) text-(--sage)" : reg.medalDelivery?.status === "DISPATCHED" ? "bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400" : "bg-(--panel-soft) text-(--muted-soft)"}`}>
+                        <Medal className="h-2.5 w-2.5" />
+                        {reg.medalDelivery?.status === "DELIVERED" ? "Delivered" : reg.medalDelivery?.status === "DISPATCHED" ? "On the way" : reg.medalDelivery?.status === "PENDING" ? "Preparing" : "Medal"}
+                      </span>
+                      {reg.event.benefits?.some?.((b: string) => b.toLowerCase().includes("shirt") || b.toLowerCase().includes("tshirt") || b.toLowerCase().includes("merch")) ? (
+                        <span className="inline-flex items-center gap-1 rounded-md bg-(--panel-soft) px-1.5 py-0.5 text-[0.5rem] font-semibold uppercase tracking-wider text-(--muted-soft)">
+                          <Shirt className="h-2.5 w-2.5" />
+                          T-Shirt
+                        </span>
+                      ) : null}
+                      {reg.certificate?.status === "SENT" || reg.medalDelivery?.status !== null ? (
+                        <Link className="ml-auto text-[0.55rem] text-(--sage) underline-offset-2 hover:underline" href={`/prize/${reg.bibNumber}`}>
+                          Details →
+                        </Link>
+                      ) : null}
+                    </div>
+                  ) : null}
 
                   {/* Proof form */}
                   {formOpen ? (
