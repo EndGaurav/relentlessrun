@@ -62,8 +62,8 @@ adminRouter.patch("/registrations/:id", asyncHandler(adminUpdateRegistration));
 adminRouter.post("/registrations/:id/mark-paid", asyncHandler(adminMarkRegistrationPaid));
 
 adminRouter.get("/payments", asyncHandler(adminListPayments));
-adminRouter.patch("/payments/:id", asyncHandler(adminUpdatePayment));
 adminRouter.post("/payments/sync", asyncHandler(adminSyncPayments));
+adminRouter.patch("/payments/:id", asyncHandler(adminUpdatePayment));
 
 adminRouter.get("/users", asyncHandler(adminListUsers));
 adminRouter.get("/users/:id", asyncHandler(adminGetUser));
