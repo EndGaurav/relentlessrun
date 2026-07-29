@@ -4,7 +4,7 @@ import { useAuth, useUser } from "@clerk/nextjs";
 import { Lock } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { FormEvent, Suspense, useEffect, useMemo, useState } from "react";
+import { FormEvent, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { Field, inputClass } from "../components/app-shell";
 import { PhoneInput } from "../components/phone-input";
 import { SearchableSelect } from "../components/searchable-select";
@@ -144,6 +144,7 @@ function PaymentRegistrationFormInner() {
 
   const [status, setStatus] = useState<"idle" | "creating" | "paying" | "paid" | "error">("idle");
   const [message, setMessage] = useState("Complete the form and continue to secure checkout.");
+  const paidRef = useRef(false);
   const [events, setEvents] = useState<RegisterEventOption[]>(fallbackEvents);
   const [selectedEvent, setSelectedEvent] = useState(
     eventFromQuery || fallbackEvents[0].value,
@@ -487,7 +488,7 @@ function PaymentRegistrationFormInner() {
         theme: { color: "#0d9488" },
         handler: async (response: CheckoutResponse) => {
           setStatus("paying");
-          setMessage("Payment captured. Verifying registration...");
+          setMessage("Verifying your payment...");
 
           try {
             const verifyResponse = await fetch(getApiUrl("/api/payments/verify"), {
@@ -505,11 +506,12 @@ function PaymentRegistrationFormInner() {
             const verifyJson = await verifyResponse.json().catch(() => null);
             const emailSent = verifyJson?.data?.emailSent === true;
 
+            paidRef.current = true;
             setStatus("paid");
             setMessage(
               emailSent
-                ? "Payment verified. Confirmation email sent."
-                : "Payment verified. Registration confirmed.",
+                ? "✅ Payment successful! Confirmation email sent. Redirecting to dashboard..."
+                : "✅ Payment verified! Registration confirmed. Redirecting to dashboard...",
             );
 
             try {
@@ -524,16 +526,19 @@ function PaymentRegistrationFormInner() {
               /* ignore */
             }
 
-            router.push("/dashboard");
+            setTimeout(() => router.push("/dashboard"), 3000);
           } catch (error) {
             setStatus("error");
-            setMessage(getFriendlyErrorMessage(error));
+            setMessage(
+              "Payment may have gone through but we couldn't verify it right now. Please check your dashboard and email for confirmation.",
+            );
           }
         },
         modal: {
           ondismiss: () => {
+            if (paidRef.current) return;
             setStatus("idle");
-            setMessage("Payment cancelled. You can try again.");
+            setMessage("Checkout closed. You can retry when ready.");
           },
         },
       });
