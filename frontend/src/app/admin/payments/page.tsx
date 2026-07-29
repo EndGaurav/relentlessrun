@@ -27,6 +27,8 @@ export default function AdminPaymentsPage() {
   const [status, setStatus] = useState("");
   const [q, setQ] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [syncing, setSyncing] = useState(false);
+  const [syncResult, setSyncResult] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     try {
@@ -63,6 +65,27 @@ export default function AdminPaymentsPage() {
     }
   }
 
+  async function syncPayments() {
+    setSyncing(true);
+    setSyncResult(null);
+    setError(null);
+    try {
+      const token = await getToken().catch(() => null);
+      const json = await adminFetch<{
+        data: { synced: number; total: number; message: string; errors?: Array<{ id: string; orderId: string; error: string }> };
+      }>("/api/admin/payments/sync", token, { method: "POST" });
+      setSyncResult(json.data.message);
+      if (json.data.errors?.length) {
+        setError(`${json.data.errors.length} error(s). Check server logs.`);
+      }
+      await load();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Sync failed");
+    } finally {
+      setSyncing(false);
+    }
+  }
+
   return (
     <div className="admin-stack">
       <AdminPageHeader
@@ -89,9 +112,18 @@ export default function AdminPaymentsPage() {
         <button className="btn btn-primary" onClick={() => void load()} type="button">
           Refresh
         </button>
+        <button
+          className="btn btn-secondary"
+          disabled={syncing}
+          onClick={() => void syncPayments()}
+          type="button"
+        >
+          {syncing ? "Syncing\u2026" : "Sync payments"}
+        </button>
       </div>
 
       {error ? <p className="admin-muted" style={{ color: "var(--danger)" }}>{error}</p> : null}
+      {syncResult ? <p className="admin-muted" style={{ color: "var(--sage)" }}>{syncResult}</p> : null}
 
       <div className="table-wrap table-scroll admin-fill">
         <table className="table-clean min-w-[860px]">
