@@ -494,10 +494,18 @@ function PaymentRegistrationFormInner() {
           setStatus("paying");
           setMessage("Verifying your payment...");
 
+          const freshToken = await getToken();
+          if (!freshToken) {
+            setStatus("error");
+            setMessage("Session expired. Please refresh the page and try again.");
+            return;
+          }
+          const verifyHeaders = authHeaders(freshToken);
+
           try {
             const verifyResponse = await fetch(getApiUrl("/api/payments/verify"), {
               method: "POST",
-              headers,
+              headers: verifyHeaders,
               body: JSON.stringify(response),
             });
 

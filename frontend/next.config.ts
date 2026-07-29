@@ -9,9 +9,25 @@ if (publishableKey && !process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) {
   process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY = publishableKey;
 }
 
+const apiUrl = process.env.NEXT_PUBLIC_API_URL || "";
+
 const nextConfig: NextConfig = {
   env: {
     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: publishableKey,
+  },
+
+  // ── Webhook proxy ─────────────────────────────────────────
+  // Razorpay webhook URL points to mountainrun.in (Vercel).
+  // This rewrite forwards it to the Railway backend so the
+  // Express handler can process the raw body + signature.
+  async rewrites() {
+    if (!apiUrl) return [];
+    return [
+      {
+        source: "/api/payments/webhook",
+        destination: `${apiUrl.replace(/\/+$/, "")}/api/payments/webhook`,
+      },
+    ];
   },
 
   // ── Image optimisation ───────────────────────────────────
