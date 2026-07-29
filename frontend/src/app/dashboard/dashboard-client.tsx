@@ -4,7 +4,7 @@ import { useAuth, useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { authHeaders, getApiUrl, readApiError } from "../../lib/api";
-import { CalendarDays, Target, ArrowUpRight, Users, Medal, FileBadge, Eye, Clock, IndianRupee, CheckCircle, AlertCircle } from "lucide-react";
+import { CalendarDays, Target, ArrowUpRight, Users, Medal, FileBadge, Eye, Clock, IndianRupee, CheckCircle, AlertCircle, RefreshCw } from "lucide-react";
 import { validateProofForm } from "../../lib/validation";
 
 type Registration = {
@@ -111,6 +111,7 @@ export function DashboardClient() {
   const [proofMessage, setProofMessage] = useState<string | null>(null);
   const [proofError, setProofError] = useState<string | null>(null);
   const [proofBusy, setProofBusy] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const seq = useRef(0);
 
   const load = useCallback(async () => {
@@ -139,6 +140,20 @@ export function DashboardClient() {
   const pendingRegs = useMemo(() => registrations.filter((r) => r.payment?.status === "CREATED"), [registrations]);
   const totalPaid = useMemo(() => paidRegs.reduce((s, r) => s + (r.payment?.amountInPaise ?? 0), 0), [paidRegs]);
   const totalPending = useMemo(() => pendingRegs.reduce((s, r) => s + (r.payment?.amountInPaise ?? 0), 0), [pendingRegs]);
+
+  const hasPending = useMemo(() => registrations.some((r) => r.payment?.status === "CREATED" || r.proofStatus === "SUBMITTED"), [registrations]);
+
+  useEffect(() => {
+    if (!hasPending || !isLoaded) return;
+    const interval = setInterval(() => { void load(); }, 15_000);
+    return () => clearInterval(interval);
+  }, [hasPending, isLoaded, load]);
+
+  async function handleRefresh() {
+    setRefreshing(true);
+    await load();
+    setRefreshing(false);
+  }
 
   async function onPickFile(file: File | null) {
     setProofError(null); setProofFileName(null); setProofUrl("");
@@ -221,6 +236,10 @@ export function DashboardClient() {
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
+          <button className="btn btn-ghost h-9 cursor-pointer" disabled={refreshing} onClick={() => void handleRefresh()} type="button">
+            <RefreshCw className={`h-4 w-4 ${refreshing ? "animate-spin" : ""}`} />
+            <span className="ml-1.5">{refreshing ? "Refreshing..." : "Refresh"}</span>
+          </button>
           {isAdmin ? <Link className="btn btn-primary" href="/admin">Admin console</Link> : null}
           <Link className="btn btn-secondary" href="/events">Join an event</Link>
         </div>
