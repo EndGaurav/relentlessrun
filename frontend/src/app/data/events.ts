@@ -29,6 +29,13 @@ export type PublicEvent = {
   verifiedResults?: number;
   cities?: number;
   resultNote?: string;
+  /** ISO date range for countdown / urgency (API-driven events) */
+  startsAt?: string;
+  endsAt?: string;
+  /** Strikethrough "MRP" shown next to the entry fee for open events */
+  compareAtPrice?: string;
+  /** Live registration count when available from the API */
+  registrations?: number;
 };
 
 export const allPublicEvents: PublicEvent[] = [
@@ -44,6 +51,7 @@ export const allPublicEvents: PublicEvent[] = [
     banner: "Rain-ready challenge",
     reward: "Medal + certificate",
     status: "upcoming",
+    compareAtPrice: "Rs. 850",
   },
   {
     name: "Independence Endurance Run",
@@ -57,6 +65,7 @@ export const allPublicEvents: PublicEvent[] = [
     banner: "Flagship endurance week",
     reward: "Premium medal + T-shirt",
     status: "upcoming",
+    compareAtPrice: "Rs. 1100",
   },
   {
     name: "Himalayan Winter Sprint",
@@ -70,6 +79,7 @@ export const allPublicEvents: PublicEvent[] = [
     banner: "Fast festive sprint",
     reward: "Digital kit + medal",
     status: "upcoming",
+    compareAtPrice: "Rs. 700",
   },
   {
     name: "Spring Valley Dash",

@@ -54,7 +54,11 @@ export function FloatingContact() {
   }, [open]);
 
   return (
-    <div ref={ref} className="fixed bottom-5 right-4 z-50 flex flex-col items-end gap-3 sm:bottom-6 sm:right-6">
+    <div
+      ref={ref}
+      data-floating-contact="true"
+      className="fixed bottom-5 right-4 z-50 flex flex-col items-end gap-3 sm:bottom-6 sm:right-6"
+    >
       <AnimatePresence>
         {open ? (
           <motion.div

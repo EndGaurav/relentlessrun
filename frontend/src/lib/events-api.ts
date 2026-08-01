@@ -62,6 +62,14 @@ function formatDateRange(startsAt: string, endsAt: string) {
   return `${full.format(start)} – ${full.format(end)}`;
 }
 
+function deriveCompareAtPrice(priceInPaise: number): string | undefined {
+  if (!priceInPaise || priceInPaise <= 0) return undefined;
+  const price = priceInPaise / 100;
+  const raw = price * 1.71;
+  const rounded = Math.max(Math.round(raw / 50) * 50, price + 100);
+  return `Rs. ${rounded}`;
+}
+
 export function mapApiEventToPublic(
   event: ApiEvent,
   forcePhase?: "upcoming" | "past",
@@ -99,6 +107,10 @@ export function mapApiEventToPublic(
     activityTypes: event.activityTypes ?? ["running"],
     benefits: event.benefits ?? staticMatch?.benefits ?? [],
     status: isPast ? "past" : "upcoming",
+    startsAt: event.startsAt ?? undefined,
+    endsAt: event.endsAt ?? undefined,
+    registrations: event.stats?.registrations ?? event._count?.registrations ?? undefined,
+    compareAtPrice: isPast ? undefined : deriveCompareAtPrice(event.priceInPaise),
     finishers:
       event.finishers != null ? event.finishers
         : apiFinishers && apiFinishers > 0 ? apiFinishers
