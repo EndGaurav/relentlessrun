@@ -100,7 +100,7 @@ const trustPills = [
 const rewardsGrid = [
   { title: "Finisher medal", text: "A physical medal shipped after your proof is verified.", icon: Medal },
   { title: "Premium T-shirt", text: "Exclusive event T-shirt included with your kit.", icon: Shirt },
-  { title: "E-certificate", text: "QR-linked certificate for every verified finisher.", icon: FileBadge },
+  { title: "Real certificate", text: "A genuine certificate for every verified finisher, delivered to your door.", icon: FileBadge },
   { title: "Leaderboard rank", text: "Your verified time with pacing stats on the board.", icon: Trophy },
   { title: "Verified timing", text: "Official duration verified by our team from your GPS proof.", icon: Clock },
   { title: "WhatsApp support", text: "Real humans on WhatsApp to help you at every step.", icon: MessageCircle },
@@ -208,9 +208,43 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
             ]}
           />
 
+          {/* ─── Header (title block) ─── */}
+          <div className="mt-6 min-w-0">
+            <div className="flex flex-wrap items-center gap-3">
+              <span className="eyebrow">{isPast ? "Past Event" : "Open Event"}</span>
+              <span
+                className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider ${
+                  isPast ? "bg-(--panel-soft) text-(--muted)" : "bg-(--sage-soft) text-(--sage)"
+                }`}
+              >
+                {isPast ? <Timer className="h-3 w-3" /> : <Sparkles className="h-3 w-3" />}
+                {isPast ? "Completed" : "Open for registration"}
+              </span>
+            </div>
+
+            <h1 className="mt-4 text-3xl font-bold leading-[1.1] tracking-tight text-(--foreground) sm:text-4xl lg:text-5xl">
+              {event.name}
+            </h1>
+
+            {event.activityTypes && event.activityTypes.length > 0 ? (
+              <div className="mt-4 flex flex-wrap items-center gap-2">
+                {event.activityTypes.map((type) => (
+                  <span
+                    key={type}
+                    className="inline-flex items-center gap-1.5 rounded-full border border-(--line) bg-(--panel-soft) px-3 py-1 text-xs font-semibold capitalize text-(--muted)"
+                  >
+                    {type}
+                  </span>
+                ))}
+              </div>
+            ) : null}
+          </div>
+
           <div className="mt-6 grid gap-8 lg:grid-cols-[1fr_360px] lg:gap-12">
             {/* ─── Main ─── */}
             <div className="min-w-0">
+              <p className="mb-6 text-sm leading-relaxed text-(--muted) max-w-2xl sm:text-base">{event.description}</p>
+
               {event.bannerImageUrl ? (
                 <div className="relative mb-6 overflow-hidden rounded-2xl border border-(--line) bg-(--panel) shadow-sm">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -227,37 +261,6 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
                   ) : null}
                 </div>
               ) : null}
-
-              <div className="flex flex-wrap items-center gap-3">
-                <span className="eyebrow">{isPast ? "Past Event" : "Open Event"}</span>
-                <span
-                  className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider ${
-                    isPast ? "bg-(--panel-soft) text-(--muted)" : "bg-(--sage-soft) text-(--sage)"
-                  }`}
-                >
-                  {isPast ? <Timer className="h-3 w-3" /> : <Sparkles className="h-3 w-3" />}
-                  {isPast ? "Completed" : "Open for registration"}
-                </span>
-              </div>
-
-              <h1 className="mt-4 text-3xl font-bold leading-[1.1] tracking-tight text-(--foreground) sm:text-4xl lg:text-5xl">
-                {event.name}
-              </h1>
-
-              {event.activityTypes && event.activityTypes.length > 0 ? (
-                <div className="mt-4 flex flex-wrap items-center gap-2">
-                  {event.activityTypes.map((type) => (
-                    <span
-                      key={type}
-                      className="inline-flex items-center gap-1.5 rounded-full border border-(--line) bg-(--panel-soft) px-3 py-1 text-xs font-semibold capitalize text-(--muted)"
-                    >
-                      {type}
-                    </span>
-                  ))}
-                </div>
-              ) : null}
-
-              <p className="mt-5 text-sm leading-relaxed text-(--muted) max-w-2xl sm:text-base">{event.description}</p>
 
               {/* ─── Info cards ─── */}
               <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
@@ -337,7 +340,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
             </div>
 
             {/* ─── Sidebar ─── */}
-            <aside className="lg:sticky lg:top-24 lg:self-start">
+            <aside className="order-first lg:order-none lg:sticky lg:top-24 lg:self-start">
               <div className="overflow-hidden rounded-2xl border border-(--line) bg-(--panel) shadow-sm">
                 <div className={`h-1.5 w-full ${isPast ? "bg-(--muted-soft)" : "bg-gradient-to-r from-(--sage) to-emerald-500"}`} />
 

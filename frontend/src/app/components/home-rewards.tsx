@@ -11,8 +11,8 @@ const rewards: { title: string; text: string; icon: LucideIcon }[] = [
     icon: Medal,
   },
   {
-    title: "E-certificate",
-    text: "QR-linked certificate for every verified finisher.",
+    title: "Finisher certificate",
+    text: "A real certificate for every verified finisher, delivered to you.",
     icon: FileBadge,
   },
   {

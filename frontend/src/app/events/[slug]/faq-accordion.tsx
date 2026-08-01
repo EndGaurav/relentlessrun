@@ -19,7 +19,7 @@ const faqs = [
   },
   {
     q: "When will I receive my medal and rewards?",
-    a: "Once your proof is verified, your finisher medal and any included merchandise are shipped to the address you entered during registration. You also get your QR-linked e-certificate instantly after verification.",
+    a: "Once your proof is verified, your finisher medal, certificate and any included merchandise are shipped to the address you entered during registration.",
   },
   {
     q: "Is my payment safe?",
