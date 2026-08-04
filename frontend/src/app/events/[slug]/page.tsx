@@ -135,11 +135,11 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
       ) : (
         <>
           <EventHero event={event} isPast={false} />
+          <EventSelect event={event} />
           <EventStats />
           <EventWhy />
           <EventRewards />
           <EventHow event={event} />
-          <EventSelect event={event} />
           <EventCompare />
           <EventCommunity />
           <EventReviews />
