@@ -7,7 +7,7 @@ export function Reveal({
   children,
   className,
   delay = 0,
-  y = 16,
+  y = 14,
 }: {
   children: ReactNode;
   className?: string;
@@ -22,8 +22,8 @@ export function Reveal({
     <motion.div
       ref={ref}
       className={className}
-      initial={reduce ? false : { opacity: 0, y }}
-      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y }}
+      initial={reduce ? false : { opacity: 1, y }}
+      animate={inView ? { opacity: 1, y: 0 } : { opacity: 1, y }}
       transition={{ duration: 0.5, delay, ease: [0.22, 1, 0.36, 1] }}
     >
       {children}

@@ -6,7 +6,7 @@ import { Bike, Footprints, IndianRupee, Route, Sparkles, Timer } from "lucide-re
 import type { PublicEvent } from "../../data/events";
 import { RegisterCta } from "../../components/register-cta";
 import { EventCountdown } from "./countdown";
-import { Reveal, SectionHeader } from "./reveal";
+import { SectionHeader } from "./reveal";
 
 const WHATSAPP_URL = "https://wa.me/917518418960";
 
@@ -69,7 +69,7 @@ export function EventSelect({ event }: { event: PublicEvent }) {
 
         <div className="mt-10 grid items-start gap-6 sm:mt-14 lg:grid-cols-[1.1fr_360px] lg:gap-8">
           {/* Distance picker */}
-          <Reveal>
+          <div>
             <div className="rounded-3xl border border-(--line) bg-(--panel) p-5 shadow-premium sm:p-7">
               <p className="text-[0.65rem] font-black uppercase tracking-widest text-(--muted-soft)">
                 I want to
@@ -120,10 +120,10 @@ export function EventSelect({ event }: { event: PublicEvent }) {
                 })}
               </div>
             </div>
-          </Reveal>
+          </div>
 
           {/* Purchase card */}
-          <Reveal delay={0.1} className="lg:sticky lg:top-28">
+          <div className="lg:sticky lg:top-28">
             <div className="overflow-hidden rounded-3xl border border-(--gold-line) bg-(--panel) shadow-premium">
               <div className="h-1.5 w-full bg-gradient-to-r from-(--gold) via-(--sage) to-(--gold)" />
 
@@ -210,7 +210,7 @@ export function EventSelect({ event }: { event: PublicEvent }) {
                 </p>
               </div>
             </div>
-          </Reveal>
+          </div>
         </div>
       </div>
     </section>
