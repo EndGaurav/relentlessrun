@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { ArrowUpRight, BadgeCheck, Quote, Star } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { fetchHomeContent, type HomeTestimonial } from "../../lib/events-api";
+import { useEffect, useRef, useState } from "react";
+import type { HomeTestimonial } from "../../lib/events-api";
 import { HomeSectionHeader } from "./home-section-header";
 
 /* ─── Fallback data ─── */
@@ -180,20 +180,10 @@ function ReviewCarousel({ reviews }: { reviews: HomeTestimonial[] }) {
 }
 
 /* ─── Main ─── */
-export function HomeReviews() {
-  const [reviews, setReviews] = useState<HomeTestimonial[]>(fallbackReviews);
-  const [loaded, setLoaded] = useState(false);
-
-  useEffect(() => {
-    let cancelled = false;
-    void fetchHomeContent().then((data) => {
-      if (!cancelled && data.testimonials.length > 0) setReviews(data.testimonials);
-      setLoaded(true);
-    });
-    return () => { cancelled = true; };
-  }, []);
-
-  if (!loaded && reviews.length === 0) return null;
+export function HomeReviews({ testimonials: initial }: { testimonials?: HomeTestimonial[] }) {
+  const [reviews] = useState<HomeTestimonial[]>(
+    initial && initial.length > 0 ? initial : fallbackReviews,
+  );
 
   return (
     <section className="section relative overflow-hidden border-b border-(--line)">

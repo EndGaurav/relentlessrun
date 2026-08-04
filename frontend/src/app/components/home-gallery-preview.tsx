@@ -3,9 +3,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
-import { useEffect, useState } from "react";
 import { galleryMoments } from "../data/events";
-import { fetchHomeContent, type HomeMoment } from "../../lib/events-api";
+import type { HomeMoment } from "../../lib/events-api";
 import { HomeSectionHeader } from "./home-section-header";
 
 const galleryTones = [
@@ -27,21 +26,8 @@ export function HomeGalleryPreview({
 }: {
   moments?: HomeMoment[];
 }) {
-  const [moments, setMoments] = useState<HomeMoment[]>(
-    initial && initial.length > 0 ? initial : fallbackMoments,
-  );
-
-  useEffect(() => {
-    let cancelled = false;
-    void fetchHomeContent().then((data) => {
-      if (!cancelled && data.moments.length > 0) {
-        setMoments(data.moments.slice(0, 4));
-      }
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  const moments =
+    initial && initial.length > 0 ? initial : fallbackMoments;
 
   if (moments.length === 0) {
     return null;

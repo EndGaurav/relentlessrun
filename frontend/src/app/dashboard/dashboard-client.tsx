@@ -130,6 +130,19 @@ export function DashboardClient() {
     finally { if (seq.current === id) setLoading(false); }
   }, [getToken, isSignedIn, user]);
 
+  const loadMe = useCallback(async () => {
+    const id = ++seq.current;
+    if (!isSignedIn) return;
+    try {
+      const token = await getToken();
+      if (!token) return;
+      const res = await fetch(getApiUrl("/api/users/me"), { headers: authHeaders(token) });
+      if (!res.ok) return;
+      const json = await res.json();
+      if (seq.current === id) setDbUser(json.data as DbUser);
+    } catch { /* keep last known data during background polls */ }
+  }, [getToken, isSignedIn]);
+
   useEffect(() => { if (isLoaded) { const t = setTimeout(() => void load(), 0); return () => clearTimeout(t); } }, [isLoaded, load]);
 
   const registrations = useMemo(() => dedupe(dbUser?.registrations ?? []), [dbUser]);
@@ -145,9 +158,9 @@ export function DashboardClient() {
 
   useEffect(() => {
     if (!hasPending || !isLoaded) return;
-    const interval = setInterval(() => { void load(); }, 15_000);
+    const interval = setInterval(() => { void loadMe(); }, 30_000);
     return () => clearInterval(interval);
-  }, [hasPending, isLoaded, load]);
+  }, [hasPending, isLoaded, loadMe]);
 
   async function handleRefresh() {
     setRefreshing(true);

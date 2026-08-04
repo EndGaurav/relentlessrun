@@ -10,7 +10,7 @@ import { HomeReviews } from "./components/home-reviews";
 import { HomeRewards } from "./components/home-rewards";
 import { HomeSectionHeader } from "./components/home-section-header";
 import { HomeSteps } from "./components/home-steps";
-import { fetchOpenEvents } from "../lib/events-api";
+import { fetchOpenEvents, fetchHomeContent } from "../lib/events-api";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://mountainrun.in";
 
@@ -47,6 +47,7 @@ export const metadata: Metadata = {
 
 export default async function Home() {
   const serverEvents = await fetchOpenEvents({ homeFeaturedFirst: true, limit: 3 }).catch(() => undefined);
+  const serverHome = await fetchHomeContent().catch(() => undefined);
 
   return (
     <div className="page-shell flex min-h-screen flex-col">
@@ -95,8 +96,8 @@ export default async function Home() {
 
         <HomeRewards />
         {/* Moments + reviews are admin-managed via /admin/content (with static fallbacks). */}
-        <HomeGalleryPreview />
-        <HomeReviews />
+        <HomeGalleryPreview moments={serverHome?.moments} />
+        <HomeReviews testimonials={serverHome?.testimonials} />
       </main>
 
       <AppFooter />

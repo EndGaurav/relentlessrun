@@ -27,7 +27,7 @@ import { PageShell } from "../../components/app-shell";
 import { Breadcrumb } from "../../components/breadcrumb";
 import { allPublicEvents } from "../../data/events";
 import { fetchEventBySlug } from "../../../lib/events-api";
-import { auth } from "@clerk/nextjs/server";
+import { RegisterCta, SignedOutHint } from "../../components/register-cta";
 import { EventCountdown } from "./countdown";
 import { DistanceSelector } from "./distance-selector";
 import { EventFaq } from "./faq-accordion";
@@ -136,8 +136,6 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
   const event = await fetchEventBySlug(slug);
   if (!event) notFound();
 
-  const { userId } = await auth();
-  const isSignedIn = !!userId;
   const isPast = event.status === "past";
 
   const registerUrl = `/register?event=${encodeURIComponent(event.slug)}`;
@@ -150,7 +148,6 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
         { label: "Cities", value: event.cities, icon: "map" },
       ]
     : [
-        { label: "Runners registered", value: event.registrations, icon: "users", live: true },
         { label: "GPS verified results", value: event.verifiedResults, icon: "badge" },
         { label: "Cities across India", value: event.cities, icon: "map" },
       ];
@@ -305,10 +302,12 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
                   <DistanceSelector slug={event.slug} distances={event.distance.split(" / ")} />
 
                   <div className="flex flex-col gap-2.5 sm:flex-row">
-                    <Link className="btn btn-primary flex-1 gap-2 text-sm group" href={registerUrl}>
-                      {isSignedIn ? "Register for this race" : "Register now — secure your spot"}
-                      <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
-                    </Link>
+                    <RegisterCta
+                      className="flex-1"
+                      signedInLabel="Register for this race"
+                      signedOutLabel="Register now — secure your spot"
+                      slug={event.slug}
+                    />
                     <Link
                       className="btn flex-1 gap-2 text-sm"
                       href={whatsappUrl}
@@ -400,10 +399,12 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
                       ) : null}
 
                       <div className="mt-5 space-y-2.5">
-                        <Link className="btn btn-primary btn-full gap-2 text-sm group" href={registerUrl}>
-                          {isSignedIn ? "Register for this race" : "Register now"}
-                          <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
-                        </Link>
+                        <RegisterCta
+                          className="btn-full"
+                          signedInLabel="Register for this race"
+                          signedOutLabel="Register now"
+                          slug={event.slug}
+                        />
                         <Link className="btn btn-secondary btn-full text-sm" href="/events">Browse other events</Link>
                       </div>
 
@@ -421,11 +422,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
                         </div>
                       ) : null}
 
-                      {!isSignedIn ? (
-                        <div className="mt-4 rounded-xl bg-(--panel-soft) px-4 py-3 text-center text-xs text-(--muted)">
-                          Already have an account? <Link href="/sign-in" className="font-semibold text-(--sage) hover:underline">Sign in</Link>
-                        </div>
-                      ) : null}
+                      <SignedOutHint />
                     </>
                   )}
                 </div>

@@ -128,7 +128,7 @@ export function mapApiEventToPublic(
 export async function fetchEventBySlug(slug: string): Promise<PublicEvent | null> {
   try {
     const response = await fetch(getApiUrl(`/api/events/${encodeURIComponent(slug)}`), {
-      next: { revalidate: 60 },
+      next: { revalidate: 300 },
     });
     if (response.ok) {
       const json = (await response.json()) as { data: ApiEvent };
@@ -151,7 +151,7 @@ export async function fetchOpenEvents(options?: {
   const limit = options?.limit;
   try {
     const response = await fetch(getApiUrl("/api/events?scope=open"), {
-      next: { revalidate: 60 },
+      next: { revalidate: 300 },
     });
     if (response.ok) {
       const json = (await response.json()) as { data: ApiEvent[] };
@@ -196,7 +196,7 @@ export async function fetchHomeContent(): Promise<{
 }> {
   try {
     const response = await fetch(getApiUrl("/api/content/home"), {
-      next: { revalidate: 30 },
+      next: { revalidate: 300 },
     });
     if (response.ok) {
       const json = (await response.json()) as {

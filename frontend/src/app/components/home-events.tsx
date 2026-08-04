@@ -3,10 +3,8 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowUpRight, CalendarDays, IndianRupee, Sparkles } from "lucide-react";
-import { useEffect, useState } from "react";
 import type { PublicEvent } from "../data/events";
 import { publicEvents as staticUpcoming } from "../data/events";
-import { fetchOpenEvents } from "../../lib/events-api";
 
 function EventCard({ event }: { event: PublicEvent }) {
   const hasBannerImage = Boolean(event.bannerImageUrl);
@@ -91,15 +89,7 @@ function EventCard({ event }: { event: PublicEvent }) {
 }
 
 export function HomeEvents({ initial = staticUpcoming.slice(0, 3) }: { initial?: PublicEvent[] }) {
-  const [events, setEvents] = useState<PublicEvent[]>(initial);
-
-  useEffect(() => {
-    let cancelled = false;
-    void fetchOpenEvents({ homeFeaturedFirst: true, limit: 3 }).then((list) => {
-      if (!cancelled && list.length > 0) setEvents(list);
-    });
-    return () => { cancelled = true; };
-  }, []);
+  const events = initial;
 
   return (
     <div className="mt-8 grid grid-cols-1 gap-5 sm:mt-10 sm:grid-cols-2 lg:grid-cols-3">
