@@ -70,7 +70,7 @@ export function EventHero({ event, isPast }: { event: PublicEvent; isPast: boole
           </p>
 
           <h1 className="mt-5 text-[2rem] font-black leading-[1.05] tracking-tight text-(--foreground) sm:text-5xl lg:text-6xl">
-            <span className="block">{isPast ? "The" : "India&rsquo;s Premium"}</span>
+            <span className="block">{isPast ? "The" : "India's Premium"}</span>
             <span className="text-gradient-premium block">{event.name}</span>
           </h1>
 

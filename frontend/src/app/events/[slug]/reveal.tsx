@@ -7,7 +7,7 @@ export function Reveal({
   children,
   className,
   delay = 0,
-  y = 24,
+  y = 16,
 }: {
   children: ReactNode;
   className?: string;
@@ -15,7 +15,7 @@ export function Reveal({
   y?: number;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-60px" });
+  const inView = useInView(ref, { once: true, amount: 0.05 });
   const reduce = useReducedMotion();
 
   return (
@@ -24,7 +24,7 @@ export function Reveal({
       className={className}
       initial={reduce ? false : { opacity: 0, y }}
       animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y }}
-      transition={{ duration: 0.55, delay, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.5, delay, ease: [0.22, 1, 0.36, 1] }}
     >
       {children}
     </motion.div>
