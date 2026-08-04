@@ -105,15 +105,13 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
           <EventCommunity />
           <EventReviews />
 
-          <section className="section relative overflow-hidden">
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-0"
-              style={{
-                background:
-                  "radial-gradient(ellipse 70% 60% at 50% 0%, color-mix(in srgb, var(--sage) 10%, transparent) 0%, transparent 60%), var(--background)",
-              }}
-            />
+          <section
+            className="section relative overflow-hidden"
+            style={{
+              background:
+                "radial-gradient(ellipse 70% 60% at 50% 0%, color-mix(in srgb, var(--sage) 10%, transparent) 0%, transparent 60%), var(--background)",
+            }}
+          >
             <div className="container-page text-center">
               <Reveal>
                 <div className="mx-auto flex max-w-2xl flex-col items-center gap-5">

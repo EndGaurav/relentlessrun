@@ -45,16 +45,13 @@ export function EventSelect({ event }: { event: PublicEvent }) {
   const mrp = event.compareAtPrice ? formatPrice(event.compareAtPrice) : null;
 
   return (
-    <section className="relative overflow-hidden border-b border-(--line)">
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(ellipse 70% 50% at 50% 0%, color-mix(in srgb, var(--gold) 8%, transparent) 0%, transparent 60%), var(--background)",
-        }}
-      />
-
+    <section
+      className="relative overflow-hidden border-b border-(--line)"
+      style={{
+        background:
+          "radial-gradient(ellipse 70% 50% at 50% 0%, color-mix(in srgb, var(--gold) 8%, transparent) 0%, transparent 60%), var(--background)",
+      }}
+    >
       <div className="container-page py-14 sm:py-20">
         <SectionHeader
           eyebrow="Choose & claim"
