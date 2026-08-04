@@ -21,6 +21,10 @@ html[data-theme="light"] {
   --on-accent: #ffffff;
   --sage: #0d9488;
   --sage-soft: #f0fdfa;
+  --gold: #c9a227;
+  --gold-deep: #9a7a12;
+  --gold-soft: #fdf8ec;
+  --gold-line: rgba(201, 162, 39, 0.28);
   --success: #059669;
   --danger: #e11d48;
   --eyebrow-color: #0a7870;
@@ -63,6 +67,10 @@ html[data-theme="dark"] {
   --on-accent: #0a0a0c;
   --sage: #2dd4bf;
   --sage-soft: rgba(45, 212, 191, 0.12);
+  --gold: #e2b93f;
+  --gold-deep: #c9a227;
+  --gold-soft: rgba(226, 185, 63, 0.12);
+  --gold-line: rgba(226, 185, 63, 0.3);
   --success: #34d399;
   --danger: #fb7185;
   --eyebrow-color: #2dd4bf;
@@ -404,6 +412,28 @@ img:not([width]) {
 
 .btn-full {
   width: 100%;
+}
+
+.btn-lg {
+  height: 3.25rem;
+  font-size: 0.9375rem;
+  padding-inline: 1.4rem;
+}
+
+.btn-gold {
+  background: linear-gradient(135deg, #f0d987 0%, #c9a227 55%, #9a7a12 100%);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 16px 36px -16px rgba(201, 162, 39, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  text-shadow: 0 1px 2px rgba(122, 92, 8, 0.35);
+}
+
+.btn-gold:hover {
+  filter: brightness(1.05);
+}
+
+.btn-gold:active {
+  filter: brightness(0.98);
 }
 
 .field-label {
@@ -972,6 +1002,112 @@ html[data-theme="dark"] .badge-danger {
 
 .feature-card:hover .glow-icon-bg::after {
   opacity: 1;
+}
+
+/* ═══════════════════════════════════════════════
+   PREMIUM EVENT PAGE EXTENSIONS
+   ═══════════════════════════════════════════════ */
+
+.text-gold {
+  background: linear-gradient(135deg, #ecd179 0%, var(--gold) 55%, var(--gold-deep) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.grad-gold {
+  background: linear-gradient(135deg, #f0d987 0%, var(--gold) 50%, var(--gold-deep) 100%);
+}
+
+.shadow-gold {
+  box-shadow: 0 18px 45px -18px rgba(201, 162, 39, 0.5), 0 6px 18px -6px rgba(201, 162, 39, 0.25);
+}
+
+.shadow-premium {
+  box-shadow: 0 24px 60px -18px rgba(15, 23, 42, 0.14), 0 8px 24px -12px rgba(15, 23, 42, 0.06);
+}
+
+@keyframes medal-spin {
+  0% {
+    transform: rotate(-8deg) translateY(0);
+  }
+  50% {
+    transform: rotate(8deg) translateY(-10px);
+  }
+  100% {
+    transform: rotate(-8deg) translateY(0);
+  }
+}
+
+.medal-float {
+  animation: medal-spin 9s ease-in-out infinite;
+  transform-origin: 50% 100%;
+}
+
+@keyframes badge-float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(var(--tilt, 0deg));
+  }
+  50% {
+    transform: translateY(-8px) rotate(var(--tilt, 0deg));
+  }
+}
+
+.badge-float {
+  animation: badge-float 5.5s ease-in-out infinite;
+}
+
+@keyframes shimmer-sweep {
+  0% {
+    transform: translateX(-120%) skewX(-18deg);
+  }
+  100% {
+    transform: translateX(220%) skewX(-18deg);
+  }
+}
+
+.shine-sweep {
+  position: relative;
+  overflow: hidden;
+}
+
+.shine-sweep::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 45%;
+  left: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+  transform: translateX(-120%) skewX(-18deg);
+  animation: shimmer-sweep 5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  pointer-events: none;
+}
+
+@keyframes sun-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.06);
+  }
+}
+
+.sun-pulse {
+  animation: sun-pulse 7s ease-in-out infinite;
+}
+
+@keyframes road-lines {
+  from {
+    background-position-y: 0;
+  }
+  to {
+    background-position-y: 48px;
+  }
 }
 
 /* ═══════════════════════════════════════════════

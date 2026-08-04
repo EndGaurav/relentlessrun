@@ -19,7 +19,7 @@ export function RegisterCta({
   const href = `/register?event=${encodeURIComponent(slug)}`;
 
   return (
-    <Link className={`btn btn-primary gap-2 text-sm group ${className ?? ""}`} href={href}>
+    <Link className={`btn btn-gold gap-2 text-sm group ${className ?? ""}`} href={href}>
       {isSignedIn ? signedInLabel : signedOutLabel}
       <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
     </Link>
