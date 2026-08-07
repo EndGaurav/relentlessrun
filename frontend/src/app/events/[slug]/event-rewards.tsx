@@ -12,7 +12,7 @@ const items = [
   {
     icon: Shirt,
     title: "Premium event T-shirt",
-    desc: "Exclusive athletic-fit tee included with your kit — limited print run.",
+    desc: "Exclusive athletic-fit tee included with every kit, in a special-edition print.",
   },
   {
     icon: FileBadge,

@@ -54,14 +54,14 @@ export function EventSelect({ event }: { event: PublicEvent }) {
     >
       <div className="container-page py-14 sm:py-20">
         <SectionHeader
-          eyebrow="Choose & claim"
+          eyebrow="Choose & run"
           title={
             <>
               Pick your challenge,{" "}
-              <span className="text-gold">lock your slot</span>
+              <span className="text-gold">find your pace</span>
             </>
           }
-          lead="Tap a distance to go straight to registration. Every entry includes the full reward kit."
+          lead="Choose a distance that suits your rhythm — tap it to register. Every entry includes the full reward kit."
         />
 
         <div className="mt-10 grid items-start gap-6 sm:mt-14 lg:grid-cols-[1.1fr_360px] lg:gap-8">
@@ -156,7 +156,7 @@ export function EventSelect({ event }: { event: PublicEvent }) {
                   <div className="mt-5 rounded-2xl border border-(--line) bg-(--panel-soft) p-4">
                     <p className="inline-flex items-center gap-1.5 text-[0.6rem] font-black uppercase tracking-widest text-(--muted)">
                       <Timer className="h-3.5 w-3.5 text-(--gold-deep)" />
-                      Registration closes in
+                      Registration open for
                     </p>
                     <div className="mt-3 flex justify-center">
                       <EventCountdown targetDate={event.endsAt} />
@@ -164,31 +164,33 @@ export function EventSelect({ event }: { event: PublicEvent }) {
                   </div>
                 ) : null}
 
-                {/* Limited slots */}
+                {/* What's included */}
                 <div className="mt-5 rounded-2xl border border-(--gold-line) bg-(--gold-soft) p-4">
-                  <div className="flex items-center justify-between">
-                    <p className="text-xs font-bold uppercase tracking-widest text-(--gold-deep)">
-                      Edition of {new Intl.NumberFormat("en-IN").format(1000)} slots
-                    </p>
-                    <span className="rounded-full bg-(--gold) px-2.5 py-0.5 text-[0.6rem] font-black uppercase tracking-wider text-white">
-                      Filling fast
-                    </span>
-                  </div>
-                  <div className="mt-3 h-2 overflow-hidden rounded-full bg-white">
-                    <div className="h-full w-[64%] rounded-full grad-gold" />
-                  </div>
-                  <p className="mt-2.5 text-[0.7rem] font-semibold text-(--muted)">
-                    <span className="text-(--gold-deep)">{new Intl.NumberFormat("en-IN").format(640)}</span> slots reserved ·{" "}
-                    {new Intl.NumberFormat("en-IN").format(360)} left
+                  <p className="text-xs font-bold uppercase tracking-widest text-(--gold-deep)">
+                    Every entry includes
                   </p>
+                  <ul className="mt-3 space-y-1.5 text-[0.72rem] font-medium text-(--muted)">
+                    <li className="flex items-center gap-1.5">
+                      <Sparkles className="h-3 w-3 shrink-0 text-(--gold-deep)" />
+                      Finisher medal · Premium T-shirt · Printed certificate
+                    </li>
+                    <li className="flex items-center gap-1.5">
+                      <Sparkles className="h-3 w-3 shrink-0 text-(--gold-deep)" />
+                      Verified finish on the public leaderboard
+                    </li>
+                    <li className="flex items-center gap-1.5">
+                      <Sparkles className="h-3 w-3 shrink-0 text-(--gold-deep)" />
+                      Free doorstep delivery across India
+                    </li>
+                  </ul>
                 </div>
 
                 {/* CTA */}
                 <div className="mt-5 space-y-2.5">
                   <RegisterCta
                     className="btn-full btn-lg"
-                    signedInLabel="Claim your spot"
-                    signedOutLabel={`Claim your spot - ${amount}`}
+                    signedInLabel="Register now"
+                    signedOutLabel={`Register now - ${amount}`}
                     slug={event.slug}
                   />
                   <Link

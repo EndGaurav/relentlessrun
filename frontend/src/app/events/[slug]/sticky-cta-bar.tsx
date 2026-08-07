@@ -59,7 +59,7 @@ export function EventStickyCta({
             </p>
             <p className="inline-flex items-center gap-1 truncate text-[0.6rem] font-black uppercase tracking-wider text-(--gold-deep)">
               <Sparkles className="h-3 w-3" />
-              Kit included - Limited slots
+              Kit included with every entry
             </p>
           </div>
           <Link

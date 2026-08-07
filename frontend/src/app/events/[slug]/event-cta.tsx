@@ -45,7 +45,7 @@ export function EventCta({ event }: { event: PublicEvent }) {
 
               <h2 className="heading mt-6 text-(--foreground)">This one&rsquo;s yours to win.</h2>
               <p className="lede mt-3 max-w-lg">
-                {event.name} - pick a distance and secure your spot in under two minutes with UPI.
+                {event.name} - pick a distance and register in under two minutes with UPI.
               </p>
 
               {event.endsAt ? (
