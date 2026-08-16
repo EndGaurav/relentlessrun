@@ -9,11 +9,16 @@ import { writeAdminAudit } from "../services/admin-audit.service.js";
 import {
   bulkEmailGeneratedCertificates,
   bulkGenerateQueuedCertificates,
+  bulkResendAllCertificates,
   emailCertificate,
   ensureCertificateForRegistration,
   generateCertificate,
   issueCertificateAfterApproval,
 } from "../services/certificate-issue.service.js";
+import {
+  buildCertificateEmailHtml,
+  toCertificateRenderData,
+} from "../services/certificate.service.js";
 import { sendRegistrationConfirmationEmail } from "../services/email.service.js";
 import { fetchPaymentsForOrder } from "../services/razorpay.service.js";
 import { ensureDefaultEvents } from "../services/event.service.js";
@@ -1209,6 +1214,63 @@ export async function adminBulkSendCertificates(
     })),
     meta: { count: items.length, sent },
   });
+}
+
+/** Resend certificate emails to ALL confirmed participants (SENT + GENERATED + QUEUED). */
+export async function adminBulkResendAllCertificates(
+  request: AuthenticatedRequest,
+  response: Response,
+) {
+  const limitRaw = typeof request.query.limit === "string" ? Number(request.query.limit) : 200;
+  const items = await bulkResendAllCertificates(Number.isFinite(limitRaw) ? limitRaw : 200);
+  const sent = items.filter((i) => i.email.sent).length;
+
+  await writeAdminAudit(request, {
+    action: "certificate.bulk_resend_all",
+    entityType: "Certificate",
+    entityId: "bulk",
+    summary: `Bulk re-emailed ${sent}/${items.length} certificates to all participants`,
+  });
+
+  response.json({
+    data: items.map((i) => ({
+      certificate: i.certificate,
+      email: i.email,
+    })),
+    meta: { count: items.length, sent },
+  });
+}
+
+/** Return a rendered HTML preview of the certificate email for a given certificate. */
+export async function adminCertificateEmailPreview(
+  request: AuthenticatedRequest,
+  response: Response,
+) {
+  const certId = routeParam(request, "id");
+  const cert = await prisma.certificate.findUnique({
+    where: { id: certId },
+    include: {
+      registration: {
+        include: { user: true, event: true },
+      },
+    },
+  });
+
+  if (!cert) throw new ApiError(404, "Certificate not found");
+
+  const render = toCertificateRenderData({
+    certificateNumber: cert.certificateNumber,
+    runnerName: cert.registration.user.name,
+    eventTitle: cert.registration.event.title,
+    distance: cert.registration.distance,
+    bibNumber: cert.registration.bibNumber,
+    finishTimeSeconds: cert.registration.finishTimeSeconds,
+    issuedAt: cert.issuedAt,
+  });
+
+  const html = buildCertificateEmailHtml(render);
+  response.setHeader("Content-Type", "text/html; charset=utf-8");
+  response.send(html);
 }
 
 /** Create a certificate row for an approved registration that is missing one. */

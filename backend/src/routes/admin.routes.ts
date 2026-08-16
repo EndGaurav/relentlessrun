@@ -1,5 +1,7 @@
 import { Router } from "express";
 import {
+  adminBulkResendAllCertificates,
+  adminCertificateEmailPreview,
   adminCreateCoupon,
   adminCreateEvent,
   adminDeleteCoupon,
@@ -85,6 +87,8 @@ adminRouter.post(
 );
 adminRouter.post("/certificates/bulk-generate", asyncHandler(adminBulkGenerateCertificates));
 adminRouter.post("/certificates/bulk-send", asyncHandler(adminBulkSendCertificates));
+adminRouter.post("/certificates/bulk-resend-all", asyncHandler(adminBulkResendAllCertificates));
+adminRouter.get("/certificates/:id/email-preview", asyncHandler(adminCertificateEmailPreview));
 adminRouter.post(
   "/registrations/:id/certificate",
   asyncHandler(adminEnsureCertificateForRegistration),

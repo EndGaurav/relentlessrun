@@ -16,6 +16,8 @@ import {
   ExternalLink,
   RefreshCw,
   Info,
+  RotateCcw,
+  Eye,
 } from "lucide-react";
 
 /* ── Toast ─────────────────────────────────────────────── */
@@ -58,6 +60,219 @@ function useToast() {
   return { toasts, dismiss, toast };
 }
 
+/* ── Email Preview Modal ─────────────────────────────────── */
+function EmailPreviewModal({
+  certId,
+  runnerName,
+  onClose,
+  getToken,
+}: {
+  certId: string;
+  runnerName: string;
+  onClose: () => void;
+  getToken: () => Promise<string | null>;
+}) {
+  const [html, setHtml] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchPreview() {
+      setLoading(true);
+      setError(null);
+      try {
+        const token = await getToken().catch(() => null);
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "";
+        const res = await fetch(`${apiUrl}/api/admin/certificates/${certId}/email-preview`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (!res.ok) throw new Error("Could not load preview");
+        const text = await res.text();
+        setHtml(text);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Preview failed");
+      } finally {
+        setLoading(false);
+      }
+    }
+    void fetchPreview();
+  }, [certId, getToken]);
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      style={{ background: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)" }}
+      onClick={onClose}
+    >
+      <div
+        className="relative w-full max-w-2xl max-h-[90vh] flex flex-col rounded-2xl overflow-hidden shadow-2xl"
+        style={{ background: "var(--panel)", border: "1px solid var(--line)" }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Modal header */}
+        <div
+          className="flex items-center justify-between px-5 py-4 border-b"
+          style={{ borderColor: "var(--line)" }}
+        >
+          <div className="flex items-center gap-2">
+            <Eye className="h-4 w-4 text-[var(--sage)]" />
+            <div>
+              <p className="text-sm font-semibold" style={{ color: "var(--foreground)" }}>
+                Email Preview
+              </p>
+              <p className="text-xs" style={{ color: "var(--muted)" }}>
+                Certificate email for {runnerName}
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-lg p-1.5 hover:bg-[var(--panel-soft)] transition-colors"
+          >
+            <X className="h-4 w-4" style={{ color: "var(--muted)" }} />
+          </button>
+        </div>
+
+        {/* Modal body */}
+        <div className="flex-1 overflow-auto bg-[#f0ede5] p-4">
+          {loading && (
+            <div className="flex flex-col items-center justify-center py-16 gap-3">
+              <div className="h-8 w-8 rounded-full border-2 border-[var(--sage)] border-t-transparent animate-spin" />
+              <p className="text-sm text-[var(--muted)]">Loading preview…</p>
+            </div>
+          )}
+          {error && (
+            <div className="flex flex-col items-center justify-center py-12 gap-2">
+              <XCircle className="h-8 w-8 text-red-500" />
+              <p className="text-sm text-red-600">{error}</p>
+            </div>
+          )}
+          {html && !loading && (
+            <iframe
+              srcDoc={html}
+              className="w-full rounded-xl border border-[var(--line)] bg-white"
+              style={{ minHeight: "540px", height: "540px" }}
+              title={`Email preview for ${runnerName}`}
+              sandbox="allow-same-origin"
+            />
+          )}
+        </div>
+
+        {/* Footer note */}
+        <div
+          className="px-5 py-3 border-t text-xs flex items-center gap-1.5"
+          style={{ borderColor: "var(--line)", color: "var(--muted)" }}
+        >
+          <Info className="h-3.5 w-3.5 shrink-0" />
+          This is exactly how the email will appear in the runner&apos;s inbox.
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── Resend All Confirm Modal ───────────────────────────── */
+function ResendAllModal({
+  totalCount,
+  onConfirm,
+  onClose,
+  busy,
+}: {
+  totalCount: number;
+  onConfirm: () => void;
+  onClose: () => void;
+  busy: boolean;
+}) {
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      style={{ background: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)" }}
+      onClick={onClose}
+    >
+      <div
+        className="relative w-full max-w-md rounded-2xl overflow-hidden shadow-2xl"
+        style={{ background: "var(--panel)", border: "1px solid var(--line)" }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Saffron-White-Green top strip */}
+        <div className="flex h-1.5">
+          <div className="flex-1 bg-[#FF9933]" />
+          <div className="flex-1 bg-white" />
+          <div className="flex-1 bg-[#138808]" />
+        </div>
+
+        <div className="px-6 py-6">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="h-10 w-10 rounded-xl bg-amber-50 dark:bg-amber-950/30 flex items-center justify-center border border-amber-200 dark:border-amber-800/40">
+              <RotateCcw className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+            </div>
+            <div>
+              <p className="font-semibold" style={{ color: "var(--foreground)" }}>
+                Resend All Certificates
+              </p>
+              <p className="text-xs" style={{ color: "var(--muted)" }}>
+                {totalCount} participant{totalCount === 1 ? "" : "s"} will receive the new email
+              </p>
+            </div>
+          </div>
+
+          <div
+            className="rounded-xl border p-4 mb-5 text-sm space-y-2"
+            style={{
+              background: "var(--panel-soft)",
+              borderColor: "var(--line)",
+              color: "var(--foreground)",
+            }}
+          >
+            <p>
+              This will send the <strong>new premium certificate email</strong> to all{" "}
+              <strong>{totalCount}</strong> participants who have confirmed certificates — including
+              those who already received the old email.
+            </p>
+            <p style={{ color: "var(--muted)" }}>
+              ✅ Each runner will get a fresh, beautifully designed certificate in their inbox.
+            </p>
+          </div>
+
+          <div className="flex gap-3">
+            <button
+              type="button"
+              onClick={onClose}
+              disabled={busy}
+              className="btn btn-secondary flex-1 disabled:opacity-40"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={onConfirm}
+              disabled={busy}
+              className="btn btn-primary flex-1 gap-2 disabled:opacity-40"
+              style={{
+                background: busy ? undefined : "linear-gradient(135deg, #1a3a2e, #0d5c45)",
+                border: "1px solid #c9a227",
+              }}
+            >
+              {busy ? (
+                <>
+                  <div className="h-4 w-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
+                  Sending…
+                </>
+              ) : (
+                <>
+                  <RotateCcw className="h-4 w-4" />
+                  Yes, Resend All
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ── Types ─────────────────────────────────────────────── */
 type CertRow = {
   id: string;
@@ -85,12 +300,18 @@ export default function AdminCertificatesPage() {
   const [statusFilter, setStatusFilter] = useState("");
   const [busyId, setBusyId] = useState<string | null>(null);
   const [bulkBusy, setBulkBusy] = useState(false);
+  const [resendAllBusy, setResendAllBusy] = useState(false);
   const { toasts, dismiss, toast } = useToast();
+
+  /* Preview modal state */
+  const [previewCert, setPreviewCert] = useState<{ id: string; name: string } | null>(null);
+  /* Resend-all confirm modal */
+  const [showResendModal, setShowResendModal] = useState(false);
 
   const load = useCallback(async () => {
     try {
       const token = await getToken().catch(() => null);
-      const params = new URLSearchParams({ pageSize: "50" });
+      const params = new URLSearchParams({ pageSize: "200" });
       if (statusFilter) params.set("status", statusFilter);
       const json = await adminFetch<{ data: CertRow[] }>(`/api/admin/certificates?${params}`, token);
       setItems(json.data);
@@ -145,13 +366,60 @@ export default function AdminCertificatesPage() {
     }
   }
 
+  /* Resend All */
+  async function handleResendAll() {
+    setResendAllBusy(true);
+    try {
+      const token = await getToken().catch(() => null);
+      const json = await adminFetch<{ meta?: { count?: number; sent?: number } }>(
+        "/api/admin/certificates/bulk-resend-all",
+        token,
+        { method: "POST" },
+      );
+      const count = json.meta?.count ?? 0;
+      const sent = json.meta?.sent ?? 0;
+      setShowResendModal(false);
+      if (count === 0) {
+        toast("info", "No certificates to resend.");
+      } else {
+        toast("success", `🎉 Resent ${sent} of ${count} certificate emails successfully!`);
+      }
+      await load();
+    } catch (err) {
+      toast("error", err instanceof Error ? err.message : "Resend all failed");
+    } finally {
+      setResendAllBusy(false);
+    }
+  }
+
   const queued    = items.filter((i) => i.status === "QUEUED").length;
   const generated = items.filter((i) => i.status === "GENERATED").length;
   const sent      = items.filter((i) => i.status === "SENT").length;
+  const totalWithCert = sent + generated + queued;
 
   return (
     <>
       <ToastContainer toasts={toasts} dismiss={dismiss} />
+
+      {/* Email preview modal */}
+      {previewCert && (
+        <EmailPreviewModal
+          certId={previewCert.id}
+          runnerName={previewCert.name}
+          onClose={() => setPreviewCert(null)}
+          getToken={() => getToken().catch(() => null)}
+        />
+      )}
+
+      {/* Resend all confirm modal */}
+      {showResendModal && (
+        <ResendAllModal
+          totalCount={totalWithCert}
+          onConfirm={() => void handleResendAll()}
+          onClose={() => !resendAllBusy && setShowResendModal(false)}
+          busy={resendAllBusy}
+        />
+      )}
 
       <div className="admin-stack">
         <AdminPageHeader
@@ -169,7 +437,7 @@ export default function AdminCertificatesPage() {
               <p><strong>Pending</strong> → Proof approved, certificate number assigned, runner has nothing yet.</p>
               <p><strong>Ready</strong> → Verify link generated, certificate is viewable online, but email not sent.</p>
               <p><strong>Emailed</strong> → Runner received the certificate in their inbox. ✓ Done.</p>
-              <p className="pt-1 text-[var(--muted)]">Tip: Use <em>"Send email"</em> per row, or <em>"Email all ready"</em> to send in bulk.</p>
+              <p className="pt-1 text-[var(--muted)]">Use <em>&quot;Preview Email&quot;</em> (👁️) to see exactly how the email looks before sending.</p>
             </div>
           </div>
         </div>
@@ -219,6 +487,26 @@ export default function AdminCertificatesPage() {
               <span className="text-xs text-white/70">— sends to runners</span>
             </button>
 
+            {/* ── RESEND ALL BUTTON ── */}
+            <button
+              type="button"
+              disabled={bulkBusy || resendAllBusy || totalWithCert === 0}
+              onClick={() => setShowResendModal(true)}
+              className="btn h-9 gap-2 text-sm disabled:opacity-40 font-semibold"
+              style={{
+                background: "linear-gradient(135deg, #1a3a2e, #0d5c45)",
+                color: "#ffffff",
+                border: "1.5px solid #c9a227",
+                borderRadius: "var(--radius-sm)",
+                boxShadow: "0 2px 8px rgba(26,58,46,0.25)",
+              }}
+              title="Resend the new premium certificate email to ALL participants"
+            >
+              <RotateCcw className="h-4 w-4" />
+              🏅 Resend All ({totalWithCert})
+              <span className="text-xs text-white/70">— new template</span>
+            </button>
+
             <button
               type="button"
               disabled={bulkBusy}
@@ -251,7 +539,7 @@ export default function AdminCertificatesPage() {
               </AdminEmpty>
             </div>
           ) : (
-            <table className="table-clean min-w-[860px]">
+            <table className="table-clean min-w-[920px]">
               <thead>
                 <tr>
                   <th>Runner</th>
@@ -287,6 +575,17 @@ export default function AdminCertificatesPage() {
                       </td>
                       <td>
                         <div className="flex flex-wrap gap-1">
+                          {/* Preview email button — always visible */}
+                          <button
+                            type="button"
+                            disabled={busy}
+                            onClick={() => setPreviewCert({ id: row.id, name: row.registration.user.name })}
+                            className="btn btn-ghost h-8 w-8 items-center justify-center p-0"
+                            title="Preview certificate email"
+                          >
+                            <Eye className="h-3.5 w-3.5" />
+                          </button>
+
                           {/* Only show Generate if not yet generated */}
                           {row.status === "QUEUED" && (
                             <button type="button" disabled={busy}
@@ -313,7 +612,7 @@ export default function AdminCertificatesPage() {
                               onClick={() => void runAction(row.id, `/api/admin/certificates/${row.id}/send`, `Re-sent certificate to ${row.registration.user.email}`)}
                               className="btn btn-secondary h-8 px-2.5 text-xs gap-1 disabled:opacity-40"
                             >
-                              <RefreshCw className="h-3.5 w-3.5" /> Re-send
+                              <RotateCcw className="h-3.5 w-3.5" /> Re-send
                             </button>
                           )}
 

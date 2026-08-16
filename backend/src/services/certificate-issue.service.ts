@@ -166,3 +166,19 @@ export async function bulkEmailGeneratedCertificates(limit = 50) {
   }
   return results;
 }
+
+/** Resend certificates to ALL participants — including those already emailed (SENT). */
+export async function bulkResendAllCertificates(limit = 200) {
+  const all = await prisma.certificate.findMany({
+    where: { status: { in: ["SENT", "GENERATED", "QUEUED"] } },
+    take: Math.min(Math.max(limit, 1), 500),
+    orderBy: { id: "asc" },
+  });
+
+  const results = [];
+  for (const item of all) {
+    results.push(await emailCertificate(item.id));
+  }
+  return results;
+}
+
