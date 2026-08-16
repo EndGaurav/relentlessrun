@@ -70,97 +70,230 @@ export function toCertificateRenderData(input: {
   };
 }
 
-/** HTML email body for certificate delivery (no binary PDF dependency). */
+/** HTML email body for certificate delivery — premium Mountain Run template. */
 export function buildCertificateEmailHtml(data: CertificateRenderData) {
-  const S = "#0d9488";
-  const G = "#e2e8f0";
-  const FG = "#0f172a";
-  const MUTED = "#64748b";
+  const DARK_GREEN = "#1a3a2e";
+  const MED_GREEN = "#0d5c45";
+  const GOLD = "#c9a227";
+  const GOLD_LIGHT = "#e8c84a";
+  const CREAM = "#fefcf7";
+  const MUTED = "#8a7a5a";
+  const LINE = "#e8dfc8";
 
-  return `
-<div style="max-width: 620px; margin: 0 auto; font-family: Georgia, 'Times New Roman', serif; color: ${FG}; line-height: 1.5;">
-  <div style="background: #ffffff; border-radius: 20px; padding: 6px; box-shadow: 0 4px 24px rgba(0,0,0,0.08);">
-    <div style="border: 1.5px solid ${S}; border-radius: 16px; padding: 0; background: #fff; overflow: hidden;">
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Mountain Run Certificate</title>
+</head>
+<body style="margin:0;padding:0;background:#f0ede5;font-family:Arial,sans-serif;">
 
-      <!-- Top decorative band -->
-      <div style="height: 6px; background: linear-gradient(90deg, ${S}, #14b8a6, ${S});"></div>
-
-      <div style="padding: 36px 32px 28px;">
-
-        <!-- Ornamental header -->
-        <div style="text-align: center; position: relative;">
-          <div style="border-top: 2px solid ${S}; height: 1px; margin: 0 0 24px;"></div>
-          <p style="margin: 0 0 6px; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: ${S}; font-family: Arial, sans-serif; font-weight: 600;">Mountain Run</p>
-          <h1 style="margin: 0 0 2px; font-size: 30px; font-weight: 600; letter-spacing: 0.02em; color: ${FG};">Certificate of Completion</h1>
-          <p style="margin: 0 0 16px; color: ${MUTED}; font-size: 13px; font-family: Arial, sans-serif;">Verified Virtual Finish</p>
-          <div style="border-bottom: 2px solid ${S}; height: 1px; margin: 0 0 24px;"></div>
-        </div>
-
-        <!-- Decorative corner ornaments are approximated with bordered squares -->
-        <div style="text-align: center; margin: 0 0 12px;">
-
-          <p style="margin: 0 0 4px; font-size: 14px; color: #475569; font-family: Arial, sans-serif;">This certifies that</p>
-
-          <div style="display: inline-block; border-top: 1.5px solid ${G}; border-bottom: 1.5px solid ${G}; padding: 10px 32px; margin: 4px 0 12px;">
-            <p style="margin: 0; font-size: 28px; font-weight: 700; color: ${FG}; letter-spacing: 0.03em;">${escapeHtml(data.runnerName)}</p>
-          </div>
-
-          <p style="margin: 0 0 4px; font-size: 13px; color: #475569; font-family: Arial, sans-serif;">has successfully completed the following distance</p>
-
-          <p style="margin: 0; font-size: 18px; font-weight: 700; color: ${S};">${escapeHtml(data.distance)}</p>
-          <p style="margin: 2px 0 0; font-size: 13px; color: #64748b; font-family: Arial, sans-serif;">in the <strong style="color: ${FG};">${escapeHtml(data.eventTitle)}</strong> virtual event</p>
-        </div>
-
-        <!-- Details grid -->
-        <table style="width: 100%; border-collapse: collapse; margin: 20px 0 0; font-family: Arial, sans-serif; font-size: 13px;">
-          <tr>
-            <td style="padding: 7px 12px; color: ${MUTED}; background: #f8fafc; width: 40%; border-radius: 6px 0 0 0;">Bib number</td>
-            <td style="padding: 7px 12px; font-weight: 600; background: #f8fafc; border-radius: 0 6px 0 0;">${escapeHtml(data.bibNumber)}</td>
-          </tr>
-          <tr>
-            <td style="padding: 7px 12px; color: ${MUTED}; border-bottom: 1px solid ${G};">Finish time</td>
-            <td style="padding: 7px 12px; font-weight: 600; border-bottom: 1px solid ${G};">${escapeHtml(data.finishTimeLabel)}</td>
-          </tr>
-          <tr>
-            <td style="padding: 7px 12px; color: ${MUTED};">Certificate no.</td>
-            <td style="padding: 7px 12px; font-weight: 600; font-family: ui-monospace, monospace; font-size: 12px;">${escapeHtml(data.certificateNumber)}</td>
-          </tr>
-          <tr>
-            <td style="padding: 7px 12px; color: ${MUTED}; background: #f8fafc; border-radius: 0 0 0 6px;">Issued on</td>
-            <td style="padding: 7px 12px; font-weight: 600; background: #f8fafc; border-radius: 0 0 6px 0;">${escapeHtml(data.issuedAtLabel)}</td>
-          </tr>
-        </table>
-
-        <!-- Signature & seal -->
-        <div style="margin-top: 28px; padding-top: 20px; border-top: 1px solid ${G}; display: flex; justify-content: space-between; align-items: end; gap: 16px;">
-          <div>
-            <div style="font-family: 'Segoe Script', 'Brush Script MT', cursive; font-size: 22px; color: ${FG}; line-height: 1.2;">Mountain Run</div>
-            <p style="margin: 4px 0 0; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: ${MUTED}; font-family: Arial, sans-serif;">Race Director &middot; Authorized digital seal</p>
-          </div>
-          <div style="text-align: center;">
-            <div style="width: 52px; height: 52px; border: 2px solid ${S}; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 4px;">
-              <span style="font-size: 10px; font-weight: 700; color: ${S}; letter-spacing: 0.05em; text-align: center; line-height: 1.2;">MR<br/>✓</span>
-            </div>
-            <p style="margin: 0; font-size: 9px; color: ${MUTED}; font-family: Arial, sans-serif;">Digitally verified</p>
-          </div>
-        </div>
-
-        <!-- CTA -->
-        <p style="margin: 24px 0 0; text-align: center; font-family: Arial, sans-serif;">
-          <a href="${escapeHtml(data.verifyUrl)}" style="display: inline-block; background: ${S}; color: #fff; text-decoration: none; padding: 12px 28px; border-radius: 999px; font-size: 14px; font-weight: 600; letter-spacing: 0.01em;">
-            View &amp; download certificate
-          </a>
-        </p>
-      </div>
-
-      <!-- Bottom decorative band -->
-      <div style="height: 6px; background: linear-gradient(90deg, ${S}, #14b8a6, ${S});"></div>
-    </div>
+  <!-- Preheader (hidden) -->
+  <div style="display:none;max-height:0;overflow:hidden;mso-hide:all;">
+    Congratulations ${escapeHtml(data.runnerName)}! Your Mountain Run certificate is ready. 🏅
   </div>
-  <p style="font-family: Arial, sans-serif; font-size: 11px; color: #94a3b8; margin-top: 16px; text-align: center;">
-    This certificate was issued automatically after GPS proof approval. Verify authenticity anytime at the link above.
-  </p>
-</div>`;
+
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f0ede5;padding:32px 16px;">
+    <tr>
+      <td align="center">
+        <table width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;">
+
+          <!-- ═══ HEADER BAND ═══ -->
+          <tr>
+            <td style="background:${DARK_GREEN};border-radius:16px 16px 0 0;padding:0;overflow:hidden;">
+              <!-- Tricolor strip -->
+              <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td width="33.3%" height="4" style="background:#FF9933;"></td>
+                  <td width="33.4%" height="4" style="background:#ffffff;"></td>
+                  <td width="33.3%" height="4" style="background:#138808;"></td>
+                </tr>
+              </table>
+              <!-- Logo area -->
+              <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td style="padding:28px 32px 20px;text-align:center;">
+                    <!-- Mountain icon text -->
+                    <div style="display:inline-block;background:rgba(255,255,255,0.08);border:1px solid rgba(201,162,39,0.4);border-radius:50px;padding:6px 20px;margin-bottom:12px;">
+                      <span style="font-size:11px;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;color:${GOLD};">⛰️ MOUNTAIN RUN</span>
+                    </div>
+                    <p style="margin:0;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.55);">Run Anywhere, Anytime</p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- ═══ CERTIFICATE CARD ═══ -->
+          <tr>
+            <td style="background:${CREAM};border-left:1px solid ${LINE};border-right:1px solid ${LINE};padding:0;">
+
+              <!-- Gold top rule -->
+              <div style="height:2px;background:linear-gradient(90deg,transparent,${GOLD},transparent);"></div>
+
+              <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td style="padding:36px 40px 28px;text-align:center;">
+
+                    <!-- Greeting -->
+                    <p style="margin:0 0 6px;font-size:14px;color:${MUTED};">Dear</p>
+
+                    <!-- Runner Name -->
+                    <div style="border-top:2px solid ${GOLD};border-bottom:2px solid ${GOLD};display:inline-block;padding:10px 32px;margin:8px 0 16px;">
+                      <p style="margin:0;font-size:32px;color:${DARK_GREEN};font-family:Georgia,'Times New Roman',serif;font-weight:700;">
+                        ${escapeHtml(data.runnerName)}
+                      </p>
+                    </div>
+
+                    <!-- Medal emoji + title -->
+                    <p style="margin:0 0 4px;font-size:13px;letter-spacing:0.05em;color:${MUTED};">🏅 &nbsp;Congratulations!&nbsp; 🏅</p>
+                    <h1 style="margin:8px 0 4px;font-size:26px;font-weight:800;letter-spacing:-0.02em;color:${DARK_GREEN};font-family:Georgia,serif;">
+                      CERTIFICATE OF ACHIEVEMENT
+                    </h1>
+                    <p style="margin:0 0 20px;font-size:12px;letter-spacing:0.2em;text-transform:uppercase;color:${GOLD};">
+                      ── Virtual Run ──
+                    </p>
+
+                    <!-- Description -->
+                    <p style="margin:0;font-size:14px;color:#4a4a4a;line-height:1.7;">
+                      You have successfully completed the
+                      <strong style="color:${DARK_GREEN};">${escapeHtml(data.distance)}</strong> Virtual Run
+                      <br/>in the <strong style="color:${DARK_GREEN};">${escapeHtml(data.eventTitle)}</strong>.
+                    </p>
+                    <p style="margin:6px 0 0;font-size:13px;color:${MUTED};">
+                      Every step you took brought you closer to the summit. Proud of you! 🏔️
+                    </p>
+
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Gold divider -->
+              <div style="height:1px;background:linear-gradient(90deg,transparent,${GOLD},transparent);margin:0 40px;"></div>
+
+              <!-- ── Details grid ── -->
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0;">
+                <tr>
+                  <td style="padding:24px 40px;">
+                    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-radius:12px;overflow:hidden;border:1px solid ${LINE};">
+                      <tr>
+                        <td width="50%" style="padding:14px 18px;background:#f8f4ec;border-bottom:1px solid ${LINE};border-right:1px solid ${LINE};">
+                          <p style="margin:0 0 3px;font-size:9px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:${MUTED};">🏃 Distance</p>
+                          <p style="margin:0;font-size:16px;font-weight:800;color:${DARK_GREEN};">${escapeHtml(data.distance)}</p>
+                        </td>
+                        <td width="50%" style="padding:14px 18px;background:#f8f4ec;border-bottom:1px solid ${LINE};">
+                          <p style="margin:0 0 3px;font-size:9px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:${MUTED};">⏱️ Finish Time</p>
+                          <p style="margin:0;font-size:16px;font-weight:800;color:${DARK_GREEN};">${escapeHtml(data.finishTimeLabel)}</p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td width="50%" style="padding:14px 18px;background:#ffffff;border-right:1px solid ${LINE};">
+                          <p style="margin:0 0 3px;font-size:9px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:${MUTED};">🗓️ Date Issued</p>
+                          <p style="margin:0;font-size:14px;font-weight:700;color:${DARK_GREEN};">${escapeHtml(data.issuedAtLabel)}</p>
+                        </td>
+                        <td width="50%" style="padding:14px 18px;background:#ffffff;">
+                          <p style="margin:0 0 3px;font-size:9px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:${MUTED};">🏷️ Bib Number</p>
+                          <p style="margin:0;font-size:14px;font-weight:700;color:${DARK_GREEN};">${escapeHtml(data.bibNumber)}</p>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <!-- Certificate number -->
+                    <p style="margin:12px 0 0;text-align:center;font-size:10px;color:${MUTED};font-family:monospace;letter-spacing:0.1em;">
+                      Certificate No: <strong style="color:${DARK_GREEN};">${escapeHtml(data.certificateNumber)}</strong>
+                    </p>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Gold divider -->
+              <div style="height:1px;background:linear-gradient(90deg,transparent,${GOLD},transparent);margin:0 40px;"></div>
+
+              <!-- ── CTA Button ── -->
+              <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td style="padding:28px 40px;text-align:center;">
+                    <a href="${escapeHtml(data.verifyUrl)}"
+                       style="display:inline-block;background:linear-gradient(135deg,${DARK_GREEN},${MED_GREEN});color:#ffffff;text-decoration:none;padding:14px 36px;border-radius:50px;font-size:15px;font-weight:700;letter-spacing:0.05em;border:2px solid ${GOLD};box-shadow:0 4px 16px rgba(26,58,46,0.25);">
+                      🏆 &nbsp;View Your Certificate
+                    </a>
+                    <p style="margin:12px 0 0;font-size:11px;color:${MUTED};">
+                      Print, download, or share it on social media!
+                    </p>
+                  </td>
+                </tr>
+              </table>
+
+            </td>
+          </tr>
+
+          <!-- ═══ FOOTER ═══ -->
+          <tr>
+            <td style="background:${DARK_GREEN};border-radius:0 0 16px 16px;padding:0;">
+
+              <!-- Gold divider -->
+              <div style="height:2px;background:linear-gradient(90deg,transparent,${GOLD},transparent);"></div>
+
+              <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td style="padding:24px 32px;text-align:center;">
+
+                    <!-- Sign off -->
+                    <p style="margin:0 0 4px;font-size:20px;color:rgba(255,255,255,0.9);font-family:Georgia,'Times New Roman',serif;font-style:italic;">
+                      Keep Running, Keep Inspiring!
+                    </p>
+                    <p style="margin:0 0 16px;font-size:11px;color:${GOLD};letter-spacing:0.2em;text-transform:uppercase;">── Every Finish Has a Story ──</p>
+
+                    <!-- Team sign -->
+                    <p style="margin:0 0 2px;font-size:13px;font-weight:700;color:#ffffff;">Mountain Run Team</p>
+                    <p style="margin:0 0 20px;font-size:11px;color:rgba(255,255,255,0.5);">Organizer · mountainrun.in</p>
+
+                    <!-- Tricolor strip -->
+                    <table width="200" cellpadding="0" cellspacing="0" border="0" align="center" style="margin:0 auto 16px;">
+                      <tr>
+                        <td width="66" height="3" style="background:#FF9933;border-radius:2px 0 0 2px;"></td>
+                        <td width="68" height="3" style="background:#ffffff;"></td>
+                        <td width="66" height="3" style="background:#138808;border-radius:0 2px 2px 0;"></td>
+                      </tr>
+                    </table>
+
+                    <p style="margin:0;font-size:10px;color:rgba(255,255,255,0.3);line-height:1.6;">
+                      This certificate was issued automatically after GPS proof approval.<br/>
+                      Verify authenticity anytime at the link above.<br/>
+                      This is an e-certificate and does not require a physical signature.
+                    </p>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Tricolor bottom strip -->
+              <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td width="33.3%" height="4" style="background:#FF9933;border-radius:0 0 0 16px;"></td>
+                  <td width="33.4%" height="4" style="background:#ffffff;"></td>
+                  <td width="33.3%" height="4" style="background:#138808;border-radius:0 0 16px 0;"></td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Disclaimer -->
+          <tr>
+            <td style="padding:16px;text-align:center;">
+              <p style="margin:0;font-size:10px;color:#94a3b8;line-height:1.5;">
+                You're receiving this because you participated in a Mountain Run virtual event.<br/>
+                © ${new Date().getFullYear()} Mountain Run. All rights reserved.
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
 }
 
 function escapeHtml(value: string) {
