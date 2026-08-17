@@ -310,14 +310,30 @@ export default function AdminCertificatesPage() {
   /* Resend-all confirm modal */
   const [showResendModal, setShowResendModal] = useState(false);
 
+  const [counts, setCounts] = useState<{ QUEUED: number; GENERATED: number; SENT: number; total: number }>({
+    QUEUED: 0,
+    GENERATED: 0,
+    SENT: 0,
+    total: 0,
+  });
+
   const load = useCallback(async () => {
     try {
       const token = await getToken().catch(() => null);
-      const params = new URLSearchParams({ pageSize: "200" });
+      const params = new URLSearchParams({ pageSize: "1000" });
       if (statusFilter) params.set("status", statusFilter);
       if (search.trim()) params.set("search", search.trim());
-      const json = await adminFetch<{ data: CertRow[] }>(`/api/admin/certificates?${params}`, token);
+      const json = await adminFetch<{
+        data: CertRow[];
+        meta?: {
+          total: number;
+          statusCounts?: { QUEUED: number; GENERATED: number; SENT: number; total: number };
+        };
+      }>(`/api/admin/certificates?${params}`, token);
       setItems(json.data);
+      if (json.meta?.statusCounts) {
+        setCounts(json.meta.statusCounts);
+      }
     } catch (err) {
       toast("error", err instanceof Error ? err.message : "Failed to load certificates");
     }
@@ -395,10 +411,10 @@ export default function AdminCertificatesPage() {
     }
   }
 
-  const queued    = items.filter((i) => i.status === "QUEUED").length;
-  const generated = items.filter((i) => i.status === "GENERATED").length;
-  const sent      = items.filter((i) => i.status === "SENT").length;
-  const totalWithCert = sent + generated + queued;
+  const queued    = counts.QUEUED;
+  const generated = counts.GENERATED;
+  const sent      = counts.SENT;
+  const totalWithCert = counts.total || (items.length);
 
   return (
     <>

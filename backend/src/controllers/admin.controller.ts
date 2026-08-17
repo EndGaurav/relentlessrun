@@ -39,9 +39,9 @@ import {
   adminUserRoleSchema,
 } from "../validators/admin.validator.js";
 
-function parsePage(request: AuthenticatedRequest) {
+function parsePage(request: AuthenticatedRequest, maxLimit = 200) {
   const page = Math.max(1, Number(request.query.page ?? 1) || 1);
-  const pageSize = Math.min(100, Math.max(1, Number(request.query.pageSize ?? 20) || 20));
+  const pageSize = Math.min(maxLimit, Math.max(1, Number(request.query.pageSize ?? 20) || 20));
   return { page, pageSize, skip: (page - 1) * pageSize };
 }
 
@@ -1065,7 +1065,7 @@ export async function adminUpdateMedal(request: AuthenticatedRequest, response: 
 // ── Certificates ───────────────────────────────────────────────
 
 export async function adminListCertificates(request: AuthenticatedRequest, response: Response) {
-  const { page, pageSize, skip } = parsePage(request);
+  const { page, pageSize, skip } = parsePage(request, 1000);
   const status = q(request, "status");
   const search = q(request, "search")?.trim();
 
@@ -1084,7 +1084,7 @@ export async function adminListCertificates(request: AuthenticatedRequest, respo
       : {}),
   };
 
-  const [total, items] = await Promise.all([
+  const [total, items, countsByStatus] = await Promise.all([
     prisma.certificate.count({ where }),
     prisma.certificate.findMany({
       where,
@@ -1100,11 +1100,34 @@ export async function adminListCertificates(request: AuthenticatedRequest, respo
         },
       },
     }),
+    prisma.certificate.groupBy({
+      by: ["status"],
+      _count: { status: true },
+    }),
   ]);
+
+  const statusCounts = {
+    QUEUED: 0,
+    GENERATED: 0,
+    SENT: 0,
+    total: 0,
+  };
+  for (const c of countsByStatus) {
+    if (c.status in statusCounts) {
+      statusCounts[c.status as keyof typeof statusCounts] = c._count.status;
+    }
+    statusCounts.total += c._count.status;
+  }
 
   response.json({
     data: items,
-    meta: { total, page, pageSize, totalPages: Math.ceil(total / pageSize) },
+    meta: {
+      total,
+      page,
+      pageSize,
+      totalPages: Math.ceil(total / pageSize),
+      statusCounts,
+    },
   });
 }
 

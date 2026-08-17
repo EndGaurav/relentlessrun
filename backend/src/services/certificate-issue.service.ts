@@ -139,10 +139,10 @@ export async function issueCertificateAfterApproval(registrationId: string) {
   return emailCertificate(cert.id);
 }
 
-export async function bulkGenerateQueuedCertificates(limit = 50) {
+export async function bulkGenerateQueuedCertificates(limit = 1000) {
   const queued = await prisma.certificate.findMany({
     where: { status: "QUEUED" },
-    take: Math.min(Math.max(limit, 1), 200),
+    take: Math.min(Math.max(limit, 1), 2000),
     orderBy: { id: "asc" },
   });
 
@@ -153,10 +153,10 @@ export async function bulkGenerateQueuedCertificates(limit = 50) {
   return results;
 }
 
-export async function bulkEmailGeneratedCertificates(limit = 50) {
+export async function bulkEmailGeneratedCertificates(limit = 1000) {
   const ready = await prisma.certificate.findMany({
     where: { status: { in: ["GENERATED", "QUEUED"] } },
-    take: Math.min(Math.max(limit, 1), 200),
+    take: Math.min(Math.max(limit, 1), 2000),
     orderBy: { id: "asc" },
   });
 
@@ -168,10 +168,10 @@ export async function bulkEmailGeneratedCertificates(limit = 50) {
 }
 
 /** Resend certificates to ALL participants — including those already emailed (SENT). */
-export async function bulkResendAllCertificates(limit = 200) {
+export async function bulkResendAllCertificates(limit = 2000) {
   const all = await prisma.certificate.findMany({
     where: { status: { in: ["SENT", "GENERATED", "QUEUED"] } },
-    take: Math.min(Math.max(limit, 1), 500),
+    take: Math.min(Math.max(limit, 1), 5000),
     orderBy: { id: "asc" },
   });
 
