@@ -25,84 +25,108 @@ function formatFinishTime(seconds: number | null | undefined) {
   const h = Math.floor(total / 3600);
   const m = Math.floor((total % 3600) / 60);
   const s = total % 60;
-  if (h > 0) return `${h}h ${String(m).padStart(2, "0")}m ${String(s).padStart(2, "0")}s`;
-  return `${m}m ${String(s).padStart(2, "0")}s`;
+  if (h > 0) {
+    return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+  }
+  return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
 }
 
 function formatIssuedAt(iso: string | null) {
   if (!iso) return "—";
   return new Date(iso).toLocaleDateString("en-IN", {
-    day: "numeric", month: "long", year: "numeric",
+    day: "numeric",
+    month: "short",
+    year: "numeric",
   });
 }
 
-/* ─── Inline SVG assets ─────────────────────────────────────────── */
+/* ── Inline SVG Icons matching the reference certificate ── */
 
-function MountainLogo() {
+function TricolorRibbon() {
   return (
-    <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="28" cy="28" r="28" fill="#1a3a2e" />
-      <polygon points="28,10 14,38 42,38" fill="none" stroke="#f5f5f0" strokeWidth="2.2" strokeLinejoin="round" />
-      <polygon points="22,38 33,22 44,38" fill="rgba(255,255,255,0.08)" stroke="#c9a227" strokeWidth="1.5" strokeLinejoin="round" />
-      <circle cx="40" cy="14" r="3.5" fill="#f5f5f0" />
-      <path d="M40 10.5 L41.5 14 L40 12 L38.5 14 Z" fill="#c9a227" />
+    <svg width="60" height="24" viewBox="0 0 60 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M2 6 C15 2, 35 12, 58 6 L58 10 C35 16, 15 6, 2 10 Z" fill="#FF9933" />
+      <path d="M2 10 C15 6, 35 16, 58 10 L58 14 C35 20, 15 10, 2 14 Z" fill="#FFFFFF" />
+      <path d="M2 14 C15 10, 35 20, 58 14 L58 18 C35 24, 15 14, 2 18 Z" fill="#138808" />
+      <circle cx="30" cy="12" r="3" stroke="#000088" strokeWidth="0.8" fill="none" />
     </svg>
   );
 }
 
-function RunnerSilhouette() {
+function MountainRunCrestLogo() {
   return (
-    <svg width="120" height="140" viewBox="0 0 120 140" fill="none" xmlns="http://www.w3.org/2000/svg" className="opacity-10" aria-hidden="true">
-      <ellipse cx="72" cy="18" rx="9" ry="9" fill="currentColor" />
-      <path d="M72 27 Q65 45 60 58 L48 52 L38 72 L50 76 L56 62 L64 68 L58 90 L44 110 L56 114 L70 92 L78 110 L90 106 L76 84 L80 65 L90 72 L96 60 L82 50 L78 32 Z" fill="currentColor" />
-    </svg>
-  );
-}
-
-function TricolorStripe({ className }: { className?: string }) {
-  return (
-    <div className={`flex overflow-hidden ${className ?? ""}`}>
-      <div className="flex-1 bg-[#FF9933]" />
-      <div className="flex-1 bg-white" />
-      <div className="flex-1 bg-[#138808]" />
+    <div className="flex flex-col items-center text-center">
+      <svg width="64" height="42" viewBox="0 0 64 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+        {/* Mountain range background */}
+        <polygon points="32,4 12,34 52,34" fill="#1a3a2e" />
+        <polygon points="46,14 34,34 58,34" fill="#0d5c45" opacity="0.8" />
+        <polygon points="18,16 6,34 30,34" fill="#2d5a47" opacity="0.9" />
+        {/* Snow peak */}
+        <polygon points="32,4 27,14 32,12 37,14" fill="#ffffff" />
+        {/* Sun */}
+        <circle cx="48" cy="10" r="4" fill="#c9a227" />
+        {/* Running silhouette leaping on the peak */}
+        <ellipse cx="36" cy="7" rx="1.5" ry="1.5" fill="#fcfaf5" />
+        <path d="M36 8.5 L35 13 L32 16 L34 17 L36 14 L39 17 L41 16 L38 13 L37 8.5 Z" fill="#fcfaf5" />
+      </svg>
+      <p className="text-base sm:text-lg font-black uppercase tracking-[0.2em] text-[#1a3a2e] leading-tight mt-1 font-serif">
+        MOUNTAIN <span className="text-[#d97706]">RUN</span>
+      </p>
+      <p className="text-[0.55rem] font-extrabold uppercase tracking-[0.25em] text-[#7a6e5a]">
+        — RUN ANYWHERE, ANYTIME —
+      </p>
     </div>
   );
 }
 
-function WaxSeal() {
+function RunnerTrailGraphic() {
   return (
-    <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="32" cy="32" r="30" fill="#1a3a2e" />
-      <circle cx="32" cy="32" r="26" fill="none" stroke="#c9a227" strokeWidth="1.5" strokeDasharray="4 3" />
-      <text x="32" y="27" textAnchor="middle" fill="#f5f5f0" fontSize="9" fontWeight="700" fontFamily="Arial" letterSpacing="1">MOUNTAIN</text>
-      <text x="32" y="38" textAnchor="middle" fill="#c9a227" fontSize="8" fontWeight="700" fontFamily="Arial" letterSpacing="1">RUN</text>
-      <text x="32" y="49" textAnchor="middle" fill="#f5f5f0" fontSize="14">✓</text>
+    <svg
+      viewBox="0 0 240 380"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className="absolute -left-4 bottom-0 h-[85%] w-auto max-w-[240px] pointer-events-none select-none opacity-20 lg:opacity-30 mix-blend-multiply"
+      aria-hidden="true"
+    >
+      {/* Mountain slopes */}
+      <path d="M0 380 L0 180 Q60 220 120 280 L180 340 L240 380 Z" fill="#1a3a2e" />
+      <path d="M0 380 L0 260 Q80 280 140 340 L180 380 Z" fill="#0d5c45" />
+      {/* Evergreen pine trees along ridge */}
+      <polygon points="40,220 34,240 46,240" fill="#1a3a2e" />
+      <polygon points="60,240 54,260 66,260" fill="#1a3a2e" />
+      <polygon points="80,265 74,285 86,285" fill="#1a3a2e" />
+      {/* Trail runner athlete ascending */}
+      <g transform="translate(60, 110) scale(1.1)">
+        <ellipse cx="40" cy="12" rx="6" ry="6" fill="#1a3a2e" />
+        <path d="M40 18 Q35 30 30 40 L20 34 L12 48 L22 52 L26 42 L32 46 L28 64 L16 80 L26 84 L38 68 L44 82 L54 78 L42 60 L46 44 L54 50 L60 40 L48 32 L44 18 Z" fill="#1a3a2e" />
+      </g>
     </svg>
   );
 }
 
-function MedalIcon() {
+function VirtualRunBadge() {
   return (
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M18 2 L14 12 H4 L12 18 L9 28 L18 22 L27 28 L24 18 L32 12 H22 Z" fill="#c9a227" stroke="#9a7a12" strokeWidth="1" />
-      <circle cx="18" cy="17" r="5" fill="#fff" fillOpacity="0.25" />
-    </svg>
-  );
-}
-
-function DiamondDivider() {
-  return (
-    <div className="flex items-center gap-3 my-6">
-      <span className="flex-1 h-px bg-linear-to-r from-transparent via-[#c9a227]/40 to-[#c9a227]/60" />
-      <span className="rotate-45 h-2.5 w-2.5 border border-[#c9a227]/60 inline-block" />
-      <span className="h-1.5 w-1.5 bg-[#c9a227]/60 rounded-full inline-block" />
-      <span className="rotate-45 h-2.5 w-2.5 border border-[#c9a227]/60 inline-block" />
-      <span className="flex-1 h-px bg-linear-to-l from-transparent via-[#c9a227]/40 to-[#c9a227]/60" />
+    <div className="relative inline-flex items-center">
+      {/* Tricolor corner slash */}
+      <div className="absolute -top-8 -left-8 w-24 h-24 pointer-events-none opacity-60">
+        <div className="w-full h-3 bg-[#FF9933] rotate-[-45deg] origin-bottom-right mb-1" />
+        <div className="w-full h-3 bg-white rotate-[-45deg] origin-bottom-right mb-1" />
+        <div className="w-full h-3 bg-[#138808] rotate-[-45deg] origin-bottom-right" />
+      </div>
+      <div
+        className="relative z-10 rounded-full p-1 shadow-md"
+        style={{ background: "linear-gradient(135deg, #1a3a2e, #0d5c45)", border: "2px solid #c9a227" }}
+      >
+        <div className="rounded-full border border-white/30 px-3 py-2 text-center">
+          <p className="text-[0.55rem] font-black uppercase tracking-wider text-[#FF9933] leading-none">VIRTUAL</p>
+          <p className="text-[0.5rem] font-extrabold uppercase tracking-wider text-white leading-tight">RUN</p>
+          <p className="text-[0.45rem] font-bold uppercase tracking-wider text-white/90 leading-none">EVENT</p>
+          <p className="text-[0.55rem] text-[#c9a227] leading-none mt-0.5">★</p>
+        </div>
+      </div>
     </div>
   );
 }
-
-/* ─── Main page ─────────────────────────────────────────────────── */
 
 export default function CertificateVerifyPage() {
   const params = useParams<{ certificateNumber: string }>();
@@ -132,155 +156,150 @@ export default function CertificateVerifyPage() {
       }
     }
     void load();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [params.certificateNumber]);
 
   return (
     <PageShell>
-      <section className="section">
-        <div className="container-page max-w-4xl">
-
-          {/* Page header — hidden when printing */}
-          <div className="flex flex-wrap items-end justify-between gap-3 mb-8 print:hidden">
+      <section className="section py-8">
+        <div className="container-page max-w-5xl">
+          {/* Header controls (hidden on print) */}
+          <div className="flex flex-wrap items-center justify-between gap-4 mb-6 print:hidden">
             <div>
-              <p className="eyebrow">E-Certificate</p>
-              <h1 className="heading mt-2">Certificate of Achievement</h1>
-              <p className="lede mt-2">Verified Mountain Run participant certificate.</p>
+              <p className="eyebrow text-[#c9a227]">Official E-Certificate</p>
+              <h1 className="heading text-2xl sm:text-3xl mt-1">Certificate of Achievement</h1>
+              <p className="lede text-xs sm:text-sm mt-1">Verified Mountain Run finisher credential.</p>
             </div>
             {data && (
-              <button
-                className="btn btn-primary gap-2"
-                onClick={() => window.print()}
-                type="button"
-              >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9V2h12v7" /><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" /><rect x="6" y="14" width="12" height="8" /></svg>
-                Print / Save PDF
-              </button>
+              <div className="flex gap-2">
+                <button
+                  className="btn btn-primary gap-2 shadow-lg"
+                  onClick={() => window.print()}
+                  type="button"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9V2h12v7" /><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" /><rect x="6" y="14" width="12" height="8" /></svg>
+                  Print / Save PDF
+                </button>
+              </div>
             )}
           </div>
 
-          {/* Loading */}
+          {/* Loading state */}
           {loading && (
-            <div className="card mt-4 p-12 text-center">
-              <div className="inline-block h-8 w-8 border-2 border-[#c9a227] border-t-transparent rounded-full animate-spin mb-4" />
-              <p className="text-sm text-(--muted)">Verifying certificate…</p>
+            <div className="card p-14 text-center">
+              <div className="inline-block h-8 w-8 border-3 border-[#c9a227] border-t-transparent rounded-full animate-spin mb-4" />
+              <p className="text-sm font-medium text-(--muted)">Loading verified certificate…</p>
             </div>
           )}
 
-          {/* Error */}
+          {/* Error state */}
           {error && (
-            <div className="card mt-4 p-10 text-center">
-              <div className="text-4xl mb-4">❌</div>
+            <div className="card p-12 text-center">
+              <div className="text-4xl mb-3">⚠️</div>
               <p className="text-base font-semibold text-(--danger)">{error}</p>
-              <Link className="btn btn-secondary mt-6" href="/">Back to Home</Link>
+              <p className="text-xs text-(--muted) mt-1">Please verify the certificate URL or contact Mountain Run support.</p>
+              <Link className="btn btn-secondary mt-5" href="/">Back to Home</Link>
             </div>
           )}
 
-          {/* ── CERTIFICATE ─────────────────────────────────────────────── */}
+          {/* ══════ MAIN CERTIFICATE CANVAS (MATCHING USER'S IMAGE) ══════ */}
           {data && (
             <article
               id="certificate-print"
-              className="relative overflow-hidden rounded-2xl shadow-2xl"
+              className="relative overflow-hidden rounded-2xl shadow-2xl transition-all"
               style={{
-                background: "linear-gradient(145deg, #f9f6ef 0%, #fefcf7 60%, #f0ede5 100%)",
-                border: "1px solid #d4c89a",
+                background: "linear-gradient(135deg, #fbf8f0 0%, #fcfaf5 45%, #f4ede1 100%)",
+                border: "2.5px solid #c9a227",
+                color: "#1a3a2e",
               }}
             >
+              {/* Subtle Topo contour lines watermark */}
+              <div
+                className="absolute inset-0 pointer-events-none opacity-[0.035]"
+                style={{
+                  backgroundImage: `radial-gradient(#1a3a2e 1px, transparent 1px), radial-gradient(#c9a227 1px, #fcfaf5 1px)`,
+                  backgroundSize: "28px 28px",
+                  backgroundPosition: "0 0, 14px 14px",
+                }}
+              />
 
-              {/* ── Tricolor top strip ── */}
-              <TricolorStripe className="h-2 w-full" />
-
-              {/* ── Corner ornaments ── */}
-              <div className="absolute top-4 left-4 w-16 h-16 opacity-30 pointer-events-none" aria-hidden="true">
-                <svg viewBox="0 0 60 60" fill="none"><path d="M0 0 L60 0 L60 5 L5 5 L5 60 L0 60 Z" fill="#c9a227" /></svg>
-              </div>
-              <div className="absolute top-4 right-4 w-16 h-16 opacity-30 pointer-events-none" aria-hidden="true">
-                <svg viewBox="0 0 60 60" fill="none"><path d="M60 0 L0 0 L0 5 L55 5 L55 60 L60 60 Z" fill="#c9a227" /></svg>
-              </div>
-              <div className="absolute bottom-4 left-4 w-16 h-16 opacity-30 pointer-events-none" aria-hidden="true">
-                <svg viewBox="0 0 60 60" fill="none"><path d="M0 60 L60 60 L60 55 L5 55 L5 0 L0 0 Z" fill="#c9a227" /></svg>
-              </div>
-              <div className="absolute bottom-4 right-4 w-16 h-16 opacity-30 pointer-events-none" aria-hidden="true">
-                <svg viewBox="0 0 60 60" fill="none"><path d="M60 60 L0 60 L0 55 L55 55 L55 0 L60 0 Z" fill="#c9a227" /></svg>
-              </div>
-
-              {/* ── Runner silhouette (decorative BG) ── */}
-              <div className="absolute left-0 bottom-0 text-[#1a3a2e] pointer-events-none select-none" aria-hidden="true">
-                <RunnerSilhouette />
+              {/* Top Indian Tricolor Strip */}
+              <div className="flex h-2 w-full">
+                <div className="flex-1 bg-[#FF9933]" />
+                <div className="flex-1 bg-white" />
+                <div className="flex-1 bg-[#138808]" />
               </div>
 
-              {/* ── Main content ── */}
-              <div className="relative px-8 py-10 sm:px-16 sm:py-14">
+              {/* Left Trail Runner & Mountain Silhouette Graphic */}
+              <RunnerTrailGraphic />
 
-                {/* Top: Logo + Event badge */}
-                <div className="flex items-start justify-between mb-2">
-                  {/* Left: Logo + Brand */}
-                  <div className="flex items-center gap-3">
-                    <MountainLogo />
-                    <div>
-                      <p className="text-[0.6rem] font-black uppercase tracking-[0.25em] text-[#1a3a2e]">Mountain Run</p>
-                      <p className="text-[0.55rem] tracking-[0.15em] text-[#6b5c3a] uppercase">Run Anywhere, Anytime</p>
-                    </div>
+              <div className="relative px-6 py-8 sm:px-12 sm:py-10">
+
+                {/* ── TOP BAR: Left Badge | Center Logo | Right Event Banner ── */}
+                <div className="flex items-start justify-between gap-4">
+                  {/* Left Badge */}
+                  <div className="w-1/4">
+                    <VirtualRunBadge />
                   </div>
-                  {/* Right: Event pill */}
-                  <div className="text-right">
-                    <div
-                      className="inline-block rounded-lg px-3 py-2 text-right"
-                      style={{ background: "linear-gradient(135deg, #1a3a2e, #0d5c45)", border: "1px solid #c9a227" }}
-                    >
-                      <p className="text-[0.45rem] font-bold uppercase tracking-[0.2em] text-[#c9a227]">— Event —</p>
-                      <p className="text-[0.6rem] font-black uppercase tracking-wide text-white leading-tight mt-0.5">{data.event}</p>
+
+                  {/* Center Mountain Run Logo */}
+                  <div className="w-2/4 flex justify-center">
+                    <MountainRunCrestLogo />
+                  </div>
+
+                  {/* Right Event Header + Ribbon */}
+                  <div className="w-1/4 flex flex-col items-end text-right">
+                    <p className="text-[0.55rem] font-black uppercase tracking-[0.2em] text-[#d97706] leading-none">
+                      — EVENT —
+                    </p>
+                    <p className="text-xs sm:text-sm font-black uppercase tracking-wide text-[#1a3a2e] leading-tight mt-0.5">
+                      {data.event}
+                    </p>
+                    <div className="mt-1">
+                      <TricolorRibbon />
                     </div>
                   </div>
                 </div>
 
-                <DiamondDivider />
-
-                {/* Certificate title */}
-                <div className="text-center">
-                  <div className="inline-flex items-center gap-2 mb-2">
-                    <MedalIcon />
-                    <span className="text-[0.55rem] font-black uppercase tracking-[0.35em] text-[#6b5c3a]">Certificate of Achievement</span>
-                    <MedalIcon />
-                  </div>
+                {/* ── CERTIFICATE OF ACHIEVEMENT TITLE ── */}
+                <div className="mt-6 text-center">
                   <h2
-                    className="text-5xl sm:text-6xl font-black uppercase tracking-tight text-[#1a3a2e] leading-none"
-                    style={{ fontFamily: "'Georgia', serif", letterSpacing: "-0.02em" }}
+                    className="text-3xl sm:text-5xl lg:text-6xl font-black uppercase tracking-tight text-[#1a3a2e] leading-none"
+                    style={{ fontFamily: "Georgia, 'Times New Roman', serif", letterSpacing: "-0.01em" }}
                   >
                     CERTIFICATE
                   </h2>
-                  <div className="flex items-center justify-center gap-2 mt-1">
-                    <span className="h-px w-12 bg-[#c9a227]" />
-                    <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#c9a227]">of Achievement</p>
-                    <span className="h-px w-12 bg-[#c9a227]" />
+                  <div className="flex items-center justify-center gap-3 mt-1.5">
+                    <span className="h-0.5 w-12 sm:w-16 bg-[#c9a227]" />
+                    <p className="text-xs sm:text-sm font-extrabold uppercase tracking-[0.3em] text-[#c9a227]">
+                      OF ACHIEVEMENT ★
+                    </p>
+                    <span className="h-0.5 w-12 sm:w-16 bg-[#c9a227]" />
                   </div>
                 </div>
 
-                <DiamondDivider />
-
-                {/* Presented to */}
-                <div className="text-center">
-                  <p
-                    className="text-[0.65rem] font-bold uppercase tracking-[0.3em] text-[#6b5c3a]"
-                  >
-                    This Certificate is Proudly Presented To
+                {/* ── RECIPIENT NAME & DISTANCE ── */}
+                <div className="mt-6 text-center">
+                  <p className="text-[0.65rem] sm:text-xs font-black uppercase tracking-[0.25em] text-[#7a6e5a]">
+                    THIS CERTIFICATE IS PROUDLY PRESENTED TO
                   </p>
 
-                  {/* Runner name */}
-                  <div className="my-4 relative">
+                  <div className="my-2 sm:my-3 inline-block">
                     <div
-                      className="inline-block px-8 py-3"
+                      className="px-8 sm:px-14 py-2"
                       style={{
                         borderTop: "2px solid #c9a227",
                         borderBottom: "2px solid #c9a227",
                       }}
                     >
                       <p
-                        className="text-4xl sm:text-5xl text-[#1a3a2e]"
+                        className="text-4xl sm:text-5xl lg:text-6xl text-[#1a3a2e] font-bold"
                         style={{
-                          fontFamily: "'Segoe Script', 'Brush Script MT', 'Dancing Script', cursive",
-                          lineHeight: 1.3,
-                          textShadow: "0 1px 2px rgba(0,0,0,0.08)",
+                          fontFamily: "'Dancing Script', 'Brush Script MT', 'Segoe Script', cursive",
+                          lineHeight: 1.25,
+                          textShadow: "0 1px 2px rgba(0,0,0,0.06)",
                         }}
                       >
                         {data.runnerName}
@@ -288,145 +307,155 @@ export default function CertificateVerifyPage() {
                     </div>
                   </div>
 
-                  <p className="text-sm text-[#6b5c3a]">
+                  <p className="text-sm sm:text-base text-[#4a4030]">
                     for successfully completing the{" "}
-                    <strong className="text-[#1a3a2e] font-black text-base">{data.distance}</strong>{" "}
+                    <strong className="text-[#1a3a2e] font-black text-base sm:text-lg">
+                      [ {data.distance} ]
+                    </strong>{" "}
                     Virtual Run
                   </p>
-                  <p className="text-xs text-[#8a7a5a] mt-1">
-                    in the <strong className="text-[#1a3a2e]">{data.event}</strong>
-                  </p>
                 </div>
 
-                {/* ── Details grid ── */}
-                <div
-                  className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-3"
-                >
-                  {[
-                    {
-                      icon: (
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 18 0 9 9 0 0 0-18 0" /><path d="M3 12h4" /><path d="M17 12h4" /><path d="M8 7l2 5h4l2-5" /></svg>
-                      ),
-                      label: "Distance",
-                      value: data.distance,
-                    },
-                    {
-                      icon: (
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 3" /></svg>
-                      ),
-                      label: "Completion Time",
-                      value: formatFinishTime(data.finishTimeSeconds),
-                    },
-                    {
-                      icon: (
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" /></svg>
-                      ),
-                      label: "Activity Date",
-                      value: formatIssuedAt(data.issuedAt),
-                    },
-                    {
-                      icon: (
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" /></svg>
-                      ),
-                      label: "Bib Number",
-                      value: data.bibNumber,
-                    },
-                  ].map((item) => (
-                    <div
-                      key={item.label}
-                      className="flex flex-col items-center text-center rounded-xl px-3 py-4 gap-2"
-                      style={{
-                        background: "rgba(255,255,255,0.65)",
-                        border: "1px solid rgba(201,162,39,0.35)",
-                        backdropFilter: "blur(6px)",
-                      }}
-                    >
-                      <span className="text-[#1a3a2e]">{item.icon}</span>
-                      <p className="text-[0.55rem] font-black uppercase tracking-[0.2em] text-[#8a7a5a]">{item.label}</p>
-                      <p className="text-sm font-bold text-[#1a3a2e] leading-tight">{item.value}</p>
+                {/* ── 4-COLUMN STATS CARD (MATCHING REFERENCE IMAGE) ── */}
+                <div className="mt-8 rounded-xl border-2 border-[#d9cdb0] bg-white/90 backdrop-blur-sm shadow-sm overflow-hidden">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-[#d9cdb0]">
+                    {/* Distance */}
+                    <div className="flex flex-col items-center text-center p-4">
+                      <div className="text-xl sm:text-2xl mb-1">🛣️</div>
+                      <p className="text-[0.6rem] font-black uppercase tracking-[0.2em] text-[#7a6e5a]">DISTANCE</p>
+                      <p className="text-base sm:text-lg font-black text-[#1a3a2e] mt-0.5">[ {data.distance} ]</p>
+                      <p className="text-[0.6rem] text-[#7a6e5a] mt-0.5">(Category: {data.distance})</p>
                     </div>
-                  ))}
+
+                    {/* Completion Time */}
+                    <div className="flex flex-col items-center text-center p-4">
+                      <div className="text-xl sm:text-2xl mb-1">⏱️</div>
+                      <p className="text-[0.6rem] font-black uppercase tracking-[0.2em] text-[#7a6e5a]">COMPLETION TIME</p>
+                      <p className="text-base sm:text-lg font-black text-[#1a3a2e] mt-0.5">
+                        [ {formatFinishTime(data.finishTimeSeconds)} ]
+                      </p>
+                      <p className="text-[0.6rem] text-[#7a6e5a] mt-0.5">(Verified Finish)</p>
+                    </div>
+
+                    {/* Activity Date */}
+                    <div className="flex flex-col items-center text-center p-4">
+                      <div className="text-xl sm:text-2xl mb-1">📅</div>
+                      <p className="text-[0.6rem] font-black uppercase tracking-[0.2em] text-[#7a6e5a]">ACTIVITY DATE</p>
+                      <p className="text-base sm:text-lg font-black text-[#1a3a2e] mt-0.5">
+                        [ {formatIssuedAt(data.issuedAt)} ]
+                      </p>
+                      <p className="text-[0.6rem] text-[#7a6e5a] mt-0.5">(Verified Date)</p>
+                    </div>
+
+                    {/* Event */}
+                    <div className="flex flex-col items-center text-center p-4">
+                      <div className="text-xl sm:text-2xl mb-1">🏅</div>
+                      <p className="text-[0.6rem] font-black uppercase tracking-[0.2em] text-[#7a6e5a]">EVENT</p>
+                      <p className="text-xs sm:text-sm font-black text-[#c9a227] uppercase mt-0.5 leading-tight">
+                        {data.event}
+                      </p>
+                      <p className="text-[0.6rem] text-[#7a6e5a] mt-0.5">Bib: #{data.bibNumber}</p>
+                    </div>
+                  </div>
                 </div>
 
-                {/* Certificate number */}
-                <div className="mt-4 text-center">
-                  <p className="text-[0.6rem] font-mono text-[#8a7a5a] tracking-wider">
-                    Cert. No: <span className="font-bold text-[#1a3a2e]">{data.certificateNumber}</span>
-                  </p>
-                </div>
-
-                <DiamondDivider />
-
-                {/* ── Footer: Signature + Seal + Tagline ── */}
-                <div className="flex flex-wrap items-end justify-between gap-6">
-
-                  {/* Signature */}
-                  <div>
+                {/* ── BOTTOM SIGNATURES, SEALS & QR CODE ── */}
+                <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 items-end gap-6 text-center">
+                  {/* Left: Organizer Signature */}
+                  <div className="flex flex-col items-center">
                     <p
-                      className="text-2xl text-[#1a3a2e]"
-                      style={{ fontFamily: "'Segoe Script', 'Brush Script MT', cursive" }}
+                      className="text-2xl sm:text-3xl text-[#1a3a2e] font-bold"
+                      style={{ fontFamily: "'Dancing Script', cursive" }}
                     >
                       Mountain Run Team
                     </p>
-                    <div className="h-px w-40 bg-[#c9a227]/60 my-1" />
-                    <p className="text-[0.55rem] font-bold uppercase tracking-[0.15em] text-[#8a7a5a]">Mountain Run Team</p>
-                    <p className="text-[0.5rem] text-[#8a7a5a]">Organizer</p>
+                    <div className="h-0.5 w-32 bg-[#c9a227] my-1" />
+                    <p className="text-[0.6rem] font-black uppercase tracking-[0.15em] text-[#1a3a2e]">
+                      MOUNTAIN RUN TEAM
+                    </p>
+                    <p className="text-[0.55rem] text-[#7a6e5a]">Organizer</p>
                   </div>
 
-                  {/* Wax Seal (center) */}
-                  <div className="flex flex-col items-center gap-1">
-                    <WaxSeal />
-                    <p className="text-[0.5rem] font-bold uppercase tracking-[0.15em] text-[#8a7a5a]">Verify Certificate</p>
-                    <p className="text-[0.45rem] text-[#8a7a5a]">Scan to Verify</p>
+                  {/* Center-Left: Official Wax / Stamp Seal */}
+                  <div className="flex flex-col items-center">
+                    <div className="w-18 h-18 rounded-full bg-[#1a3a2e] border-2 border-dashed border-[#c9a227] flex flex-col items-center justify-center p-2 shadow-md">
+                      <p className="text-[0.5rem] font-black uppercase tracking-wider text-[#f5f5f0] leading-none">MOUNTAIN RUN</p>
+                      <p className="text-[0.45rem] font-bold tracking-wider text-[#c9a227] uppercase mt-0.5">RUN ANYWHERE</p>
+                      <p className="text-[0.4rem] tracking-widest text-[#c9a227] uppercase">ANYTIME</p>
+                      <p className="text-[0.65rem] text-[#c9a227] leading-none mt-0.5">★★★</p>
+                    </div>
                   </div>
 
-                  {/* Tagline */}
-                  <div className="text-right">
+                  {/* Center-Right: QR Code */}
+                  <div className="flex flex-col items-center">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={`https://api.qrserver.com/v1/create-qr-code/?size=120x120&margin=0&color=1a3a2e&bgcolor=fcfaf5&data=${encodeURIComponent(typeof window !== "undefined" ? window.location.href : data.certificateNumber)}`}
+                      alt="Certificate QR"
+                      className="w-14 h-14 rounded border border-[#d9cdb0] shadow-xs"
+                    />
+                    <p className="text-[0.55rem] font-black uppercase tracking-wider text-[#1a3a2e] mt-1">
+                      VERIFY CERTIFICATE
+                    </p>
+                    <p className="text-[0.5rem] text-[#7a6e5a]">Scan to Verify</p>
+                  </div>
+
+                  {/* Right: Keep Running Signature */}
+                  <div className="flex flex-col items-center">
                     <p
-                      className="text-xl text-[#1a3a2e]"
-                      style={{ fontFamily: "'Segoe Script', 'Brush Script MT', cursive" }}
+                      className="text-2xl sm:text-3xl text-[#1a3a2e] font-bold"
+                      style={{ fontFamily: "'Dancing Script', cursive" }}
                     >
                       Keep Running
                     </p>
-                    <div className="h-px w-40 bg-[#c9a227]/60 my-1 ml-auto" />
-                    <p className="text-[0.55rem] font-bold uppercase tracking-[0.12em] text-[#8a7a5a]">Keep Running, Keep Inspiring!</p>
-                    <p className="text-[0.5rem] text-[#8a7a5a]">Every Finish Has a Story</p>
+                    <div className="h-0.5 w-32 bg-[#c9a227] my-1" />
+                    <p className="text-[0.55rem] font-black uppercase tracking-wider text-[#1a3a2e]">
+                      KEEP RUNNING, KEEP INSPIRING!
+                    </p>
+                    <p className="text-[0.5rem] text-[#7a6e5a]">Every Finish Has a Story</p>
                   </div>
                 </div>
 
-                {/* Verified badge */}
-                <div className="mt-6 text-center">
-                  <span
-                    className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-[0.55rem] font-bold uppercase tracking-[0.2em]"
-                    style={{ background: "rgba(26,58,46,0.08)", color: "#1a3a2e", border: "1px solid rgba(26,58,46,0.2)" }}
-                  >
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#138808] inline-block animate-pulse" />
-                    {data.status === "SENT" ? "Issued & Verified" : data.status === "GENERATED" ? "Issued" : data.status}
-                  </span>
+                {/* Verified Pill & Disclaimer */}
+                <div className="mt-8 pt-4 border-t border-[#d9cdb0]/60 text-center">
+                  <p className="text-[0.55rem] sm:text-[0.6rem] font-bold uppercase tracking-wider text-[#7a6e5a]">
+                    THIS IS AN E-CERTIFICATE AND DOES NOT REQUIRE A PHYSICAL SIGNATURE.
+                  </p>
+                  <p className="text-[0.5rem] font-mono text-[#7a6e5a] mt-1">
+                    Cert ID: {data.certificateNumber} · Issued: {formatIssuedAt(data.issuedAt)}
+                  </p>
                 </div>
-
-                {/* Disclaimer */}
-                <p className="mt-5 text-center text-[0.5rem] text-[#8a7a5a] tracking-wide">
-                  This is an E-Certificate and does not require a physical signature.
-                </p>
               </div>
 
-              {/* ── Tricolor bottom strip ── */}
-              <TricolorStripe className="h-2 w-full" />
+              {/* Bottom Indian Tricolor Strip */}
+              <div className="flex h-2 w-full">
+                <div className="flex-1 bg-[#FF9933]" />
+                <div className="flex-1 bg-white" />
+                <div className="flex-1 bg-[#138808]" />
+              </div>
             </article>
           )}
 
-          {/* Action buttons */}
+          {/* Action buttons (hidden on print) */}
           {data && (
-            <div className="mt-6 flex flex-wrap gap-3 print:hidden">
-              <Link className="btn btn-secondary" href="/dashboard">My Dashboard</Link>
-              <Link className="btn btn-ghost" href="/leaderboard">Leaderboard</Link>
+            <div className="mt-6 flex flex-wrap items-center justify-between gap-3 print:hidden">
+              <div className="flex gap-2">
+                <Link className="btn btn-secondary" href="/dashboard">
+                  My Dashboard
+                </Link>
+                <Link className="btn btn-ghost" href="/leaderboard">
+                  View Leaderboard
+                </Link>
+              </div>
+              <p className="text-xs text-(--muted)">
+                Need help? Contact support with Certificate ID: <strong className="font-mono text-(--foreground)">{data.certificateNumber}</strong>
+              </p>
             </div>
           )}
         </div>
       </section>
 
-      {/* ── Print styles ── */}
+      {/* ── Print & Font Styles ── */}
       <style dangerouslySetInnerHTML={{
         __html: `
           @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap');
@@ -434,7 +463,7 @@ export default function CertificateVerifyPage() {
           @media print {
             @page {
               size: A4 landscape;
-              margin: 0.4in 0.5in;
+              margin: 0.3in;
             }
             body * { visibility: hidden !important; }
             #certificate-print,
@@ -447,6 +476,7 @@ export default function CertificateVerifyPage() {
               box-shadow: none !important;
               border-radius: 0 !important;
               overflow: visible !important;
+              margin: 0 !important;
             }
             header, footer, nav, .print\\:hidden { display: none !important; }
           }

@@ -107,7 +107,9 @@ export function DashboardClient() {
   const [proofUrl, setProofUrl] = useState("");
   const [proofFileName, setProofFileName] = useState<string | null>(null);
   const [sourceApp, setSourceApp] = useState("Strava");
+  const [finishHours, setFinishHours] = useState("");
   const [finishMinutes, setFinishMinutes] = useState("");
+  const [finishSeconds, setFinishSeconds] = useState("");
   const [proofMessage, setProofMessage] = useState<string | null>(null);
   const [proofError, setProofError] = useState<string | null>(null);
   const [proofBusy, setProofBusy] = useState(false);
@@ -182,21 +184,27 @@ export function DashboardClient() {
     try {
       const token = await getToken(); if (!token) throw new Error("Sign in again.");
       let url = proofUrl.trim();
-      const errors = validateProofForm({ proofUrl: url, sourceApp, finishMinutes });
-      if (errors.proofUrl || errors.sourceApp || errors.finishMinutes) {
-        throw new Error(errors.proofUrl || errors.sourceApp || errors.finishMinutes || "Please fix the highlighted fields.");
+      const errors = validateProofForm({ proofUrl: url, sourceApp });
+      if (errors.proofUrl || errors.sourceApp) {
+        throw new Error(errors.proofUrl || errors.sourceApp || "Please fix the highlighted fields.");
       }
       if (url.startsWith("data:") || url.startsWith("https://")) {
         const up = await fetch(getApiUrl("/api/uploads/image"), { method: "POST", headers: authHeaders(token), body: JSON.stringify({ file: url, folder: "mountainrun/proofs" }) });
         if (!up.ok) { if (!url.startsWith("https://")) throw new Error(await readApiError(up, "Image upload failed")); }
         else url = (await up.json()).data.url;
       }
-      const mins = Number(finishMinutes);
-      const secs = Number.isFinite(mins) && mins > 0 ? Math.round(mins * 60) : undefined;
+      const h = Math.max(0, parseInt(finishHours, 10) || 0);
+      const m = Math.max(0, parseInt(finishMinutes, 10) || 0);
+      const s = Math.max(0, parseInt(finishSeconds, 10) || 0);
+      const totalSecs = (h * 3600) + (m * 60) + s;
+      if (totalSecs > 0 && totalSecs < 120) {
+        throw new Error("Finish time cannot be under 2 minutes. Please check your entered hours and minutes.");
+      }
+      const secs = totalSecs > 0 ? totalSecs : undefined;
       const res = await fetch(getApiUrl(`/api/registrations/${proofRegId}/proof`), { method: "POST", headers: authHeaders(token), body: JSON.stringify({ activityImageUrl: url, sourceApp: sourceApp.trim() || "Other", finishTimeSeconds: secs }) });
       if (!res.ok) throw new Error(await readApiError(res, "Proof submit failed"));
       setProofMessage("Proof submitted. You'll get a certificate email after admin approval.");
-      setProofRegId(null); setProofUrl(""); setProofFileName(null); setFinishMinutes("");
+      setProofRegId(null); setProofUrl(""); setProofFileName(null); setFinishHours(""); setFinishMinutes(""); setFinishSeconds("");
       await load();
     } catch (err) { setProofError(err instanceof Error ? err.message : "Proof submit failed"); }
     finally { setProofBusy(false); }
@@ -681,16 +689,47 @@ export function DashboardClient() {
                               {SOURCE_APPS.map((a) => <option key={a} value={a}>{a}</option>)}
                             </select>
                           </label>
-                          <label className="block text-sm">
-                            <span className="field-label">Finish time (minutes)</span>
-                            <input
-                              className="input"
-                              inputMode="decimal"
-                              onChange={(e) => setFinishMinutes(e.target.value)}
-                              placeholder="e.g. 52"
-                              value={finishMinutes}
-                            />
-                          </label>
+                          <div className="block text-sm">
+                            <span className="field-label">Activity Finish Time (from GPS)</span>
+                            <div className="grid grid-cols-3 gap-2">
+                              <div>
+                                <input
+                                  className="input text-center text-sm"
+                                  min="0"
+                                  max="23"
+                                  onChange={(e) => setFinishHours(e.target.value)}
+                                  placeholder="00"
+                                  type="number"
+                                  value={finishHours}
+                                />
+                                <span className="text-[0.65rem] text-(--muted) block text-center mt-0.5">Hours</span>
+                              </div>
+                              <div>
+                                <input
+                                  className="input text-center text-sm"
+                                  min="0"
+                                  max="59"
+                                  onChange={(e) => setFinishMinutes(e.target.value)}
+                                  placeholder="45"
+                                  type="number"
+                                  value={finishMinutes}
+                                />
+                                <span className="text-[0.65rem] text-(--muted) block text-center mt-0.5">Mins</span>
+                              </div>
+                              <div>
+                                <input
+                                  className="input text-center text-sm"
+                                  min="0"
+                                  max="59"
+                                  onChange={(e) => setFinishSeconds(e.target.value)}
+                                  placeholder="30"
+                                  type="number"
+                                  value={finishSeconds}
+                                />
+                                <span className="text-[0.65rem] text-(--muted) block text-center mt-0.5">Secs</span>
+                              </div>
+                            </div>
+                          </div>
                         </div>
 
                         <div className="flex flex-wrap gap-2">

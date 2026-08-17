@@ -18,6 +18,7 @@ import {
   Info,
   RotateCcw,
   Eye,
+  Search,
 } from "lucide-react";
 
 /* ── Toast ─────────────────────────────────────────────── */
@@ -297,6 +298,7 @@ const STATUS_INFO: Record<string, { label: string; color: string; hint: string }
 export default function AdminCertificatesPage() {
   const { getToken } = useAuth();
   const [items, setItems] = useState<CertRow[]>([]);
+  const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [busyId, setBusyId] = useState<string | null>(null);
   const [bulkBusy, setBulkBusy] = useState(false);
@@ -313,12 +315,13 @@ export default function AdminCertificatesPage() {
       const token = await getToken().catch(() => null);
       const params = new URLSearchParams({ pageSize: "200" });
       if (statusFilter) params.set("status", statusFilter);
+      if (search.trim()) params.set("search", search.trim());
       const json = await adminFetch<{ data: CertRow[] }>(`/api/admin/certificates?${params}`, token);
       setItems(json.data);
     } catch (err) {
       toast("error", err instanceof Error ? err.message : "Failed to load certificates");
     }
-  }, [getToken, statusFilter]); // eslint-disable-line
+  }, [getToken, statusFilter, search]); // eslint-disable-line
 
   useEffect(() => { void load(); }, [load]);
 
@@ -518,14 +521,43 @@ export default function AdminCertificatesPage() {
           </div>
         </div>
 
-        {/* ── Filter ── */}
-        <div className="admin-toolbar is-two">
-          <select className="input" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
-            <option value="">All certificates</option>
-            <option value="QUEUED">Pending only</option>
-            <option value="GENERATED">Ready to email only</option>
-            <option value="SENT">Emailed only</option>
-          </select>
+        {/* ── Search & Filter Toolbar ── */}
+        <div className="flex flex-wrap items-center gap-3 p-3 rounded-xl border border-[var(--line)] bg-[var(--panel)]">
+          {/* Search Box */}
+          <div className="relative flex-1 min-w-[240px]">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--muted)] pointer-events-none" />
+            <input
+              type="text"
+              className="input pl-9 pr-8 w-full text-sm h-10"
+              placeholder="Search runner name, email, bib #, cert #..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            {search && (
+              <button
+                type="button"
+                onClick={() => setSearch("")}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-[var(--muted)] hover:text-[var(--foreground)]"
+                title="Clear search"
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+            )}
+          </div>
+
+          {/* Status Dropdown Filter */}
+          <div className="w-48">
+            <select
+              className="input text-sm h-10 w-full"
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+            >
+              <option value="">All statuses ({totalWithCert})</option>
+              <option value="QUEUED">Pending ({queued})</option>
+              <option value="GENERATED">Ready to email ({generated})</option>
+              <option value="SENT">Emailed ({sent})</option>
+            </select>
+          </div>
         </div>
 
         {/* ── Table ── */}

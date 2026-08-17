@@ -938,11 +938,10 @@ export async function adminReviewProof(request: AuthenticatedRequest, response: 
       });
     }
 
-    // Scalable path: queue → generate public cert URL → email (if auto-send on)
+    // Auto-generate certificate & send email to runner immediately upon approval
     try {
       certificateIssue = await issueCertificateAfterApproval(id);
     } catch (err) {
-      // Proof still approved even if cert pipeline hiccups; admin can retry.
       console.error("[admin] certificate issue after approve failed:", err);
       await ensureCertificateForRegistration(id);
     }
@@ -977,6 +976,15 @@ export async function adminReviewProof(request: AuthenticatedRequest, response: 
             pdfUrl: certificateIssue.certificate.pdfUrl,
             emailSent: certificateIssue.email.sent,
             emailError: certificateIssue.email.error ?? null,
+          }
+        : refreshed?.certificate
+        ? {
+            id: refreshed.certificate.id,
+            status: refreshed.certificate.status,
+            certificateNumber: refreshed.certificate.certificateNumber,
+            pdfUrl: refreshed.certificate.pdfUrl,
+            emailSent: false,
+            emailError: null,
           }
         : null,
     },
@@ -1059,9 +1067,21 @@ export async function adminUpdateMedal(request: AuthenticatedRequest, response: 
 export async function adminListCertificates(request: AuthenticatedRequest, response: Response) {
   const { page, pageSize, skip } = parsePage(request);
   const status = q(request, "status");
+  const search = q(request, "search")?.trim();
 
   const where: Prisma.CertificateWhereInput = {
     ...(status ? { status: status as never } : {}),
+    ...(search
+      ? {
+          OR: [
+            { certificateNumber: { contains: search, mode: "insensitive" } },
+            { registration: { bibNumber: { contains: search, mode: "insensitive" } } },
+            { registration: { user: { name: { contains: search, mode: "insensitive" } } } },
+            { registration: { user: { email: { contains: search, mode: "insensitive" } } } },
+            { registration: { event: { title: { contains: search, mode: "insensitive" } } } },
+          ],
+        }
+      : {}),
   };
 
   const [total, items] = await Promise.all([

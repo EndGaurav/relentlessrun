@@ -176,14 +176,55 @@ export function validateReviewForm(data: { name: string; role: string; quote: st
   return errors;
 }
 
-export function validateProofForm(data: { proofUrl: string; sourceApp: string; finishMinutes: string }): FieldErrors {
+export function parseTimeToSeconds(input: string | number | null | undefined): number | null {
+  if (input == null) return null;
+  if (typeof input === "number") return input > 0 ? input : null;
+  const str = String(input).trim();
+  if (!str) return null;
+
+  // Format: HH:MM:SS or MM:SS (e.g. "33:06", "01:25:30")
+  if (str.includes(":")) {
+    const parts = str.split(":").map((p) => parseFloat(p.trim()));
+    if (parts.some((p) => Number.isNaN(p) || p < 0)) return null;
+    if (parts.length === 3) {
+      return Math.round((parts[0] * 3600) + (parts[1] * 60) + parts[2]);
+    }
+    if (parts.length === 2) {
+      return Math.round((parts[0] * 60) + parts[1]);
+    }
+  }
+
+  // Format: e.g. "33m 6s" or "1h 20m 10s"
+  const hMatch = str.match(/(\d+)\s*h/i);
+  const mMatch = str.match(/(\d+)\s*m/i);
+  const sMatch = str.match(/(\d+)\s*s/i);
+  if (hMatch || mMatch || sMatch) {
+    const h = hMatch ? parseInt(hMatch[1], 10) : 0;
+    const m = mMatch ? parseInt(mMatch[1], 10) : 0;
+    const s = sMatch ? parseInt(sMatch[1], 10) : 0;
+    const total = (h * 3600) + (m * 60) + s;
+    return total > 0 ? total : null;
+  }
+
+  // Fallback: simple numeric minutes
+  const num = parseFloat(str);
+  if (!Number.isNaN(num) && num > 0) {
+    return Math.round(num * 60);
+  }
+
+  return null;
+}
+
+export function validateProofForm(data: {
+  proofUrl: string;
+  sourceApp?: string;
+  finishMinutes?: string;
+  finishHours?: string;
+  finishSeconds?: string;
+}): FieldErrors {
   const errors: FieldErrors = {};
   if (!data.proofUrl) errors.proofUrl = "Upload a screenshot or paste an image URL.";
   if (!data.sourceApp) errors.sourceApp = "Select a source app.";
-  if (data.finishMinutes) {
-    const mins = Number(data.finishMinutes);
-    if (Number.isNaN(mins) || mins <= 0) errors.finishMinutes = "Enter a valid positive number.";
-  }
   return errors;
 }
 
