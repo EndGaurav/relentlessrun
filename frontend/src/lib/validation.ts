@@ -223,8 +223,36 @@ export function validateProofForm(data: {
   finishSeconds?: string;
 }): FieldErrors {
   const errors: FieldErrors = {};
-  if (!data.proofUrl) errors.proofUrl = "Upload a screenshot or paste an image URL.";
-  if (!data.sourceApp) errors.sourceApp = "Select a source app.";
+  if (!data.proofUrl || !data.proofUrl.trim()) {
+    errors.proofUrl = "Upload a screenshot or paste an image URL.";
+  }
+  if (!data.sourceApp || !data.sourceApp.trim()) {
+    errors.sourceApp = "Select a source app.";
+  }
+
+  const hStr = (data.finishHours ?? "").trim();
+  const mStr = (data.finishMinutes ?? "").trim();
+  const sStr = (data.finishSeconds ?? "").trim();
+
+  if (hStr) {
+    const h = Number(hStr);
+    if (Number.isNaN(h) || !Number.isInteger(h) || h < 0 || h > 23) {
+      errors.finishHours = "Hours must be between 0 and 23.";
+    }
+  }
+  if (mStr) {
+    const m = Number(mStr);
+    if (Number.isNaN(m) || !Number.isInteger(m) || m < 0 || m > 59) {
+      errors.finishMinutes = "Minutes must be between 0 and 59.";
+    }
+  }
+  if (sStr) {
+    const s = Number(sStr);
+    if (Number.isNaN(s) || !Number.isInteger(s) || s < 0 || s > 59) {
+      errors.finishSeconds = "Seconds must be between 0 and 59.";
+    }
+  }
+
   return errors;
 }
 

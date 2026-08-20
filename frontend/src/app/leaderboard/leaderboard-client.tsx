@@ -114,7 +114,7 @@ export function LeaderboardClient() {
   const currentClerkId = user?.id ?? null;
 
   const [events, setEvents] = useState<EventOption[]>(
-    publicEvents.map((e) => ({ slug: e.slug, name: e.name })),
+    publicEvents.map((e) => ({ slug: e.slug, name: e.name, distances: e.distance ? e.distance.split("/").map((d) => d.trim()).filter(Boolean) : undefined })),
   );
   const [selectedSlug, setSelectedSlug] = useState(publicEvents[0]?.slug ?? "");
   const [distance, setDistance] = useState<string>("all");
@@ -128,7 +128,7 @@ export function LeaderboardClient() {
     if (fromApi?.length) return fromApi;
     const pub = publicEvents.find((e) => e.slug === selectedSlug);
     if (pub?.distance) return pub.distance.split("/").map((d) => d.trim()).filter(Boolean);
-    return ["5 km", "10 km", "21 km"];
+    return ["1.5 km", "3 km", "5 km", "10 km", "15 km", "20 km", "25 km", "30 km"];
   }, [events, selectedSlug]);
 
   const stats = useMemo(() => {
@@ -145,8 +145,15 @@ export function LeaderboardClient() {
       const json = await response.json();
       const list = (json.data ?? []) as Array<{ id: string; slug: string; title: string; distances: string[] }>;
       if (list.length > 0) {
-        setEvents(list.map((e) => ({ id: e.id, slug: e.slug, name: e.title, distances: e.distances })));
-        setSelectedSlug((prev) => prev || list[0].slug);
+        const mapped = list.map((e) => ({ id: e.id, slug: e.slug, name: e.title, distances: e.distances }));
+        setEvents(mapped);
+        setSelectedSlug((prev) => {
+          if (prev && mapped.some((e) => e.slug === prev)) {
+            return prev;
+          }
+          const defaultEvent = mapped.find((e) => e.slug === "independence-day-virtual-run-2026") || mapped[0];
+          return defaultEvent?.slug ?? "";
+        });
       }
     } catch {
       // keep fallback
@@ -154,16 +161,29 @@ export function LeaderboardClient() {
   }, []);
 
   const loadLeaderboard = useCallback(async () => {
-    if (!selectedSlug) return;
+    if (!selectedSlug) {
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     setError(null);
 
     try {
       const query = distance !== "all" ? `?distance=${encodeURIComponent(distance)}` : "";
-      const response = await fetch(getApiUrl(`/api/registrations/leaderboard/${selectedSlug}${query}`));
-      if (!response.ok) throw new Error("Could not load leaderboard");
+      const response = await fetch(getApiUrl(`/api/registrations/leaderboard/${encodeURIComponent(selectedSlug)}${query}`));
+      if (!response.ok) {
+        if (response.status === 404) {
+          // Event has no leaderboard yet or slug not found in DB
+          setEntries(DEMO_ENTRIES);
+          setUsingDemo(true);
+          setError(null);
+          return;
+        }
+        throw new Error("Could not load leaderboard");
+      }
       const json = await response.json();
       const rows = (json.data ?? []) as LeaderboardEntry[];
+      setError(null);
       if (rows.length === 0) {
         let demo = DEMO_ENTRIES.map((row) => ({ ...row }));
         if (isSignedIn && currentClerkId) {
@@ -187,10 +207,10 @@ export function LeaderboardClient() {
         setEntries(rows);
         setUsingDemo(false);
       }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load");
+    } catch {
       setEntries(DEMO_ENTRIES);
       setUsingDemo(true);
+      setError(null);
     } finally {
       setLoading(false);
     }

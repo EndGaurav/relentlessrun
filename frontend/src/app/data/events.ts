@@ -40,6 +40,22 @@ export type PublicEvent = {
 
 export const allPublicEvents: PublicEvent[] = [
   {
+    name: "Independence Day Virtual Run 2026 🇮🇳",
+    slug: "independence-day-virtual-run-2026",
+    date: "15-20 Aug 2026",
+    distance: "1.5 km / 3 km / 5 km / 10 km / 15 km / 20 km / 25 km / 30 km",
+    price: "Rs. 349",
+    description:
+      "Celebrate India's Independence Day by running from anywhere in the country. Complete your chosen distance at your own pace during the event window. Every finisher receives an official digital certificate, premium finisher medal, exclusive event T-shirt and exciting goodies.",
+    highlight: "Flagship virtual run with official finisher medals and e-certificates.",
+    banner: "Flagship run",
+    bannerImageUrl:
+      "https://res.cloudinary.com/yppcqzt6/image/upload/v1785155314/mountainrun/admin/uvujs4wpdunrnmz9rfqt.jpg",
+    reward: "Premium medal + T-shirt + certificate",
+    status: "upcoming",
+    compareAtPrice: "Rs. 699",
+  },
+  {
     name: "Monsoon Mountain Miles",
     slug: "monsoon-mountain-miles",
     date: "11-17 Jul 2026",

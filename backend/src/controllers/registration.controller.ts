@@ -332,7 +332,8 @@ export async function reviewProof(request: AuthenticatedRequest, response: Respo
 }
 
 export async function getLeaderboard(request: AuthenticatedRequest, response: Response) {
-  const eventKey = routeParam(request, "eventId");
+  const rawKey = routeParam(request, "eventId");
+  const eventKey = decodeURIComponent(rawKey).trim();
   const distance =
     typeof request.query.distance === "string" && request.query.distance.trim()
       ? request.query.distance.trim().slice(0, 50)
@@ -340,10 +341,15 @@ export async function getLeaderboard(request: AuthenticatedRequest, response: Re
 
   await ensureDefaultEvents();
 
-  // Accept either event id or slug
+  // Accept either event id, exact slug, case-insensitive slug, or title
   const event = await prisma.event.findFirst({
     where: {
-      OR: [{ id: eventKey }, { slug: eventKey }],
+      OR: [
+        { id: eventKey },
+        { slug: eventKey },
+        { slug: { equals: eventKey, mode: "insensitive" } },
+        { title: { equals: eventKey, mode: "insensitive" } },
+      ],
     },
   });
 

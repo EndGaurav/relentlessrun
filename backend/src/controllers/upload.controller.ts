@@ -11,7 +11,7 @@ const uploadImageSchema = z.object({
   folder: z.string().max(80).optional(),
 });
 
-const MAX_DATA_URL_CHARS = 1_800_000; // ~1.3MB payload
+const MAX_DATA_URL_CHARS = 10_000_000; // ~7.5MB payload
 
 export async function uploadProofImage(request: AuthenticatedRequest, response: Response) {
   const payload = validateBody(uploadImageSchema, request);

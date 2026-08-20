@@ -68,20 +68,20 @@ export const createRegistrationSchema = z
 export const submitProofSchema = z.object({
   activityImageUrl: z
     .string()
-    .min(12, "Activity image is required")
+    .min(10, "Activity image is required")
     .refine(
       (value) =>
         value.startsWith("https://") ||
-        value.startsWith("http://localhost") ||
+        value.startsWith("http://") ||
         value.startsWith("data:image/"),
-      "Provide a public image URL or uploaded image data",
+      "Provide a valid image URL or uploaded image data",
     ),
   sourceApp: z.string().min(2, "Source app is required"),
-  finishTimeSeconds: z.number().int().positive().optional(),
+  finishTimeSeconds: z.number().int().positive().nullable().optional(),
 });
 
 export const reviewProofSchema = z.object({
   approved: z.boolean(),
   reviewerNote: z.string().optional(),
-  finishTimeSeconds: z.number().int().positive().optional(),
+  finishTimeSeconds: z.number().int().positive().nullable().optional(),
 });

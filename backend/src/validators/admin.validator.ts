@@ -106,5 +106,5 @@ export const adminCouponUpdateSchema = adminCouponSchema.partial();
 export const adminProofReviewSchema = z.object({
   approved: z.boolean(),
   reviewerNote: z.string().max(1000).optional(),
-  finishTimeSeconds: z.number().int().positive().optional(),
+  finishTimeSeconds: z.number().int().positive().nullable().optional(),
 });

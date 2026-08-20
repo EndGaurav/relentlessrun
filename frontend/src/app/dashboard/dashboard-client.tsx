@@ -4,8 +4,8 @@ import { useAuth, useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { authHeaders, getApiUrl, readApiError } from "../../lib/api";
-import { CalendarDays, Target, ArrowUpRight, Users, Medal, FileBadge, Eye, Clock, IndianRupee, CheckCircle, AlertCircle, RefreshCw, Gift, Award, Package, Truck, Shirt } from "lucide-react";
-import { validateProofForm } from "../../lib/validation";
+import { CalendarDays, Target, ArrowUpRight, Users, Medal, Eye, Clock, IndianRupee, AlertCircle, RefreshCw, Gift, Award, Shirt } from "lucide-react";
+import { parseTimeToSeconds, validateProofForm } from "../../lib/validation";
 
 type Registration = {
   id: string;
@@ -73,13 +73,46 @@ function canUpload(reg: Registration) { return isEligible(reg) && (reg.proofStat
 function dedupe(rows: Registration[]) { const s = new Set<string>(); return rows.filter((r) => { if (s.has(r.id)) return false; s.add(r.id); return true; }); }
 
 async function fileToPayload(file: File): Promise<string> {
-  if (!file.type.startsWith("image/")) throw new Error("Please choose an image file.");
-  if (file.size > 8 * 1024 * 1024) throw new Error("Image must be under 8 MB.");
-  const bmp = await createImageBitmap(file);
-  const scale = Math.min(1, 1600 / Math.max(bmp.width, bmp.height));
-  const c = document.createElement("canvas"); c.width = Math.round(bmp.width * scale); c.height = Math.round(bmp.height * scale);
-  const ctx = c.getContext("2d")!; ctx.drawImage(bmp, 0, 0, c.width, c.height); bmp.close();
-  return c.toDataURL("image/jpeg", 0.82);
+  const isImageMime = file.type ? file.type.startsWith("image/") : false;
+  const isImageExt = /\.(jpe?g|png|webp|heic|bmp|gif)$/i.test(file.name);
+  if (!isImageMime && !isImageExt) {
+    throw new Error("Please choose an image file (JPEG, PNG, WebP).");
+  }
+  if (file.size > 15 * 1024 * 1024) {
+    throw new Error("Image file is too large (maximum 15 MB). Please choose a smaller image.");
+  }
+
+  try {
+    if (typeof window !== "undefined" && typeof createImageBitmap === "function") {
+      const bmp = await createImageBitmap(file);
+      const scale = Math.min(1, 1600 / Math.max(bmp.width, bmp.height));
+      const c = document.createElement("canvas");
+      c.width = Math.max(1, Math.round(bmp.width * scale));
+      c.height = Math.max(1, Math.round(bmp.height * scale));
+      const ctx = c.getContext("2d");
+      if (ctx) {
+        ctx.drawImage(bmp, 0, 0, c.width, c.height);
+        bmp.close();
+        return c.toDataURL("image/jpeg", 0.85);
+      }
+      bmp.close();
+    }
+  } catch (err) {
+    console.warn("Canvas compression failed, falling back to FileReader:", err);
+  }
+
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (typeof reader.result === "string") {
+        resolve(reader.result);
+      } else {
+        reject(new Error("Could not read image file."));
+      }
+    };
+    reader.onerror = () => reject(new Error("Failed to read image file."));
+    reader.readAsDataURL(file);
+  });
 }
 
 function StatCard({ icon: Icon, label, value }: { icon: typeof CalendarDays; label: string; value: string | number }) {
@@ -115,6 +148,41 @@ export function DashboardClient() {
   const [proofBusy, setProofBusy] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const seq = useRef(0);
+
+  const hoursInputRef = useRef<HTMLInputElement | null>(null);
+  const minutesInputRef = useRef<HTMLInputElement | null>(null);
+  const secondsInputRef = useRef<HTMLInputElement | null>(null);
+
+  function handleTimePaste(e: React.ClipboardEvent<HTMLInputElement>) {
+    const text = e.clipboardData.getData("text");
+    if (!text) return;
+    const parsedSecs = parseTimeToSeconds(text);
+    if (parsedSecs && parsedSecs > 0) {
+      e.preventDefault();
+      const h = Math.floor(parsedSecs / 3600);
+      const m = Math.floor((parsedSecs % 3600) / 60);
+      const s = parsedSecs % 60;
+      setFinishHours(h > 0 ? String(h).padStart(2, "0") : "");
+      setFinishMinutes(String(m).padStart(2, "0"));
+      setFinishSeconds(String(s).padStart(2, "0"));
+    }
+  }
+
+  const formattedTimePreview = useMemo(() => {
+    const h = parseInt(finishHours, 10) || 0;
+    const m = parseInt(finishMinutes, 10) || 0;
+    const s = parseInt(finishSeconds, 10) || 0;
+    if (!finishHours && !finishMinutes && !finishSeconds) return null;
+    if (h === 0 && m === 0 && s === 0) return null;
+
+    const parts: string[] = [];
+    if (h > 0) parts.push(`${h} hr${h > 1 ? "s" : ""}`);
+    if (m > 0 || h > 0) parts.push(`${m} min${m !== 1 ? "s" : ""}`);
+    if (s > 0 || (!h && !m)) parts.push(`${s} sec${s !== 1 ? "s" : ""}`);
+
+    const digital = `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+    return { label: parts.join(" "), digital };
+  }, [finishHours, finishMinutes, finishSeconds]);
 
   const load = useCallback(async () => {
     const id = ++seq.current;
@@ -179,35 +247,85 @@ export function DashboardClient() {
   }
 
   async function submitProof(e: FormEvent) {
-    e.preventDefault(); if (!proofRegId) return;
-    setProofBusy(true); setProofMessage(null); setProofError(null);
+    e.preventDefault();
+    if (!proofRegId) return;
+    setProofBusy(true);
+    setProofMessage(null);
+    setProofError(null);
     try {
-      const token = await getToken(); if (!token) throw new Error("Sign in again.");
+      const token = await getToken();
+      if (!token) throw new Error("Please sign in again to submit proof.");
       let url = proofUrl.trim();
-      const errors = validateProofForm({ proofUrl: url, sourceApp });
-      if (errors.proofUrl || errors.sourceApp) {
-        throw new Error(errors.proofUrl || errors.sourceApp || "Please fix the highlighted fields.");
+
+      const errors = validateProofForm({
+        proofUrl: url,
+        sourceApp,
+        finishHours,
+        finishMinutes,
+        finishSeconds,
+      });
+
+      const firstError = Object.values(errors).find(Boolean);
+      if (firstError) {
+        throw new Error(firstError);
       }
-      if (url.startsWith("data:") || url.startsWith("https://")) {
-        const up = await fetch(getApiUrl("/api/uploads/image"), { method: "POST", headers: authHeaders(token), body: JSON.stringify({ file: url, folder: "mountainrun/proofs" }) });
-        if (!up.ok) { if (!url.startsWith("https://")) throw new Error(await readApiError(up, "Image upload failed")); }
-        else url = (await up.json()).data.url;
+
+      if (url.startsWith("data:") || url.startsWith("https://") || url.startsWith("http://")) {
+        if (url.startsWith("data:")) {
+          const up = await fetch(getApiUrl("/api/uploads/image"), {
+            method: "POST",
+            headers: authHeaders(token),
+            body: JSON.stringify({ file: url, folder: "mountainrun/proofs" }),
+          });
+          if (!up.ok) {
+            if (!url.startsWith("https://")) {
+              throw new Error(await readApiError(up, "Image upload failed. Please try again."));
+            }
+          } else {
+            const upJson = await up.json();
+            url = upJson.data?.url || url;
+          }
+        }
       }
+
       const h = Math.max(0, parseInt(finishHours, 10) || 0);
       const m = Math.max(0, parseInt(finishMinutes, 10) || 0);
       const s = Math.max(0, parseInt(finishSeconds, 10) || 0);
       const totalSecs = (h * 3600) + (m * 60) + s;
-      if (totalSecs > 0 && totalSecs < 120) {
-        throw new Error("Finish time cannot be under 2 minutes. Please check your entered hours and minutes.");
+
+      if (totalSecs > 0 && totalSecs < 60) {
+        throw new Error("Finish time cannot be under 1 minute. Please check your entered time or leave it empty.");
       }
+
       const secs = totalSecs > 0 ? totalSecs : undefined;
-      const res = await fetch(getApiUrl(`/api/registrations/${proofRegId}/proof`), { method: "POST", headers: authHeaders(token), body: JSON.stringify({ activityImageUrl: url, sourceApp: sourceApp.trim() || "Other", finishTimeSeconds: secs }) });
-      if (!res.ok) throw new Error(await readApiError(res, "Proof submit failed"));
-      setProofMessage("Proof submitted. You'll get a certificate email after admin approval.");
-      setProofRegId(null); setProofUrl(""); setProofFileName(null); setFinishHours(""); setFinishMinutes(""); setFinishSeconds("");
+
+      const res = await fetch(getApiUrl(`/api/registrations/${proofRegId}/proof`), {
+        method: "POST",
+        headers: authHeaders(token),
+        body: JSON.stringify({
+          activityImageUrl: url,
+          sourceApp: sourceApp.trim() || "Strava",
+          finishTimeSeconds: secs,
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error(await readApiError(res, "Proof submission failed. Please try again."));
+      }
+
+      setProofMessage("Proof submitted successfully! You'll get a certificate email after admin approval.");
+      setProofRegId(null);
+      setProofUrl("");
+      setProofFileName(null);
+      setFinishHours("");
+      setFinishMinutes("");
+      setFinishSeconds("");
       await load();
-    } catch (err) { setProofError(err instanceof Error ? err.message : "Proof submit failed"); }
-    finally { setProofBusy(false); }
+    } catch (err) {
+      setProofError(err instanceof Error ? err.message : "Proof submit failed");
+    } finally {
+      setProofBusy(false);
+    }
   }
 
   if (!isLoaded || loading) return (
@@ -238,7 +356,6 @@ export function DashboardClient() {
   const name = dbUser?.name || user?.fullName || user?.firstName || "Runner";
   const registeredCount = registrations.filter((r) => r.status !== "CANCELLED").length;
   const proofedCount = registrations.filter((r) => r.proofStatus === "SUBMITTED" || r.proofStatus === "APPROVED").length;
-  const certCount = registrations.filter((r) => r.certificate && r.certificate.status !== "QUEUED").length;
 
   return (
     <div className="space-y-8 sm:space-y-10">
@@ -682,53 +799,120 @@ export function DashboardClient() {
                           </div>
                         ) : null}
 
-                        <div className="grid gap-3 sm:grid-cols-2">
+                        <div className="space-y-3">
                           <label className="block text-sm">
                             <span className="field-label">Source app</span>
                             <select className="input" onChange={(e) => setSourceApp(e.target.value)} required value={sourceApp}>
                               {SOURCE_APPS.map((a) => <option key={a} value={a}>{a}</option>)}
                             </select>
                           </label>
-                          <div className="block text-sm">
-                            <span className="field-label">Activity Finish Time (from GPS)</span>
-                            <div className="grid grid-cols-3 gap-2">
-                              <div>
+
+                          {/* Activity Finish Time Section */}
+                          <div className="rounded-xl border border-(--line) bg-(--panel) p-3.5 sm:p-4">
+                            <div className="flex flex-wrap items-center justify-between gap-2">
+                              <div className="flex items-center gap-1.5">
+                                <Clock className="h-4 w-4 text-(--sage)" />
+                                <span className="text-xs font-bold text-(--foreground)">Activity Finish Time</span>
+                                <span className="rounded-full bg-(--panel-soft) px-2 py-0.5 text-[0.65rem] font-medium text-(--muted)">Optional</span>
+                              </div>
+                              {finishHours || finishMinutes || finishSeconds ? (
+                                <button
+                                  type="button"
+                                  onClick={() => { setFinishHours(""); setFinishMinutes(""); setFinishSeconds(""); }}
+                                  className="text-[0.7rem] text-(--muted) hover:text-(--foreground) underline cursor-pointer"
+                                >
+                                  Clear time
+                                </button>
+                              ) : null}
+                            </div>
+
+                            <p className="mt-1 text-[0.72rem] leading-relaxed text-(--muted)">
+                              Enter the duration/moving time shown on your GPS activity screenshot (e.g. <strong>45 mins 30 secs</strong>).
+                            </p>
+
+                            {/* Digital Time Segmented Inputs */}
+                            <div className="mt-3 flex items-center justify-center gap-1.5 sm:gap-2">
+                              {/* Hours */}
+                              <div className="flex-1 max-w-[85px] text-center">
                                 <input
-                                  className="input text-center text-sm"
-                                  min="0"
-                                  max="23"
-                                  onChange={(e) => setFinishHours(e.target.value)}
+                                  ref={hoursInputRef}
+                                  aria-label="Finish Hours"
+                                  className="input text-center font-mono text-base sm:text-lg font-bold tracking-wider py-1.5 h-11"
+                                  max={23}
+                                  min={0}
+                                  onPaste={handleTimePaste}
+                                  onChange={(e) => {
+                                    const val = e.target.value.slice(0, 2);
+                                    setFinishHours(val);
+                                    if (val.length === 2 && minutesInputRef.current) {
+                                      minutesInputRef.current.focus();
+                                    }
+                                  }}
                                   placeholder="00"
                                   type="number"
                                   value={finishHours}
                                 />
-                                <span className="text-[0.65rem] text-(--muted) block text-center mt-0.5">Hours</span>
+                                <span className="text-[0.65rem] text-(--muted-soft) font-semibold block mt-1 uppercase tracking-wider">Hours</span>
                               </div>
-                              <div>
+
+                              <span className="font-mono text-lg font-bold text-(--muted-soft) pb-5">:</span>
+
+                              {/* Minutes */}
+                              <div className="flex-1 max-w-[85px] text-center">
                                 <input
-                                  className="input text-center text-sm"
-                                  min="0"
-                                  max="59"
-                                  onChange={(e) => setFinishMinutes(e.target.value)}
+                                  ref={minutesInputRef}
+                                  aria-label="Finish Minutes"
+                                  className="input text-center font-mono text-base sm:text-lg font-bold tracking-wider py-1.5 h-11"
+                                  max={59}
+                                  min={0}
+                                  onPaste={handleTimePaste}
+                                  onChange={(e) => {
+                                    const val = e.target.value.slice(0, 2);
+                                    setFinishMinutes(val);
+                                    if (val.length === 2 && secondsInputRef.current) {
+                                      secondsInputRef.current.focus();
+                                    }
+                                  }}
                                   placeholder="45"
                                   type="number"
                                   value={finishMinutes}
                                 />
-                                <span className="text-[0.65rem] text-(--muted) block text-center mt-0.5">Mins</span>
+                                <span className="text-[0.65rem] text-(--muted-soft) font-semibold block mt-1 uppercase tracking-wider">Mins</span>
                               </div>
-                              <div>
+
+                              <span className="font-mono text-lg font-bold text-(--muted-soft) pb-5">:</span>
+
+                              {/* Seconds */}
+                              <div className="flex-1 max-w-[85px] text-center">
                                 <input
-                                  className="input text-center text-sm"
-                                  min="0"
-                                  max="59"
-                                  onChange={(e) => setFinishSeconds(e.target.value)}
+                                  ref={secondsInputRef}
+                                  aria-label="Finish Seconds"
+                                  className="input text-center font-mono text-base sm:text-lg font-bold tracking-wider py-1.5 h-11"
+                                  max={59}
+                                  min={0}
+                                  onPaste={handleTimePaste}
+                                  onChange={(e) => {
+                                    const val = e.target.value.slice(0, 2);
+                                    setFinishSeconds(val);
+                                  }}
                                   placeholder="30"
                                   type="number"
                                   value={finishSeconds}
                                 />
-                                <span className="text-[0.65rem] text-(--muted) block text-center mt-0.5">Secs</span>
+                                <span className="text-[0.65rem] text-(--muted-soft) font-semibold block mt-1 uppercase tracking-wider">Secs</span>
                               </div>
                             </div>
+
+                            {/* Live summary badge */}
+                            {formattedTimePreview ? (
+                              <div className="mt-2.5 flex items-center justify-center gap-1.5 rounded-lg border border-(--sage)/20 bg-(--sage)/10 px-3 py-1.5 text-xs text-(--sage) font-medium">
+                                <span>⏱ Total time: <strong>{formattedTimePreview.label}</strong> ({formattedTimePreview.digital})</span>
+                              </div>
+                            ) : (
+                              <p className="mt-2 text-center text-[0.68rem] text-(--muted-soft)">
+                                💡 Leave empty if unsure — our team will verify your exact time directly from your uploaded screenshot.
+                              </p>
+                            )}
                           </div>
                         </div>
 
