@@ -130,20 +130,20 @@ function StatCard({
   };
 
   return (
-    <div className="group flex flex-col items-center gap-1.5 rounded-2xl border border-(--line) bg-(--panel) px-3 py-3 text-center transition-all hover:shadow-md sm:flex-row sm:items-center sm:gap-3 sm:px-5 sm:py-4 sm:text-left">
+    <div className="group flex flex-col items-center justify-center gap-1 rounded-xl border border-(--line) bg-(--panel) p-2.5 text-center transition-all hover:shadow-md sm:flex-row sm:items-center sm:gap-3 sm:rounded-2xl sm:p-4 sm:text-left">
       <span
         className={cn(
-          "flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-(--line) bg-(--panel-soft) transition-all sm:h-10 sm:w-10",
+          "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-(--line) bg-(--panel-soft) transition-all sm:h-10 sm:w-10 sm:rounded-xl",
           accentColors[accent],
         )}
       >
         <Icon className="h-4 w-4 sm:h-5 sm:w-5" strokeWidth={1.75} />
       </span>
       <div className="min-w-0">
-        <p className="text-base font-bold tracking-tight tabular-nums text-foreground sm:text-xl">
+        <p className="text-sm font-bold tracking-tight tabular-nums text-foreground sm:text-xl truncate">
           {value}
         </p>
-        <p className="text-[0.65rem] font-semibold uppercase tracking-wider text-(--muted) sm:text-xs">
+        <p className="text-[0.6rem] font-semibold uppercase tracking-wider text-(--muted) sm:text-xs truncate">
           {label}
         </p>
       </div>
@@ -165,7 +165,6 @@ function PodiumCard({
 
   const medalMeta = {
     1: {
-      title: "1st Place",
       badgeClass: "bg-amber-500/15 text-amber-600 dark:text-amber-400 border-amber-500/30",
       borderClass: "border-amber-500/40 shadow-amber-500/10",
       avatarClass: "from-amber-400 to-yellow-600 text-white ring-amber-400/40",
@@ -173,7 +172,6 @@ function PodiumCard({
       rankLabel: "Gold 🥇",
     },
     2: {
-      title: "2nd Place",
       badgeClass: "bg-slate-400/15 text-slate-600 dark:text-slate-300 border-slate-400/30",
       borderClass: "border-slate-300 dark:border-slate-700",
       avatarClass: "from-slate-400 to-slate-600 text-white ring-slate-400/30",
@@ -181,7 +179,6 @@ function PodiumCard({
       rankLabel: "Silver 🥈",
     },
     3: {
-      title: "3rd Place",
       badgeClass: "bg-amber-800/15 text-amber-800 dark:text-amber-300 border-amber-800/30",
       borderClass: "border-amber-700/30",
       avatarClass: "from-amber-700 to-amber-900 text-white ring-amber-700/30",
@@ -196,75 +193,75 @@ function PodiumCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: position * 0.1 }}
       className={cn(
-        "relative flex flex-col items-center justify-between rounded-2xl border bg-(--panel) p-4 text-center transition-all duration-300 hover:shadow-xl sm:p-5",
+        "relative flex flex-col items-center justify-between rounded-2xl border bg-(--panel) p-3.5 text-center transition-all duration-300 hover:shadow-xl sm:p-5",
         medalMeta.borderClass,
         isFirst && "sm:-translate-y-2 ring-1 ring-amber-500/30 bg-linear-to-b from-amber-500/5 via-(--panel) to-(--panel)",
       )}
     >
       {/* Crown for #1 */}
       {medalMeta.crown && (
-        <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 flex items-center gap-1 rounded-full bg-linear-to-r from-amber-500 to-yellow-400 px-2.5 py-0.5 text-[0.65rem] font-black uppercase tracking-wider text-slate-950 shadow-md">
+        <div className="absolute -top-3 left-1/2 -translate-x-1/2 flex items-center gap-1 rounded-full bg-linear-to-r from-amber-500 to-yellow-400 px-2.5 py-0.5 text-[0.6rem] sm:text-[0.65rem] font-black uppercase tracking-wider text-slate-950 shadow-md whitespace-nowrap">
           <Crown className="h-3 w-3" /> Champion
         </div>
       )}
 
       {/* Header Badge */}
-      <div className="mb-3 flex w-full items-center justify-between">
+      <div className="mb-2 flex w-full items-center justify-between">
         <span
           className={cn(
-            "rounded-full border px-2.5 py-0.5 text-[0.65rem] font-bold uppercase tracking-wider",
+            "rounded-full border px-2 py-0.5 text-[0.6rem] sm:text-[0.65rem] font-bold uppercase tracking-wider",
             medalMeta.badgeClass,
           )}
         >
           {medalMeta.rankLabel}
         </span>
         {entry.bibNumber && (
-          <span className="font-mono text-[0.65rem] font-medium text-(--muted)">
+          <span className="font-mono text-[0.6rem] sm:text-[0.65rem] font-medium text-(--muted)">
             {entry.bibNumber}
           </span>
         )}
       </div>
 
       {/* Avatar */}
-      <div className="relative my-2">
+      <div className="relative my-1.5 sm:my-2">
         <div
           className={cn(
-            "flex h-14 w-14 items-center justify-center rounded-2xl bg-linear-to-tr font-bold tracking-tight shadow-md ring-4 sm:h-16 sm:w-16 sm:text-lg",
+            "flex h-12 w-12 sm:h-16 sm:w-16 items-center justify-center rounded-2xl bg-linear-to-tr font-bold tracking-tight shadow-md ring-4 text-sm sm:text-lg",
             medalMeta.avatarClass,
           )}
         >
           {getInitials(entry.runnerName)}
         </div>
-        <span className="absolute -bottom-1.5 -right-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-(--panel) text-xs font-bold shadow border border-(--line)">
+        <span className="absolute -bottom-1 -right-1 flex h-5 w-5 sm:h-6 sm:w-6 items-center justify-center rounded-full bg-(--panel) text-[0.65rem] sm:text-xs font-bold shadow border border-(--line)">
           #{position}
         </span>
       </div>
 
       {/* Runner Info */}
-      <div className="mt-2 w-full min-w-0">
-        <h3 className="truncate text-base font-bold tracking-tight text-foreground sm:text-lg">
+      <div className="mt-1 sm:mt-2 w-full min-w-0">
+        <h3 className="truncate text-sm sm:text-base font-bold tracking-tight text-foreground">
           {entry.runnerName}
         </h3>
         {entry.city && (
-          <p className="flex items-center justify-center gap-1 text-xs text-(--muted)">
-            <MapPin className="h-3 w-3 text-(--muted-soft)" />
+          <p className="flex items-center justify-center gap-1 text-[0.7rem] sm:text-xs text-(--muted) truncate">
+            <MapPin className="h-3 w-3 shrink-0 text-(--muted-soft)" />
             {entry.city}
           </p>
         )}
       </div>
 
       {/* Time & Pace stats */}
-      <div className="mt-4 w-full rounded-xl border border-(--line) bg-(--panel-soft) p-2.5">
-        <div className="grid grid-cols-2 gap-2 text-center">
+      <div className="mt-3 w-full rounded-xl border border-(--line) bg-(--panel-soft) p-2 sm:p-2.5">
+        <div className="grid grid-cols-2 gap-1 sm:gap-2 text-center">
           <div>
-            <p className="text-[0.6rem] font-semibold uppercase tracking-wider text-(--muted)">Time</p>
-            <p className="font-mono text-xs font-bold tracking-wide text-foreground sm:text-sm">
+            <p className="text-[0.55rem] sm:text-[0.6rem] font-semibold uppercase tracking-wider text-(--muted)">Time</p>
+            <p className="font-mono text-xs sm:text-sm font-bold tracking-wide text-foreground">
               {formatTime(entry.finishTimeSeconds)}
             </p>
           </div>
           <div className="border-l border-(--line)">
-            <p className="text-[0.6rem] font-semibold uppercase tracking-wider text-(--muted)">Pace</p>
-            <p className="font-mono text-xs font-bold tracking-wide text-(--sage) sm:text-sm">
+            <p className="text-[0.55rem] sm:text-[0.6rem] font-semibold uppercase tracking-wider text-(--muted)">Pace</p>
+            <p className="font-mono text-xs sm:text-sm font-bold tracking-wide text-(--sage)">
               {formatPace(entry.finishTimeSeconds, activeDistance)}
             </p>
           </div>
@@ -290,7 +287,7 @@ export function LeaderboardClient() {
       name: e.name,
       distances: e.distance
         ? e.distance.split("/").map((d) => d.trim()).filter(Boolean)
-        : ["1.6 km", "3 km", "5 km", "10 km", "21 km"],
+        : ["1.5 km", "1.6 km", "3 km", "5 km", "10 km", "21 km"],
     })),
   );
 
@@ -307,6 +304,7 @@ export function LeaderboardClient() {
   const [participants, setParticipants] = useState<ParticipantEntry[]>([]);
   const [userRegistrations, setUserRegistrations] = useState<UserReg[]>([]);
   const [availableDistances, setAvailableDistances] = useState<string[]>([
+    "1.5 km",
     "1.6 km",
     "3 km",
     "5 km",
@@ -321,7 +319,7 @@ export function LeaderboardClient() {
     if (availableDistances.length > 0) return availableDistances;
     const currentEv = events.find((e) => e.slug === selectedSlug);
     if (currentEv?.distances?.length) return currentEv.distances;
-    return ["1.6 km", "3 km", "5 km", "10 km", "21 km"];
+    return ["1.5 km", "1.6 km", "3 km", "5 km", "10 km", "21 km"];
   }, [availableDistances, events, selectedSlug]);
 
   // Load list of events from backend
@@ -343,7 +341,7 @@ export function LeaderboardClient() {
           name: e.title,
           distances: e.distances?.length
             ? e.distances
-            : ["1.6 km", "3 km", "5 km", "10 km", "21 km"],
+            : ["1.5 km", "1.6 km", "3 km", "5 km", "10 km", "21 km"],
         }));
         setEvents(mapped);
         if (initialEventParam && mapped.some((e) => e.slug === initialEventParam)) {
@@ -476,7 +474,7 @@ export function LeaderboardClient() {
   }, [entries.length, participants.length, selectedDistance]);
 
   return (
-    <div className="min-w-0 pb-16">
+    <div className="min-w-0 pb-16 px-1 sm:px-0">
       {/* ── HERO ──────────────────────────────────────────────── */}
       <section className="relative overflow-hidden border-b border-(--line)">
         <div
@@ -491,27 +489,27 @@ export function LeaderboardClient() {
           }}
         />
 
-        <div className="container-page py-10 sm:py-12 md:py-14">
+        <div className="container-page py-8 sm:py-12 md:py-14">
           <motion.div
             className="mx-auto max-w-2xl text-center"
             initial={reduce ? false : { opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
           >
-            <div className="inline-flex items-center gap-2 rounded-full border border-(--sage)/30 bg-(--sage-soft) px-3 py-1 text-xs font-bold uppercase tracking-wider text-(--sage)">
-              <Sparkles className="h-3.5 w-3.5" /> Official Event Leaderboard
+            <div className="inline-flex items-center gap-1.5 sm:gap-2 rounded-full border border-(--sage)/30 bg-(--sage-soft) px-2.5 py-0.5 sm:px-3 sm:py-1 text-[0.65rem] sm:text-xs font-bold uppercase tracking-wider text-(--sage)">
+              <Sparkles className="h-3 w-3 sm:h-3.5 sm:w-3.5" /> Official Event Leaderboard
             </div>
-            <h1 className="mt-3 text-4xl font-black leading-[1.1] tracking-tight text-foreground sm:text-5xl">
+            <h1 className="mt-2.5 sm:mt-3 text-3xl font-black leading-[1.1] tracking-tight text-foreground sm:text-5xl">
               Verified Race Rankings
             </h1>
-            <p className="lede mx-auto mt-3 max-w-lg text-sm sm:text-base">
+            <p className="lede mx-auto mt-2.5 sm:mt-3 max-w-lg text-xs sm:text-base">
               Explore real-time standings across all distance categories. Every finish is verified with GPS tracking.
             </p>
           </motion.div>
 
           {/* Quick Stats Grid */}
           <motion.div
-            className="mx-auto mt-8 grid max-w-3xl grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4"
+            className="mx-auto mt-6 sm:mt-8 grid max-w-3xl grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-4"
             initial={reduce ? false : { opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
@@ -525,20 +523,20 @@ export function LeaderboardClient() {
       </section>
 
       {/* ── CONTROLS & FILTERS ─────────────────────────────────── */}
-      <section className="section pt-6 sm:pt-8">
+      <section className="section pt-5 sm:pt-8">
         <div className="container-page">
-          <div className="flex flex-col gap-5">
+          <div className="flex flex-col gap-4 sm:gap-5">
             {/* Event Selector & Search Bar */}
-            <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
+            <div className="grid grid-cols-1 gap-3.5 sm:gap-4 lg:grid-cols-12">
               {/* Event Select */}
               <div className="lg:col-span-6">
-                <label className="block text-xs font-bold uppercase tracking-wider text-(--muted) mb-1.5">
+                <label className="block text-[0.65rem] sm:text-xs font-bold uppercase tracking-wider text-(--muted) mb-1.5">
                   <span className="flex items-center gap-1.5">
                     <Calendar className="h-3.5 w-3.5 text-(--sage)" /> Select Event
                   </span>
                 </label>
                 <select
-                  className="input w-full font-medium"
+                  className="input w-full font-medium text-xs sm:text-sm"
                   value={selectedSlug}
                   onChange={(e) => {
                     setSelectedSlug(e.target.value);
@@ -553,22 +551,26 @@ export function LeaderboardClient() {
                 </select>
               </div>
 
-              {/* Instant Search Bar */}
+              {/* Instant Search Bar with Overlap-Free Padding */}
               <div className="lg:col-span-6">
-                <label className="block text-xs font-bold uppercase tracking-wider text-(--muted) mb-1.5">
+                <label className="block text-[0.65rem] sm:text-xs font-bold uppercase tracking-wider text-(--muted) mb-1.5">
                   <span className="flex items-center gap-1.5">
                     <Search className="h-3.5 w-3.5 text-(--sage)" /> Search Runner or Bib #
                   </span>
                 </label>
-                <div className="relative">
+                <div className="relative flex items-center">
+                  <Search
+                    aria-hidden="true"
+                    className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-(--muted-soft)"
+                  />
                   <input
                     type="text"
-                    placeholder="Search by runner name, city, or bib (e.g. MR-5K-101)..."
+                    placeholder="Search runner name, city, or bib (e.g. MR-5K-101)..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="input w-full pl-9 pr-8"
+                    style={{ paddingLeft: "2.65rem", paddingRight: "2.25rem" }}
+                    className="input w-full text-xs sm:text-sm"
                   />
-                  <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-(--muted)" />
                   {searchQuery && (
                     <button
                       onClick={() => setSearchQuery("")}
@@ -581,12 +583,15 @@ export function LeaderboardClient() {
               </div>
             </div>
 
-            {/* ── DISTANCE CATEGORY PILLS (1.6 km, 5 km, 10 km, 21 km) ── */}
+            {/* ── DISTANCE CATEGORY PILLS (Swipeable on Mobile) ── */}
             <div>
-              <p className="mb-2 text-xs font-bold uppercase tracking-wider text-(--muted)">
+              <p className="mb-2 text-[0.65rem] sm:text-xs font-bold uppercase tracking-wider text-(--muted)">
                 Choose Distance Category:
               </p>
-              <div className="flex flex-wrap items-center gap-2 overflow-x-auto pb-1" style={{ WebkitOverflowScrolling: "touch" }}>
+              <div
+                className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none touch-pan-x"
+                style={{ WebkitOverflowScrolling: "touch" }}
+              >
                 {distanceOptions.map((dist) => {
                   const isSelected = selectedDistance.toLowerCase().trim() === dist.toLowerCase().trim();
                   return (
@@ -597,7 +602,7 @@ export function LeaderboardClient() {
                         setSearchQuery("");
                       }}
                       className={cn(
-                        "group relative flex items-center gap-2 rounded-xl px-4 py-2.5 text-xs font-bold transition-all sm:text-sm cursor-pointer",
+                        "group relative flex shrink-0 items-center gap-1.5 sm:gap-2 rounded-xl px-3.5 py-2 text-xs font-bold transition-all sm:px-4 sm:py-2.5 sm:text-sm cursor-pointer select-none",
                         isSelected
                           ? "bg-(--sage) text-(--on-accent) shadow-md shadow-(--sage)/20"
                           : "border border-(--line) bg-(--panel) text-(--muted) hover:border-(--sage)/40 hover:text-foreground",
@@ -606,7 +611,7 @@ export function LeaderboardClient() {
                       <Ruler className={cn("h-3.5 w-3.5", isSelected ? "text-white" : "text-(--muted-soft) group-hover:text-(--sage)")} />
                       {dist}
                       {isSelected && (
-                        <span className="rounded-full bg-white/20 px-1.5 py-0.2 text-[0.65rem] font-mono">
+                        <span className="rounded-full bg-white/20 px-1.5 py-0.2 text-[0.6rem] font-mono">
                           Active
                         </span>
                       )}
@@ -616,32 +621,32 @@ export function LeaderboardClient() {
               </div>
             </div>
 
-            {/* ── DUAL TAB TOGGLE (Verified Rankings vs Participants Roster) ── */}
-            <div className="mt-2 flex items-center justify-between border-b border-(--line) pb-3">
-              <div className="flex items-center gap-2">
+            {/* ── DUAL TAB TOGGLE (Mobile Grid Responsive) ── */}
+            <div className="mt-1 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 border-b border-(--line) pb-3">
+              <div className="grid grid-cols-2 gap-2 sm:flex sm:items-center">
                 <button
                   onClick={() => setActiveTab("verified")}
                   className={cn(
-                    "flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all sm:text-sm cursor-pointer",
+                    "flex items-center justify-center gap-1.5 sm:gap-2 rounded-xl px-3 py-2 text-[0.7rem] sm:text-sm font-bold uppercase tracking-wider transition-all cursor-pointer text-center",
                     activeTab === "verified"
-                      ? "border border-amber-500/30 bg-amber-500/10 text-amber-600 dark:text-amber-400"
-                      : "text-(--muted) hover:text-foreground",
+                      ? "border border-amber-500/30 bg-amber-500/10 text-amber-600 dark:text-amber-400 shadow-xs"
+                      : "text-(--muted) hover:text-foreground border border-transparent",
                   )}
                 >
-                  <Trophy className="h-4 w-4" />
-                  Verified Leaderboard ({entries.length})
+                  <Trophy className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
+                  <span className="truncate">Verified ({entries.length})</span>
                 </button>
                 <button
                   onClick={() => setActiveTab("participants")}
                   className={cn(
-                    "flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all sm:text-sm cursor-pointer",
+                    "flex items-center justify-center gap-1.5 sm:gap-2 rounded-xl px-3 py-2 text-[0.7rem] sm:text-sm font-bold uppercase tracking-wider transition-all cursor-pointer text-center",
                     activeTab === "participants"
-                      ? "border border-(--sage)/30 bg-(--sage-soft) text-(--sage)"
-                      : "text-(--muted) hover:text-foreground",
+                      ? "border border-(--sage)/30 bg-(--sage-soft) text-(--sage) shadow-xs"
+                      : "text-(--muted) hover:text-foreground border border-transparent",
                   )}
                 >
-                  <Users className="h-4 w-4" />
-                  Event Roster ({participants.length})
+                  <Users className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
+                  <span className="truncate">Roster ({participants.length})</span>
                 </button>
               </div>
 
@@ -653,22 +658,22 @@ export function LeaderboardClient() {
 
           {/* ── USER RECOGNITION / PERSONAL STANDING BANNER ──────── */}
           {isLoaded && isSignedIn && !loading && (
-            <div className="mt-6">
+            <div className="mt-4 sm:mt-6">
               {userStanding?.rankedEntry ? (
                 <motion.div
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="flex flex-col gap-3 rounded-2xl border border-amber-500/30 bg-amber-500/5 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5"
+                  className="flex flex-col gap-3 rounded-2xl border border-amber-500/30 bg-amber-500/5 p-3.5 sm:flex-row sm:items-center sm:justify-between sm:p-5"
                 >
                   <div className="flex items-center gap-3">
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-500 text-slate-950 font-black shadow">
+                    <span className="flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-xl bg-amber-500 text-slate-950 font-black shadow text-sm sm:text-base">
                       #{userStanding.rankedEntry.rank}
                     </span>
                     <div>
-                      <p className="text-sm font-bold text-foreground">
+                      <p className="text-xs sm:text-sm font-bold text-foreground">
                         You are ranked <span className="text-amber-500">#{userStanding.rankedEntry.rank}</span> in {selectedDistance}!
                       </p>
-                      <p className="text-xs text-(--muted)">
+                      <p className="text-[0.7rem] sm:text-xs text-(--muted)">
                         Time: <span className="font-mono font-bold text-foreground">{formatTime(userStanding.rankedEntry.finishTimeSeconds)}</span>
                         {" · "}
                         Pace: <span className="font-mono font-bold text-(--sage)">{formatPace(userStanding.rankedEntry.finishTimeSeconds, selectedDistance)}</span>
@@ -678,7 +683,7 @@ export function LeaderboardClient() {
                   </div>
                   <Link
                     href="/dashboard"
-                    className="btn btn-secondary text-xs w-fit py-2 px-3 self-end sm:self-center"
+                    className="btn btn-secondary text-xs w-full sm:w-fit py-1.5 px-3 text-center"
                   >
                     View in Dashboard
                   </Link>
@@ -687,7 +692,7 @@ export function LeaderboardClient() {
                 <motion.div
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="flex flex-col gap-2 rounded-2xl border border-(--line) bg-(--panel-soft) p-4 sm:flex-row sm:items-center sm:justify-between"
+                  className="flex flex-col gap-2 rounded-2xl border border-(--line) bg-(--panel-soft) p-3.5 sm:flex-row sm:items-center sm:justify-between sm:p-4"
                 >
                   <p className="text-xs sm:text-sm text-(--muted)">
                     You are registered for <span className="font-bold text-foreground">{userStanding.otherDistanceReg.distance}</span> in this event.
@@ -703,7 +708,7 @@ export function LeaderboardClient() {
                 <motion.div
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="flex flex-col gap-2 rounded-2xl border border-dashed border-(--line) p-4 sm:flex-row sm:items-center sm:justify-between text-xs sm:text-sm text-(--muted)"
+                  className="flex flex-col gap-2 rounded-2xl border border-dashed border-(--line) p-3.5 sm:flex-row sm:items-center sm:justify-between sm:p-4 text-xs sm:text-sm text-(--muted)"
                 >
                   <span>
                     Want to see your name on the board? Register for this event or submit your run from Dashboard.
@@ -724,33 +729,34 @@ export function LeaderboardClient() {
 
           {/* ── LOADING STATE ────────────────────────────────────── */}
           {loading ? (
-            <div className="mt-12 flex flex-col items-center justify-center rounded-2xl border border-(--line) bg-(--panel) py-16">
+            <div className="mt-10 flex flex-col items-center justify-center rounded-2xl border border-(--line) bg-(--panel) py-14">
               <div className="h-8 w-8 animate-spin rounded-full border-3 border-(--line) border-t-(--sage)" />
-              <p className="mt-4 text-sm font-medium text-(--muted)">Loading {selectedDistance} rankings...</p>
+              <p className="mt-4 text-xs sm:text-sm font-medium text-(--muted)">Loading {selectedDistance} rankings...</p>
             </div>
           ) : error ? (
-            <div className="mt-8 rounded-2xl border border-red-200 bg-red-50 p-6 text-center text-sm text-red-700">
+            <div className="mt-6 rounded-2xl border border-red-200 bg-red-50 p-5 text-center text-xs sm:text-sm text-red-700">
               {error}
             </div>
           ) : (
             <>
               {/* ── TAB 1: VERIFIED LEADERBOARD ─────────────────────── */}
               {activeTab === "verified" && (
-                <div className="mt-8 space-y-8">
+                <div className="mt-6 sm:mt-8 space-y-6 sm:space-y-8">
                   {/* TOP 3 PODIUM (Visible when no search active and at least 3 entries exist) */}
                   {!searchQuery && entries.length >= 3 && (
                     <div>
-                      <div className="mb-4 text-center">
-                        <p className="text-xs font-bold uppercase tracking-wider text-amber-500">
+                      <div className="mb-3.5 text-center">
+                        <p className="text-[0.65rem] sm:text-xs font-bold uppercase tracking-wider text-amber-500">
                           Podium Finishers
                         </p>
-                        <h2 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">
+                        <h2 className="text-lg sm:text-2xl font-bold tracking-tight text-foreground">
                           Top 3 in {selectedDistance}
                         </h2>
                       </div>
 
-                      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-5">
-                        {/* 2nd Place (Left) */}
+                      {/* Responsive Podium Grid: 1st Place on Top on Mobile, 3 cols on Desktop */}
+                      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-5">
+                        {/* 2nd Place (Desktop Left, Mobile 2nd) */}
                         {topThree.second && (
                           <div className="order-2 sm:order-1">
                             <PodiumCard
@@ -761,7 +767,7 @@ export function LeaderboardClient() {
                           </div>
                         )}
 
-                        {/* 1st Place (Center, Elevated) */}
+                        {/* 1st Place (Desktop Center Elevated, Mobile 1st) */}
                         {topThree.first && (
                           <div className="order-1 sm:order-2">
                             <PodiumCard
@@ -772,7 +778,7 @@ export function LeaderboardClient() {
                           </div>
                         )}
 
-                        {/* 3rd Place (Right) */}
+                        {/* 3rd Place (Desktop Right, Mobile 3rd) */}
                         {topThree.third && (
                           <div className="order-3 sm:order-3">
                             <PodiumCard
@@ -787,28 +793,28 @@ export function LeaderboardClient() {
                   )}
 
                   {/* FULL RANKINGS TABLE */}
-                  <div className="overflow-hidden rounded-2xl border border-(--line) bg-(--panel) shadow-sm">
-                    <div className="border-b border-(--line) bg-(--panel-soft) px-4 py-3 sm:px-6 flex items-center justify-between">
-                      <h3 className="text-sm font-bold text-foreground">
+                  <div className="overflow-hidden rounded-2xl border border-(--line) bg-(--panel) shadow-xs">
+                    <div className="border-b border-(--line) bg-(--panel-soft) px-3.5 py-3 sm:px-6 flex items-center justify-between">
+                      <h3 className="text-xs sm:text-sm font-bold text-foreground">
                         All Verified Finishers · {selectedDistance}
                       </h3>
-                      <span className="text-xs text-(--muted) font-mono">
-                        Showing {filteredEntries.length} runners
+                      <span className="text-[0.65rem] sm:text-xs text-(--muted) font-mono">
+                        {filteredEntries.length} runners
                       </span>
                     </div>
 
-                    <div className="overflow-x-auto" style={{ WebkitOverflowScrolling: "touch" }}>
-                      <table className="w-full min-w-152 text-left text-sm">
+                    <div className="overflow-x-auto touch-pan-x" style={{ WebkitOverflowScrolling: "touch" }}>
+                      <table className="w-full min-w-140 sm:min-w-152 text-left text-xs sm:text-sm">
                         <thead>
-                          <tr className="border-b border-(--line) bg-(--panel-soft)/50 text-[0.65rem] font-bold uppercase tracking-wider text-(--muted)">
-                            <th className="px-4 py-3.5">Rank</th>
-                            <th className="px-4 py-3.5">Runner</th>
-                            <th className="px-4 py-3.5">Bib #</th>
-                            <th className="px-4 py-3.5">City</th>
-                            <th className="px-4 py-3.5">Distance</th>
-                            <th className="px-4 py-3.5">Pace</th>
-                            <th className="px-4 py-3.5">Finish Time</th>
-                            <th className="px-4 py-3.5">Status</th>
+                          <tr className="border-b border-(--line) bg-(--panel-soft)/50 text-[0.6rem] sm:text-[0.65rem] font-bold uppercase tracking-wider text-(--muted)">
+                            <th className="px-3 py-3 sm:px-4 sm:py-3.5">Rank</th>
+                            <th className="px-3 py-3 sm:px-4 sm:py-3.5">Runner</th>
+                            <th className="px-3 py-3 sm:px-4 sm:py-3.5">Bib #</th>
+                            <th className="px-3 py-3 sm:px-4 sm:py-3.5">City</th>
+                            <th className="px-3 py-3 sm:px-4 sm:py-3.5">Distance</th>
+                            <th className="px-3 py-3 sm:px-4 sm:py-3.5">Pace</th>
+                            <th className="px-3 py-3 sm:px-4 sm:py-3.5">Finish Time</th>
+                            <th className="px-3 py-3 sm:px-4 sm:py-3.5">Status</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -831,22 +837,22 @@ export function LeaderboardClient() {
                                 )}
                               >
                                 {/* Rank */}
-                                <td className="px-4 py-3.5">
-                                  <div className="flex items-center gap-1.5 font-mono text-xs font-bold">
+                                <td className="px-3 py-2.5 sm:px-4 sm:py-3.5">
+                                  <div className="flex items-center gap-1 font-mono text-xs font-bold">
                                     {row.rank === 1 ? (
-                                      <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-amber-500/20 text-amber-600 dark:text-amber-400">
+                                      <span className="flex h-5 w-5 sm:h-6 sm:w-6 items-center justify-center rounded-md sm:rounded-lg bg-amber-500/20 text-amber-600 dark:text-amber-400">
                                         🥇
                                       </span>
                                     ) : row.rank === 2 ? (
-                                      <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-slate-400/20 text-slate-600 dark:text-slate-300">
+                                      <span className="flex h-5 w-5 sm:h-6 sm:w-6 items-center justify-center rounded-md sm:rounded-lg bg-slate-400/20 text-slate-600 dark:text-slate-300">
                                         🥈
                                       </span>
                                     ) : row.rank === 3 ? (
-                                      <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-amber-800/20 text-amber-800 dark:text-amber-300">
+                                      <span className="flex h-5 w-5 sm:h-6 sm:w-6 items-center justify-center rounded-md sm:rounded-lg bg-amber-800/20 text-amber-800 dark:text-amber-300">
                                         🥉
                                       </span>
                                     ) : (
-                                      <span className="w-6 text-center text-(--muted)">
+                                      <span className="w-5 sm:w-6 text-center text-(--muted)">
                                         #{row.rank}
                                       </span>
                                     )}
@@ -854,16 +860,16 @@ export function LeaderboardClient() {
                                 </td>
 
                                 {/* Runner Avatar & Name */}
-                                <td className="px-4 py-3.5">
-                                  <div className="flex items-center gap-2.5">
-                                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-(--line) bg-(--panel-soft) text-[0.65rem] font-bold text-foreground">
+                                <td className="px-3 py-2.5 sm:px-4 sm:py-3.5">
+                                  <div className="flex items-center gap-2 sm:gap-2.5">
+                                    <div className="flex h-6 w-6 sm:h-7 sm:w-7 shrink-0 items-center justify-center rounded-lg border border-(--line) bg-(--panel-soft) text-[0.6rem] sm:text-[0.65rem] font-bold text-foreground">
                                       {getInitials(row.runnerName)}
                                     </div>
                                     <div>
-                                      <p className="font-semibold text-foreground flex items-center gap-1.5">
+                                      <p className="font-semibold text-foreground flex items-center gap-1.5 text-xs sm:text-sm">
                                         {row.runnerName}
                                         {isYou && (
-                                          <span className="rounded-full bg-(--sage) px-1.5 py-0.2 text-[0.6rem] font-bold uppercase tracking-wider text-white">
+                                          <span className="rounded-full bg-(--sage) px-1.5 py-0.2 text-[0.55rem] sm:text-[0.6rem] font-bold uppercase tracking-wider text-white">
                                             You
                                           </span>
                                         )}
@@ -873,34 +879,34 @@ export function LeaderboardClient() {
                                 </td>
 
                                 {/* Bib */}
-                                <td className="px-4 py-3.5 font-mono text-xs text-(--muted)">
+                                <td className="px-3 py-2.5 sm:px-4 sm:py-3.5 font-mono text-[0.7rem] sm:text-xs text-(--muted)">
                                   {row.bibNumber || `MR-${parseKm(selectedDistance)}K-${100 + row.rank}`}
                                 </td>
 
                                 {/* City */}
-                                <td className="px-4 py-3.5 text-xs text-(--muted)">
+                                <td className="px-3 py-2.5 sm:px-4 sm:py-3.5 text-[0.7rem] sm:text-xs text-(--muted)">
                                   {row.city || "India"}
                                 </td>
 
                                 {/* Distance */}
-                                <td className="px-4 py-3.5 font-medium text-foreground text-xs">
+                                <td className="px-3 py-2.5 sm:px-4 sm:py-3.5 font-medium text-foreground text-[0.7rem] sm:text-xs">
                                   {row.distance || selectedDistance}
                                 </td>
 
                                 {/* Pace */}
-                                <td className="px-4 py-3.5 font-mono text-xs font-semibold text-(--sage)">
+                                <td className="px-3 py-2.5 sm:px-4 sm:py-3.5 font-mono text-[0.7rem] sm:text-xs font-semibold text-(--sage)">
                                   {formatPace(row.finishTimeSeconds, selectedDistance)}
                                 </td>
 
                                 {/* Time */}
-                                <td className="px-4 py-3.5 font-mono text-xs font-bold text-foreground">
+                                <td className="px-3 py-2.5 sm:px-4 sm:py-3.5 font-mono text-[0.7rem] sm:text-xs font-bold text-foreground">
                                   {formatTime(row.finishTimeSeconds)}
                                 </td>
 
                                 {/* Status */}
-                                <td className="px-4 py-3.5">
-                                  <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[0.65rem] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
-                                    <CheckCircle2 className="h-3 w-3" /> Verified
+                                <td className="px-3 py-2.5 sm:px-4 sm:py-3.5">
+                                  <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[0.6rem] sm:text-[0.65rem] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
+                                    <CheckCircle2 className="h-2.5 w-2.5 sm:h-3 sm:w-3" /> Verified
                                   </span>
                                 </td>
                               </motion.tr>
@@ -911,7 +917,7 @@ export function LeaderboardClient() {
                     </div>
 
                     {filteredEntries.length === 0 && (
-                      <div className="py-12 text-center text-sm text-(--muted)">
+                      <div className="py-10 text-center text-xs sm:text-sm text-(--muted)">
                         No runners match &ldquo;{searchQuery}&rdquo;. Try another name or bib number.
                       </div>
                     )}
@@ -921,32 +927,32 @@ export function LeaderboardClient() {
 
               {/* ── TAB 2: PARTICIPANTS ROSTER ─────────────────────── */}
               {activeTab === "participants" && (
-                <div className="mt-8 space-y-6">
-                  <div className="overflow-hidden rounded-2xl border border-(--line) bg-(--panel) shadow-sm">
-                    <div className="border-b border-(--line) bg-(--panel-soft) px-4 py-3 sm:px-6 flex items-center justify-between">
+                <div className="mt-6 sm:mt-8 space-y-6">
+                  <div className="overflow-hidden rounded-2xl border border-(--line) bg-(--panel) shadow-xs">
+                    <div className="border-b border-(--line) bg-(--panel-soft) px-3.5 py-3 sm:px-6 flex items-center justify-between">
                       <div>
-                        <h3 className="text-sm font-bold text-foreground">
+                        <h3 className="text-xs sm:text-sm font-bold text-foreground">
                           Registered Event Participants · {selectedDistance}
                         </h3>
-                        <p className="text-xs text-(--muted)">
+                        <p className="text-[0.65rem] sm:text-xs text-(--muted)">
                           All runners confirmed for this event. Verified times appear on the Leaderboard tab.
                         </p>
                       </div>
-                      <span className="text-xs text-(--muted) font-mono">
+                      <span className="text-[0.65rem] sm:text-xs text-(--muted) font-mono">
                         {filteredParticipants.length} registered
                       </span>
                     </div>
 
-                    <div className="overflow-x-auto" style={{ WebkitOverflowScrolling: "touch" }}>
-                      <table className="w-full min-w-152 text-left text-sm">
+                    <div className="overflow-x-auto touch-pan-x" style={{ WebkitOverflowScrolling: "touch" }}>
+                      <table className="w-full min-w-140 sm:min-w-152 text-left text-xs sm:text-sm">
                         <thead>
-                          <tr className="border-b border-(--line) bg-(--panel-soft)/50 text-[0.65rem] font-bold uppercase tracking-wider text-(--muted)">
-                            <th className="px-4 py-3.5">#</th>
-                            <th className="px-4 py-3.5">Runner Name</th>
-                            <th className="px-4 py-3.5">Bib Number</th>
-                            <th className="px-4 py-3.5">City</th>
-                            <th className="px-4 py-3.5">Distance</th>
-                            <th className="px-4 py-3.5">Status</th>
+                          <tr className="border-b border-(--line) bg-(--panel-soft)/50 text-[0.6rem] sm:text-[0.65rem] font-bold uppercase tracking-wider text-(--muted)">
+                            <th className="px-3 py-3 sm:px-4 sm:py-3.5">#</th>
+                            <th className="px-3 py-3 sm:px-4 sm:py-3.5">Runner Name</th>
+                            <th className="px-3 py-3 sm:px-4 sm:py-3.5">Bib Number</th>
+                            <th className="px-3 py-3 sm:px-4 sm:py-3.5">City</th>
+                            <th className="px-3 py-3 sm:px-4 sm:py-3.5">Distance</th>
+                            <th className="px-3 py-3 sm:px-4 sm:py-3.5">Status</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -963,37 +969,37 @@ export function LeaderboardClient() {
                                   isYou && "bg-(--sage-soft) ring-1 ring-(--sage)/40",
                                 )}
                               >
-                                <td className="px-4 py-3.5 font-mono text-xs text-(--muted)">
+                                <td className="px-3 py-2.5 sm:px-4 sm:py-3.5 font-mono text-[0.7rem] sm:text-xs text-(--muted)">
                                   {idx + 1}
                                 </td>
-                                <td className="px-4 py-3.5">
+                                <td className="px-3 py-2.5 sm:px-4 sm:py-3.5">
                                   <div className="flex items-center gap-2">
-                                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-(--line) bg-(--panel-soft) text-[0.65rem] font-bold text-foreground">
+                                    <div className="flex h-6 w-6 sm:h-7 sm:w-7 shrink-0 items-center justify-center rounded-lg border border-(--line) bg-(--panel-soft) text-[0.6rem] sm:text-[0.65rem] font-bold text-foreground">
                                       {getInitials(p.runnerName)}
                                     </div>
-                                    <p className="font-semibold text-foreground flex items-center gap-1.5">
+                                    <p className="font-semibold text-foreground flex items-center gap-1.5 text-xs sm:text-sm">
                                       {p.runnerName}
                                       {isYou && (
-                                        <span className="rounded-full bg-(--sage) px-1.5 py-0.2 text-[0.6rem] font-bold uppercase tracking-wider text-white">
+                                        <span className="rounded-full bg-(--sage) px-1.5 py-0.2 text-[0.55rem] sm:text-[0.6rem] font-bold uppercase tracking-wider text-white">
                                           You
                                         </span>
                                       )}
                                     </p>
                                   </div>
                                 </td>
-                                <td className="px-4 py-3.5 font-mono text-xs font-bold text-foreground">
+                                <td className="px-3 py-2.5 sm:px-4 sm:py-3.5 font-mono text-[0.7rem] sm:text-xs font-bold text-foreground">
                                   {p.bibNumber}
                                 </td>
-                                <td className="px-4 py-3.5 text-xs text-(--muted)">
+                                <td className="px-3 py-2.5 sm:px-4 sm:py-3.5 text-[0.7rem] sm:text-xs text-(--muted)">
                                   {p.city || "India"}
                                 </td>
-                                <td className="px-4 py-3.5 text-xs font-medium text-foreground">
+                                <td className="px-3 py-2.5 sm:px-4 sm:py-3.5 text-[0.7rem] sm:text-xs font-medium text-foreground">
                                   {p.distance}
                                 </td>
-                                <td className="px-4 py-3.5">
+                                <td className="px-3 py-2.5 sm:px-4 sm:py-3.5">
                                   <span
                                     className={cn(
-                                      "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[0.65rem] font-bold uppercase tracking-wider",
+                                      "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[0.6rem] sm:text-[0.65rem] font-bold uppercase tracking-wider",
                                       p.status === "Verified Finisher"
                                         ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
                                         : p.status === "Under Review"
@@ -1002,9 +1008,9 @@ export function LeaderboardClient() {
                                     )}
                                   >
                                     {p.status === "Verified Finisher" ? (
-                                      <CheckCircle2 className="h-3 w-3" />
+                                      <CheckCircle2 className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
                                     ) : (
-                                      <Clock className="h-3 w-3" />
+                                      <Clock className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
                                     )}
                                     {p.status}
                                   </span>
@@ -1017,7 +1023,7 @@ export function LeaderboardClient() {
                     </div>
 
                     {filteredParticipants.length === 0 && (
-                      <div className="py-12 text-center text-sm text-(--muted)">
+                      <div className="py-10 text-center text-xs sm:text-sm text-(--muted)">
                         No registered runners found for {selectedDistance}.
                       </div>
                     )}
