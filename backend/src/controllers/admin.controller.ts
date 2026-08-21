@@ -80,35 +80,79 @@ export async function adminMe(request: AuthenticatedRequest, response: Response)
   });
 }
 
-export async function adminOverview(_request: AuthenticatedRequest, response: Response) {
+export async function adminOverview(request: AuthenticatedRequest, response: Response) {
   await ensureDefaultEvents();
 
+  const timeRange = (typeof request.query.range === "string" ? request.query.range.toLowerCase().trim() : "all") as "today" | "3d" | "7d" | "30d" | "all";
+  const eventFilter = q(request, "eventId");
+
+  const now = new Date();
+  let sinceDate: Date | undefined = undefined;
+
+  if (timeRange === "today") {
+    sinceDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+  } else if (timeRange === "3d") {
+    sinceDate = new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000);
+  } else if (timeRange === "7d") {
+    sinceDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+  } else if (timeRange === "30d") {
+    sinceDate = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+  }
+
+  // Base filters for registrations and payments
+  const regWhere: Prisma.RegistrationWhereInput = {
+    ...(eventFilter ? { eventId: eventFilter } : {}),
+    ...(sinceDate ? { registeredAt: { gte: sinceDate } } : {}),
+  };
+
+  const paymentWhere: Prisma.PaymentWhereInput = {
+    status: "PAID",
+    ...(sinceDate ? { createdAt: { gte: sinceDate } } : {}),
+    ...(eventFilter ? { registration: { eventId: eventFilter } } : {}),
+  };
+
   const [
-    events,
-    openEvents,
-    registrations,
-    confirmedRegs,
-    pendingPayment,
-    paidPayments,
-    pendingProofs,
-    certificates,
-    medalsPending,
-    users,
+    allEventsList,
+    totalEventsCount,
+    openEventsCount,
+    totalUsersCount,
+    pendingProofsCount,
+    certificatesCount,
+    medalsPendingCount,
+    filteredRegs,
+    filteredPayments,
     recentRegs,
     recentPayments,
   ] = await Promise.all([
+    // All events with registrations & payments to calculate per-event breakdown
+    prisma.event.findMany({
+      orderBy: { createdAt: "desc" },
+      include: {
+        registrations: {
+          where: sinceDate ? { registeredAt: { gte: sinceDate } } : undefined,
+          include: {
+            payment: true,
+          },
+        },
+      },
+    }),
     prisma.event.count(),
     prisma.event.count({ where: { status: "OPEN" } }),
-    prisma.registration.count(),
-    prisma.registration.count({ where: { status: "CONFIRMED" } }),
-    prisma.registration.count({ where: { status: "PENDING_PAYMENT" } }),
-    prisma.payment.findMany({ where: { status: "PAID" }, select: { amountInPaise: true } }),
-    prisma.registration.count({ where: { proofStatus: "SUBMITTED" } }),
-    prisma.certificate.count(),
-    prisma.medalDelivery.count({ where: { status: { in: ["PENDING", "DISPATCHED"] } } }),
     prisma.user.count(),
+    prisma.registration.count({ where: { proofStatus: "SUBMITTED", ...(eventFilter ? { eventId: eventFilter } : {}) } }),
+    prisma.certificate.count({ where: eventFilter ? { registration: { eventId: eventFilter } } : undefined }),
+    prisma.medalDelivery.count({ where: { status: { in: ["PENDING", "DISPATCHED"] }, ...(eventFilter ? { registration: { eventId: eventFilter } } : {}) } }),
     prisma.registration.findMany({
-      take: 8,
+      where: regWhere,
+      select: { id: true, status: true, eventId: true },
+    }),
+    prisma.payment.findMany({
+      where: paymentWhere,
+      select: { id: true, amountInPaise: true, createdAt: true, registrationId: true },
+    }),
+    prisma.registration.findMany({
+      where: regWhere,
+      take: 10,
       orderBy: { registeredAt: "desc" },
       include: {
         user: { select: { name: true, email: true } },
@@ -117,7 +161,8 @@ export async function adminOverview(_request: AuthenticatedRequest, response: Re
       },
     }),
     prisma.payment.findMany({
-      take: 8,
+      where: eventFilter ? { registration: { eventId: eventFilter } } : undefined,
+      take: 10,
       orderBy: { createdAt: "desc" },
       include: {
         registration: {
@@ -130,23 +175,99 @@ export async function adminOverview(_request: AuthenticatedRequest, response: Re
     }),
   ]);
 
-  const revenueInPaise = paidPayments.reduce((sum, p) => sum + p.amountInPaise, 0);
+  // Overall calculations for the active scope
+  const totalRevenueInPaise = filteredPayments.reduce((acc, p) => acc + p.amountInPaise, 0);
+  const totalRegistrations = filteredRegs.length;
+  const confirmedRegs = filteredRegs.filter((r) => r.status === "CONFIRMED" || r.status === "COMPLETED").length;
+  const pendingPaymentRegs = filteredRegs.filter((r) => r.status === "PENDING_PAYMENT").length;
+  const paidCount = filteredPayments.length;
+  const avgOrderValuePaise = paidCount > 0 ? Math.round(totalRevenueInPaise / paidCount) : 0;
+  const conversionRate = totalRegistrations > 0 ? Math.round((confirmedRegs / totalRegistrations) * 100) : 0;
+
+  // Per-Event Breakdown
+  const eventBreakdown = allEventsList.map((ev) => {
+    const regs = ev.registrations;
+    const paidRegs = regs.filter((r) => r.payment?.status === "PAID" || r.status === "CONFIRMED");
+    const pendingRegs = regs.filter((r) => r.status === "PENDING_PAYMENT");
+    const eventRevenuePaise = regs.reduce((sum, r) => {
+      if (r.payment && r.payment.status === "PAID") return sum + r.payment.amountInPaise;
+      return sum;
+    }, 0);
+
+    const eventConvRate = regs.length > 0 ? Math.round((paidRegs.length / regs.length) * 100) : 0;
+    const sharePercent = totalRevenueInPaise > 0 ? Math.round((eventRevenuePaise / totalRevenueInPaise) * 100) : 0;
+
+    return {
+      eventId: ev.id,
+      slug: ev.slug,
+      title: ev.title,
+      status: ev.status,
+      priceInPaise: ev.priceInPaise,
+      totalRegistrations: regs.length,
+      paidCount: paidRegs.length,
+      pendingCount: pendingRegs.length,
+      revenueInPaise: eventRevenuePaise,
+      revenueInr: Math.round(eventRevenuePaise / 100),
+      conversionRate: eventConvRate,
+      sharePercent,
+    };
+  });
+
+  // Calculate 7-day daily revenue trend
+  const dailyTrendMap = new Map<string, { date: string; label: string; revenuePaise: number; regsCount: number; paidCount: number }>();
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
+    const key = d.toISOString().split("T")[0];
+    const label = d.toLocaleDateString("en-IN", { day: "numeric", month: "short" });
+    dailyTrendMap.set(key, { date: key, label, revenuePaise: 0, regsCount: 0, paidCount: 0 });
+  }
+
+  // Backfill daily trend from filtered payments and registrations
+  for (const pay of filteredPayments) {
+    const key = pay.createdAt.toISOString().split("T")[0];
+    if (dailyTrendMap.has(key)) {
+      const existing = dailyTrendMap.get(key)!;
+      existing.revenuePaise += pay.amountInPaise;
+      existing.paidCount += 1;
+    }
+  }
+
+  for (const reg of recentRegs) {
+    const key = reg.registeredAt.toISOString().split("T")[0];
+    if (dailyTrendMap.has(key)) {
+      const existing = dailyTrendMap.get(key)!;
+      existing.regsCount += 1;
+    }
+  }
+
+  const dailyTrend = Array.from(dailyTrendMap.values()).map((d) => ({
+    ...d,
+    revenueInr: Math.round(d.revenuePaise / 100),
+  }));
 
   response.json({
     data: {
+      timeRange,
+      eventId: eventFilter ?? null,
       stats: {
-        events,
-        openEvents,
-        registrations,
+        revenueInPaise: totalRevenueInPaise,
+        revenueInr: Math.round(totalRevenueInPaise / 100),
+        registrations: totalRegistrations,
         confirmedRegs,
-        pendingPayment,
-        revenueInPaise,
-        revenueInr: Math.round(revenueInPaise / 100),
-        pendingProofs,
-        certificates,
-        medalsPending,
-        users,
+        pendingPayment: pendingPaymentRegs,
+        paidCount,
+        avgOrderValueInr: Math.round(avgOrderValuePaise / 100),
+        conversionRate,
+        events: totalEventsCount,
+        openEvents: openEventsCount,
+        pendingProofs: pendingProofsCount,
+        certificates: certificatesCount,
+        medalsPending: medalsPendingCount,
+        users: totalUsersCount,
       },
+      eventBreakdown,
+      dailyTrend,
+      allEvents: allEventsList.map((e) => ({ id: e.id, slug: e.slug, title: e.title, status: e.status })),
       recentRegistrations: recentRegs,
       recentPayments,
     },
