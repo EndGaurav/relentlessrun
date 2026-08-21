@@ -1,17 +1,21 @@
 #!/bin/sh
-# Retry prisma migrate deploy up to 5 times with 8s delay between attempts.
-# Needed for Neon serverless Postgres which can have cold-start advisory lock timeouts.
+# Resilient database migration / schema sync for Railway & Neon / Postgres
 
-MAX=5
-i=1
-until npx prisma migrate deploy; do
-  if [ $i -ge $MAX ]; then
-    echo "ERROR: prisma migrate deploy failed after $MAX attempts." >&2
-    exit 1
-  fi
-  echo "Attempt $i failed. Retrying in 8s..."
-  i=$((i + 1))
-  sleep 8
-done
+echo "=== [Database Sync] Running Prisma migration ==="
 
-echo "Migrations applied successfully."
+# Attempt 1: Standard migrate deploy
+if npx prisma migrate deploy; then
+  echo "=== [Database Sync] Migrations applied successfully via migrate deploy ==="
+  exit 0
+fi
+
+echo "=== [Database Sync] migrate deploy encountered an issue, falling back to db push ==="
+
+# Attempt 2: Schema push fallback (handles drift/locks gracefully)
+if npx prisma db push --skip-generate; then
+  echo "=== [Database Sync] Database schema synchronized successfully via db push ==="
+  exit 0
+fi
+
+echo "=== [Database Sync] ERROR: All database sync attempts failed ===" >&2
+exit 1
