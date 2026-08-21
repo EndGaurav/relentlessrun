@@ -134,19 +134,19 @@ export function EventHero({ event, isPast }: { event: PublicEvent; isPast: boole
           </div>
         </motion.div>
 
-        {/* ─── Cinematic frame ─── */}
+        {/* ─── Cinematic poster frame ─── */}
         <motion.div
           initial={{ opacity: 0, y: 36 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.25, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="relative mx-auto mt-10 max-w-5xl sm:mt-14"
+          className="relative mx-auto mt-8 max-w-5xl sm:mt-14"
         >
-          <div className="relative overflow-hidden rounded-[1.75rem] border border-(--line) bg-(--panel) shadow-premium">
+          <div className="relative overflow-hidden rounded-2xl sm:rounded-[1.75rem] border border-(--line) bg-slate-950 shadow-premium">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={event.bannerImageUrl ?? "/images/mountain-run-hero.png"}
               alt={`${event.name} — run toward the mountains`}
-              className="aspect-[4/3] w-full object-cover sm:aspect-[16/8] lg:aspect-[21/9]"
+              className="w-full h-auto max-h-[520px] object-contain sm:object-cover aspect-[16/9] sm:aspect-[16/8] lg:aspect-[21/9]"
             />
 
             {/* golden sunrise glow */}
@@ -158,14 +158,14 @@ export function EventHero({ event, isPast }: { event: PublicEvent; isPast: boole
                   "radial-gradient(circle, rgba(240,217,135,0.75) 0%, rgba(201,162,39,0.25) 45%, transparent 70%)",
               }}
             />
-            {/* soft vignette so text stays readable */}
+            {/* soft vignette */}
             <div
               aria-hidden
-              className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-white/10"
+              className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/10"
             />
 
             {/* status badge */}
-            <span className="glass-pill absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[0.6rem] font-bold uppercase tracking-wider text-(--foreground) sm:left-5 sm:top-5 sm:text-xs">
+            <span className="glass-pill absolute left-2.5 top-2.5 sm:left-5 sm:top-5 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[0.6rem] sm:text-xs font-bold uppercase tracking-wider text-white shadow-md">
               <span className="relative flex h-2 w-2">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
@@ -173,20 +173,20 @@ export function EventHero({ event, isPast }: { event: PublicEvent; isPast: boole
               {isPast ? "Event completed" : "Open for registration"}
             </span>
 
-            {/* floating medal */}
-            <div className="absolute -bottom-4 right-2 w-28 drop-shadow-2xl sm:-bottom-6 sm:right-8 sm:w-40 lg:w-48">
+            {/* floating medal - hidden on small mobile to not block poster text */}
+            <div className="hidden sm:block absolute -bottom-4 right-2 w-28 drop-shadow-2xl sm:-bottom-6 sm:right-8 sm:w-40 lg:w-48 pointer-events-none">
               <div className="medal-float">
                 <Medal3D className="h-auto w-full" />
               </div>
             </div>
 
             {/* bottom meta */}
-            <div className="absolute inset-x-0 bottom-0 flex flex-wrap items-center gap-2 p-3 sm:gap-3 sm:p-5">
-              <span className="glass-pill inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[0.65rem] font-bold text-white sm:text-xs">
+            <div className="absolute inset-x-0 bottom-0 flex flex-wrap items-center gap-2 p-2.5 sm:gap-3 sm:p-5">
+              <span className="glass-pill inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[0.65rem] font-bold text-white sm:text-xs">
                 <CalendarDays className="h-3.5 w-3.5" />
                 {event.date}
               </span>
-              <span className="glass-pill hidden items-center gap-1.5 rounded-full px-3 py-1.5 text-[0.65rem] font-bold text-white sm:inline-flex sm:text-xs">
+              <span className="glass-pill inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[0.65rem] font-bold text-white sm:text-xs">
                 <Route className="h-3.5 w-3.5" />
                 {distances.slice(0, 3).join(" · ")}
                 {distances.length > 3 ? " +" : ""}

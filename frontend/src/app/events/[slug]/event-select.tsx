@@ -65,62 +65,8 @@ export function EventSelect({ event }: { event: PublicEvent }) {
         />
 
         <div className="mt-10 grid items-start gap-6 sm:mt-14 lg:grid-cols-[1.1fr_360px] lg:gap-8">
-          {/* Distance picker */}
-          <div>
-            <div className="rounded-3xl border border-(--line) bg-(--panel) p-5 shadow-premium sm:p-7">
-              <p className="text-[0.65rem] font-black uppercase tracking-widest text-(--muted-soft)">
-                I want to
-              </p>
-
-              {/* Activity segmented */}
-              <div className="mt-3 grid grid-cols-3 gap-2 rounded-2xl bg-(--panel-soft) p-1.5">
-                {activities.map(({ key, label, icon: Icon, active }) => {
-                  const isOn = activity === key;
-                  return (
-                    <button
-                      key={key}
-                      type="button"
-                      onClick={() => setActivity(key)}
-                      aria-pressed={isOn}
-                      className={`inline-flex items-center justify-center gap-1.5 rounded-xl border px-3 py-2.5 text-sm font-bold capitalize transition-all duration-200 ${
-                        isOn
-                          ? active
-                          : "border-transparent bg-transparent text-(--muted) hover:text-(--foreground)"
-                      }`}
-                    >
-                      <Icon className="h-4 w-4" strokeWidth={2} />
-                      {label}
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* Distance chips */}
-              <div className="mt-5 grid grid-cols-2 gap-2.5 sm:grid-cols-3">
-                {distances.map((distance) => {
-                  const km = distanceNum(distance);
-                  const t = tier(km ?? 5, activity);
-                  return (
-                    <Link
-                      key={distance}
-                      href={`/register?event=${encodeURIComponent(event.slug)}&distance=${encodeURIComponent(distance)}`}
-                      className={`group flex flex-col rounded-2xl border bg-(--panel) px-4 py-3.5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-premium ${t.chip}`}
-                    >
-                      <span className="text-lg font-black tracking-tight text-(--foreground)">
-                        {distance}
-                      </span>
-                      <span className="mt-0.5 text-[0.6rem] font-bold uppercase tracking-wider text-(--muted)">
-                        {t.label}
-                      </span>
-                    </Link>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-
-          {/* Purchase card */}
-          <div className="lg:sticky lg:top-28">
+          {/* Purchase / Payment card - appears FIRST on mobile */}
+          <div className="order-1 lg:order-2 lg:sticky lg:top-28">
             <div className="overflow-hidden rounded-3xl border border-(--gold-line) bg-(--panel) shadow-premium">
               <div className="h-1.5 w-full bg-gradient-to-r from-(--gold) via-(--sage) to-(--gold)" />
 
@@ -207,6 +153,60 @@ export function EventSelect({ event }: { event: PublicEvent }) {
                   <Sparkles className="h-3 w-3 text-(--gold-deep)" />
                   Secure UPI payment · Instant confirmation · Refund-safe
                 </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Distance picker - appears AFTER payment card on mobile */}
+          <div className="order-2 lg:order-1">
+            <div className="rounded-3xl border border-(--line) bg-(--panel) p-5 shadow-premium sm:p-7">
+              <p className="text-[0.65rem] font-black uppercase tracking-widest text-(--muted-soft)">
+                Select Distance / Category
+              </p>
+
+              {/* Activity segmented */}
+              <div className="mt-3 grid grid-cols-3 gap-2 rounded-2xl bg-(--panel-soft) p-1.5">
+                {activities.map(({ key, label, icon: Icon, active }) => {
+                  const isOn = activity === key;
+                  return (
+                    <button
+                      key={key}
+                      type="button"
+                      onClick={() => setActivity(key)}
+                      aria-pressed={isOn}
+                      className={`inline-flex items-center justify-center gap-1.5 rounded-xl border px-3 py-2.5 text-sm font-bold capitalize transition-all duration-200 cursor-pointer ${
+                        isOn
+                          ? active
+                          : "border-transparent bg-transparent text-(--muted) hover:text-(--foreground)"
+                      }`}
+                    >
+                      <Icon className="h-4 w-4" strokeWidth={2} />
+                      {label}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Distance chips */}
+              <div className="mt-5 grid grid-cols-2 gap-2.5 sm:grid-cols-3">
+                {distances.map((distance) => {
+                  const km = distanceNum(distance);
+                  const t = tier(km ?? 5, activity);
+                  return (
+                    <Link
+                      key={distance}
+                      href={`/register?event=${encodeURIComponent(event.slug)}&distance=${encodeURIComponent(distance)}`}
+                      className={`group flex flex-col rounded-2xl border bg-(--panel) px-4 py-3.5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-premium ${t.chip}`}
+                    >
+                      <span className="text-lg font-black tracking-tight text-(--foreground)">
+                        {distance}
+                      </span>
+                      <span className="mt-0.5 text-[0.6rem] font-bold uppercase tracking-wider text-(--muted)">
+                        {t.label}
+                      </span>
+                    </Link>
+                  );
+                })}
               </div>
             </div>
           </div>
