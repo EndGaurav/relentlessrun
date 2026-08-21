@@ -31,8 +31,31 @@ export const metadata: Metadata = {
 };
 
 export default function LeaderboardPage() {
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: SITE_URL,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Official Leaderboard",
+        item: `${SITE_URL}/leaderboard`,
+      },
+    ],
+  };
+
   return (
     <PageShell>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <section className="page-section">
         <div className="container-page max-w-5xl">
           <Breadcrumb

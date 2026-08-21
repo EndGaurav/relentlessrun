@@ -73,29 +73,106 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
 
   const isPast = event.status === "past";
 
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: SITE_URL,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Virtual Running Events",
+        item: `${SITE_URL}/events`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: event.name,
+        item: `${SITE_URL}/events/${slug}`,
+      },
+    ],
+  };
+
+  const sportsEventSchema = {
+    "@context": "https://schema.org",
+    "@type": "SportsEvent",
+    name: event.name,
+    description: event.description || event.highlight,
+    url: `${SITE_URL}/events/${slug}`,
+    image: event.bannerImageUrl || `${SITE_URL}/og-image.png`,
+    startDate: event.date,
+    location: {
+      "@type": "VirtualLocation",
+      url: `${SITE_URL}/events/${slug}`,
+      name: "Online / Virtual (Pan-India)",
+    },
+    organizer: {
+      "@type": "Organization",
+      name: "Mountain Run",
+      url: SITE_URL,
+      logo: `${SITE_URL}/logo-mark.svg`,
+    },
+    offers: {
+      "@type": "Offer",
+      price: event.price.replace(/[^\d]/g, ""),
+      priceCurrency: "INR",
+      url: `${SITE_URL}/events/${slug}`,
+      availability: isPast ? "https://schema.org/SoldOut" : "https://schema.org/InStock",
+      validFrom: "2026-01-01",
+    },
+    eventStatus: isPast ? "https://schema.org/EventMovedOnline" : "https://schema.org/EventScheduled",
+    eventAttendanceMode: "https://schema.org/OnlineEventAttendanceMode",
+  };
+
+  const eventFaqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: `How do I participate in ${event.name}?`,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: `Register on Mountain Run, choose your distance (${event.distance}), run using any GPS tracking app (Strava, Nike, Garmin), and upload your activity screenshot to claim your medal and certificate.`,
+        },
+      },
+      {
+        "@type": "Question",
+        name: `When will I receive my finisher medal for ${event.name}?`,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Finisher medals and performance t-shirts are dispatched to your registered postal address via tracked courier within 7-10 business days after your GPS run proof is verified.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Can I run on a treadmill or outdoors?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Yes, you can run outdoors with any GPS app or on a treadmill (by uploading a clear photo of the treadmill console showing total distance and elapsed time).",
+        },
+      },
+    ],
+  };
+
   return (
     <PageShell>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "SportsEvent",
-            name: event.name,
-            description: event.description,
-            url: `${SITE_URL}/events/${slug}`,
-            startDate: event.date,
-            location: { "@type": "VirtualLocation", url: `${SITE_URL}/events/${slug}` },
-            organizer: { "@type": "Organization", name: "Mountain Run", url: SITE_URL },
-            offers: {
-              "@type": "Offer",
-              price: event.price.replace(/[^\d]/g, ""),
-              priceCurrency: "INR",
-              availability: isPast ? "https://schema.org/SoldOut" : "https://schema.org/InStock",
-            },
-            eventStatus: isPast ? "https://schema.org/EventMovedOnline" : "https://schema.org/EventScheduled",
-          }),
-        }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(sportsEventSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(eventFaqSchema) }}
       />
 
       {isPast ? (
