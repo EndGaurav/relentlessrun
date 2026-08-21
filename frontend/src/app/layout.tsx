@@ -97,24 +97,18 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#fcfbf9" },
-    { media: "(prefers-color-scheme: dark)", color: "#0a0a0c" },
-  ],
+  themeColor: "#0a0a0c",
 };
 
-/** Blocks FOUC for public site theme only (admin uses its own storage key). */
+/** Blocks FOUC and permanently enforces dark theme */
 const siteThemeInitScript = `
 (function(){
   try {
-    var k = 'mr-site-theme';
-    var t = localStorage.getItem(k);
-    if (t !== 'light' && t !== 'dark') t = 'dark';
+    localStorage.setItem('mr-site-theme', 'dark');
     var r = document.documentElement;
-    r.dataset.theme = t;
-    if (t === 'dark') r.classList.add('dark');
-    else r.classList.remove('dark');
-    r.style.colorScheme = t;
+    r.dataset.theme = 'dark';
+    r.classList.add('dark');
+    r.style.colorScheme = 'dark';
   } catch (e) {}
 })();
 `;
@@ -132,7 +126,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`dark ${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      data-theme="dark"
+      style={{ colorScheme: "dark" }}
       suppressHydrationWarning
     >
       <head>
@@ -144,7 +140,7 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: siteThemeInitScript }} />
         <StructuredData />
       </head>
-      <body className="min-h-full flex flex-col bg-[var(--background)] text-[var(--foreground)]">
+      <body className="min-h-full flex flex-col bg-(--background) text-(--foreground)">
         <ThemeProvider>
           <ClerkProvider
             publishableKey={publishableKey || undefined}
