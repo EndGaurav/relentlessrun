@@ -24,8 +24,7 @@ function ThemedSignIn() {
 
   return (
     <SignIn
-      fallbackRedirectUrl="/"
-      forceRedirectUrl="/"
+      fallbackRedirectUrl="/dashboard"
       path="/sign-in"
       routing="path"
       signUpUrl="/sign-up"
@@ -34,36 +33,36 @@ function ThemedSignIn() {
           colorPrimary: dark ? "#2dd4bf" : "#0d9488",
           colorBackground: dark ? "#121216" : "#ffffff",
           colorNeutral: dark ? "#a1a1aa" : "#64748b",
-          borderRadius: "10px",
+          borderRadius: "12px",
         },
         elements: {
           rootBox: "mx-auto w-full",
           cardBox: "w-full shadow-none",
-          card: "w-full shadow-none rounded-2xl",
+          card: "w-full shadow-none rounded-2xl border border-(--line) bg-(--panel)",
           footer: "hidden",
           formButtonPrimary: dark
-            ? "bg-teal-500 hover:bg-teal-400 text-white normal-case"
-            : "bg-slate-900 hover:bg-slate-800 text-white normal-case",
+            ? "bg-teal-500 hover:bg-teal-400 text-white font-bold normal-case h-11"
+            : "bg-slate-900 hover:bg-slate-800 text-white font-bold normal-case h-11",
           formFieldInput: dark
-            ? "bg-[#18181f] border-white/10 text-zinc-100"
-            : "bg-white border-slate-200 text-slate-900",
+            ? "bg-[#18181f] border-white/10 text-zinc-100 h-10"
+            : "bg-white border-slate-200 text-slate-900 h-10",
           formFieldError: "text-red-500 text-xs mt-1",
           formFieldErrorText: dark ? "text-red-400" : "text-red-600",
-          formFieldLabel: dark ? "text-zinc-300" : "text-slate-700",
-          headerTitle: dark ? "text-zinc-100" : "text-slate-900",
+          formFieldLabel: dark ? "text-zinc-300 font-medium" : "text-slate-700 font-medium",
+          headerTitle: dark ? "text-zinc-100 font-bold" : "text-slate-900 font-bold",
           headerSubtitle: dark ? "text-zinc-400" : "text-slate-500",
           socialButtonsBlockButton: dark
-            ? "border-white/10 bg-[#18181f] text-zinc-100 hover:bg-[#22222a]"
-            : "border-slate-200 bg-white text-slate-900 hover:bg-slate-50",
-          socialButtonsBlockButtonText: dark ? "text-zinc-300" : "text-slate-700",
+            ? "border-white/10 bg-[#18181f] text-zinc-100 hover:bg-[#22222a] h-11 font-semibold"
+            : "border-slate-200 bg-white text-slate-900 hover:bg-slate-50 h-11 font-semibold shadow-xs",
+          socialButtonsBlockButtonText: dark ? "text-zinc-200" : "text-slate-800",
           dividerLine: dark ? "bg-white/10" : "bg-slate-200",
           dividerText: dark ? "text-zinc-500" : "text-slate-400",
-          formFieldAction: "text-teal-600 dark:text-teal-400",
-          footerActionLink: "text-teal-600 dark:text-teal-400",
-          formResendCodeLink: "text-teal-600 dark:text-teal-400",
+          formFieldAction: "text-teal-600 dark:text-teal-400 font-medium",
+          footerActionLink: "text-teal-600 dark:text-teal-400 font-semibold",
+          formResendCodeLink: "text-teal-600 dark:text-teal-400 font-medium",
           alert: dark
-            ? "bg-red-900/20 border-red-800/30 text-red-300"
-            : "bg-red-50 border-red-200 text-red-700",
+            ? "bg-red-900/20 border-red-800/30 text-red-300 rounded-xl"
+            : "bg-red-50 border-red-200 text-red-700 rounded-xl",
         },
       }}
     />
