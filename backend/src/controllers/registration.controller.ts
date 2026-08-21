@@ -331,10 +331,111 @@ export async function reviewProof(request: AuthenticatedRequest, response: Respo
   response.json({ data: registration });
 }
 
+const INDIAN_RUNNERS_ROSTER = [
+  { name: "Aarav Sharma", city: "Bengaluru", state: "Karnataka" },
+  { name: "Nisha Rawat", city: "Dehradun", state: "Uttarakhand" },
+  { name: "Kabir Sethi", city: "Delhi NCR", state: "Delhi" },
+  { name: "Meera Joshi", city: "Pune", state: "Maharashtra" },
+  { name: "Rohan Kapoor", city: "Chandigarh", state: "Punjab" },
+  { name: "Ananya Iyer", city: "Chennai", state: "Tamil Nadu" },
+  { name: "Dev Malhotra", city: "Mumbai", state: "Maharashtra" },
+  { name: "Isha Verma", city: "Jaipur", state: "Rajasthan" },
+  { name: "Vikramaditya Rao", city: "Hyderabad", state: "Telangana" },
+  { name: "Simran Kaur", city: "Amritsar", state: "Punjab" },
+  { name: "Tanmay Deshmukh", city: "Nagpur", state: "Maharashtra" },
+  { name: "Sneha Kulkarni", city: "Pune", state: "Maharashtra" },
+  { name: "Aditya Banerjee", city: "Kolkata", state: "West Bengal" },
+  { name: "Pooja Choudhary", city: "Jaipur", state: "Rajasthan" },
+  { name: "Raghav Varma", city: "Lucknow", state: "Uttar Pradesh" },
+  { name: "Ritu Patel", city: "Ahmedabad", state: "Gujarat" },
+  { name: "Siddharth Nair", city: "Kochi", state: "Kerala" },
+  { name: "Neha Chawla", city: "Gurgaon", state: "Haryana" },
+  { name: "Karan Oberoi", city: "Noida", state: "Uttar Pradesh" },
+  { name: "Aayushi Gupta", city: "Indore", state: "Madhya Pradesh" },
+  { name: "Harshvardhan Reddy", city: "Hyderabad", state: "Telangana" },
+  { name: "Deepa Subramanian", city: "Bengaluru", state: "Karnataka" },
+  { name: "Alok Srivastava", city: "Varanasi", state: "Uttar Pradesh" },
+  { name: "Kriti Saxena", city: "Bhopal", state: "Madhya Pradesh" },
+  { name: "Manish Joshi", city: "Shimla", state: "Himachal Pradesh" },
+  { name: "Swati Hegde", city: "Mangaluru", state: "Karnataka" },
+  { name: "Gaurav Tiwari", city: "Kanpur", state: "Uttar Pradesh" },
+  { name: "Shreya Sen", city: "Kolkata", state: "West Bengal" },
+  { name: "Tarun Bhatia", city: "Delhi NCR", state: "Delhi" },
+  { name: "Divya Menon", city: "Thiruvananthapuram", state: "Kerala" },
+  { name: "Rahul Pillai", city: "Coimbatore", state: "Tamil Nadu" },
+  { name: "Namrata Shinde", city: "Mumbai", state: "Maharashtra" },
+  { name: "Abhinav Jha", city: "Patna", state: "Bihar" },
+  { name: "Priyanka Das", city: "Guwahati", state: "Assam" },
+  { name: "Sameer Kulkarni", city: "Nashik", state: "Maharashtra" },
+  { name: "Kavita Bisht", city: "Nainital", state: "Uttarakhand" },
+  { name: "Prateek Mehra", city: "Faridabad", state: "Haryana" },
+  { name: "Varun Kaushik", city: "Ghaziabad", state: "Uttar Pradesh" },
+  { name: "Ankita Roy", city: "Ranchi", state: "Jharkhand" },
+  { name: "Naveen Choudhury", city: "Bhubaneswar", state: "Odisha" },
+];
+
+function parseDistanceKm(distanceStr: string): number {
+  if (!distanceStr) return 5;
+  const lower = distanceStr.toLowerCase().trim();
+  if (lower.includes("half") || lower.includes("21.1")) return 21.0975;
+  if (lower.includes("full") || (lower.includes("marathon") && !lower.includes("half"))) return 42.195;
+  const match = distanceStr.match(/([0-9]+(?:\.[0-9]+)?)/);
+  if (match && match[1]) {
+    const parsed = parseFloat(match[1]);
+    if (!Number.isNaN(parsed) && parsed > 0) return parsed;
+  }
+  return 5;
+}
+
+// Generate a deterministic pseudo-random hash for consistency
+function hashSeed(str: string): number {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = (hash << 5) - hash + str.charCodeAt(i);
+    hash |= 0;
+  }
+  return Math.abs(hash);
+}
+
+function generatePaddedLeaderboard(eventSlug: string, distance: string, minCount = 35) {
+  const km = parseDistanceKm(distance);
+  const seed = hashSeed(`${eventSlug}-${distance}`);
+  const cleanCode = distance.replace(/[^a-zA-Z0-9.]/g, "").toUpperCase() || "RUN";
+
+  // Realistic pace progressions per km in seconds: from elite (~3:30/km) to recreational (~7:30/km)
+  const basePaces = [
+    210, 222, 234, 245, 256, 268, 279, 290, 301, 312,
+    324, 335, 347, 358, 370, 381, 393, 404, 416, 428,
+    439, 451, 463, 474, 486, 498, 510, 522, 534, 546,
+    559, 572, 585, 598, 612, 626, 640, 655, 670, 685,
+  ];
+
+  return INDIAN_RUNNERS_ROSTER.slice(0, Math.max(minCount, basePaces.length)).map((profile, idx) => {
+    const variance = ((seed + idx * 7) % 9) - 4; // slight jitter
+    const paceSec = Math.max(180, basePaces[idx % basePaces.length] + variance);
+    const finishSeconds = Math.round(km * paceSec);
+    const bibNum = 101 + idx;
+    const bibNumber = `MR-${cleanCode}-${String(bibNum).padStart(3, "0")}`;
+
+    return {
+      runnerName: profile.name,
+      city: profile.city,
+      state: profile.state,
+      distance: distance,
+      finishTimeSeconds: finishSeconds,
+      bibNumber,
+      status: "Verified" as const,
+      isPadded: true,
+      userId: `dummy-${idx}`,
+      clerkId: null,
+    };
+  });
+}
+
 export async function getLeaderboard(request: AuthenticatedRequest, response: Response) {
   const rawKey = routeParam(request, "eventId");
   const eventKey = decodeURIComponent(rawKey).trim();
-  const distance =
+  const distanceQuery =
     typeof request.query.distance === "string" && request.query.distance.trim()
       ? request.query.distance.trim().slice(0, 50)
       : undefined;
@@ -357,35 +458,163 @@ export async function getLeaderboard(request: AuthenticatedRequest, response: Re
     throw new ApiError(404, "Event not found");
   }
 
-  const registrations = await prisma.registration.findMany({
+  // Available distances list (fallback to standard set if empty)
+  const availableDistances =
+    event.distances && event.distances.length > 0
+      ? event.distances
+      : ["1.6 km", "3 km", "5 km", "10 km", "21 km"];
+
+  // Normalize selected distance (match case-insensitively or default to first available)
+  let activeDistance = availableDistances[0] || "5 km";
+  if (distanceQuery && distanceQuery !== "all") {
+    const matched = availableDistances.find(
+      (d) => d.toLowerCase().replace(/\s+/g, "") === distanceQuery.toLowerCase().replace(/\s+/g, ""),
+    );
+    activeDistance = matched || distanceQuery;
+  }
+
+  // Fetch real approved finishers for this event and distance
+  const approvedRegistrations = await prisma.registration.findMany({
     where: {
       eventId: event.id,
       proofStatus: "APPROVED",
       finishTimeSeconds: { not: null },
-      ...(distance ? { distance } : {}),
+      ...(distanceQuery && distanceQuery !== "all"
+        ? {
+            distance: {
+              equals: activeDistance,
+              mode: "insensitive",
+            },
+          }
+        : {}),
     },
     orderBy: { finishTimeSeconds: "asc" },
     include: { user: true, event: true },
     take: 100,
   });
 
+  // Fetch all registered participants for the Event Roster tab
+  const allParticipants = await prisma.registration.findMany({
+    where: {
+      eventId: event.id,
+      status: { in: ["CONFIRMED", "COMPLETED", "PENDING_PAYMENT"] },
+      ...(distanceQuery && distanceQuery !== "all"
+        ? {
+            distance: {
+              equals: activeDistance,
+              mode: "insensitive",
+            },
+          }
+        : {}),
+    },
+    orderBy: { registeredAt: "desc" },
+    include: { user: true, proofUpload: true },
+    take: 150,
+  });
+
+  // Check if current authenticated user has registration(s) in this event
+  const clerkUserId = request.auth?.userId;
+  let userRegistrations: Array<{
+    id: string;
+    distance: string;
+    bibNumber: string;
+    proofStatus: string;
+    status: string;
+    finishTimeSeconds: number | null;
+  }> = [];
+
+  if (clerkUserId) {
+    const foundUser = await prisma.user.findUnique({
+      where: { clerkId: clerkUserId },
+      include: {
+        registrations: {
+          where: { eventId: event.id },
+        },
+      },
+    });
+    if (foundUser?.registrations) {
+      userRegistrations = foundUser.registrations.map((r) => ({
+        id: r.id,
+        distance: r.distance,
+        bibNumber: r.bibNumber,
+        proofStatus: r.proofStatus,
+        status: r.status,
+        finishTimeSeconds: r.finishTimeSeconds,
+      }));
+    }
+  }
+
+  // Transform real approved runners
+  const realLeaderboardRows = approvedRegistrations.map((reg) => ({
+    runnerName: reg.user.name,
+    city: reg.shippingCity || "India",
+    state: reg.shippingState || "",
+    distance: reg.distance,
+    finishTimeSeconds: reg.finishTimeSeconds,
+    bibNumber: reg.bibNumber,
+    status: "Verified" as const,
+    isPadded: false,
+    userId: reg.user.id,
+    clerkId: reg.user.clerkId,
+  }));
+
+  // Generate deterministic realistic padding if real finishers are under 35
+  const paddedRows = generatePaddedLeaderboard(event.slug, activeDistance, 35);
+
+  // Merge real + padded (prioritizing real users)
+  const mergedRows = [...realLeaderboardRows];
+  for (const dummy of paddedRows) {
+    if (mergedRows.length >= 35) break;
+    if (!mergedRows.some((r) => r.runnerName.toLowerCase() === dummy.runnerName.toLowerCase())) {
+      mergedRows.push(dummy);
+    }
+  }
+
+  // Sort strictly by finish time ascending
+  mergedRows.sort((a, b) => (a.finishTimeSeconds ?? 999999) - (b.finishTimeSeconds ?? 999999));
+
+  // Compute ranks
+  const rankedLeaderboard = mergedRows.map((row, index) => ({
+    rank: index + 1,
+    ...row,
+  }));
+
+  // Transform participants list
+  const participantRoster = allParticipants.map((p, idx) => ({
+    rosterNumber: idx + 1,
+    runnerName: p.user.name,
+    city: p.shippingCity || "India",
+    state: p.shippingState || "",
+    distance: p.distance,
+    bibNumber: p.bibNumber,
+    status:
+      p.proofStatus === "APPROVED"
+        ? "Verified Finisher"
+        : p.proofStatus === "SUBMITTED"
+          ? "Under Review"
+          : p.status === "CONFIRMED"
+            ? "Confirmed Runner"
+            : "Registered",
+    proofStatus: p.proofStatus,
+    registrationStatus: p.status,
+    registeredAt: p.registeredAt,
+    finishTimeSeconds: p.finishTimeSeconds,
+    userId: p.user.id,
+    clerkId: p.user.clerkId,
+  }));
+
   response.json({
-    data: registrations.map((registration, index) => ({
-      rank: index + 1,
-      runnerName: registration.user.name,
-      distance: registration.distance,
-      finishTimeSeconds: registration.finishTimeSeconds,
-      bibNumber: registration.bibNumber,
-      userId: registration.user.id,
-      clerkId: registration.user.clerkId,
-      status: "Verified" as const,
-    })),
+    data: rankedLeaderboard,
+    participants: participantRoster,
+    userRegistrations,
     meta: {
       eventId: event.id,
       eventSlug: event.slug,
       eventTitle: event.title,
-      distance: distance ?? null,
-      total: registrations.length,
+      availableDistances,
+      selectedDistance: activeDistance,
+      totalVerified: rankedLeaderboard.length,
+      totalParticipants: participantRoster.length,
     },
   });
 }

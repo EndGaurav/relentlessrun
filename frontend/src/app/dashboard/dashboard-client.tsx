@@ -4,7 +4,7 @@ import { useAuth, useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { authHeaders, getApiUrl, readApiError } from "../../lib/api";
-import { CalendarDays, Target, ArrowUpRight, Users, Medal, Eye, Clock, IndianRupee, AlertCircle, RefreshCw, Gift, Award, Shirt } from "lucide-react";
+import { CalendarDays, Target, ArrowUpRight, Users, Medal, Eye, Clock, IndianRupee, AlertCircle, RefreshCw, Gift, Award, Shirt, Trophy } from "lucide-react";
 import { parseTimeToSeconds, validateProofForm } from "../../lib/validation";
 
 type Registration = {
@@ -723,6 +723,12 @@ export function DashboardClient() {
                         <Clock className="h-3 w-3" /> Under review
                       </span>
                     ) : null}
+                    <Link
+                      className="btn btn-secondary h-8 px-3 text-xs"
+                      href={`/leaderboard?event=${reg.event.slug}&distance=${encodeURIComponent(reg.distance)}`}
+                    >
+                      Leaderboard <Trophy className="h-3 w-3" />
+                    </Link>
                     {reg.certificate && reg.certificate.status !== "QUEUED" ? (
                       <Link className="btn btn-secondary h-8 px-3 text-xs" href={`/certificates/${reg.certificate.certificateNumber}`}>
                         Certificate <ArrowUpRight className="h-3 w-3" />
