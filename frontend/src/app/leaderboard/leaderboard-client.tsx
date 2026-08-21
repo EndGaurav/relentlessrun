@@ -87,9 +87,11 @@ function formatTime(seconds: number | null | undefined): string {
   const h = Math.floor(seconds / 3600);
   const m = Math.floor((seconds % 3600) / 60);
   const s = Math.floor(seconds % 60);
-  const mm = String(m).padStart(2, "0");
-  const ss = String(s).padStart(2, "0");
-  return h > 0 ? `${String(h).padStart(2, "0")}:${mm}:${ss}` : `${mm}:${ss}`;
+  
+  if (h > 0) {
+    return `${h}h ${m}m ${String(s).padStart(2, "0")}s`;
+  }
+  return `${m}m ${String(s).padStart(2, "0")}s`;
 }
 
 function formatPace(seconds: number | null | undefined, distanceStr: string): string {
@@ -99,7 +101,7 @@ function formatPace(seconds: number | null | undefined, distanceStr: string): st
   const paceSec = Math.round(seconds / km);
   const m = Math.floor(paceSec / 60);
   const s = Math.floor(paceSec % 60);
-  return `${m}:${String(s).padStart(2, "0")} /km`;
+  return `${m}m ${String(s).padStart(2, "0")}s /km`;
 }
 
 function getInitials(name: string): string {

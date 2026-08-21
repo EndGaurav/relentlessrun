@@ -397,22 +397,35 @@ function hashSeed(str: string): number {
   return Math.abs(hash);
 }
 
+function getBasePacesForDistance(km: number): number[] {
+  // Base pace in seconds per km scaled realistically by race distance
+  // Sprints (1.5k - 3k) are faster (~3:20 to 7:20/km), while 20k - 30k are endurance paces (~4:30 to 8:40/km)
+  let startPace = 215; // ~3:35/km for 5k
+  if (km <= 2) startPace = 200; // ~3:20/km
+  else if (km <= 3) startPace = 210; // ~3:30/km
+  else if (km <= 5) startPace = 225; // ~3:45/km
+  else if (km <= 10) startPace = 245; // ~4:05/km
+  else if (km <= 15) startPace = 265; // ~4:25/km
+  else if (km <= 21.1) startPace = 275; // ~4:35/km
+  else if (km <= 25) startPace = 285; // ~4:45/km
+  else startPace = 295; // ~4:55/km for 30k+
+
+  // Progressive distribution from Rank 1 to Rank 35+
+  return Array.from({ length: 40 }, (_, i) => {
+    const spread = Math.round(startPace + Math.pow(i, 1.35) * 2.8);
+    return spread;
+  });
+}
+
 function generatePaddedLeaderboard(eventSlug: string, distance: string, minCount = 35) {
   const km = parseDistanceKm(distance);
   const seed = hashSeed(`${eventSlug}-${distance}`);
   const cleanCode = distance.replace(/[^a-zA-Z0-9.]/g, "").toUpperCase() || "RUN";
-
-  // Realistic pace progressions per km in seconds: from elite (~3:30/km) to recreational (~7:30/km)
-  const basePaces = [
-    210, 222, 234, 245, 256, 268, 279, 290, 301, 312,
-    324, 335, 347, 358, 370, 381, 393, 404, 416, 428,
-    439, 451, 463, 474, 486, 498, 510, 522, 534, 546,
-    559, 572, 585, 598, 612, 626, 640, 655, 670, 685,
-  ];
+  const basePaces = getBasePacesForDistance(km);
 
   return INDIAN_RUNNERS_ROSTER.slice(0, Math.max(minCount, basePaces.length)).map((profile, idx) => {
-    const variance = ((seed + idx * 7) % 9) - 4; // slight jitter
-    const paceSec = Math.max(180, basePaces[idx % basePaces.length] + variance);
+    const variance = ((seed + idx * 7) % 7) - 3;
+    const paceSec = Math.max(190, basePaces[idx % basePaces.length] + variance);
     const finishSeconds = Math.round(km * paceSec);
     const bibNum = 101 + idx;
     const bibNumber = `MR-${cleanCode}-${String(bibNum).padStart(3, "0")}`;
@@ -462,7 +475,7 @@ export async function getLeaderboard(request: AuthenticatedRequest, response: Re
   const availableDistances =
     event.distances && event.distances.length > 0
       ? event.distances
-      : ["1.6 km", "3 km", "5 km", "10 km", "21 km"];
+      : ["1.5 km", "1.6 km", "3 km", "5 km", "10 km", "15 km", "20 km", "25 km", "30 km"];
 
   // Normalize selected distance (match case-insensitively or default to first available)
   let activeDistance = availableDistances[0] || "5 km";
@@ -472,6 +485,9 @@ export async function getLeaderboard(request: AuthenticatedRequest, response: Re
     );
     activeDistance = matched || distanceQuery;
   }
+
+  const activeKm = parseDistanceKm(activeDistance);
+  const minRealisticSeconds = Math.round(activeKm * 150); // Min ~2:30/km world record pace
 
   // Fetch real approved finishers for this event and distance
   const approvedRegistrations = await prisma.registration.findMany({
@@ -544,19 +560,35 @@ export async function getLeaderboard(request: AuthenticatedRequest, response: Re
     }
   }
 
-  // Transform real approved runners
-  const realLeaderboardRows = approvedRegistrations.map((reg) => ({
-    runnerName: reg.user.name,
-    city: reg.shippingCity || "India",
-    state: reg.shippingState || "",
-    distance: reg.distance,
-    finishTimeSeconds: reg.finishTimeSeconds,
-    bibNumber: reg.bibNumber,
-    status: "Verified" as const,
-    isPadded: false,
-    userId: reg.user.id,
-    clerkId: reg.user.clerkId,
-  }));
+  // Transform real approved runners with time sanity verification
+  const realLeaderboardRows = approvedRegistrations.map((reg) => {
+    let validSeconds = reg.finishTimeSeconds;
+    if (validSeconds != null && validSeconds > 0) {
+      if (validSeconds < minRealisticSeconds) {
+        // If user entered minutes (e.g., 45 instead of 2700) or hours (e.g., 2 instead of 7200)
+        if (validSeconds * 60 >= minRealisticSeconds && validSeconds * 60 <= activeKm * 600) {
+          validSeconds = validSeconds * 60;
+        } else if (validSeconds * 3600 >= minRealisticSeconds && validSeconds * 3600 <= activeKm * 600) {
+          validSeconds = validSeconds * 3600;
+        } else {
+          validSeconds = Math.round(activeKm * 290);
+        }
+      }
+    }
+
+    return {
+      runnerName: reg.user.name,
+      city: reg.shippingCity || "India",
+      state: reg.shippingState || "",
+      distance: reg.distance,
+      finishTimeSeconds: validSeconds,
+      bibNumber: reg.bibNumber,
+      status: "Verified" as const,
+      isPadded: false,
+      userId: reg.user.id,
+      clerkId: reg.user.clerkId,
+    };
+  });
 
   // Generate deterministic realistic padding if real finishers are under 35
   const paddedRows = generatePaddedLeaderboard(event.slug, activeDistance, 35);
