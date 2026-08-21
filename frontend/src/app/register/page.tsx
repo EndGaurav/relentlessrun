@@ -36,7 +36,7 @@ export default function RegisterPage() {
       </section>
 
       <section className="pb-6 sm:pb-8 md:pb-10">
-        <div className="container-page max-w-3xl">
+        <div className="container-page max-w-5xl">
           <PaymentRegistrationForm />
         </div>
       </section>

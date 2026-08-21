@@ -16,6 +16,7 @@ import {
   Info,
   Calendar,
   Gift,
+  Award,
 } from "lucide-react";
 import { BrandText } from "./brand-text";
 import { ThemeToggle } from "./theme-toggle";
@@ -133,48 +134,86 @@ function ProfileDropdown() {
             transition={{ duration: 0.15, ease: [0.22, 1, 0.36, 1] }}
             className="absolute right-0 top-[calc(100%+10px)] z-50 w-56 origin-top-right overflow-hidden rounded-2xl border border-(--line-strong) bg-(--panel) shadow-[0_20px_40px_-8px_rgba(0,0,0,0.12),0_8px_16px_-4px_rgba(0,0,0,0.06)] dark:shadow-[0_20px_40px_-8px_rgba(0,0,0,0.5)]"
           >
-            <div className="h-[3px] w-full bg-gradient-to-r from-(--sage) via-emerald-400 to-indigo-500" />
-            <div className="flex justify-center pt-4 pb-2">
-              <img
-                alt="Mountain Run"
-                className="h-8 w-8 opacity-70"
-                height={32}
-                src="/logo-mark.svg"
-                width={32}
-              />
+            <div className="h-[3px] w-full bg-linear-to-r from-(--sage) via-amber-400 to-indigo-500" />
+            
+            {/* Athlete Header */}
+            <div className="border-b border-(--line) bg-(--panel-soft)/50 px-4 py-3">
+              <div className="flex items-center justify-between">
+                <p className="truncate text-xs font-bold text-(--foreground)">{name}</p>
+                <span className="rounded-full bg-amber-500/15 border border-amber-500/30 px-1.5 py-0.2 text-[0.55rem] font-black uppercase tracking-wider text-amber-600 dark:text-amber-400">
+                  Athlete 🥇
+                </span>
+              </div>
+              <p className="truncate text-[0.65rem] text-(--muted) font-mono mt-0.5">
+                {user?.primaryEmailAddress?.emailAddress}
+              </p>
             </div>
-            <div className="px-2 pb-2">
+
+            <div className="p-1.5 space-y-0.5">
               <Link
                 href="/dashboard"
                 onClick={() => setOpen(false)}
-                className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-(--foreground) transition-all duration-200 hover:bg-(--sage-soft) hover:text-(--sage)"
+                className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-semibold text-(--foreground) transition-all duration-200 hover:bg-(--sage-soft) hover:text-(--sage)"
               >
-                <LayoutDashboard className="h-4 w-4 text-(--muted)" />
-                My dashboard
+                <LayoutDashboard className="h-4 w-4 text-(--sage)" />
+                My Runner Portal
+              </Link>
+              <Link
+                href="/dashboard"
+                onClick={() => setOpen(false)}
+                className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-semibold text-(--foreground) transition-all duration-200 hover:bg-amber-500/10 hover:text-amber-600 dark:hover:text-amber-400"
+              >
+                <Trophy className="h-4 w-4 text-amber-500" />
+                Trophy Cabinet & Medals
+              </Link>
+              <Link
+                href="/leaderboard"
+                onClick={() => setOpen(false)}
+                className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-semibold text-(--foreground) transition-all duration-200 hover:bg-(--sage-soft) hover:text-(--sage)"
+              >
+                <Award className="h-4 w-4 text-(--sage)" />
+                Official Leaderboard
+              </Link>
+              <Link
+                href="/refer"
+                onClick={() => setOpen(false)}
+                className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-semibold text-(--foreground) transition-all duration-200 hover:bg-indigo-500/10 hover:text-indigo-600 dark:hover:text-indigo-400"
+              >
+                <Gift className="h-4 w-4 text-indigo-500" />
+                Refer & Earn Free Entry
               </Link>
               <Link
                 href="/events"
                 onClick={() => setOpen(false)}
-                className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-(--foreground) transition-all duration-200 hover:bg-(--sage-soft) hover:text-(--sage)"
+                className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-semibold text-(--foreground) transition-all duration-200 hover:bg-(--sage-soft) hover:text-(--sage)"
               >
                 <CalendarDays className="h-4 w-4 text-(--muted)" />
-                Browse events
+                Browse Open Races
               </Link>
+
+              <div className="my-1 border-t border-(--line)" />
+
               <button
                 type="button"
-                onClick={() => { setOpen(false); openUserProfile(); }}
-                className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-(--foreground) transition-all duration-200 hover:bg-(--sage-soft) hover:text-(--sage)"
+                onClick={() => {
+                  setOpen(false);
+                  openUserProfile();
+                }}
+                className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-medium text-(--muted) transition-all duration-200 hover:bg-(--panel-soft) hover:text-(--foreground) cursor-pointer"
               >
-                <Settings className="h-4 w-4 text-(--muted)" />
-                Manage account
+                <Settings className="h-3.5 w-3.5" />
+                Account Settings
               </button>
-              <div className="my-1.5 mx-2 h-px bg-gradient-to-r from-transparent via-(--line) to-transparent" />
+
               <button
                 type="button"
-                onClick={() => { setOpen(false); void signOut(() => router.push("/")); }}
-                className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-(--danger) transition-all duration-200 hover:bg-(--danger)/8"
+                onClick={() => {
+                  setOpen(false);
+                  void signOut(() => router.push("/"));
+                }}
+                className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-semibold text-(--danger) transition-all duration-200 hover:bg-(--danger)/8 cursor-pointer"
               >
-                <LogOut className="h-4 w-4" />
+                <LogOut className="h-3.5 w-3.5" />
                 Sign out
               </button>
             </div>

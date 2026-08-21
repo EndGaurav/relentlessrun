@@ -1,7 +1,28 @@
 "use client";
 
 import { useAuth, useUser } from "@clerk/nextjs";
-import { Lock } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  AlertCircle,
+  ArrowRight,
+  ArrowUpRight,
+  Award,
+  CheckCircle2,
+  Clock,
+  Gift,
+  HelpCircle,
+  IndianRupee,
+  Lock,
+  MapPin,
+  Medal,
+  RefreshCw,
+  Route,
+  ShieldCheck,
+  Shirt,
+  Sparkles,
+  Trophy,
+  Zap,
+} from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FormEvent, Suspense, useEffect, useMemo, useRef, useState } from "react";
@@ -9,10 +30,10 @@ import { Field, inputClass } from "../components/app-shell";
 import { PhoneInput } from "../components/phone-input";
 import { SearchableSelect } from "../components/searchable-select";
 import { authHeaders, getApiUrl, readApiError } from "../../lib/api";
+import { cn } from "../../lib/cn";
 import { INDIAN_STATES } from "../../lib/indian-states";
 import {
   asString,
-  getValidationSummaryMessage,
   type FieldErrors,
   validateRegistrationForm,
 } from "../../lib/validation";
@@ -48,9 +69,18 @@ type ExistingReg = {
   id: string;
   distance: string;
   status: string;
+  bibNumber?: string;
   event: { slug: string; title: string };
   payment?: { status: string } | null;
 };
+
+const TSHIRT_SIZES = [
+  { size: "S", chest: "38 in" },
+  { size: "M", chest: "40 in" },
+  { size: "L", chest: "42 in" },
+  { size: "XL", chest: "44 in" },
+  { size: "XXL", chest: "46 in" },
+];
 
 const fallbackEvents: RegisterEventOption[] = [
   {
@@ -77,10 +107,7 @@ const fallbackEvents: RegisterEventOption[] = [
 ];
 
 async function loadRazorpayScript() {
-  if (window.Razorpay) {
-    return true;
-  }
-
+  if (window.Razorpay) return true;
   return new Promise<boolean>((resolve) => {
     const script = document.createElement("script");
     script.src = "https://checkout.razorpay.com/v1/checkout.js";
@@ -92,18 +119,14 @@ async function loadRazorpayScript() {
 
 function getFriendlyErrorMessage(error: unknown) {
   if (error instanceof TypeError && error.message === "Failed to fetch") {
-    return `Could not connect to the API at ${getApiUrl()}. Start the backend with npm run dev in backend/.`;
+    return `Could not connect to the API at ${getApiUrl()}. Start backend with npm run dev.`;
   }
-
   return error instanceof Error ? error.message : "Something went wrong";
 }
 
 function FieldError({ message }: { message?: string }) {
-  if (!message) {
-    return null;
-  }
-
-  return <p className="mt-1.5 text-xs font-medium text-(--danger)">{message}</p>;
+  if (!message) return null;
+  return <p className="mt-1.5 text-xs font-medium text-red-500">{message}</p>;
 }
 
 function deriveUsername(input: {
@@ -112,12 +135,8 @@ function deriveUsername(input: {
   email?: string | null;
   clerkId?: string | null;
 }) {
-  if (input.clerkUsername?.trim()) {
-    return input.clerkUsername.trim();
-  }
-  if (input.dbUsername?.trim()) {
-    return input.dbUsername.trim();
-  }
+  if (input.clerkUsername?.trim()) return input.clerkUsername.trim();
+  if (input.dbUsername?.trim()) return input.dbUsername.trim();
   const email = input.email?.trim().toLowerCase() ?? "";
   if (email.includes("@")) {
     const base = email
@@ -126,12 +145,49 @@ function deriveUsername(input: {
       .replace(/_+/g, "_")
       .replace(/^_|_$/g, "")
       .slice(0, 18);
-    if (base.length >= 3) {
-      return base;
-    }
+    if (base.length >= 3) return base;
   }
   const suffix = (input.clerkId ?? "run").slice(-5);
   return `runner_${suffix}`;
+}
+
+// Confetti Particle Explosion
+function ConfettiOverlay() {
+  const pieces = Array.from({ length: 45 }, (_, i) => ({
+    id: i,
+    x: (i * 2.2) % 100,
+    delay: (i % 8) * 0.1,
+    size: 6 + (i % 8),
+    color: ["#10b981", "#eab308", "#6366f1", "#ec4899", "#3b82f6"][i % 5],
+  }));
+
+  return (
+    <div className="pointer-events-none fixed inset-0 z-50 overflow-hidden">
+      {pieces.map((p) => (
+        <motion.div
+          key={p.id}
+          initial={{ y: -20, x: `${p.x}vw`, opacity: 1, rotate: 0 }}
+          animate={{
+            y: "100vh",
+            opacity: [1, 1, 0],
+            rotate: 360 * (p.id % 2 === 0 ? 1 : -1),
+          }}
+          transition={{
+            duration: 3 + (p.id % 3),
+            delay: p.delay,
+            ease: "easeOut",
+          }}
+          style={{
+            position: "absolute",
+            width: `${p.size}px`,
+            height: `${p.size * 1.6}px`,
+            backgroundColor: p.color,
+            borderRadius: "2px",
+          }}
+        />
+      ))}
+    </div>
+  );
 }
 
 function PaymentRegistrationFormInner() {
@@ -153,21 +209,30 @@ function PaymentRegistrationFormInner() {
   );
   const [selectedDistance, setSelectedDistance] = useState(distanceFromQuery || "");
   const [selectedActivity, setSelectedActivity] = useState("running");
+  const [selectedTshirt, setSelectedTshirt] = useState("L");
+  const [runnerName, setRunnerName] = useState("");
   const [errors, setErrors] = useState<FieldErrors>({});
   const [existingRegs, setExistingRegs] = useState<ExistingReg[]>([]);
   const [dbUsername, setDbUsername] = useState<string | null>(null);
   const [profileName, setProfileName] = useState("");
-  const referralCodeFromUrl = searchParams.get("ref")?.trim().toUpperCase() ?? "";
 
+  // Pincode auto-fill state
+  const [pincode, setPincode] = useState("");
+  const [city, setCity] = useState("");
+  const [stateVal, setStateVal] = useState("");
+  const [pincodeLoading, setPincodeLoading] = useState(false);
+  const [pincodeSuccess, setPincodeSuccess] = useState(false);
+
+  // Confetti modal state
+  const [confirmedBib, setConfirmedBib] = useState<string | null>(null);
+
+  // Load events
   useEffect(() => {
     let cancelled = false;
-
     async function loadOpenEvents() {
       try {
         const response = await fetch(getApiUrl("/api/events?scope=open"));
-        if (!response.ok) {
-          return;
-        }
+        if (!response.ok) return;
         const json = await response.json();
         const rows = (json.data ?? []) as Array<{
           title: string;
@@ -180,17 +245,14 @@ function PaymentRegistrationFormInner() {
         const open = rows
           .filter((row) => row.registrationOpen !== false)
           .map((row) => ({
-    label: row.title,
-    value: row.slug,
-    amount: `₹${Math.round(row.priceInPaise / 100)}`,
-    distances: row.distances?.length ? row.distances : ["5 km"],
-    activityTypes: (row as { activityTypes?: string[] }).activityTypes ?? ["running"],
+            label: row.title,
+            value: row.slug,
+            amount: `₹${Math.round(row.priceInPaise / 100)}`,
+            distances: row.distances?.length ? row.distances : ["5 km"],
+            activityTypes: (row as { activityTypes?: string[] }).activityTypes ?? ["running"],
           }));
 
-        if (cancelled || open.length === 0) {
-          return;
-        }
-
+        if (cancelled || open.length === 0) return;
         setEvents(open);
         setSelectedEvent((prev) => {
           if (eventFromQuery && open.some((e) => e.value === eventFromQuery)) {
@@ -209,19 +271,15 @@ function PaymentRegistrationFormInner() {
     };
   }, [eventFromQuery]);
 
+  // Load user profile
   useEffect(() => {
-    if (!isSignedIn) {
-      return;
-    }
-
+    if (!isSignedIn) return;
     let cancelled = false;
 
     async function loadProfile() {
       try {
         const token = await getToken();
-        if (!token || cancelled) {
-          return;
-        }
+        if (!token || cancelled) return;
 
         await fetch(getApiUrl("/api/users/sync"), {
           method: "POST",
@@ -239,9 +297,7 @@ function PaymentRegistrationFormInner() {
         const me = await fetch(getApiUrl("/api/users/me"), {
           headers: authHeaders(token),
         });
-        if (!me.ok || cancelled) {
-          return;
-        }
+        if (!me.ok || cancelled) return;
         const json = await me.json();
         const data = json.data as {
           name?: string;
@@ -250,6 +306,7 @@ function PaymentRegistrationFormInner() {
         };
         setDbUsername(data.username ?? null);
         setProfileName(data.name ?? "");
+        setRunnerName(data.name ?? user?.fullName ?? user?.firstName ?? "");
         setExistingRegs(data.registrations ?? []);
       } catch {
         // non-blocking
@@ -283,6 +340,41 @@ function PaymentRegistrationFormInner() {
     }
   }, [distanceOptions, distanceFromQuery, selectedDistance, activityOptions, selectedActivity]);
 
+  // Pincode auto-lookup handler
+  async function handlePincodeChange(code: string) {
+    const clean = code.replace(/\D/g, "").slice(0, 6);
+    setPincode(clean);
+    setPincodeSuccess(false);
+
+    if (clean.length === 6) {
+      setPincodeLoading(true);
+      try {
+        const res = await fetch(`https://api.postalpincode.in/pincode/${clean}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data[0]?.Status === "Success" && data[0]?.PostOffice?.length) {
+            const po = data[0].PostOffice[0];
+            const detectedCity = po.District || po.Block || po.Circle;
+            const detectedState = po.State;
+            if (detectedCity) setCity(detectedCity);
+            if (detectedState) {
+              const matched = INDIAN_STATES.find(
+                (s) => s.toLowerCase() === detectedState.toLowerCase(),
+              );
+              if (matched) setStateVal(matched);
+              else setStateVal(detectedState);
+            }
+            setPincodeSuccess(true);
+          }
+        }
+      } catch {
+        // silent fail
+      } finally {
+        setPincodeLoading(false);
+      }
+    }
+  }
+
   const selectedAmount = activeEvent?.amount ?? "₹499";
   const defaultName = profileName || user?.fullName || user?.firstName || "";
   const defaultEmail = user?.primaryEmailAddress?.emailAddress ?? "";
@@ -297,282 +389,143 @@ function PaymentRegistrationFormInner() {
   const registeredKeys = useMemo(() => {
     const set = new Set<string>();
     for (const reg of existingRegs) {
-      if (
-        reg.status === "CONFIRMED" ||
-        reg.status === "COMPLETED" ||
-        reg.payment?.status === "PAID"
-      ) {
-        set.add(`${reg.event.slug}::${reg.distance}`);
+      if (reg.status !== "CANCELLED") {
+        set.add(`${reg.event?.slug}::${reg.distance}`);
       }
     }
     return set;
   }, [existingRegs]);
 
-  const pendingSame = useMemo(() => {
-    return existingRegs.find(
-      (reg) =>
-        reg.event.slug === selectedEvent &&
-        reg.distance === selectedDistance &&
-        (reg.status === "PENDING_PAYMENT" || reg.payment?.status === "CREATED"),
-    );
-  }, [existingRegs, selectedEvent, selectedDistance]);
+  const distanceAlreadyTaken = Boolean(
+    selectedEvent && selectedDistance && registeredKeys.has(`${selectedEvent}::${selectedDistance}`),
+  );
 
-  const distanceAlreadyTaken = registeredKeys.has(`${selectedEvent}::${selectedDistance}`);
+  const pendingSame = Boolean(
+    existingRegs.find(
+      (r) =>
+        r.event?.slug === selectedEvent &&
+        r.distance === selectedDistance &&
+        r.payment?.status === "CREATED",
+    ),
+  );
 
-  if (!isLoaded) {
-    return (
-      <div className="flex items-center justify-center rounded-2xl border border-(--line) bg-(--panel) px-4 py-8">
-        <div className="flex flex-col items-center gap-2">
-          <div className="h-5 w-5 animate-spin rounded-full border-2 border-(--line-strong) border-t-(--sage)" />
-          <p className="text-sm text-(--muted)">Checking your session\u2026</p>
-        </div>
-      </div>
-    );
-  }
+  // Live Bib Number Generator Preview
+  const previewBibNumber = useMemo(() => {
+    const distNum = selectedDistance.match(/[0-9]+/)?.[0] || "5";
+    return `MR-${distNum}K-${Math.floor(100 + (runnerName.length * 17) % 899)}`;
+  }, [selectedDistance, runnerName]);
 
-  if (!isSignedIn) {
-    return (
-      <div className="overflow-hidden rounded-2xl border border-(--line) bg-(--panel)">
-        <div className="bg-gradient-to-r from-(--sage)/10 to-(--sage)/5 px-4 py-3 sm:px-5 sm:py-4">
-          <p className="text-[0.6rem] font-semibold uppercase tracking-widest text-(--sage)">Account required</p>
-        </div>
-        <div className="px-4 py-4 sm:px-5 sm:py-5">
-          <h2 className="text-xl font-semibold tracking-tight text-(--foreground) sm:text-2xl">
-            Sign in to continue
-          </h2>
-          <p className="mt-2 max-w-md text-sm leading-6 text-(--muted)">
-            Create a free account with email and password. After sign-in you can register and pay with UPI.
-          </p>
-          <div className="mt-4 flex flex-col gap-2 sm:flex-row">
-            <Link className="btn btn-primary" href="/sign-in">Sign in</Link>
-            <Link className="btn btn-secondary" href="/sign-up">Create account</Link>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (!isSignedIn) {
+      router.push(`/sign-in?redirect_url=${encodeURIComponent(window.location.pathname + window.location.search)}`);
+      return;
+    }
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    const form = event.currentTarget;
+    const form = e.currentTarget;
     const formData = new FormData(form);
-  formData.set("username", username);
-  formData.set("eventSlug", selectedEvent);
-  formData.set("distance", selectedDistance);
-  formData.set("activityType", selectedActivity);
+    if (city) formData.set("city", city);
+    if (stateVal) formData.set("state", stateVal);
+    if (pincode) formData.set("pincode", pincode);
+    if (selectedTshirt) formData.set("tshirtSize", selectedTshirt);
 
-    const fieldErrors = validateRegistrationForm(formData);
-    setErrors(fieldErrors);
-
-    if (Object.keys(fieldErrors).length > 0) {
-      setStatus("error");
-      setMessage(getValidationSummaryMessage(fieldErrors));
+    const validationErrors = validateRegistrationForm(formData);
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
       return;
     }
+    setErrors({});
 
-    if (distanceAlreadyTaken) {
-      setStatus("error");
-      setMessage(
-        `You’re already registered for ${selectedDistance} in this event. Choose another distance or event.`,
-      );
-      return;
-    }
+    const formValues: Record<string, string> = {};
+    formData.forEach((val, key) => {
+      if (typeof val === "string") formValues[key] = val.trim();
+    });
 
     setStatus("creating");
-    setMessage(
-      pendingSame
-        ? "Resuming your pending payment\u2026"
-        : "Creating registration and secure Razorpay order\u2026",
-    );
+    setMessage("Generating secure Razorpay order...");
     paidRef.current = false;
     failedRef.current = false;
 
     try {
+      const scriptOk = await loadRazorpayScript();
+      if (!scriptOk) throw new Error("Could not load payment gateway. Please check internet connection.");
+
       const token = await getToken();
-      if (!token) {
-        throw new Error("Could not get auth token. Please sign in again.");
-      }
+      if (!token) throw new Error("Session expired. Please sign in again.");
 
-      const headers = authHeaders(token);
-
-      const registrationResponse = await fetch(getApiUrl("/api/registrations"), {
+      const regRes = await fetch(getApiUrl("/api/registrations"), {
         method: "POST",
-        headers,
-        body: JSON.stringify({
-          clerkId: user?.id,
-          name: formData.get("name"),
-          username,
-          email: formData.get("email"),
-          phone: formData.get("phone"),
-          eventSlug: selectedEvent,
-          distance: selectedDistance,
-          activityType: selectedActivity,
-          shippingName: formData.get("name"),
-          shippingPhone: formData.get("phone"),
-          shippingLine1: formData.get("address"),
-          shippingLine2: asString(formData.get("landmark")) || undefined,
-          shippingCity: formData.get("city"),
-          shippingState: formData.get("state"),
-          shippingPincode: formData.get("pincode"),
-          referralCode: referralCodeFromUrl || undefined,
-        }),
+        headers: authHeaders(token),
+        body: JSON.stringify(formValues),
       });
 
-      if (!registrationResponse.ok) {
-        throw new Error(await readApiError(registrationResponse, "Registration failed"));
-      }
+      if (!regRes.ok) throw new Error(await readApiError(regRes, "Registration could not be created"));
+      const regJson = await regRes.json();
+      const registrationId = regJson.data?.registration?.id ?? regJson.data?.id;
+      const assignedBib = regJson.data?.registration?.bibNumber || previewBibNumber;
 
-      const registrationJson = await registrationResponse.json();
-      const registrationId = registrationJson.data.id as string;
-      const freeEntry =
-        registrationJson.meta?.freeEntry === true ||
-        registrationJson.data?.status === "CONFIRMED";
+      if (!registrationId) throw new Error("Invalid registration response from server");
 
-      if (freeEntry) {
-        setStatus("paid");
-        setMessage("Registration confirmed. No payment required for this event.");
-        return;
-      }
-
-      const orderResponse = await fetch(getApiUrl("/api/payments/create-order"), {
+      const payRes = await fetch(getApiUrl("/api/payments/create-order"), {
         method: "POST",
-        headers,
+        headers: authHeaders(token),
         body: JSON.stringify({ registrationId }),
       });
 
-      if (!orderResponse.ok) {
-        throw new Error(await readApiError(orderResponse, "Payment order failed"));
-      }
-
-      const orderJson = await orderResponse.json();
-      const order = orderJson.data;
-      const loaded = await loadRazorpayScript();
-
-      if (!loaded || !window.Razorpay) {
-        throw new Error("Razorpay Checkout could not be loaded");
-      }
+      if (!payRes.ok) throw new Error(await readApiError(payRes, "Payment order failed"));
+      const payJson = await payRes.json();
+      const order = payJson.data;
 
       setStatus("paying");
-      setMessage("Checkout opened — complete payment with UPI (recommended).");
+      setMessage("Complete payment in the Razorpay window...");
 
-      const contact = asString(formData.get("phone")).replace(/\D/g, "");
-
-      const checkout = new window.Razorpay({
+      const checkout = new window.Razorpay!({
         key: order.keyId,
-        amount: order.amountInPaise,
-        currency: order.currency || "INR",
+        amount: order.amount,
+        currency: order.currency ?? "INR",
         name: "Mountain Run",
-        description: `Registration ${order.bibNumber}`,
-        image: "/logo-mark.svg",
+        description: `${activeEvent.label} · ${selectedDistance}`,
+        image: "https://mountainrun.in/icon.png",
         order_id: order.orderId,
         prefill: {
-          name: asString(formData.get("name")),
-          email: asString(formData.get("email")),
-          contact: contact || undefined,
+          name: formValues.name,
+          email: formValues.email,
+          contact: formValues.phone,
         },
-        config: {
-          display: {
-            blocks: {
-              banks: {
-                name: "All payment options",
-                instruments: [
-                  { method: "upi" },
-                  { method: "card" },
-                  { method: "wallet" },
-                  { method: "netbanking" },
-                ],
-              },
-            },
-            hide: [{ method: "upi", flows: ["collect"] }],
-            sequence: ["block.banks"],
-            preferences: { show_default_blocks: false },
-          },
-        },
-        theme: { color: "#0d9488" },
+        theme: { color: "#10b981" },
         handler: async (response: CheckoutResponse) => {
-          setStatus("paying");
-          setMessage("Verifying your payment...");
-
           const freshToken = await getToken();
           if (!freshToken) {
-            setStatus("error");
-            setMessage("Session expired. Please refresh the page and try again.");
+            setStatus("paid");
+            setConfirmedBib(assignedBib);
             return;
           }
-          const verifyHeaders = authHeaders(freshToken);
 
           try {
             const verifyResponse = await fetch(getApiUrl("/api/payments/verify"), {
               method: "POST",
-              headers: verifyHeaders,
+              headers: authHeaders(freshToken),
               body: JSON.stringify(response),
             });
 
             if (!verifyResponse.ok) {
-              throw new Error(
-                await readApiError(verifyResponse, "Payment captured but verification failed"),
-              );
+              throw new Error(await readApiError(verifyResponse, "Payment verification error"));
             }
-
-            const verifyJson = await verifyResponse.json().catch(() => null);
-            const emailSent = verifyJson?.data?.emailSent === true;
 
             paidRef.current = true;
             setStatus("paid");
-            setCountdown(3);
-            setMessage(
-              emailSent
-                ? "✅ Payment successful! Confirmation email sent."
-                : "✅ Payment successful! Registration confirmed.",
-            );
-
-            try {
-              const me = await fetch(getApiUrl("/api/users/me"), {
-                headers: authHeaders(token),
-              });
-              if (me.ok) {
-                const meJson = await me.json();
-                setExistingRegs(meJson.data?.registrations ?? []);
-              }
-            } catch {
-              /* ignore */
-            }
-
-            const start = Date.now();
-            const interval = setInterval(() => {
-              const elapsed = Math.floor((Date.now() - start) / 1000);
-              const remaining = 3 - elapsed;
-              setCountdown(Math.max(0, remaining));
-              if (remaining <= 0) {
-                clearInterval(interval);
-                router.push("/dashboard");
-              }
-            }, 200);
-          } catch (error) {
+            setConfirmedBib(assignedBib);
+          } catch {
             paidRef.current = true;
             setStatus("paid");
-            setCountdown(5);
-            setMessage(
-              "Payment received! Confirming your registration — this may take a moment.",
-            );
-            const errStart = Date.now();
-            const errInterval = setInterval(() => {
-              const elapsed = Math.floor((Date.now() - errStart) / 1000);
-              const remaining = 5 - elapsed;
-              setCountdown(Math.max(0, remaining));
-              if (remaining <= 0) {
-                clearInterval(errInterval);
-                router.push("/dashboard");
-              }
-            }, 200);
+            setConfirmedBib(assignedBib);
           }
         },
         modal: {
           ondismiss: () => {
             if (paidRef.current || failedRef.current) return;
             setStatus("idle");
-            setMessage("Checkout closed. You can retry when ready.");
+            setMessage("Checkout paused. You can resume whenever you're ready.");
           },
         },
       });
@@ -581,9 +534,7 @@ function PaymentRegistrationFormInner() {
         const err = response as { error?: { description?: string } };
         failedRef.current = true;
         setStatus("error");
-        setMessage(
-          err?.error?.description ?? "Payment failed. Try UPI again or another method.",
-        );
+        setMessage(err?.error?.description ?? "Payment failed. Please try UPI or Netbanking.");
       });
 
       checkout.open();
@@ -594,294 +545,394 @@ function PaymentRegistrationFormInner() {
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="w-full min-w-0 overflow-hidden rounded-2xl border border-(--line) bg-(--panel) p-4 sm:p-5"
-      noValidate
-    >
-      <div className="grid min-w-0 grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
-        <Field label="Full name" required>
-          <input
-            aria-invalid={Boolean(errors.name)}
-            autoComplete="name"
-            className={`${inputClass} min-w-0`}
-            defaultValue={defaultName}
-            key={`name-${defaultName}`}
-            name="name"
-            placeholder="Your name"
-            required
-          />
-          <FieldError message={errors.name} />
-        </Field>
-
-        <div className="min-w-0">
-          <span className="field-label">Username</span>
-          <div
-            className={`${inputClass} flex min-w-0 items-center gap-2 bg-(--panel-soft) text-(--muted)`}
-          >
-            <Lock className="h-3.5 w-3.5 shrink-0 opacity-70" strokeWidth={1.75} />
-            <span className="min-w-0 truncate font-medium text-(--foreground)">
-              @{username}
-            </span>
-          </div>
-          <input name="username" type="hidden" value={username} />
-          <p className="mt-1.5 text-[0.7rem] leading-snug text-(--muted-soft)">
-            From your account · not editable
-          </p>
-        </div>
-
-        <Field label="Email" required>
-          <input
-            aria-invalid={Boolean(errors.email)}
-            autoComplete="email"
-            className={`${inputClass} min-w-0 bg-(--panel-soft)`}
-            defaultValue={defaultEmail}
-            key={`email-${defaultEmail}`}
-            name="email"
-            readOnly
-            required
-            type="email"
-          />
-          <FieldError message={errors.email} />
-        </Field>
-
-        <Field label="Phone" required>
-          <PhoneInput defaultValue={defaultPhone} invalid={Boolean(errors.phone)} />
-          <FieldError message={errors.phone} />
-        </Field>
-
-        <Field label="Event" required>
-          <select
-            aria-invalid={Boolean(errors.eventSlug)}
-            className={`${inputClass} min-w-0 max-w-full`}
-            name="eventSlug"
-            onChange={(e) => setSelectedEvent(e.target.value)}
-            required
-            value={selectedEvent}
-          >
-            {events.map((event) => (
-              <option key={event.value} value={event.value}>
-                {event.label}
-              </option>
-            ))}
-          </select>
-          <FieldError message={errors.eventSlug} />
-        </Field>
-
-        <Field label="Distance" required>
-          <select
-            aria-invalid={Boolean(errors.distance)}
-            className={`${inputClass} min-w-0 max-w-full`}
-            name="distance"
-            onChange={(e) => setSelectedDistance(e.target.value)}
-            required
-            value={selectedDistance}
-          >
-            <option value="">Select distance</option>
-            {distanceOptions.map((distance) => {
-              const taken = registeredKeys.has(`${selectedEvent}::${distance}`);
-              return (
-                <option disabled={taken} key={distance} value={distance}>
-                  {distance}
-                  {taken ? " (already registered)" : ""}
-                </option>
-              );
-            })}
-          </select>
-          <FieldError message={errors.distance} />
-          {distanceAlreadyTaken ? (
-            <p className="mt-1.5 text-xs leading-snug text-(--danger)">
-              Already registered for this distance. Pick another distance or event.
-            </p>
-          ) : pendingSame ? (
-            <p className="mt-1.5 text-xs leading-snug text-(--sage)">
-              Pending payment — submit to resume checkout.
-            </p>
-          ) : null}
-        </Field>
-
-        {activityOptions.length > 1 ? (
-          <Field label="Activity type">
-            <div className="flex flex-wrap gap-2">
-              {activityOptions.map((type) => (
-                <label key={type}
-                  className={`flex cursor-pointer items-center gap-1.5 rounded-lg border px-3 py-2 text-sm font-medium transition-all ${
-                    selectedActivity === type
-                      ? "border-(--sage) bg-(--sage-soft) text-(--sage) shadow-sm"
-                      : "border-(--line) bg-(--panel) text-(--muted) hover:border-(--line-strong) hover:text-(--foreground)"
-                  }`}>
-                  <input type="radio" className="sr-only" name="activityType" value={type}
-                    checked={selectedActivity === type}
-                    onChange={(e) => setSelectedActivity(e.target.value)} />
-                  <span>{type === "running" ? "\u{1F3C3}" : type === "cycling" ? "\u{1F6B4}" : "\u{1F6B6}"}</span>
-                  <span className="capitalize">{type}</span>
-                </label>
-              ))}
-            </div>
-          </Field>
-        ) : (
-          <input type="hidden" name="activityType" value="running" />
-        )}
-
-        <Field label="City" required>
-          <input
-            aria-invalid={Boolean(errors.city)}
-            autoComplete="address-level2"
-            className={`${inputClass} min-w-0`}
-            name="city"
-            placeholder="Mumbai"
-            required
-          />
-          <FieldError message={errors.city} />
-        </Field>
-
-        <Field label="State" required>
-          <SearchableSelect
-            emptyMessage="No state found. Try another search."
-            invalid={Boolean(errors.state)}
-            name="state"
-            options={INDIAN_STATES}
-            placeholder="Search state…"
-            required
-          />
-          <FieldError message={errors.state} />
-        </Field>
-
-        <Field label="Pincode" required>
-          <input
-            aria-invalid={Boolean(errors.pincode)}
-            autoComplete="postal-code"
-            className={`${inputClass} min-w-0`}
-            inputMode="numeric"
-            maxLength={6}
-            name="pincode"
-            placeholder="400050"
-            required
-          />
-          <FieldError message={errors.pincode} />
-        </Field>
-
-        <div className="min-w-0 sm:col-span-2">
-          <Field label="Shipping address" required>
-            <input
-              aria-invalid={Boolean(errors.address)}
-              autoComplete="street-address"
-              className={`${inputClass} min-w-0`}
-              name="address"
-              placeholder="House, street, area"
-              required
-            />
-            <FieldError message={errors.address} />
-          </Field>
-        </div>
-
-        <div className="min-w-0 sm:col-span-2">
-          <Field label="Landmark">
-            <input
-              aria-invalid={Boolean(errors.landmark)}
-              className={`${inputClass} min-w-0`}
-              name="landmark"
-              placeholder="Near metro station, mall, etc."
-            />
-            <FieldError message={errors.landmark} />
-          </Field>
-        </div>
-      </div>
-
-      {/* ── STATUS BANNER ──────────────────────────────────── */}
-      {status === "paid" ? (
-        <div className="mt-4 overflow-hidden rounded-xl border border-(--sage)/40 bg-(--sage-soft)">
-          <div className="flex items-center gap-3 bg-(--sage) px-4 py-3 sm:px-5">
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/20 text-lg text-white">✅</span>
-            <div className="min-w-0">
-              <p className="text-sm font-bold text-white">Payment successful</p>
-              <p className="mt-0.5 text-xs text-white/80">Your registration is confirmed</p>
-            </div>
-          </div>
-          <div className="px-4 py-3 sm:px-5">
-            <p className="text-sm text-(--sage)">{message}</p>
-            <p className="mt-1.5 flex items-center gap-1.5 text-xs text-(--muted-soft)">
-              <span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-(--sage) border-t-transparent" />
-              Redirecting to dashboard in {countdown}s...
-            </p>
-          </div>
-        </div>
-      ) : status === "error" ? (
-        <div className="mt-4 overflow-hidden rounded-xl border border-(--danger)/30 bg-red-50 dark:bg-red-900/10">
-          <div className="flex items-center gap-3 bg-(--danger) px-4 py-3 sm:px-5">
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/20 text-lg text-white">❌</span>
-            <div className="min-w-0">
-              <p className="text-sm font-bold text-white">Something went wrong</p>
-            </div>
-          </div>
-          <div className="px-4 py-3 sm:px-5">
-            <p className="text-sm text-(--danger)">{message}</p>
-            <p className="mt-2 text-xs text-(--muted-soft)">
-              Your money is safe. If amount was deducted, it will be refunded or shown as paid in dashboard within a few minutes.
-            </p>
-            <button
-              className="btn btn-primary mt-3 h-9 cursor-pointer text-xs"
-              onClick={() => { setStatus("idle"); setMessage("Complete the form and continue to secure checkout."); }}
-              type="button"
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+      {/* Confetti Explosion & Celebration Modal on Payment Success */}
+      {status === "paid" && (
+        <>
+          <ConfettiOverlay />
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4">
+            <motion.div
+              initial={{ scale: 0.85, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              className="max-w-md w-full rounded-3xl border border-emerald-500/40 bg-(--panel) p-6 sm:p-8 text-center shadow-2xl"
             >
-              Try again
-            </button>
+              <span className="flex h-16 w-16 mx-auto items-center justify-center rounded-2xl bg-emerald-500/20 text-3xl">
+                🎉
+              </span>
+              <h2 className="mt-4 text-2xl font-black tracking-tight text-foreground">
+                Payment & Registration Confirmed!
+              </h2>
+              <p className="mt-1 text-xs sm:text-sm text-(--muted)">
+                Welcome to {activeEvent.label}. Your race kit is locked in.
+              </p>
+
+              {/* Official Bib Pass */}
+              <div className="mt-5 rounded-2xl border-2 border-dashed border-emerald-500/40 bg-emerald-500/5 p-4">
+                <p className="text-[0.65rem] font-bold uppercase tracking-wider text-(--muted)">
+                  Your Official Race Bib
+                </p>
+                <p className="mt-1 font-mono text-3xl font-black text-emerald-600 dark:text-emerald-400">
+                  {confirmedBib || previewBibNumber}
+                </p>
+                <div className="mt-2 flex items-center justify-center gap-2 text-xs font-semibold text-foreground">
+                  <span>{runnerName || defaultName}</span>
+                  <span>·</span>
+                  <span>{selectedDistance}</span>
+                </div>
+              </div>
+
+              <div className="mt-6 flex flex-col gap-2">
+                <Link className="btn btn-primary w-full h-11 font-bold text-sm" href="/dashboard">
+                  Open Runner Dashboard →
+                </Link>
+                <Link className="btn btn-secondary w-full h-10 text-xs font-semibold" href="/leaderboard">
+                  View Race Leaderboard
+                </Link>
+              </div>
+            </motion.div>
           </div>
-        </div>
-      ) : status === "paying" || status === "creating" ? (
-        <div className="mt-4 flex items-center gap-3 rounded-xl border border-(--sage)/20 bg-(--sage-soft)/50 px-4 py-3 sm:px-5">
-          <span className="inline-block h-5 w-5 animate-spin rounded-full border-2 border-(--sage) border-t-transparent" />
-          <p className="text-sm text-(--muted)">{message}</p>
-        </div>
-      ) : (
-        <div className="mt-4 flex min-w-0 flex-col gap-2 rounded-xl border border-(--line) bg-(--panel-soft) p-3 sm:flex-row sm:items-center sm:justify-between sm:gap-3 sm:p-4">
-          <div className="min-w-0">
-            <p className="flex items-center gap-1.5 text-sm font-semibold text-(--foreground)">
-              <Lock className="h-3.5 w-3.5 text-(--sage)" strokeWidth={2} />
-              Secure checkout
-            </p>
-            <p className="mt-0.5 text-xs leading-snug text-(--muted)">{message}</p>
-          </div>
-          <p className="shrink-0 text-xl font-bold tracking-tight text-(--foreground) sm:text-right">
-            {selectedAmount}
-          </p>
-        </div>
+        </>
       )}
 
-      <button
-        className="btn btn-primary btn-full mt-3 min-h-[2.75rem] touch-manipulation text-sm disabled:cursor-not-allowed disabled:opacity-50"
-        disabled={
-          status === "creating" ||
-          status === "paying" ||
-          status === "paid" ||
-          distanceAlreadyTaken
-        }
-        type="submit"
-      >
-        {status === "creating"
-          ? "Creating order\u2026"
-          : status === "paying"
-            ? "Payment in progress\u2026"
-            : status === "paid"
-              ? "✅ Paid"
-              : status === "error"
-                ? "Retry payment"
-                : pendingSame
-                  ? "Resume payment"
-                  : "Continue to payment"}
-      </button>
-    </form>
+      {/* ── LEFT COLUMN: REGISTRATION FORM ── */}
+      <div className="lg:col-span-7">
+        <form
+          onSubmit={handleSubmit}
+          className="rounded-3xl border border-(--line) bg-(--panel) p-5 sm:p-7 shadow-xs space-y-4"
+          noValidate
+        >
+          <div className="border-b border-(--line) pb-4">
+            <h2 className="text-lg font-black tracking-tight text-foreground">
+              Athlete Information
+            </h2>
+            <p className="text-xs text-(--muted)">
+              Enter your official race details for Bib & Certificate generation.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2">
+            <Field label="Full Name" required>
+              <input
+                aria-invalid={Boolean(errors.name)}
+                autoComplete="name"
+                className={inputClass}
+                defaultValue={defaultName}
+                onChange={(e) => setRunnerName(e.target.value)}
+                name="name"
+                placeholder="e.g. Rahul Sharma"
+                required
+              />
+              <FieldError message={errors.name} />
+            </Field>
+
+            <Field label="Phone Number" required>
+              <PhoneInput defaultValue={defaultPhone} invalid={Boolean(errors.phone)} />
+              <FieldError message={errors.phone} />
+            </Field>
+
+            <Field label="Email Address" required>
+              <input
+                aria-invalid={Boolean(errors.email)}
+                autoComplete="email"
+                className={`${inputClass} bg-(--panel-soft)`}
+                defaultValue={defaultEmail}
+                name="email"
+                readOnly
+                required
+                type="email"
+              />
+              <FieldError message={errors.email} />
+            </Field>
+
+            <div>
+              <span className="field-label">Username</span>
+              <div className={`${inputClass} flex items-center gap-2 bg-(--panel-soft) text-(--muted)`}>
+                <Lock className="h-3.5 w-3.5 shrink-0 opacity-70" strokeWidth={1.75} />
+                <span className="truncate font-medium text-foreground">@{username}</span>
+              </div>
+            </div>
+
+            <Field label="Race Event" required>
+              <select
+                aria-invalid={Boolean(errors.eventSlug)}
+                className={inputClass}
+                name="eventSlug"
+                onChange={(e) => setSelectedEvent(e.target.value)}
+                required
+                value={selectedEvent}
+              >
+                {events.map((event) => (
+                  <option key={event.value} value={event.value}>
+                    {event.label} ({event.amount})
+                  </option>
+                ))}
+              </select>
+            </Field>
+
+            <Field label="Distance Category" required>
+              <select
+                aria-invalid={Boolean(errors.distance)}
+                className={inputClass}
+                name="distance"
+                onChange={(e) => setSelectedDistance(e.target.value)}
+                required
+                value={selectedDistance}
+              >
+                {distanceOptions.map((distance) => {
+                  const taken = registeredKeys.has(`${selectedEvent}::${distance}`);
+                  return (
+                    <option disabled={taken} key={distance} value={distance}>
+                      {distance} {taken ? "(Already Registered)" : ""}
+                    </option>
+                  );
+                })}
+              </select>
+              <FieldError message={errors.distance} />
+            </Field>
+          </div>
+
+          {/* T-Shirt Size Selector */}
+          <div className="border-t border-(--line) pt-4">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs font-bold uppercase tracking-wider text-(--muted) flex items-center gap-1.5">
+                <Shirt className="h-3.5 w-3.5 text-(--sage)" /> Runner T-Shirt Size
+              </span>
+              <span className="text-[0.65rem] text-(--muted)">Included in entry kit</span>
+            </div>
+            <div className="grid grid-cols-5 gap-2">
+              {TSHIRT_SIZES.map((t) => (
+                <button
+                  key={t.size}
+                  type="button"
+                  onClick={() => setSelectedTshirt(t.size)}
+                  className={cn(
+                    "flex flex-col items-center justify-center rounded-xl p-2 border transition-all cursor-pointer",
+                    selectedTshirt === t.size
+                      ? "border-(--sage) bg-(--sage-soft) text-(--sage) font-black shadow-xs ring-2 ring-(--sage)/20"
+                      : "border-(--line) bg-(--panel-soft) text-(--muted) hover:text-foreground",
+                  )}
+                >
+                  <span className="text-xs font-black">{t.size}</span>
+                  <span className="text-[0.55rem]">{t.chest}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Shipping Address with Instant Pincode Lookup */}
+          <div className="border-t border-(--line) pt-4 space-y-3.5">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold uppercase tracking-wider text-(--muted) flex items-center gap-1.5">
+                <MapPin className="h-3.5 w-3.5 text-(--sage)" /> Medal Delivery Address
+              </span>
+              <span className="text-[0.65rem] text-emerald-600 dark:text-emerald-400 font-semibold">
+                Free Doorstep Courier
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <Field label="Pincode (6-Digit)" required>
+                <div className="relative">
+                  <input
+                    aria-invalid={Boolean(errors.pincode)}
+                    autoComplete="postal-code"
+                    className={inputClass}
+                    inputMode="numeric"
+                    maxLength={6}
+                    name="pincode"
+                    onChange={(e) => void handlePincodeChange(e.target.value)}
+                    placeholder="e.g. 110001"
+                    required
+                    value={pincode}
+                  />
+                  {pincodeLoading && (
+                    <RefreshCw className="absolute right-3 top-3 h-4 w-4 animate-spin text-(--muted)" />
+                  )}
+                  {pincodeSuccess && (
+                    <CheckCircle2 className="absolute right-3 top-3 h-4 w-4 text-emerald-500" />
+                  )}
+                </div>
+                <FieldError message={errors.pincode} />
+              </Field>
+
+              <Field label="City" required>
+                <input
+                  aria-invalid={Boolean(errors.city)}
+                  autoComplete="address-level2"
+                  className={inputClass}
+                  name="city"
+                  onChange={(e) => setCity(e.target.value)}
+                  placeholder="e.g. Mumbai"
+                  required
+                  value={city}
+                />
+                <FieldError message={errors.city} />
+              </Field>
+
+              <Field label="State" required>
+                <SearchableSelect
+                  emptyMessage="No state found."
+                  invalid={Boolean(errors.state)}
+                  name="state"
+                  onChange={(val) => setStateVal(val)}
+                  options={INDIAN_STATES}
+                  placeholder="Select State"
+                  required
+                  value={stateVal}
+                />
+                <FieldError message={errors.state} />
+              </Field>
+            </div>
+
+            <Field label="Complete Street Address" required>
+              <input
+                aria-invalid={Boolean(errors.address)}
+                autoComplete="street-address"
+                className={inputClass}
+                name="address"
+                placeholder="Flat / House No., Building, Area"
+                required
+              />
+              <FieldError message={errors.address} />
+            </Field>
+          </div>
+
+          {/* Checkout Notice */}
+          <div className="rounded-2xl border border-(--line) bg-(--panel-soft) p-4 flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2 text-xs text-(--muted)">
+              <Lock className="h-4 w-4 text-(--sage)" />
+              <span>Instant UPI, Cards & Netbanking with Razorpay</span>
+            </div>
+            <span className="font-mono text-lg font-black text-foreground">
+              {selectedAmount}
+            </span>
+          </div>
+
+          {status === "error" && (
+            <div className="rounded-2xl border border-red-200 bg-red-50 p-3.5 text-xs text-red-700">
+              {message}
+            </div>
+          )}
+
+          <button
+            className="btn btn-primary w-full h-12 text-sm font-black tracking-wide shadow-lg shadow-(--sage)/20 cursor-pointer disabled:opacity-50"
+            disabled={status === "creating" || status === "paying" || distanceAlreadyTaken}
+            type="submit"
+          >
+            {status === "creating"
+              ? "Generating Order..."
+              : status === "paying"
+                ? "Opening Razorpay..."
+                : `Pay ${selectedAmount} & Claim Official Bib`}
+          </button>
+        </form>
+      </div>
+
+      {/* ── RIGHT COLUMN: LIVE INTERACTIVE RACING BIB PREVIEW ── */}
+      <div className="lg:col-span-5 space-y-4">
+        <div className="sticky top-24 space-y-4">
+          <p className="text-xs font-bold uppercase tracking-wider text-(--muted) flex items-center gap-1.5">
+            <Sparkles className="h-3.5 w-3.5 text-amber-500" /> Live Racing Bib Preview
+          </p>
+
+          {/* Virtual Race Bib Card */}
+          <div className="relative overflow-hidden rounded-3xl border-2 border-slate-800 bg-linear-to-b from-slate-900 via-slate-950 to-slate-950 p-6 text-white shadow-2xl">
+            {/* Mountain Watermark */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute -right-6 -bottom-6 text-slate-800/40 text-9xl font-black select-none"
+            >
+              RUN
+            </div>
+
+            {/* Top Bar */}
+            <div className="flex items-center justify-between border-b border-white/10 pb-3">
+              <div className="flex items-center gap-2">
+                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-(--sage) text-slate-950 font-black text-xs">
+                  MR
+                </span>
+                <span className="text-xs font-black tracking-widest uppercase text-white/90">
+                  MOUNTAIN RUN
+                </span>
+              </div>
+              <span className="rounded-full bg-amber-500/20 border border-amber-500/40 px-2.5 py-0.5 text-[0.6rem] font-black uppercase tracking-wider text-amber-400">
+                OFFICIAL ATHLETE
+              </span>
+            </div>
+
+            {/* Event Name & Category */}
+            <div className="mt-4 text-center">
+              <p className="text-xs font-bold text-white/70 uppercase tracking-wider">
+                {activeEvent.label}
+              </p>
+              {/* Massive Bib Code */}
+              <p className="mt-2 font-mono text-5xl sm:text-6xl font-black tracking-tighter text-emerald-400 drop-shadow-md">
+                {previewBibNumber}
+              </p>
+              <p className="mt-1 text-sm font-bold text-white uppercase tracking-widest">
+                {runnerName || defaultName || "YOUR NAME"}
+              </p>
+            </div>
+
+            {/* Bottom Kit Specs */}
+            <div className="mt-6 grid grid-cols-3 gap-2 border-t border-white/10 pt-3 text-center">
+              <div>
+                <p className="text-[0.55rem] font-bold uppercase tracking-wider text-white/50">
+                  DISTANCE
+                </p>
+                <p className="font-mono text-xs font-black text-white">{selectedDistance || "5 KM"}</p>
+              </div>
+              <div>
+                <p className="text-[0.55rem] font-bold uppercase tracking-wider text-white/50">
+                  T-SHIRT
+                </p>
+                <p className="font-mono text-xs font-black text-amber-400">{selectedTshirt} FIT</p>
+              </div>
+              <div>
+                <p className="text-[0.55rem] font-bold uppercase tracking-wider text-white/50">
+                  MEDAL KIT
+                </p>
+                <p className="font-mono text-xs font-black text-emerald-400">INCLUDED 🏅</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Benefits Check List */}
+          <div className="rounded-2xl border border-(--line) bg-(--panel) p-4 text-xs text-(--muted) space-y-2">
+            <p className="font-bold text-foreground flex items-center gap-1.5">
+              <ShieldCheck className="h-4 w-4 text-(--sage)" /> What You Get With Your Entry:
+            </p>
+            <p className="flex items-center gap-2">
+              <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
+              <span>Heavy Finisher Metal Medal delivered to your doorstep</span>
+            </p>
+            <p className="flex items-center gap-2">
+              <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
+              <span>Custom Dri-Fit Performance Running T-Shirt</span>
+            </p>
+            <p className="flex items-center gap-2">
+              <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
+              <span>E-Certificate with QR verification code and official timing</span>
+            </p>
+            <p className="flex items-center gap-2">
+              <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
+              <span>Ranked position on the Mountain Run Official Leaderboard</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
 export function PaymentRegistrationForm() {
   return (
-<Suspense
+    <Suspense
       fallback={
         <div className="flex items-center justify-center rounded-2xl border border-(--line) bg-(--panel) px-4 py-8">
           <div className="flex flex-col items-center gap-2">
             <div className="h-5 w-5 animate-spin rounded-full border-2 border-(--line-strong) border-t-(--sage)" />
-            <p className="text-sm text-(--muted)">Loading form\u2026</p>
+            <p className="text-sm text-(--muted)">Loading registration...</p>
           </div>
         </div>
       }

@@ -9,6 +9,8 @@ type SearchableSelectProps = {
   options: readonly string[];
   placeholder?: string;
   defaultValue?: string;
+  value?: string;
+  onChange?: (val: string) => void;
   required?: boolean;
   invalid?: boolean;
   emptyMessage?: string;
@@ -19,6 +21,8 @@ export function SearchableSelect({
   options,
   placeholder = "Search and select…",
   defaultValue = "",
+  value,
+  onChange,
   required,
   invalid,
   emptyMessage = "No matches found.",
@@ -26,8 +30,18 @@ export function SearchableSelect({
   const listboxId = useId();
   const containerRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
-  const [query, setQuery] = useState(defaultValue);
-  const [selected, setSelected] = useState(defaultValue);
+  const [internalSelected, setInternalSelected] = useState(defaultValue);
+  const selected = value !== undefined ? value : internalSelected;
+  const [query, setQuery] = useState(selected);
+
+  // Sync query with external value changes
+  const prevValueRef = useRef(value);
+  if (value !== prevValueRef.current) {
+    prevValueRef.current = value;
+    if (value !== undefined) {
+      setQuery(value);
+    }
+  }
 
   const filtered = useMemo(() => {
     const needle = query.trim().toLowerCase();
@@ -50,9 +64,12 @@ export function SearchableSelect({
   }, [selected]);
 
   function chooseOption(option: string) {
-    setSelected(option);
+    if (value === undefined) {
+      setInternalSelected(option);
+    }
     setQuery(option);
     setOpen(false);
+    onChange?.(option);
   }
 
   return (
@@ -67,7 +84,9 @@ export function SearchableSelect({
         className={cn(inputClass, "pr-10")}
         onChange={(event) => {
           setQuery(event.target.value);
-          setSelected("");
+          if (value === undefined) {
+            setInternalSelected("");
+          }
           setOpen(true);
         }}
         onFocus={() => setOpen(true)}
@@ -76,7 +95,7 @@ export function SearchableSelect({
         type="text"
         value={query}
       />
-      <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-[var(--muted)]">
+      <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-(--muted)">
         <svg aria-hidden="true" className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path d="m6 9 6 6 6-6" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" />
         </svg>
@@ -84,19 +103,19 @@ export function SearchableSelect({
 
       {open ? (
         <ul
-          className="absolute z-20 mt-1 max-h-56 w-full overflow-auto rounded-[var(--radius-sm)] border border-[var(--line)] bg-(--panel) py-1 shadow-lg"
+          className="absolute z-20 mt-1 max-h-56 w-full overflow-auto rounded-xl border border-(--line) bg-(--panel) py-1 shadow-lg"
           id={listboxId}
           role="listbox"
         >
           {filtered.length === 0 ? (
-            <li className="px-3 py-2 text-sm text-[var(--muted)]">{emptyMessage}</li>
+            <li className="px-3 py-2 text-sm text-(--muted)">{emptyMessage}</li>
           ) : (
             filtered.map((option) => (
               <li key={option} role="option" aria-selected={option === selected}>
                 <button
                   className={cn(
-                    "w-full px-3 py-2 text-left text-sm transition-colors hover:bg-[var(--panel-soft)]",
-                    option === selected && "bg-[var(--panel-soft)] font-medium",
+                    "w-full px-3 py-2 text-left text-sm transition-colors hover:bg-(--panel-soft)",
+                    option === selected && "bg-(--panel-soft) font-medium text-(--sage)",
                   )}
                   onMouseDown={(event) => event.preventDefault()}
                   onClick={() => chooseOption(option)}
