@@ -7,7 +7,6 @@ import {
   CheckCircle2,
   Clock,
   Crown,
-  Flame,
   MapPin,
   Ruler,
   Search,
@@ -110,45 +109,6 @@ function getInitials(name: string): string {
     return (parts[0][0] + parts[1][0]).toUpperCase();
   }
   return name.slice(0, 2).toUpperCase();
-}
-
-function StatCard({
-  icon: Icon,
-  label,
-  value,
-  accent = "sage",
-}: {
-  icon: typeof Trophy;
-  label: string;
-  value: string | number;
-  accent?: "sage" | "gold" | "indigo";
-}) {
-  const accentColors = {
-    sage: "text-(--sage) group-hover:border-(--sage)/30 group-hover:bg-(--sage)/10",
-    gold: "text-amber-500 group-hover:border-amber-500/30 group-hover:bg-amber-500/10",
-    indigo: "text-indigo-500 group-hover:border-indigo-500/30 group-hover:bg-indigo-500/10",
-  };
-
-  return (
-    <div className="group flex flex-col items-center justify-center gap-1 rounded-xl border border-(--line) bg-(--panel) p-2.5 text-center transition-all hover:shadow-md sm:flex-row sm:items-center sm:gap-3 sm:rounded-2xl sm:p-4 sm:text-left">
-      <span
-        className={cn(
-          "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-(--line) bg-(--panel-soft) transition-all sm:h-10 sm:w-10 sm:rounded-xl",
-          accentColors[accent],
-        )}
-      >
-        <Icon className="h-4 w-4 sm:h-5 sm:w-5" strokeWidth={1.75} />
-      </span>
-      <div className="min-w-0">
-        <p className="text-sm font-bold tracking-tight tabular-nums text-foreground sm:text-xl truncate">
-          {value}
-        </p>
-        <p className="text-[0.6rem] font-semibold uppercase tracking-wider text-(--muted) sm:text-xs truncate">
-          {label}
-        </p>
-      </div>
-    </div>
-  );
 }
 
 // ── Top 3 Podium Card Component ─────────────────────────────────────────────
@@ -459,20 +419,6 @@ export function LeaderboardClient() {
     };
   }, [currentClerkId, entries, isSignedIn, selectedDistance, user, userRegistrations]);
 
-  // General stats
-  const stats = useMemo(() => {
-    const totalFin = entries.length;
-    const totalPart = participants.length;
-    const km = parseKm(selectedDistance);
-    const totalKm = Math.round((totalFin + totalPart) * km);
-    return {
-      finishers: totalFin,
-      participants: totalPart,
-      distance: selectedDistance,
-      totalKm,
-    };
-  }, [entries.length, participants.length, selectedDistance]);
-
   return (
     <div className="min-w-0 pb-16 px-1 sm:px-0">
       {/* ── HERO ──────────────────────────────────────────────── */}
@@ -505,19 +451,6 @@ export function LeaderboardClient() {
             <p className="lede mx-auto mt-2.5 sm:mt-3 max-w-lg text-xs sm:text-base">
               Explore real-time standings across all distance categories. Every finish is verified with GPS tracking.
             </p>
-          </motion.div>
-
-          {/* Quick Stats Grid */}
-          <motion.div
-            className="mx-auto mt-6 sm:mt-8 grid max-w-3xl grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-4"
-            initial={reduce ? false : { opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <StatCard icon={Trophy} label="Ranked Finishers" value={stats.finishers} accent="gold" />
-            <StatCard icon={Users} label="Total Runners" value={Math.max(stats.participants, stats.finishers)} accent="sage" />
-            <StatCard icon={Ruler} label="Active Category" value={stats.distance} accent="indigo" />
-            <StatCard icon={Flame} label="Total KM Run" value={`${stats.totalKm} km`} accent="sage" />
           </motion.div>
         </div>
       </section>
@@ -634,7 +567,7 @@ export function LeaderboardClient() {
                   )}
                 >
                   <Trophy className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
-                  <span className="truncate">Verified ({entries.length})</span>
+                  <span className="truncate">Verified Leaderboard</span>
                 </button>
                 <button
                   onClick={() => setActiveTab("participants")}
@@ -646,7 +579,7 @@ export function LeaderboardClient() {
                   )}
                 >
                   <Users className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
-                  <span className="truncate">Roster ({participants.length})</span>
+                  <span className="truncate">Event Roster</span>
                 </button>
               </div>
 
@@ -798,9 +731,6 @@ export function LeaderboardClient() {
                       <h3 className="text-xs sm:text-sm font-bold text-foreground">
                         All Verified Finishers · {selectedDistance}
                       </h3>
-                      <span className="text-[0.65rem] sm:text-xs text-(--muted) font-mono">
-                        {filteredEntries.length} runners
-                      </span>
                     </div>
 
                     <div className="overflow-x-auto touch-pan-x" style={{ WebkitOverflowScrolling: "touch" }}>
@@ -938,9 +868,6 @@ export function LeaderboardClient() {
                           All runners confirmed for this event. Verified times appear on the Leaderboard tab.
                         </p>
                       </div>
-                      <span className="text-[0.65rem] sm:text-xs text-(--muted) font-mono">
-                        {filteredParticipants.length} registered
-                      </span>
                     </div>
 
                     <div className="overflow-x-auto touch-pan-x" style={{ WebkitOverflowScrolling: "touch" }}>
