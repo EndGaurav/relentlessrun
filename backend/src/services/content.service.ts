@@ -3,7 +3,7 @@ import { prisma } from "../lib/prisma.js";
 const defaultMedia = [
   {
     title: "Sunrise finish",
-    imageUrl: "/images/sunrise-finish.png",
+    imageUrl: "/images/sunrise-finish.svg",
     category: "Trail Run",
     location: "Lonavala",
     eventLabel: "Monsoon Mountain Miles",
@@ -15,7 +15,7 @@ const defaultMedia = [
   },
   {
     title: "Club leaderboard push",
-    imageUrl: "/images/club-push.png",
+    imageUrl: "/images/club-push.svg",
     category: "Community",
     location: "Pune",
     eventLabel: "Independence Endurance Run",
@@ -27,7 +27,7 @@ const defaultMedia = [
   },
   {
     title: "First medal day",
-    imageUrl: "/images/first-medal.png",
+    imageUrl: "/images/first-medal.svg",
     category: "Awards",
     location: "Mumbai",
     eventLabel: "Spring Valley Dash",
@@ -39,7 +39,7 @@ const defaultMedia = [
   },
   {
     title: "Weekend long run",
-    imageUrl: "/images/weekend-long-run.png",
+    imageUrl: "/images/weekend-long-run.svg",
     category: "Training",
     location: "Bengaluru",
     eventLabel: "Club weekend",
@@ -51,7 +51,7 @@ const defaultMedia = [
   },
   {
     title: "Mountain ridge effort",
-    imageUrl: "/images/mountain-run-hero.png",
+    imageUrl: "/images/mountain-run-hero.svg",
     category: "Nature",
     location: "Nilgiris",
     eventLabel: "Himalayan Winter Sprint",
@@ -107,6 +107,17 @@ export async function ensureDefaultSiteContent() {
         published: true,
       })),
     });
+  } else {
+    // Automatically migrate legacy .png paths to new crisp .svg assets
+    const legacyPngs = await prisma.siteMedia.findMany({
+      where: { imageUrl: { endsWith: ".png" } },
+    });
+    for (const item of legacyPngs) {
+      await prisma.siteMedia.update({
+        where: { id: item.id },
+        data: { imageUrl: item.imageUrl.replace(/\.png$/, ".svg") },
+      });
+    }
   }
 
   if (testimonialCount === 0) {

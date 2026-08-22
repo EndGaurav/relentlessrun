@@ -18,13 +18,16 @@ export type GalleryItem = {
   featured?: boolean;
 };
 
-/** Site photography used as the visual template for every gallery card. */
+/** Premium SVG illustrations for gallery cards */
 export const galleryImagePool = [
-  "/images/sunrise-finish.png",
-  "/images/mountain-run-hero.png",
-  "/images/first-medal.png",
-  "/images/club-push.png",
-  "/images/weekend-long-run.png",
+  "/images/sunrise-finish.svg",
+  "/images/mountain-run-hero.svg",
+  "/images/first-medal.svg",
+  "/images/club-push.svg",
+  "/images/weekend-long-run.svg",
+  "/images/marathon-pace.svg",
+  "/images/trail-summit.svg",
+  "/images/nature-run.svg",
 ] as const;
 
 export const galleryCategories: GalleryCategory[] = [
@@ -45,7 +48,7 @@ export const galleryItems: GalleryItem[] = [
     location: "Lonavala",
     date: "Jul 2026",
     category: "Trail Run",
-    image: galleryImagePool[0],
+    image: "/images/trail-summit.svg",
     featured: true,
   },
   {
@@ -55,7 +58,7 @@ export const galleryItems: GalleryItem[] = [
     location: "Manali",
     date: "Dec 2026",
     category: "Training",
-    image: galleryImagePool[1],
+    image: "/images/weekend-long-run.svg",
   },
   {
     id: "g3",
@@ -64,7 +67,7 @@ export const galleryItems: GalleryItem[] = [
     location: "Pune",
     date: "Aug 2026",
     category: "Community",
-    image: galleryImagePool[3],
+    image: "/images/club-push.svg",
     featured: true,
   },
   {
@@ -74,7 +77,7 @@ export const galleryItems: GalleryItem[] = [
     location: "Mumbai",
     date: "Mar 2026",
     category: "Awards",
-    image: galleryImagePool[2],
+    image: "/images/first-medal.svg",
     featured: true,
   },
   {
@@ -84,7 +87,7 @@ export const galleryItems: GalleryItem[] = [
     location: "Nilgiris",
     date: "Jan 2026",
     category: "Nature",
-    image: galleryImagePool[4],
+    image: "/images/nature-run.svg",
   },
   {
     id: "g6",
@@ -93,7 +96,7 @@ export const galleryItems: GalleryItem[] = [
     location: "Bengaluru",
     date: "Aug 2026",
     category: "Marathon",
-    image: galleryImagePool[0],
+    image: "/images/marathon-pace.svg",
   },
   {
     id: "g7",
@@ -102,7 +105,7 @@ export const galleryItems: GalleryItem[] = [
     location: "Ahmedabad",
     date: "Mar 2026",
     category: "Community",
-    image: galleryImagePool[3],
+    image: "/images/club-push.svg",
   },
   {
     id: "g8",
@@ -111,7 +114,7 @@ export const galleryItems: GalleryItem[] = [
     location: "Mahabaleshwar",
     date: "Jul 2026",
     category: "Trail Run",
-    image: galleryImagePool[1],
+    image: "/images/sunrise-finish.svg",
   },
   {
     id: "g9",
@@ -120,7 +123,7 @@ export const galleryItems: GalleryItem[] = [
     location: "Delhi NCR",
     date: "Mar 2026",
     category: "Awards",
-    image: galleryImagePool[2],
+    image: "/images/rewards-showcase.svg",
   },
   {
     id: "g10",
@@ -129,7 +132,7 @@ export const galleryItems: GalleryItem[] = [
     location: "Hyderabad",
     date: "Jun 2026",
     category: "Training",
-    image: galleryImagePool[4],
+    image: "/images/weekend-long-run.svg",
   },
   {
     id: "g11",
@@ -138,7 +141,7 @@ export const galleryItems: GalleryItem[] = [
     location: "Shimla",
     date: "Dec 2026",
     category: "Nature",
-    image: galleryImagePool[0],
+    image: "/images/mountain-run-hero.svg",
   },
   {
     id: "g12",
@@ -147,7 +150,7 @@ export const galleryItems: GalleryItem[] = [
     location: "Jaipur",
     date: "Aug 2026",
     category: "Marathon",
-    image: galleryImagePool[1],
+    image: "/images/marathon-pace.svg",
   },
 ];
 

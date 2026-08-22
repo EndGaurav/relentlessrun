@@ -13,10 +13,10 @@ function InstagramGlyph({ className }: { className?: string }) {
 }
 
 const posts = [
-  { src: "/images/sunrise-finish.png", alt: "Runner finishing at sunrise", likes: "2.4k" },
-  { src: "/images/first-medal.png", alt: "First medal day celebration", likes: "3.1k" },
-  { src: "/images/club-push.png", alt: "Running club group effort", likes: "1.9k" },
-  { src: "/images/weekend-long-run.png", alt: "Weekend long run", likes: "2.8k" },
+  { src: "/images/sunrise-finish.svg", alt: "Runner finishing at sunrise", likes: "2.4k" },
+  { src: "/images/first-medal.svg", alt: "First medal day celebration", likes: "3.1k" },
+  { src: "/images/club-push.svg", alt: "Running club group effort", likes: "1.9k" },
+  { src: "/images/weekend-long-run.svg", alt: "Weekend long run", likes: "2.8k" },
 ];
 
 export function EventCommunity() {

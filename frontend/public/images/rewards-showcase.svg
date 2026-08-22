@@ -1,0 +1,177 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradient -->
+    <radialGradient id="rwBg" cx="45%" cy="50%" r="75%">
+      <stop offset="0%" stop-color="#1e1b4b" />
+      <stop offset="40%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#020617" />
+    </radialGradient>
+
+    <!-- Gold Foil Gradient -->
+    <linearGradient id="rwGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="35%" stop-color="#eab308" />
+      <stop offset="70%" stop-color="#ca8a04" />
+      <stop offset="100%" stop-color="#854d0e" />
+    </linearGradient>
+
+    <!-- Certificate Border Gradient -->
+    <linearGradient id="certBorder" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="50%" stop-color="#10b981" />
+      <stop offset="100%" stop-color="#6366f1" />
+    </linearGradient>
+
+    <!-- Hologram Shield -->
+    <linearGradient id="holoShield" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4" />
+      <stop offset="50%" stop-color="#10b981" />
+      <stop offset="100%" stop-color="#a855f7" />
+    </linearGradient>
+
+    <filter id="rwGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="10" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+
+    <filter id="cardShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="16" stdDeviation="18" flood-color="#000000" flood-opacity="0.75" />
+    </filter>
+  </defs>
+
+  <!-- Background Base -->
+  <rect width="800" height="500" fill="url(#rwBg)" />
+
+  <!-- Ambient Golden & Teal Glow Orbs -->
+  <circle cx="280" cy="250" r="220" fill="#f59e0b" opacity="0.12" filter="url(#rwGlow)" />
+  <circle cx="560" cy="240" r="200" fill="#10b981" opacity="0.1" filter="url(#rwGlow)" />
+
+  <!-- Background Grid Lines -->
+  <g opacity="0.15" stroke="#94a3b8" stroke-width="1">
+    <line x1="0" y1="125" x2="800" y2="125" stroke-dasharray="4 8" />
+    <line x1="0" y1="250" x2="800" y2="250" stroke-dasharray="4 8" />
+    <line x1="0" y1="375" x2="800" y2="375" stroke-dasharray="4 8" />
+    <line x1="200" y1="0" x2="200" y2="500" stroke-dasharray="4 8" />
+    <line x1="400" y1="0" x2="400" y2="500" stroke-dasharray="4 8" />
+    <line x1="600" y1="0" x2="600" y2="500" stroke-dasharray="4 8" />
+  </g>
+
+  <!-- LAYER 1: DIGITAL E-CERTIFICATE (Tilted Card on Right) -->
+  <g transform="translate(420, 70) rotate(5)" filter="url(#cardShadow)">
+    <!-- Certificate Paper Sheet -->
+    <rect width="280" height="360" rx="16" fill="#0f172a" stroke="url(#certBorder)" stroke-width="2.5" />
+    <rect x="8" y="8" width="264" height="344" rx="10" fill="#090d16" stroke="#334155" stroke-width="1" stroke-dasharray="3 3" />
+    
+    <!-- Certificate Header Logo -->
+    <g transform="translate(140, 45)">
+      <polygon points="0,-16 -12,4 12,4" fill="#10b981" />
+      <polygon points="0,-16 -4,4 4,4" fill="#ffffff" />
+      <text x="0" y="24" fill="#f8fafc" font-family="system-ui, sans-serif" font-size="11" font-weight="800" text-anchor="middle" letter-spacing="2">MOUNTAIN RUN</text>
+      <text x="0" y="38" fill="#38bdf8" font-family="system-ui, sans-serif" font-size="8" font-weight="700" text-anchor="middle" letter-spacing="1.5">OFFICIAL CERTIFICATE</text>
+    </g>
+
+    <!-- Finisher Text Details -->
+    <text x="140" y="125" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="9" text-anchor="middle">PROUDLY PRESENTED TO</text>
+    <text x="140" y="152" fill="#fbbf24" font-family="system-ui, sans-serif" font-size="16" font-weight="900" text-anchor="middle">VERIFIED FINISHER</text>
+    <line x1="50" y1="165" x2="230" y2="165" stroke="#334155" stroke-width="1" />
+
+    <!-- Race Category & Pace -->
+    <rect x="40" y="185" width="90" height="38" rx="8" fill="#1e293b" />
+    <text x="85" y="200" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="7" font-weight="700" text-anchor="middle">DISTANCE</text>
+    <text x="85" y="215" fill="#34d399" font-family="system-ui, sans-serif" font-size="12" font-weight="800" text-anchor="middle">10.0 KM</text>
+
+    <rect x="150" y="185" width="90" height="38" rx="8" fill="#1e293b" />
+    <text x="195" y="200" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="7" font-weight="700" text-anchor="middle">PACE</text>
+    <text x="195" y="215" fill="#38bdf8" font-family="system-ui, sans-serif" font-size="12" font-weight="800" text-anchor="middle">4:42 /KM</text>
+
+    <!-- QR Code & Official Gold Seal -->
+    <!-- QR Code Box -->
+    <rect x="45" y="250" width="60" height="60" rx="6" fill="#ffffff" />
+    <g transform="translate(53, 258)" fill="#0f172a">
+      <rect width="14" height="14" />
+      <rect x="2" y="2" width="10" height="10" fill="#ffffff" />
+      <rect x="4" y="4" width="6" height="6" />
+
+      <rect x="30" y="0" width="14" height="14" />
+      <rect x="32" y="2" width="10" height="10" fill="#ffffff" />
+      <rect x="34" y="4" width="6" height="6" />
+
+      <rect x="0" y="30" width="14" height="14" />
+      <rect x="2" y="32" width="10" height="10" fill="#ffffff" />
+      <rect x="4" y="34" width="6" height="6" />
+
+      <!-- QR Pattern dots -->
+      <rect x="18" y="4" width="6" height="6" />
+      <rect x="18" y="16" width="8" height="6" />
+      <rect x="6" y="18" width="6" height="8" />
+      <rect x="28" y="22" width="12" height="6" />
+      <rect x="18" y="32" width="6" height="10" />
+      <rect x="28" y="36" width="14" height="6" />
+    </g>
+    <text x="75" y="322" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="7" font-weight="600" text-anchor="middle">Scan to Verify</text>
+
+    <!-- Holographic Official Wax Seal -->
+    <circle cx="195" cy="280" r="28" fill="url(#rwGold)" filter="url(#rwGlow)" />
+    <circle cx="195" cy="280" r="24" fill="#78350f" stroke="url(#rwGold)" stroke-width="2" />
+    <polygon points="195,264 199,274 209,274 201,280 204,290 195,284 186,290 189,280 181,274 191,274" fill="url(#rwGold)" />
+    <text x="195" y="320" fill="#fbbf24" font-family="system-ui, sans-serif" font-size="7" font-weight="800" text-anchor="middle">OFFICIAL SEAL</text>
+  </g>
+
+  <!-- LAYER 2: 3D FINISHER MEDAL (Dominant Foreground on Left) -->
+  <g transform="translate(230, 260)" filter="url(#cardShadow)">
+    <!-- Ribbon V Loop -->
+    <polygon points="-70,-260 -40,-260 -10,-120 -30,-120" fill="#1e3a8a" />
+    <polygon points="70,-260 40,-260 10,-120 30,-120" fill="#0f766e" />
+    <polygon points="-15,-260 0,-260 0,-120 -10,-120" fill="#f59e0b" />
+    <polygon points="15,-260 0,-260 0,-120 10,-120" fill="#f59e0b" />
+
+    <!-- Ribbon Clamp Ring -->
+    <rect x="-25" y="-125" width="50" height="20" rx="5" fill="url(#rwGold)" stroke="#78350f" stroke-width="1.5" />
+    <circle cx="0" cy="-115" r="4" fill="#0f172a" />
+
+    <!-- Medal Outer Coin -->
+    <circle cx="0" cy="0" r="125" fill="url(#rwGold)" stroke="#78350f" stroke-width="4" />
+    
+    <!-- Outer Star Teeth -->
+    <g stroke="#92400e" stroke-width="1" fill="url(#rwGold)">
+      <polygon points="0,-128 -10,-120 10,-120" />
+      <polygon points="0,128 -10,120 10,120" />
+      <polygon points="-128,0 -120,-10 -120,10" />
+      <polygon points="128,0 120,-10 120,10" />
+    </g>
+
+    <!-- Inner Dark Core Face -->
+    <circle cx="0" cy="0" r="112" fill="#0f172a" stroke="url(#rwGold)" stroke-width="4" />
+
+    <!-- Embossed Mountain Emblem -->
+    <polygon points="0,-55 -38,15 38,15" fill="#78350f" stroke="url(#rwGold)" stroke-width="1.5" />
+    <polygon points="0,-55 0,15 38,15" fill="#92400e" />
+    <polygon points="0,-55 -12,-30 -4,-26 0,-34 5,-28 12,-30" fill="#ffffff" />
+
+    <!-- Laurel Wreath Inside Medal -->
+    <path d="M -85,-10 C -95,20 -80,60 -50,85" fill="none" stroke="url(#rwGold)" stroke-width="2.5" />
+    <path d="M 85,-10 C 95,20 80,60 50,85" fill="none" stroke="url(#rwGold)" stroke-width="2.5" />
+
+    <!-- Banner across Medal -->
+    <rect x="-65" y="28" width="130" height="22" rx="11" fill="#090d16" stroke="url(#rwGold)" stroke-width="1.5" />
+    <text x="0" y="43" fill="#fef08a" font-family="system-ui, sans-serif" font-size="10" font-weight="900" text-anchor="middle" letter-spacing="1.5">FINISHER 2026</text>
+
+    <!-- Top Text inside Medal -->
+    <text x="0" y="-72" fill="#fef08a" font-family="system-ui, sans-serif" font-size="9" font-weight="800" text-anchor="middle" letter-spacing="2">MOUNTAIN RUN</text>
+
+    <!-- Glint Sparkle -->
+    <g transform="translate(80, -65)" filter="url(#rwGlow)">
+      <polygon points="0,-12 2,-2 12,0 2,2 0,12 -2,2 -12,0 -2,-2" fill="#ffffff" />
+      <circle cx="0" cy="0" r="2" fill="#fef08a" />
+    </g>
+  </g>
+
+  <!-- FLOATING BADGE: GPS Verification Authenticity -->
+  <g transform="translate(60, 390)" filter="url(#cardShadow)">
+    <rect width="220" height="64" rx="18" fill="#0f172a" fill-opacity="0.9" stroke="url(#holoShield)" stroke-width="1.8" />
+    <circle cx="34" cy="32" r="16" fill="#10b981" fill-opacity="0.2" />
+    <path d="M 27,32 L 32,37 L 41,27" fill="none" stroke="#10b981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    <text x="62" y="28" fill="#f8fafc" font-family="system-ui, sans-serif" font-size="11" font-weight="800">AUTOMATIC UNLOCK</text>
+    <text x="62" y="46" fill="#38bdf8" font-family="system-ui, sans-serif" font-size="9" font-weight="600">Medal + Certificate + Rank</text>
+  </g>
+</svg>

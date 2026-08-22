@@ -144,7 +144,7 @@ export function EventHero({ event, isPast }: { event: PublicEvent; isPast: boole
           <div className="relative overflow-hidden rounded-2xl sm:rounded-[1.75rem] border border-(--line) bg-slate-950 shadow-premium">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={event.bannerImageUrl ?? "/images/mountain-run-hero.png"}
+              src={event.bannerImageUrl ?? "/images/mountain-run-hero.svg"}
               alt={`${event.name} — run toward the mountains`}
               className="w-full h-auto max-h-[520px] object-contain sm:object-cover aspect-[16/9] sm:aspect-[16/8] lg:aspect-[21/9]"
             />

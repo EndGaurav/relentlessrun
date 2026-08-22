@@ -38,7 +38,7 @@ type TestimonialRow = {
 
 const emptyMedia = {
   title: "",
-  imageUrl: "/images/sunrise-finish.png",
+  imageUrl: "/images/sunrise-finish.svg",
   category: "Community",
   location: "",
   eventLabel: "",

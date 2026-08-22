@@ -7,12 +7,7 @@ import { galleryMoments } from "../data/events";
 import type { HomeMoment } from "../../lib/events-api";
 import { HomeSectionHeader } from "./home-section-header";
 
-const galleryTones = [
-  "from-[#fef3c7] via-[#fde68a] to-[#f5f5f4]",
-  "from-[#ecfdf5] via-[#d1fae5] to-[#f5f5f4]",
-  "from-[#fff7ed] via-[#ffedd5] to-[#f5f5f4]",
-  "from-[#eff6ff] via-[#dbeafe] to-[#f5f5f4]",
-];
+
 
 const fallbackMoments: HomeMoment[] = galleryMoments.map((m, i) => ({
   id: `static-${i}`,
@@ -73,18 +68,17 @@ export function HomeGalleryPreview({
               className="gallery-card group block overflow-hidden border border-(--line) rounded-(--radius) bg-(--panel) shadow-xs transition-all duration-300 hover:border-(--line-strong) hover:shadow-md"
               href="/gallery"
             >
-                <div
-                  className={`gallery-card-media bg-linear-to-br ${galleryTones[index % galleryTones.length]} relative aspect-4/3 overflow-hidden`}
-                >
+                <div className="gallery-card-media relative aspect-4/3 overflow-hidden bg-slate-950">
                   <Image
                     alt={moment.title}
                     className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                     src={moment.image}
-                    width={200}
-                    height={150}
-                    sizes="(max-width: 640px) 45vw, (max-width: 1024px) 25vw, 18vw"
+                    width={400}
+                    height={300}
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 20vw"
                     loading="lazy"
                   />
+                  <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
                   <span className="absolute left-3.5 bottom-3.5 z-10 rounded-full border border-white/20 bg-(--panel-glass-strong) px-2.5 py-1 text-[0.65rem] font-bold uppercase tracking-wider text-(--foreground) backdrop-blur-md shadow-xs">
                     {moment.meta}
                   </span>

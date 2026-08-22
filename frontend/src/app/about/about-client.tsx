@@ -175,7 +175,7 @@ export function AboutClient() {
               <div className="relative aspect-[4/3] w-full sm:aspect-[16/10] lg:aspect-[4/3]">
                 <Image
                   alt="Runner finishing a Mountain Run virtual event"
-                  src="/images/sunrise-finish.png"
+                  src="/images/about-hero-art.svg"
                   fill
                   className="object-cover"
                   sizes="(max-width: 1024px) 100vw, 50vw"
@@ -295,8 +295,8 @@ export function AboutClient() {
               <div className="relative overflow-hidden rounded-3xl border border-(--line) group">
                 <div className="relative aspect-[16/10] w-full">
                   <Image
-                    alt="Mountain Run finisher medal"
-                    src="/images/first-medal.png"
+                    alt="Mountain Run finisher medal and verified e-certificate"
+                    src="/images/rewards-showcase.svg"
                     fill
                     className="object-cover transition-transform duration-700 group-hover:scale-105"
                     sizes="(max-width: 1024px) 100vw, 50vw"
