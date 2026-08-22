@@ -21,13 +21,35 @@ const nextConfig: NextConfig = {
   // This rewrite forwards it to the Railway backend so the
   // Express handler can process the raw body + signature.
   async rewrites() {
-    if (!apiUrl) return [];
-    return [
+    const list = [
       {
-        source: "/api/payments/webhook",
-        destination: `${apiUrl.replace(/\/+$/, "")}/api/payments/webhook`,
+        source: "/images/club-push.png",
+        destination: "/images/club-push.svg",
+      },
+      {
+        source: "/images/first-medal.png",
+        destination: "/images/first-medal.svg",
+      },
+      {
+        source: "/images/mountain-run-hero.png",
+        destination: "/images/mountain-run-hero.svg",
+      },
+      {
+        source: "/images/sunrise-finish.png",
+        destination: "/images/sunrise-finish.svg",
+      },
+      {
+        source: "/images/weekend-long-run.png",
+        destination: "/images/weekend-long-run.svg",
       },
     ];
+    if (apiUrl) {
+      list.push({
+        source: "/api/payments/webhook",
+        destination: `${apiUrl.replace(/\/+$/, "")}/api/payments/webhook`,
+      });
+    }
+    return list;
   },
 
   // ── Image optimisation ───────────────────────────────────
@@ -36,7 +58,9 @@ const nextConfig: NextConfig = {
     deviceSizes: [390, 640, 750, 828, 1080, 1200, 1920],
     imageSizes: [16, 32, 64, 96, 128, 200, 256, 384],
     minimumCacheTTL: 31536000, // 1 year
-    dangerouslyAllowSVG: false,
+    dangerouslyAllowSVG: true,
+    contentDispositionType: "attachment",
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
     remotePatterns: [
       {
         protocol: "https",

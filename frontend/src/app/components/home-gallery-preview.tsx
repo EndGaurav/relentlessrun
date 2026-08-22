@@ -9,6 +9,17 @@ import { HomeSectionHeader } from "./home-section-header";
 
 
 
+function ensureSvgPath(src: string): string {
+  if (!src) return "/images/sunrise-finish.svg";
+  if (src.includes("sunrise-finish")) return "/images/sunrise-finish.svg";
+  if (src.includes("club-push")) return "/images/club-push.svg";
+  if (src.includes("first-medal")) return "/images/first-medal.svg";
+  if (src.includes("weekend-long-run")) return "/images/weekend-long-run.svg";
+  if (src.includes("mountain-run-hero")) return "/images/mountain-run-hero.svg";
+  if (src.endsWith(".png")) return src.replace(/\.png$/, ".svg");
+  return src;
+}
+
 const fallbackMoments: HomeMoment[] = galleryMoments.map((m, i) => ({
   id: `static-${i}`,
   title: m.title,
@@ -72,7 +83,7 @@ export function HomeGalleryPreview({
                   <Image
                     alt={moment.title}
                     className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-                    src={moment.image}
+                    src={ensureSvgPath(moment.image)}
                     width={400}
                     height={300}
                     sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 20vw"

@@ -486,6 +486,17 @@ function SubmitPhotoModal({ onClose }: { onClose: () => void }) {
   );
 }
 
+function ensureSvgPath(src: string): string {
+  if (!src) return "/images/trail-summit.svg";
+  if (src.includes("sunrise-finish")) return "/images/sunrise-finish.svg";
+  if (src.includes("club-push")) return "/images/club-push.svg";
+  if (src.includes("first-medal")) return "/images/first-medal.svg";
+  if (src.includes("weekend-long-run")) return "/images/weekend-long-run.svg";
+  if (src.includes("mountain-run-hero")) return "/images/mountain-run-hero.svg";
+  if (src.endsWith(".png")) return src.replace(/\.png$/, ".svg");
+  return src;
+}
+
 export function GalleryClient() {
   const reduce = useReducedMotion();
   const [category, setCategory] = useState<GalleryCategory>("All");
@@ -505,7 +516,7 @@ export function GalleryClient() {
           location: row.location,
           date: row.date,
           category: (row.category as GalleryItem["category"]) || "Community",
-          image: row.image,
+          image: ensureSvgPath(row.image),
         })),
       );
     });
