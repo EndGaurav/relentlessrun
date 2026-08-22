@@ -37,8 +37,8 @@ const navGroups: NavGroup[] = [
   {
     label: "Fulfillment",
     items: [
-      { label: "Medals",       href: "/admin/medals",       icon: "medal" },
-      { label: "Certificates", href: "/admin/certificates", icon: "doc" },
+      { label: "Medal Dispatch", href: "/admin/medals",       icon: "medal" },
+      { label: "Certificates",   href: "/admin/certificates", icon: "doc" },
     ],
   },
   {

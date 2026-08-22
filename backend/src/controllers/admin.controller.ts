@@ -1112,47 +1112,268 @@ export async function adminReviewProof(request: AuthenticatedRequest, response: 
   });
 }
 
-// ── Medals ─────────────────────────────────────────────────────
+// ── Medals & Dispatch Hub ──────────────────────────────────────
 
 export async function adminListMedals(request: AuthenticatedRequest, response: Response) {
-  const { page, pageSize, skip } = parsePage(request);
-  const status = q(request, "status");
+  const { page, pageSize, skip } = parsePage(request, 50);
+  const status = q(request, "status"); // PENDING | DISPATCHED | DELIVERED | RETURNED | ALL
+  const eventId = q(request, "eventId");
+  const proofStatus = q(request, "proofStatus"); // default: APPROVED or all
+  const search = q(request, "search")?.trim();
 
-  const where: Prisma.MedalDeliveryWhereInput = {
-    ...(status ? { status: status as never } : {}),
+  const where: Prisma.RegistrationWhereInput = {
+    status: { in: ["CONFIRMED", "COMPLETED"] },
+    ...(eventId ? { eventId } : {}),
+    ...(proofStatus && proofStatus !== "ALL"
+      ? { proofStatus: proofStatus as never }
+      : !proofStatus
+      ? { proofStatus: "APPROVED" }
+      : {}),
+    ...(status && status !== "ALL"
+      ? status === "PENDING"
+        ? {
+            OR: [
+              { medalDelivery: null },
+              { medalDelivery: { status: "PENDING" } },
+            ],
+          }
+        : {
+            medalDelivery: { status: status as never },
+          }
+      : {}),
+    ...(search
+      ? {
+          OR: [
+            { bibNumber: { contains: search, mode: "insensitive" } },
+            { shippingName: { contains: search, mode: "insensitive" } },
+            { shippingPhone: { contains: search, mode: "insensitive" } },
+            { shippingCity: { contains: search, mode: "insensitive" } },
+            { shippingPincode: { contains: search, mode: "insensitive" } },
+            { user: { name: { contains: search, mode: "insensitive" } } },
+            { user: { email: { contains: search, mode: "insensitive" } } },
+          ],
+        }
+      : {}),
   };
 
-  const [total, items] = await Promise.all([
-    prisma.medalDelivery.count({ where }),
-    prisma.medalDelivery.findMany({
-      where,
-      orderBy: { id: "desc" },
-      skip,
-      take: pageSize,
-      include: {
-        registration: {
-          include: {
-            user: { select: { name: true, email: true, phone: true } },
-            event: { select: { title: true } },
-          },
+  const [total, items, readyCount, dispatchedCount, deliveredCount, approvedCount] =
+    await Promise.all([
+      prisma.registration.count({ where }),
+      prisma.registration.findMany({
+        where,
+        orderBy: [{ proofUpload: { reviewedAt: "desc" } }, { registeredAt: "desc" }],
+        skip,
+        take: pageSize,
+        include: {
+          user: { select: { id: true, name: true, email: true, phone: true } },
+          event: { select: { id: true, title: true, slug: true } },
+          proofUpload: true,
+          certificate: { select: { id: true, certificateNumber: true, status: true, pdfUrl: true } },
+          medalDelivery: true,
         },
-      },
-    }),
-  ]);
+      }),
+      prisma.registration.count({
+        where: {
+          status: { in: ["CONFIRMED", "COMPLETED"] },
+          proofStatus: "APPROVED",
+          OR: [{ medalDelivery: null }, { medalDelivery: { status: "PENDING" } }],
+          ...(eventId ? { eventId } : {}),
+        },
+      }),
+      prisma.registration.count({
+        where: {
+          status: { in: ["CONFIRMED", "COMPLETED"] },
+          medalDelivery: { status: "DISPATCHED" },
+          ...(eventId ? { eventId } : {}),
+        },
+      }),
+      prisma.registration.count({
+        where: {
+          status: { in: ["CONFIRMED", "COMPLETED"] },
+          medalDelivery: { status: "DELIVERED" },
+          ...(eventId ? { eventId } : {}),
+        },
+      }),
+      prisma.registration.count({
+        where: {
+          status: { in: ["CONFIRMED", "COMPLETED"] },
+          proofStatus: "APPROVED",
+          ...(eventId ? { eventId } : {}),
+        },
+      }),
+    ]);
 
   response.json({
     data: items,
-    meta: { total, page, pageSize, totalPages: Math.ceil(total / pageSize) },
+    meta: {
+      total,
+      page,
+      pageSize,
+      totalPages: Math.ceil(total / pageSize),
+      stats: {
+        readyCount,
+        dispatchedCount,
+        deliveredCount,
+        approvedCount,
+      },
+    },
   });
+}
+
+export async function adminExportMedalsCsv(
+  request: AuthenticatedRequest,
+  response: Response,
+) {
+  const eventId = q(request, "eventId");
+  const status = q(request, "status");
+  const proofStatus = q(request, "proofStatus");
+  const search = q(request, "search")?.trim();
+
+  const where: Prisma.RegistrationWhereInput = {
+    status: { in: ["CONFIRMED", "COMPLETED"] },
+    ...(eventId ? { eventId } : {}),
+    ...(proofStatus && proofStatus !== "ALL"
+      ? { proofStatus: proofStatus as never }
+      : !proofStatus
+      ? { proofStatus: "APPROVED" }
+      : {}),
+    ...(status && status !== "ALL"
+      ? status === "PENDING"
+        ? {
+            OR: [
+              { medalDelivery: null },
+              { medalDelivery: { status: "PENDING" } },
+            ],
+          }
+        : {
+            medalDelivery: { status: status as never },
+          }
+      : {}),
+    ...(search
+      ? {
+          OR: [
+            { bibNumber: { contains: search, mode: "insensitive" } },
+            { shippingName: { contains: search, mode: "insensitive" } },
+            { shippingPhone: { contains: search, mode: "insensitive" } },
+            { shippingCity: { contains: search, mode: "insensitive" } },
+            { shippingPincode: { contains: search, mode: "insensitive" } },
+            { user: { name: { contains: search, mode: "insensitive" } } },
+            { user: { email: { contains: search, mode: "insensitive" } } },
+          ],
+        }
+      : {}),
+  };
+
+  const rows = await prisma.registration.findMany({
+    where,
+    orderBy: { registeredAt: "desc" },
+    include: {
+      user: true,
+      event: true,
+      proofUpload: true,
+      medalDelivery: true,
+      certificate: true,
+    },
+    take: 5000,
+  });
+
+  const header = [
+    "BIB Number",
+    "Recipient Name",
+    "Phone",
+    "Email",
+    "Address Line 1",
+    "Address Line 2",
+    "City",
+    "State",
+    "Pincode",
+    "Event Name",
+    "Distance",
+    "Finish Time (HH:MM:SS)",
+    "Proof Status",
+    "Medal Status",
+    "Courier",
+    "Tracking Number",
+    "Tracking URL",
+    "Certificate Number",
+    "Dispatched Date",
+    "Registration Date",
+  ];
+
+  const escapeCsv = (val: string | number | null | undefined) => {
+    if (val == null) return "";
+    const str = String(val).replace(/"/g, '""');
+    return `"${str}"`;
+  };
+
+  const formatSeconds = (sec: number | null | undefined) => {
+    if (sec == null || sec <= 0) return "";
+    const h = Math.floor(sec / 3600);
+    const m = Math.floor((sec % 3600) / 60);
+    const s = sec % 60;
+    return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+  };
+
+  const lines = [
+    header.join(","),
+    ...rows.map((r) =>
+      [
+        escapeCsv(r.bibNumber),
+        escapeCsv(r.shippingName || r.user.name),
+        escapeCsv(r.shippingPhone || r.user.phone),
+        escapeCsv(r.user.email),
+        escapeCsv(r.shippingLine1),
+        escapeCsv(r.shippingLine2 || ""),
+        escapeCsv(r.shippingCity),
+        escapeCsv(r.shippingState),
+        escapeCsv(r.shippingPincode),
+        escapeCsv(r.event.title),
+        escapeCsv(r.distance),
+        escapeCsv(formatSeconds(r.finishTimeSeconds)),
+        escapeCsv(r.proofStatus),
+        escapeCsv(r.medalDelivery?.status || "PENDING"),
+        escapeCsv(r.medalDelivery?.courier || ""),
+        escapeCsv(r.medalDelivery?.trackingNumber || ""),
+        escapeCsv(r.medalDelivery?.trackingUrl || ""),
+        escapeCsv(r.certificate?.certificateNumber || ""),
+        escapeCsv(r.medalDelivery?.dispatchedAt ? r.medalDelivery.dispatchedAt.toISOString().split("T")[0] : ""),
+        escapeCsv(r.registeredAt ? r.registeredAt.toISOString().split("T")[0] : ""),
+      ].join(","),
+    ),
+  ];
+
+  const filename = `mountainrun-dispatch-${new Date().toISOString().split("T")[0]}.csv`;
+  response.setHeader("Content-Type", "text/csv; charset=utf-8");
+  response.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
+  response.send(lines.join("\n"));
 }
 
 export async function adminUpdateMedal(request: AuthenticatedRequest, response: Response) {
   const id = routeParam(request, "id");
   const payload = validateBody(adminMedalUpdateSchema, request);
 
-  const medal = await prisma.medalDelivery.update({
+  // Check if id is a registrationId or medalDelivery id
+  let targetRegistrationId = id;
+  const existingDelivery = await prisma.medalDelivery.findUnique({
     where: { id },
-    data: {
+  });
+
+  if (existingDelivery) {
+    targetRegistrationId = existingDelivery.registrationId;
+  }
+
+  const medal = await prisma.medalDelivery.upsert({
+    where: { registrationId: targetRegistrationId },
+    create: {
+      registrationId: targetRegistrationId,
+      status: payload.status,
+      courier: payload.courier === undefined ? null : payload.courier,
+      trackingNumber: payload.trackingNumber === undefined ? null : payload.trackingNumber,
+      trackingUrl: payload.trackingUrl || null,
+      dispatchedAt: payload.status === "DISPATCHED" ? new Date() : null,
+      deliveredAt: payload.status === "DELIVERED" ? new Date() : null,
+    },
+    update: {
       status: payload.status,
       courier: payload.courier === undefined ? undefined : payload.courier,
       trackingNumber:
@@ -1176,8 +1397,8 @@ export async function adminUpdateMedal(request: AuthenticatedRequest, response: 
   await writeAdminAudit(request, {
     action: "medal.update",
     entityType: "MedalDelivery",
-    entityId: id,
-    summary: `Medal → ${payload.status}`,
+    entityId: medal.id,
+    summary: `Medal for ${medal.registration.bibNumber} → ${payload.status}${payload.trackingNumber ? ` (${payload.trackingNumber})` : ""}`,
   });
 
   response.json({ data: medal });

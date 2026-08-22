@@ -20,6 +20,7 @@ import {
   adminListCoupons,
   adminListEvents,
   adminListMedals,
+  adminExportMedalsCsv,
   adminListPayments,
   adminListProofs,
   adminListRegistrations,
@@ -74,6 +75,7 @@ adminRouter.patch("/users/:id/role", asyncHandler(adminUpdateUserRole));
 adminRouter.get("/proofs", asyncHandler(adminListProofs));
 adminRouter.post("/proofs/:id/review", asyncHandler(adminReviewProof));
 
+adminRouter.get("/medals/export.csv", asyncHandler(adminExportMedalsCsv));
 adminRouter.get("/medals", asyncHandler(adminListMedals));
 adminRouter.patch("/medals/:id", asyncHandler(adminUpdateMedal));
 
