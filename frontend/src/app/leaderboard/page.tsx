@@ -7,21 +7,22 @@ import { LeaderboardClient } from "./leaderboard-client";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://mountainrun.in";
 
 export const metadata: Metadata = {
-  title: "Running Leaderboard - Verified Results | Mountain Run",
- description:
-    "View GPS-verified running results and rankings. See top performers in virtual marathons, 5K, 10K races across India. Real-time leaderboards.",
- keywords: [
+  title: "Official Virtual Run Leaderboard & Finish Times | Mountain Run India",
+  description:
+    "View live GPS-verified virtual running leaderboards, finisher rankings, pace, and race stats for 5K, 10K, and 21K marathon challenges across India.",
+  keywords: [
     "running leaderboard",
     "verified results",
     "GPS rankings",
     "virtual race results",
     "marathon leaderboard",
     "running rankings India",
+    "virtual marathon winners",
   ],
- openGraph: {
-    title: "Running Leaderboard - Verified Results",
- description:
-      "View GPS-verified running results and rankings from Mountain Run events.",
+  openGraph: {
+    title: "Official Virtual Run Leaderboard & Finish Times | Mountain Run India",
+    description:
+      "View live GPS-verified running results and rankings from Mountain Run events.",
     url: "/leaderboard",
     type: "website",
   },

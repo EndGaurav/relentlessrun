@@ -4,6 +4,7 @@ import { ArrowUpRight } from "lucide-react";
 import { AppFooter } from "./components/app-footer";
 import { AppHeader } from "./components/app-header";
 import { HomeEvents } from "./components/home-events";
+import { HomeFaq } from "./components/home-faq";
 import { HomeGalleryPreview } from "./components/home-gallery-preview";
 import { HomeHero } from "./components/home-hero";
 import { HomeReviews } from "./components/home-reviews";
@@ -15,28 +16,30 @@ import { fetchOpenEvents, fetchHomeContent } from "../lib/events-api";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://mountainrun.in";
 
 export const metadata: Metadata = {
-  title: "Mountain Run - Virtual Running Events with GPS Verification",
+  title: "Virtual Running Events India 2026 | Real Medals & GPS Verified Races — Mountain Run",
   description:
-    "Join India's premier virtual running events. Register with UPI, track with GPS, earn medals & certificates. Compete in marathons, 5K, 10K runs from anywhere.",
+    "Join India's premier virtual running events. Run 1.5K, 5K, 10K, 21K marathons from anywhere. Track with Strava, Garmin, Nike, earn authentic metal finisher medals, t-shirts, and instant E-certificates.",
   keywords: [
     "virtual running",
-    "online marathon",
-    "GPS run tracking",
-    "running events India",
-    "virtual marathon",
-    "5K run",
-    "10K run",
-    "half marathon",
-    "UPI registration",
-    "running medals",
+    "virtual running events india",
+    "virtual marathon india",
+    "online running challenge",
+    "virtual 5k run",
+    "virtual 10k race",
+    "half marathon virtual",
+    "running events india",
+    "strava virtual marathon india",
+    "garmin running challenges",
+    "virtual run with medal",
+    "running medals india",
     "running certificates",
-    "fitness challenge",
-    "virtual race",
+    "fitness challenge india",
+    "virtual race registration",
   ],
   openGraph: {
-    title: "Mountain Run - Virtual Running Events with GPS Verification",
+    title: "Virtual Running Events India 2026 | Real Medals & GPS Verified Races — Mountain Run",
     description:
-      "Join India's premier virtual running events. Register with UPI, track with GPS, earn medals & certificates.",
+      "Join India's premier virtual running events. Run anywhere with Strava/Garmin, earn authentic metal finisher medals and digital certificates.",
     url: "/",
     type: "website",
   },
@@ -97,6 +100,7 @@ export default async function Home() {
         <HomeRewards />
         {/* Moments + reviews are admin-managed via /admin/content (with static fallbacks). */}
         <HomeGalleryPreview moments={serverHome?.moments} />
+        <HomeFaq />
         <HomeReviews testimonials={serverHome?.testimonials} />
       </main>
 

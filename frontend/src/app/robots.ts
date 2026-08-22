@@ -14,8 +14,7 @@ export default function robots(): MetadataRoute.Robots {
           '/api/',
           '/sign-in',
           '/sign-up',
-          '/register/',
-          '/certificates/',
+          '/unsubscribe',
         ],
       },
       {
@@ -27,6 +26,7 @@ export default function robots(): MetadataRoute.Robots {
           '/api/',
           '/sign-in',
           '/sign-up',
+          '/unsubscribe',
         ],
       },
     ],

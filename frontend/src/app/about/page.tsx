@@ -6,20 +6,21 @@ import { AboutClient } from "./about-client";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://mountainrun.in";
 
 export const metadata: Metadata = {
-  title: "About Mountain Run - Virtual Running Platform India",
- description:
-    "Learn about Mountain Run - India's trusted virtual running platform. GPS-verified events, UPI registration, premium medals, certificates, and real leaderboards.",
- keywords: [
+  title: "About Mountain Run | India's Premier GPS-Verified Virtual Race Platform",
+  description:
+    "Learn about Mountain Run - India's trusted virtual running and cycling platform. GPS-verified events, UPI registration, premium heavy metal medals, verifiable digital certificates, and fair leaderboards.",
+  keywords: [
     "about Mountain Run",
-    "virtual running platform",
+    "virtual running platform india",
     "GPS verified runs",
     "running events India",
     "virtual marathon platform",
+    "finisher medals india",
   ],
- openGraph: {
-    title: "About Mountain Run - Virtual Running Platform India",
- description:
-      "Learn about Mountain Run - India's trusted virtual running platform.",
+  openGraph: {
+    title: "About Mountain Run | India's Premier GPS-Verified Virtual Race Platform",
+    description:
+      "Learn about Mountain Run - India's trusted virtual running platform with GPS verification & real medals.",
     url: "/about",
     type: "website",
   },

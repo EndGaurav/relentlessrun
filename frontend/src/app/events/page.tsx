@@ -7,11 +7,12 @@ import { EventsCatalog } from "./events-catalog";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://mountainrun.in";
 
 export const metadata: Metadata = {
-  title: "Virtual Running Events - Marathons, 5K, 10K Races | Mountain Run",
+  title: "Upcoming Virtual Running Events India 2026 | 5K, 10K, 21K Races — Mountain Run",
   description:
-    "Browse upcoming virtual running events in India. Register for marathons, 5K, 10K, half marathon races. GPS verification, medals, certificates, and leaderboards.",
+    "Explore and register for upcoming virtual running events across India. Complete 1.5K, 5K, 10K, or 21K half marathons from anywhere. GPS verification, custom metal medals, DRI-FIT t-shirts, and instant E-certificates.",
   keywords: [
     "virtual running events",
+    "virtual running events india",
     "online marathon India",
     "5K run events",
     "10K run events",
@@ -19,11 +20,12 @@ export const metadata: Metadata = {
     "running races India",
     "GPS verified runs",
     "virtual race registration",
+    "virtual marathon 2026",
   ],
   openGraph: {
-    title: "Virtual Running Events - Marathons, 5K, 10K Races",
+    title: "Upcoming Virtual Running Events India 2026 | 5K, 10K, 21K Races — Mountain Run",
     description:
-      "Browse upcoming virtual running events in India. Register for marathons, 5K, 10K, half marathon races.",
+      "Explore and register for upcoming virtual running events across India. GPS verification, custom medals & instant certificates.",
     url: "/events",
     type: "website",
   },
