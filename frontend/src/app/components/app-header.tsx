@@ -13,9 +13,7 @@ import {
   LogOut,
   CalendarDays,
   Trophy,
-  Info,
   Calendar,
-  Gift,
   Award,
 } from "lucide-react";
 import { BrandText } from "./brand-text";
@@ -23,11 +21,9 @@ import { ThemeToggle } from "./theme-toggle";
 
 /* ─── Nav items with icons ─── */
 const publicNav = [
-  ["Events",      "/events",      Calendar     ],
-  ["Refer & Earn","/refer",       Gift         ],
-  ["Gallery",     "/gallery",     Camera       ],
-  ["Leaderboard", "/leaderboard", Trophy       ],
-  ["About",       "/about",       Info         ],
+  ["Events",      "/events",      Calendar],
+  ["Gallery",     "/gallery",     Camera  ],
+  ["Leaderboard", "/leaderboard", Trophy  ],
 ] as const;
 
 /* ─── Animated hamburger ─── */
@@ -173,14 +169,6 @@ function ProfileDropdown() {
               >
                 <Award className="h-4 w-4 text-(--sage)" />
                 Official Leaderboard
-              </Link>
-              <Link
-                href="/refer"
-                onClick={() => setOpen(false)}
-                className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-semibold text-(--foreground) transition-all duration-200 hover:bg-indigo-500/10 hover:text-indigo-600 dark:hover:text-indigo-400"
-              >
-                <Gift className="h-4 w-4 text-indigo-500" />
-                Refer & Earn Free Entry
               </Link>
               <Link
                 href="/events"

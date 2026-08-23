@@ -93,6 +93,9 @@ app.use((_request, _response, next) => {
 app.use((error: Error, _request: Request, response: Response, _next: NextFunction) => {
   void _next;
   const statusCode = error instanceof ApiError ? error.statusCode : 500;
+  if (statusCode === 500) {
+    console.error("[Unhandled Server Error]", error);
+  }
 
   response.status(statusCode).json({
     error: {

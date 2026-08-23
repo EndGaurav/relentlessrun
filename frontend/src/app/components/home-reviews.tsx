@@ -207,8 +207,8 @@ export function HomeReviews({ testimonials: initial }: { testimonials?: HomeTest
 
         <HomeSectionHeader
           action={
-            <Link className="btn btn-secondary group w-full sm:w-auto" href="/about">
-              About Mountain Run
+            <Link className="btn btn-secondary group w-full sm:w-auto" href="/events">
+              Explore Events
               <ArrowUpRight aria-hidden="true" className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </Link>
           }
