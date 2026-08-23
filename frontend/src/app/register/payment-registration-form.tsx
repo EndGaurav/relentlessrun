@@ -1,27 +1,15 @@
 "use client";
 
 import { useAuth, useUser } from "@clerk/nextjs";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import {
-  AlertCircle,
-  ArrowRight,
-  ArrowUpRight,
-  Award,
   CheckCircle2,
-  Clock,
-  Gift,
-  HelpCircle,
-  IndianRupee,
   Lock,
   MapPin,
-  Medal,
   RefreshCw,
-  Route,
   ShieldCheck,
   Shirt,
   Sparkles,
-  Trophy,
-  Zap,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -436,10 +424,36 @@ function PaymentRegistrationFormInner() {
     }
     setErrors({});
 
-    const formValues: Record<string, string> = {};
-    formData.forEach((val, key) => {
-      if (typeof val === "string") formValues[key] = val.trim();
-    });
+    const fullName = asString(formData.get("name"));
+    const phoneVal = asString(formData.get("phone"));
+    const emailVal = asString(formData.get("email"));
+    const streetAddress = asString(formData.get("address"));
+    const landmarkVal = asString(formData.get("landmark"));
+    const cityVal = (city || asString(formData.get("city"))).trim();
+    const stateValue = (stateVal || asString(formData.get("state"))).trim();
+    const pincodeVal = (pincode || asString(formData.get("pincode"))).trim();
+
+    const payload = {
+      name: fullName,
+      phone: phoneVal,
+      email: emailVal,
+      username: username || undefined,
+      eventSlug: selectedEvent,
+      distance: selectedDistance,
+      activityType: selectedActivity,
+      tshirtSize: selectedTshirt,
+      shippingName: fullName,
+      shippingPhone: phoneVal,
+      shippingLine1: streetAddress,
+      shippingLine2: landmarkVal || undefined,
+      shippingCity: cityVal,
+      shippingState: stateValue,
+      shippingPincode: pincodeVal,
+      address: streetAddress,
+      city: cityVal,
+      state: stateValue,
+      pincode: pincodeVal,
+    };
 
     setStatus("creating");
     setMessage("Generating secure Razorpay order...");
@@ -456,7 +470,7 @@ function PaymentRegistrationFormInner() {
       const regRes = await fetch(getApiUrl("/api/registrations"), {
         method: "POST",
         headers: authHeaders(token),
-        body: JSON.stringify(formValues),
+        body: JSON.stringify(payload),
       });
 
       if (!regRes.ok) throw new Error(await readApiError(regRes, "Registration could not be created"));
@@ -488,9 +502,9 @@ function PaymentRegistrationFormInner() {
         image: "https://mountainrun.in/icon.png",
         order_id: order.orderId,
         prefill: {
-          name: formValues.name,
-          email: formValues.email,
-          contact: formValues.phone,
+          name: payload.name,
+          email: payload.email,
+          contact: payload.phone,
         },
         theme: { color: "#10b981" },
         handler: async (response: CheckoutResponse) => {

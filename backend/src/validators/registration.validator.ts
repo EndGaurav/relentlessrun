@@ -38,14 +38,42 @@ export const createRegistrationSchema = z
     eventSlug: z.string().min(1).optional(),
     distance: z.string().min(1, "Distance is required"),
     activityType: z.enum(["running", "cycling", "walking"]).optional(),
-    shippingName: z.string().trim().min(2, "Shipping name is required"),
-    shippingPhone: phoneSchema,
-    shippingLine1: z.string().trim().min(5, "Address must be at least 5 characters"),
-    shippingLine2: z.string().trim().max(120, "Landmark must be 120 characters or fewer").optional(),
-    shippingCity: z.string().trim().min(2, "City is required"),
-    shippingState: indianStateSchema,
-    shippingPincode: pincodeSchema,
+    tshirtSize: z.string().trim().optional(),
+    shippingName: z.string().trim().min(2, "Shipping name is required").optional(),
+    shippingPhone: phoneSchema.optional(),
+    shippingLine1: z.string().trim().min(5, "Address must be at least 5 characters").optional(),
+    shippingLine2: z.string().trim().max(120, "Landmark must be 120 characters or fewer").optional().nullable(),
+    shippingCity: z.string().trim().min(2, "City is required").optional(),
+    shippingState: indianStateSchema.optional(),
+    shippingPincode: pincodeSchema.optional(),
+    address: z.string().trim().min(5, "Address must be at least 5 characters").optional(),
+    landmark: z.string().trim().max(120, "Landmark must be 120 characters or fewer").optional().nullable(),
+    city: z.string().trim().min(2, "City is required").optional(),
+    state: indianStateSchema.optional(),
+    pincode: pincodeSchema.optional(),
     referralCode: z.string().min(4).max(12).optional(),
+  })
+  .transform((data) => {
+    const shippingName = data.shippingName ?? data.name ?? "";
+    const shippingPhone = data.shippingPhone ?? data.phone ?? "";
+    const shippingLine1 = data.shippingLine1 ?? data.address ?? "";
+    const shippingLine2 = data.shippingLine2 ?? data.landmark ?? null;
+    const shippingCity = data.shippingCity ?? data.city ?? "";
+    const shippingState = data.shippingState ?? data.state ?? "";
+    const shippingPincode = data.shippingPincode ?? data.pincode ?? "";
+
+    return {
+      ...data,
+      name: data.name ?? shippingName,
+      phone: data.phone ?? shippingPhone,
+      shippingName,
+      shippingPhone,
+      shippingLine1,
+      shippingLine2,
+      shippingCity,
+      shippingState,
+      shippingPincode,
+    };
   })
   .superRefine((value, context) => {
     if (!value.userId && !value.clerkId && (!value.name || !value.email)) {
@@ -61,6 +89,54 @@ export const createRegistrationSchema = z
         code: "custom",
         message: "Either eventId or eventSlug is required",
         path: ["eventSlug"],
+      });
+    }
+
+    if (!value.shippingName || value.shippingName.length < 2) {
+      context.addIssue({
+        code: "custom",
+        message: "Runner name is required (min 2 characters)",
+        path: ["shippingName"],
+      });
+    }
+
+    if (!value.shippingPhone) {
+      context.addIssue({
+        code: "custom",
+        message: "Valid mobile phone number with country code is required",
+        path: ["shippingPhone"],
+      });
+    }
+
+    if (!value.shippingLine1 || value.shippingLine1.length < 5) {
+      context.addIssue({
+        code: "custom",
+        message: "Street address is required (min 5 characters)",
+        path: ["shippingLine1"],
+      });
+    }
+
+    if (!value.shippingCity || value.shippingCity.length < 2) {
+      context.addIssue({
+        code: "custom",
+        message: "City is required (min 2 characters)",
+        path: ["shippingCity"],
+      });
+    }
+
+    if (!value.shippingState) {
+      context.addIssue({
+        code: "custom",
+        message: "Choose a valid Indian state",
+        path: ["shippingState"],
+      });
+    }
+
+    if (!value.shippingPincode) {
+      context.addIssue({
+        code: "custom",
+        message: "Enter a valid 6-digit pincode",
+        path: ["shippingPincode"],
       });
     }
   });
