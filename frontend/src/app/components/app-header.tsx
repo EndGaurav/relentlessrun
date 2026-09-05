@@ -278,29 +278,31 @@ export function AppHeader() {
         }`}
       >
         <div
-          className={`overflow-hidden rounded-full border border-white/15 shadow-2xl transition-all duration-500 ease-out ${
+          className={`rounded-full border border-white/15 shadow-2xl transition-all duration-500 ease-out ${
             scrolled
               ? "bg-[#090d16]/95 backdrop-blur-2xl"
               : "bg-[#090d16]/85 backdrop-blur-xl"
           }`}
         >
-          <div className="flex items-center justify-between gap-4 px-6 py-2.5">
+          <div className="flex h-12 items-center justify-between gap-4 px-5 sm:h-13 sm:px-6">
             {/* Left — Brand */}
             <Link
               href="/"
               aria-label="Relentless Run home"
-              className="group flex min-w-0 shrink-0 items-center gap-3"
+              className="group relative flex min-w-0 shrink-0 items-center gap-3"
             >
-              <motion.img
-                src="/3d-header-logo.png"
-                alt="Relentless Run"
-                width={240}
-                height={64}
-                animate={{ y: [0, -3, 0], scale: [1, 1.02, 1] }}
-                transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut" }}
-                whileHover={{ scale: 1.08 }}
-                className="h-14 sm:h-16 lg:h-18 max-h-18 w-auto object-contain drop-shadow-[0_4px_16px_rgba(56,189,248,0.3)]"
-              />
+              <div className="relative flex items-center rounded-xl bg-[#0d1322]/95 border border-sky-500/25 p-1 shadow-[0_8px_25px_rgba(0,0,0,0.7)] backdrop-blur-md -my-3 sm:-my-4 transition-all duration-300 group-hover:border-sky-400/50 group-hover:shadow-[0_8px_30px_rgba(56,189,248,0.3)]">
+                <motion.img
+                  src="/3d-header-logo.png"
+                  alt="Relentless Run"
+                  width={200}
+                  height={52}
+                  animate={{ y: [0, -2, 0], scale: [1, 1.02, 1] }}
+                  transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut" }}
+                  whileHover={{ scale: 1.05 }}
+                  className="h-12 sm:h-13 lg:h-14 w-auto rounded-lg object-contain drop-shadow-[0_4px_16px_rgba(56,189,248,0.4)]"
+                />
+              </div>
               <span className="hidden xl:inline-flex items-center gap-1.5 rounded-md bg-sky-500/20 px-2.5 py-0.5 font-mono text-[0.6rem] font-bold text-[#f0f0f0] uppercase tracking-widest border border-sky-500/30">
                 <span className="relative flex h-1.5 w-1.5">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
@@ -361,7 +363,7 @@ export function AppHeader() {
 
       {/* ─── Mobile bar ─── */}
       <div className="flex w-full items-center justify-between md:hidden">
-        <div className={`flex w-full items-center justify-between rounded-[1.2rem] border border-(--line-strong) px-4 py-2.5 transition-all duration-500 ${
+        <div className={`flex h-13 w-full items-center justify-between rounded-[1.2rem] border border-(--line-strong) px-4 py-1.5 transition-all duration-500 ${
           scrolled
             ? "bg-(--header-bg) shadow-[0_18px_40px_-28px_rgba(0,0,0,0.65)] backdrop-blur-2xl"
             : "bg-(--header-bg)/80 backdrop-blur-xl"
@@ -370,12 +372,12 @@ export function AppHeader() {
             <motion.img
               src="/3d-header-logo.png"
               alt="Relentless Run"
-              width={180}
-              height={48}
+              width={160}
+              height={42}
               animate={{ y: [0, -2, 0], scale: [1, 1.02, 1] }}
               transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut" }}
               whileHover={{ scale: 1.06 }}
-              className="h-11 sm:h-13 w-auto object-contain shrink-0 drop-shadow-[0_4px_12px_rgba(56,189,248,0.25)]"
+              className="-my-2 h-10 sm:h-12 w-auto object-contain shrink-0 drop-shadow-[0_4px_12px_rgba(56,189,248,0.25)]"
             />
           </Link>
 
