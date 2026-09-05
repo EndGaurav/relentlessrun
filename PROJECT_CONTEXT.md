@@ -72,7 +72,7 @@ NEXT_PUBLIC_API_URL="http://127.0.0.1:4000"
 Backend example:
 
 ```env
-DATABASE_URL="postgresql://USER:PASSWORD@HOST:5432/mountainrun?schema=public"
+DATABASE_URL="postgresql://USER:PASSWORD@HOST:5432/relentlessrun?schema=public"
 PORT=4000
 FRONTEND_URL="http://localhost:3000"
 RAZORPAY_KEY_ID=""
@@ -170,7 +170,7 @@ c0022d8 Seeded data of events
 f192ed9 Auto-create default registration events
 dfd94d6 changed allowed origins
 651fbd6 Start frontend and API together in dev
-61b2bd6 Merge branch 'main' of https://github.com/kampitojha/mountainrun
+61b2bd6 Merge branch 'main' of https://github.com/kampitojha/relentlessrun
 755dc2a Migration changes
 87b01f6 Allow local dev origins for API CORS
 a56352c Fix local registration API connection
@@ -212,7 +212,7 @@ curl.exe http://127.0.0.1:4000/health
 Expected:
 
 ```json
-{"status":"ok","service":"mountainrun-api"}
+{"status":"ok","service":"relentlessrun-api"}
 ```
 
 ## Verification Commands

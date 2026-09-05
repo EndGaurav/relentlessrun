@@ -1,6 +1,7 @@
 import { prisma } from "../lib/prisma.js";
 import { env } from "../config/env.js";
 import { ApiError } from "../utils/api-error.js";
+import { logger } from "../utils/logger.js";
 import {
   buildCertificatePublicUrl,
   createCertificateNumber,
@@ -33,6 +34,7 @@ export async function ensureCertificateForRegistration(registrationId: string) {
   }
 
   const certificateNumber = createCertificateNumber(registration.bibNumber);
+  logger.info("[Certificate] Creating certificate record", { registrationId, certificateNumber });
   return prisma.certificate.create({
     data: {
       registrationId,
@@ -56,6 +58,12 @@ export async function generateCertificate(certificateId: string) {
 
   const issuedAt = existing.issuedAt ?? new Date();
   const pdfUrl = buildCertificatePublicUrl(existing.certificateNumber);
+
+  logger.info("[Certificate] Generated certificate URL", {
+    certificateId,
+    certificateNumber: existing.certificateNumber,
+    pdfUrl,
+  });
 
   return prisma.certificate.update({
     where: { id: certificateId },
@@ -133,6 +141,7 @@ export async function issueCertificateAfterApproval(registrationId: string) {
   const generated = await generateCertificate(cert.id);
 
   if (!env.certificateAutoSend) {
+    logger.info("[Certificate] Auto-send disabled in environment", { registrationId });
     return { certificate: generated, email: { sent: false as const, error: "auto-send disabled" } };
   }
 
@@ -145,6 +154,8 @@ export async function bulkGenerateQueuedCertificates(limit = 1000) {
     take: Math.min(Math.max(limit, 1), 2000),
     orderBy: { id: "asc" },
   });
+
+  logger.info("[Certificate] Bulk generating queued certificates", { count: queued.length });
 
   const results = [];
   for (const item of queued) {
@@ -160,6 +171,8 @@ export async function bulkEmailGeneratedCertificates(limit = 1000) {
     orderBy: { id: "asc" },
   });
 
+  logger.info("[Certificate] Bulk emailing certificates", { count: ready.length });
+
   const results = [];
   for (const item of ready) {
     results.push(await emailCertificate(item.id));
@@ -174,6 +187,8 @@ export async function bulkResendAllCertificates(limit = 2000) {
     take: Math.min(Math.max(limit, 1), 5000),
     orderBy: { id: "asc" },
   });
+
+  logger.info("[Certificate] Bulk resending all certificates", { count: all.length });
 
   const results = [];
   for (const item of all) {

@@ -50,7 +50,7 @@ export const allPublicEvents: PublicEvent[] = [
     highlight: "Flagship virtual run with official finisher medals and e-certificates.",
     banner: "Flagship run",
     bannerImageUrl:
-      "https://res.cloudinary.com/yppcqzt6/image/upload/v1785155314/mountainrun/admin/uvujs4wpdunrnmz9rfqt.jpg",
+      "https://res.cloudinary.com/yppcqzt6/image/upload/v1785155314/relentlessrun/admin/uvujs4wpdunrnmz9rfqt.jpg",
     reward: "Premium medal + T-shirt + certificate",
     status: "upcoming",
     compareAtPrice: "Rs. 699",

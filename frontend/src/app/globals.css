@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Syne:wght@700;800;900&family=Space+Grotesk:wght@500;700&display=swap');
 @import "tailwindcss";
 
 /* ── Dark (Permanent Global Default) ─────────────────────── */
@@ -67,29 +68,44 @@ html[data-theme="dark"] {
   --accent-hover: #e4e4e7;
   --accent-soft: rgba(255, 255, 255, 0.08);
   --on-accent: #0a0a0c;
-  --sage: #2dd4bf;
-  --sage-soft: rgba(45, 212, 191, 0.12);
-  --gold: #e2b93f;
-  --gold-deep: #c9a227;
-  --gold-soft: rgba(226, 185, 63, 0.12);
-  --gold-line: rgba(226, 185, 63, 0.3);
+  --background: #090d16;
+  --foreground: #f0f0f0;
+  --muted: #94a3b8;
+  --muted-soft: #64748b;
+  --line: rgba(255, 255, 255, 0.08);
+  --line-strong: rgba(255, 255, 255, 0.14);
+  --panel: #0f172a;
+  --panel-soft: #1e293b;
+  --panel-glass: rgba(15, 23, 42, 0.82);
+  --panel-glass-strong: rgba(15, 23, 42, 0.94);
+  --header-bg: rgba(9, 13, 22, 0.85);
+  --accent: #3b82f6;
+  --accent-hover: #60a5fa;
+  --accent-soft: rgba(59, 130, 246, 0.15);
+  --on-accent: #ffffff;
+  --sage: #38bdf8;
+  --sage-soft: rgba(56, 189, 248, 0.12);
+  --gold: #38bdf8;
+  --gold-deep: #0284c7;
+  --gold-soft: rgba(56, 189, 248, 0.12);
+  --gold-line: rgba(56, 189, 248, 0.3);
   --success: #34d399;
   --danger: #fb7185;
-  --eyebrow-color: #2dd4bf;
-  --shadow: 0 4px 30px -4px rgba(0, 0, 0, 0.45), 0 2px 10px -2px rgba(0, 0, 0, 0.35);
-  --shadow-hover: 0 20px 40px -10px rgba(0, 0, 0, 0.55), 0 10px 20px -5px rgba(0, 0, 0, 0.4);
-  --focus-ring: rgba(255, 255, 255, 0.14);
-  --input-bg: #18181f;
-  --selection-bg: rgba(45, 212, 191, 0.25);
-  --overlay: rgba(0, 0, 0, 0.65);
+  --eyebrow-color: #38bdf8;
+  --shadow: 0 4px 30px -4px rgba(0, 0, 0, 0.45);
+  --shadow-hover: 0 20px 40px -10px rgba(0, 0, 0, 0.55);
+  --focus-ring: rgba(59, 130, 246, 0.25);
+  --input-bg: #1e293b;
+  --selection-bg: rgba(56, 189, 248, 0.25);
+  --overlay: rgba(9, 13, 22, 0.75);
   --hero-grid: rgba(255, 255, 255, 0.04);
-  --trust-pill-bg: rgba(18, 18, 22, 0.75);
-  --glass-pill-bg: rgba(18, 18, 22, 0.7);
+  --trust-pill-bg: rgba(15, 23, 42, 0.75);
+  --glass-pill-bg: rgba(15, 23, 42, 0.7);
   --glass-pill-border: rgba(255, 255, 255, 0.1);
-  --glass-card-bg: rgba(18, 18, 22, 0.55);
+  --glass-card-bg: rgba(15, 23, 42, 0.55);
   --glass-card-border: rgba(255, 255, 255, 0.1);
-  --gradient-premium: linear-gradient(135deg, #f4f4f5 0%, #2dd4bf 50%, #818cf8 100%);
-  --feature-icon-bg: linear-gradient(180deg, #1a1a22 0%, var(--panel-soft) 100%);
+  --gradient-premium: linear-gradient(135deg, #f0f0f0 0%, #38bdf8 50%, #3b82f6 100%);
+  --feature-icon-bg: linear-gradient(180deg, #1e293b 0%, var(--panel-soft) 100%);
 }
 
 @theme inline {
@@ -97,6 +113,62 @@ html[data-theme="dark"] {
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+}
+
+/* ── Deep Charcoal Navy & Electric Blue Palette ── */
+.font-display {
+  font-family: 'Syne', 'Outfit', var(--font-geist-sans), sans-serif;
+}
+
+.font-tech {
+  font-family: 'Space Grotesk', var(--font-geist-mono), monospace;
+}
+
+.glass-card-dark {
+  background: rgba(11, 16, 26, 0.75);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+}
+
+.glass-card-accent {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.14) 0%, rgba(11, 16, 26, 0.8) 100%);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  box-shadow: 0 20px 40px -10px rgba(37, 99, 235, 0.25);
+}
+
+.glass-pill-bar {
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.neon-btn-blue, .neon-btn-orange {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: #f0f0f0;
+  box-shadow: 0 4px 20px rgba(37, 99, 235, 0.45);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.neon-btn-blue:hover, .neon-btn-orange:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(59, 130, 246, 0.65);
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+}
+
+.flame-text, .flame-text-orange {
+  background: linear-gradient(135deg, #38bdf8 0%, #00d2ff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.runner-glow-bg {
+  background: radial-gradient(circle at 60% 40%, rgba(37, 99, 235, 0.22) 0%, rgba(9, 13, 22, 0.95) 70%);
 }
 
 * {
@@ -1393,3 +1465,583 @@ html.dark .cl-userButtonPopoverCard,
 html[data-theme="dark"] .cl-userButtonPopoverCard {
   box-shadow: 0 20px 40px -8px rgba(0,0,0,0.5), 0 8px 16px -4px rgba(0,0,0,0.35) !important;
 }
+
+/* Home — a quieter, classic race-club visual language. */
+.classic-home {
+  --sage: #d7a849;
+  --sage-soft: rgba(215, 168, 73, 0.12);
+  --eyebrow-color: #dcb35f;
+  background: #101a20;
+}
+
+.classic-home main {
+  background: #101a20;
+}
+
+.classic-home .font-serif,
+.classic-home .classic-title {
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+.classic-home .section {
+  border-color: rgba(238, 223, 190, 0.12);
+}
+
+.classic-home .btn-primary {
+  background: #e0b75e;
+  color: #132027;
+  border: 1px solid #f2d48d;
+  box-shadow: 0 10px 24px -14px rgba(229, 183, 89, 0.75);
+}
+
+.classic-home .btn-primary:hover { background: #f0c974; }
+.classic-home .btn-secondary { border-color: rgba(235, 217, 177, 0.35); }
+.classic-home .btn-secondary:hover { background: rgba(255, 255, 255, 0.06); }
+
+.classic-hero {
+  background:
+    radial-gradient(circle at 86% 13%, rgba(211, 159, 61, 0.16), transparent 26rem),
+    linear-gradient(120deg, #122129 0%, #101a20 55%, #172830 100%);
+  border-bottom: 1px solid rgba(238, 223, 190, 0.16);
+}
+
+.classic-hero::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 7rem;
+  background: repeating-linear-gradient(90deg, transparent 0 38px, rgba(233, 189, 103, 0.08) 39px 40px);
+  mask-image: linear-gradient(to top, black, transparent);
+  pointer-events: none;
+}
+
+.classic-hero-noise {
+  position: absolute;
+  inset: 0;
+  opacity: .2;
+  background-image: radial-gradient(rgba(255,255,255,.7) .45px, transparent .7px);
+  background-size: 5px 5px;
+  mask-image: linear-gradient(to bottom, black, transparent 75%);
+  pointer-events: none;
+}
+
+.classic-kicker {
+  color: #e7bd68;
+  font-size: .7rem;
+  font-weight: 800;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+
+.classic-title {
+  color: #f4f0e5;
+  font-size: clamp(3.15rem, 7vw, 6.8rem);
+  font-weight: 700;
+  letter-spacing: -.065em;
+  line-height: .91;
+}
+
+.classic-title span { color: #e5bc68; display: block; }
+.classic-copy { color: #bdc7c3; font-size: 1.06rem; line-height: 1.75; }
+
+.classic-proof { display: inline-flex; align-items: center; gap: .5rem; color: #d8d9d0; font-size: .78rem; font-weight: 650; }
+.classic-proof svg { color: #e1b65d; }
+
+.classic-poster {
+  border: 1px solid rgba(235, 213, 157, .65);
+  box-shadow: 14px 14px 0 rgba(190, 142, 49, .22), 0 28px 65px rgba(0,0,0,.35);
+}
+
+.classic-stamp {
+  z-index: 2;
+  display: grid;
+  height: 6.25rem;
+  width: 6.25rem;
+  place-content: center;
+  border: 1px solid #e3b95f;
+  border-radius: 50%;
+  background: #dcae50;
+  color: #15232a;
+  line-height: 1;
+  text-align: center;
+  transform: rotate(-12deg);
+  box-shadow: 0 8px 24px rgba(0,0,0,.3);
+}
+.classic-stamp span { font-size: .55rem; font-weight: 900; letter-spacing: .18em; }
+.classic-stamp strong { margin: .18rem 0; font-family: Georgia, serif; font-size: 2.1rem; }
+
+.classic-section { background: #101a20; }
+.classic-home .heading,
+.classic-home h2 { font-family: Georgia, "Times New Roman", serif; letter-spacing: -.045em; }
+.classic-home .lede { color: #aebbb7; }
+.classic-home .eyebrow { color: #e0b75e; }
+
+.classic-steps,
+.classic-rewards {
+  border: 1px solid rgba(238, 223, 190, .15);
+  background: rgba(238, 223, 190, .15);
+}
+.classic-steps article,
+.classic-rewards article { background: #142129; }
+.classic-steps article:hover,
+.classic-rewards article:hover { background: #182830; }
+.classic-icon { border: 1px solid rgba(224, 183, 94, .45); background: rgba(224, 183, 94, .08); color: #e2b75c; }
+
+.classic-home .gallery-card,
+.classic-home .card { border-color: rgba(238, 223, 190, .14); }
+
+@media (max-width: 639px) {
+  .classic-title { font-size: clamp(2.8rem, 14vw, 4.5rem); }
+  .classic-stamp { height: 5.25rem; width: 5.25rem; }
+  .classic-stamp strong { font-size: 1.7rem; }
+}
+
+/* Event detail pages inherit the same finish-line club character, independently
+   from the catalogue and account screens. */
+.event-classic {
+  --background: #101a20;
+  --panel: #142129;
+  --panel-soft: #192a32;
+  --line: rgba(238, 223, 190, .14);
+  --line-strong: rgba(238, 223, 190, .26);
+  --foreground: #f4f0e5;
+  --muted: #adbbb6;
+  --muted-soft: #7f918d;
+  --sage: #d9ae58;
+  --sage-soft: rgba(217, 174, 88, .12);
+  --gold: #e2b75d;
+  --gold-deep: #e0b75e;
+  --gold-soft: rgba(224, 183, 94, .12);
+  --gold-line: rgba(224, 183, 94, .38);
+  background: #101a20;
+}
+
+.event-classic .section { border-color: rgba(238, 223, 190, .14); }
+.event-classic h2,
+.event-classic h3,
+.event-classic-title { font-family: Georgia, "Times New Roman", serif; }
+.event-classic .eyebrow { color: #e0b75e; }
+.event-classic .lede { color: #adbbb6; }
+.event-classic .btn-primary {
+  background: #e0b75e;
+  color: #132027;
+  border: 1px solid #f2d48d;
+}
+.event-classic .btn-primary:hover { background: #f0c974; }
+.event-classic .btn-secondary { border-color: rgba(235, 217, 177, .35); }
+.event-classic .btn-secondary:hover { background: rgba(255,255,255,.06); }
+
+.event-classic-hero {
+  background:
+    radial-gradient(circle at 15% 10%, rgba(224,183,94,.16), transparent 22rem),
+    linear-gradient(135deg, #13242c, #101a20 55%, #142129);
+}
+.event-classic-hero .hero-mesh-bg { opacity: .22; }
+.event-classic-hero .page-breadcrumb { background: rgba(16,26,32,.58); }
+.event-classic-title { letter-spacing: -.06em !important; }
+.event-classic-title .text-gradient-premium {
+  background: none;
+  color: #e4bb64;
+  -webkit-text-fill-color: currentColor;
+}
+.event-classic-poster {
+  border-color: rgba(235, 210, 145, .66) !important;
+  border-radius: 0 !important;
+  box-shadow: 14px 14px 0 rgba(190,142,49,.2), 0 28px 65px rgba(0,0,0,.38) !important;
+}
+.event-classic-poster::before {
+  content: "OFFICIAL MOUNTAIN RUN • EST. 2026";
+  position: absolute;
+  z-index: 2;
+  top: .85rem;
+  right: 1rem;
+  color: rgba(255,255,255,.78);
+  font-size: .56rem;
+  font-weight: 800;
+  letter-spacing: .16em;
+}
+
+.event-classic-stats { background: #101a20; }
+.event-classic-stats .container-page > div { transform: translateY(-.6rem); }
+.event-classic-stats .container-page > div > div { border-color: rgba(235,210,145,.28); }
+.event-classic-stats .container-page > div > div > div { background: #15242b; }
+.event-classic-stats .container-page > div > div > div:hover { background: #1a2b33; }
+.event-classic-stats .container-page > div > div > div > span:first-child {
+  border-radius: 999px;
+  border-color: rgba(224,183,94,.42);
+  background: rgba(224,183,94,.08);
+  color: #e0b75e;
+}
+
+.event-classic .text-gradient-premium {
+  background: none;
+  color: #e0b75e;
+  -webkit-text-fill-color: currentColor;
+}
+.event-classic .rounded-3xl { border-radius: 1rem; }
+.event-classic .rounded-2xl { border-radius: .75rem; }
+.event-classic .shadow-premium { box-shadow: 0 18px 45px -25px rgba(0,0,0,.78); }
+.event-classic [class*="grad-gold"] { background: #d7aa52; }
+
+.event-classic-cta { background: #101a20; }
+.event-classic-cta-card {
+  border-radius: 0 !important;
+  background: linear-gradient(145deg, rgba(224,183,94,.14), #15242b 35%, #132129) !important;
+  box-shadow: 12px 12px 0 rgba(190,142,49,.18), 0 28px 65px rgba(0,0,0,.35) !important;
+}
+.event-classic-cta-card h2 { font-size: clamp(2.1rem, 4vw, 3.3rem); }
+
+@media (max-width: 639px) {
+  .event-classic-poster { box-shadow: 7px 7px 0 rgba(190,142,49,.2), 0 20px 44px rgba(0,0,0,.35) !important; }
+  .event-classic-poster::before { display: none; }
+  .event-classic-cta-card { box-shadow: 7px 7px 0 rgba(190,142,49,.18), 0 20px 44px rgba(0,0,0,.3) !important; }
+}
+
+/* Event catalogue — the browsing page is deliberately quieter than an event
+   detail, with a collectible race-program feel. */
+.events-classic {
+  --background: #101a20;
+  --panel: #142129;
+  --panel-soft: #192a32;
+  --line: rgba(238, 223, 190, .14);
+  --line-strong: rgba(238, 223, 190, .28);
+  --foreground: #f4f0e5;
+  --muted: #adbbb6;
+  --muted-soft: #7f918d;
+  --sage: #d9ae58;
+  --sage-soft: rgba(217,174,88,.12);
+  background: #101a20;
+}
+.events-classic-hero {
+  background:
+    radial-gradient(circle at 80% -10%, rgba(224,183,94,.18), transparent 26rem),
+    linear-gradient(135deg, #13242c, #101a20 68%);
+}
+.events-classic-hero::after {
+  content: "MOUNTAIN RUN • OPEN RACES • MOUNTAIN RUN • OPEN RACES • MOUNTAIN RUN";
+  position: absolute;
+  bottom: .45rem;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  color: rgba(231,190,102,.17);
+  font-size: .58rem;
+  font-weight: 800;
+  letter-spacing: .22em;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.events-classic-title,
+.events-classic-heading { font-family: Georgia, "Times New Roman", serif; letter-spacing: -.05em; }
+.events-classic-title { color: #f4f0e5; }
+.events-classic .eyebrow { color: #e0b75e; }
+.events-classic .lede { color: #adbbb6; }
+.events-classic .page-breadcrumb { background: rgba(16,26,32,.56); }
+.events-classic-body { background: #101a20; }
+.events-classic .btn-primary { background: #e0b75e; color: #132027; border-color: #f2d48d; }
+.events-classic .btn-primary:hover { background: #f0c974; }
+.events-classic .btn-secondary { border-color: rgba(235,217,177,.35); }
+.events-classic .btn-secondary:hover { background: rgba(255,255,255,.06); }
+
+.events-classic-card {
+  border-radius: 0 !important;
+  border-color: rgba(235,210,145,.23) !important;
+  box-shadow: 8px 8px 0 rgba(190,142,49,.1);
+}
+.events-classic-card:hover {
+  border-color: rgba(224,183,94,.65) !important;
+  box-shadow: 10px 10px 0 rgba(190,142,49,.2), 0 22px 40px -26px rgba(0,0,0,.8) !important;
+  transform: translate(-2px, -2px);
+}
+.events-classic-card > div:first-child { min-height: 11rem; }
+.events-classic-card h3 { font-family: Georgia, "Times New Roman", serif; font-size: 1.3rem; }
+.events-classic-card .btn { border-radius: .4rem; }
+.events-classic-card .btn-primary { background: #e0b75e; color: #132027; }
+.events-classic-card .btn-secondary { border-color: rgba(235,217,177,.35); }
+.events-classic-card .rounded-md { border-radius: .25rem; }
+.events-classic .border-t { border-color: rgba(238,223,190,.14); }
+
+@media (max-width: 639px) {
+  .events-classic-card { box-shadow: 5px 5px 0 rgba(190,142,49,.1); }
+  .events-classic-card > div:first-child { min-height: 9.5rem; }
+}
+
+/* Gallery — designed as an album of race memories rather than a plain image grid. */
+.gallery-classic {
+  --background: #101a20;
+  --panel: #142129;
+  --panel-soft: #192a32;
+  --line: rgba(238,223,190,.14);
+  --line-strong: rgba(238,223,190,.28);
+  --foreground: #f4f0e5;
+  --muted: #adbbb6;
+  --muted-soft: #7f918d;
+  --sage: #d9ae58;
+  --sage-soft: rgba(217,174,88,.12);
+  --on-accent: #132027;
+  background: #101a20;
+}
+.gallery-classic > .page-section { padding-top: 1.5rem; }
+.gallery-classic .page-breadcrumb { background: rgba(16,26,32,.6); }
+.gallery-classic .eyebrow { color: #e0b75e; }
+.gallery-classic .lede { color: #adbbb6; }
+.gallery-classic-hero {
+  background:
+    radial-gradient(circle at 82% -16%, rgba(224,183,94,.18), transparent 28rem),
+    linear-gradient(135deg, #13242c, #101a20 70%);
+}
+.gallery-classic-hero::after {
+  content: "THE MOUNTAIN RUN ALBUM • THE MOUNTAIN RUN ALBUM • THE MOUNTAIN RUN ALBUM";
+  position: absolute;
+  bottom: .45rem;
+  left: 0;
+  width: 100%;
+  color: rgba(231,190,102,.16);
+  font-size: .58rem;
+  font-weight: 800;
+  letter-spacing: .21em;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.gallery-classic-title { font-family: Georgia, "Times New Roman", serif; letter-spacing: -.055em; }
+.gallery-classic-stat {
+  border-radius: 0 !important;
+  border-color: rgba(235,210,145,.24) !important;
+  background: #15242b !important;
+}
+.gallery-classic-stat span { border-radius: 50% !important; border-color: rgba(224,183,94,.35) !important; color: #e0b75e !important; }
+.gallery-classic-body { background: #101a20; }
+.gallery-classic-body button[aria-pressed="true"] { background: #e0b75e !important; color: #132027 !important; border-color: #f2d48d !important; }
+
+.gallery-classic-card {
+  border-radius: 0 !important;
+  border-color: rgba(235,210,145,.24) !important;
+  box-shadow: 7px 7px 0 rgba(190,142,49,.1) !important;
+}
+.gallery-classic-card:hover { border-color: rgba(224,183,94,.65) !important; box-shadow: 10px 10px 0 rgba(190,142,49,.2), 0 22px 40px -26px rgba(0,0,0,.8) !important; }
+.gallery-classic-card .rounded-full { border-radius: .25rem; background: rgba(16,26,32,.66); }
+
+/* Make catalogue cards feel like a selected race kit: brighter poster crop,
+   brass details, clear hierarchy and friendlier actions. */
+.events-classic-card > div:first-child::after {
+  content: "MOUNTAIN RUN";
+  position: absolute;
+  right: .85rem;
+  bottom: .7rem;
+  z-index: 2;
+  color: rgba(255,255,255,.74);
+  font-size: .55rem;
+  font-weight: 800;
+  letter-spacing: .16em;
+}
+.events-classic-card > div:first-child {
+  border-bottom: 3px solid rgba(224,183,94,.85);
+}
+.events-classic-card > div:nth-child(2) { padding: 1.25rem !important; }
+.events-classic-card h3 { line-height: 1.08; }
+.events-classic-card h3:hover { color: #e7bd68; }
+.events-classic-card [class*="rounded-md"] { border-color: rgba(224,183,94,.24); background: rgba(224,183,94,.07); }
+.events-classic-card .btn-primary { box-shadow: 0 7px 18px -11px rgba(224,183,94,.8); }
+.events-classic-card .btn-secondary { background: rgba(255,255,255,.025); }
+
+/* Leaderboard — turn live rankings into a confident, official race board. */
+.leaderboard-classic {
+  --background: #101a20;
+  --panel: #142129;
+  --panel-soft: #192a32;
+  --line: rgba(238,223,190,.14);
+  --line-strong: rgba(238,223,190,.28);
+  --foreground: #f4f0e5;
+  --muted: #adbbb6;
+  --muted-soft: #7f918d;
+  --sage: #d9ae58;
+  --sage-soft: rgba(217,174,88,.12);
+  background: #101a20;
+}
+.leaderboard-classic .page-breadcrumb { background: rgba(16,26,32,.58); }
+.leaderboard-classic-hero {
+  background:
+    radial-gradient(circle at 82% -12%, rgba(224,183,94,.2), transparent 25rem),
+    linear-gradient(135deg, #13242c, #101a20 68%);
+}
+.leaderboard-classic-hero::after {
+  content: "OFFICIAL RESULTS • GPS VERIFIED • OFFICIAL RESULTS • GPS VERIFIED • OFFICIAL RESULTS";
+  position: absolute;
+  bottom: .42rem;
+  left: 0;
+  width: 100%;
+  color: rgba(231,190,102,.16);
+  font-size: .58rem;
+  font-weight: 800;
+  letter-spacing: .2em;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.leaderboard-classic-title { font-family: Georgia, "Times New Roman", serif; letter-spacing: -.06em; }
+.leaderboard-classic .lede { color: #adbbb6; }
+.leaderboard-classic-content { background: #101a20; }
+.leaderboard-classic-content > section { border-color: rgba(238,223,190,.14); }
+.leaderboard-classic .btn-primary { background: #e0b75e; color: #132027; border-color: #f2d48d; }
+.leaderboard-classic .btn-secondary { border-color: rgba(235,217,177,.35); }
+.leaderboard-classic .btn-secondary:hover { background: rgba(255,255,255,.06); }
+
+.leaderboard-podium-card {
+  border-radius: 0 !important;
+  border-color: rgba(235,210,145,.28) !important;
+  background: #15242b !important;
+  box-shadow: 7px 7px 0 rgba(190,142,49,.1);
+}
+.leaderboard-podium-card:hover { box-shadow: 10px 10px 0 rgba(190,142,49,.2), 0 20px 35px -26px rgba(0,0,0,.8) !important; }
+.leaderboard-podium-card[class*="ring-amber"] { background: linear-gradient(180deg, rgba(224,183,94,.15), #15242b 42%) !important; }
+.leaderboard-podium-card .rounded-xl { border-radius: .4rem; }
+.leaderboard-podium-card h3 { font-family: Georgia, "Times New Roman", serif; }
+
+.leaderboard-table-shell {
+  border-radius: 0 !important;
+  border-color: rgba(235,210,145,.26) !important;
+  box-shadow: 8px 8px 0 rgba(190,142,49,.1);
+}
+.leaderboard-table-shell > div:first-child { background: rgba(224,183,94,.08); }
+.leaderboard-table-shell thead { background: rgba(255,255,255,.035); }
+.leaderboard-table-shell tbody tr:hover { background: rgba(224,183,94,.055) !important; }
+.leaderboard-classic input,
+.leaderboard-classic select { border-color: rgba(235,210,145,.25); background: #15242b; }
+
+@media (max-width: 639px) {
+  .leaderboard-podium-card { box-shadow: 5px 5px 0 rgba(190,142,49,.1); }
+  .leaderboard-table-shell { box-shadow: 5px 5px 0 rgba(190,142,49,.1); }
+}
+
+/* Authentication entry pages */
+.auth-classic {
+  --background: #101a20;
+  --panel: #142129;
+  --panel-soft: #192a32;
+  --line: rgba(238,223,190,.14);
+  --line-strong: rgba(238,223,190,.28);
+  --foreground: #f4f0e5;
+  --muted: #adbbb6;
+  --muted-soft: #7f918d;
+  --sage: #d9ae58;
+  --sage-soft: rgba(217,174,88,.12);
+  background: #101a20;
+}
+.auth-classic-shell {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 18% 20%, rgba(224,183,94,.16), transparent 23rem),
+    linear-gradient(135deg, #13242c, #101a20 62%, #142129);
+}
+.auth-classic-shell::before {
+  content: "MOUNTAIN RUN • RUN YOUR WAY • MOUNTAIN RUN • RUN YOUR WAY";
+  position: absolute;
+  right: -7rem;
+  top: 50%;
+  color: rgba(231,190,102,.09);
+  font-size: .62rem;
+  font-weight: 800;
+  letter-spacing: .25em;
+  transform: rotate(-90deg);
+  white-space: nowrap;
+}
+.auth-classic-kicker { color: #e0b75e; font-size: .68rem; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; }
+.auth-classic-title { color: #f4f0e5; font-family: Georgia, "Times New Roman", serif; font-size: clamp(3.25rem, 5vw, 5.25rem); font-weight: 700; letter-spacing: -.065em; line-height: .94; }
+.auth-classic-form {
+  position: relative;
+  border: 1px solid rgba(235,210,145,.38);
+  background: #15242b;
+  box-shadow: 12px 12px 0 rgba(190,142,49,.16), 0 25px 60px rgba(0,0,0,.3);
+  padding: 2rem;
+}
+.auth-classic-form-title { color: #f4f0e5; font-family: Georgia, "Times New Roman", serif; font-size: clamp(1.85rem, 3vw, 2.45rem); font-weight: 700; letter-spacing: -.045em; line-height: 1; }
+.auth-classic .cl-card { border-color: rgba(235,210,145,.2) !important; background: #192a32 !important; border-radius: .65rem !important; }
+.auth-classic .cl-formButtonPrimary { background: #e0b75e !important; color: #132027 !important; }
+.auth-classic .cl-formButtonPrimary:hover { background: #f0c974 !important; }
+.auth-classic .cl-socialButtonsBlockButton { border-color: rgba(235,210,145,.22) !important; background: #142129 !important; }
+.auth-classic .cl-dividerLine { background: rgba(238,223,190,.15) !important; }
+
+@media (max-width: 639px) {
+  .auth-classic-form { padding: 1.35rem; box-shadow: 6px 6px 0 rgba(190,142,49,.14), 0 18px 42px rgba(0,0,0,.28); }
+}
+
+/* Runner dashboard — operational information with the same composed race-club finish. */
+.dashboard-classic {
+  --background: #101a20;
+  --panel: #142129;
+  --panel-soft: #192a32;
+  --line: rgba(238,223,190,.14);
+  --line-strong: rgba(238,223,190,.28);
+  --foreground: #f4f0e5;
+  --muted: #adbbb6;
+  --muted-soft: #7f918d;
+  --sage: #d9ae58;
+  --sage-soft: rgba(217,174,88,.12);
+  --on-accent: #132027;
+  background: #101a20;
+}
+.dashboard-classic-content { background: #101a20; }
+.dashboard-classic .btn-primary { background: #e0b75e; color: #132027; border-color: #f2d48d; }
+.dashboard-classic .btn-primary:hover { background: #f0c974; }
+.dashboard-classic .btn-secondary { border-color: rgba(235,217,177,.35); }
+.dashboard-classic .btn-secondary:hover { background: rgba(255,255,255,.06); }
+
+.dashboard-classic-hero {
+  border-radius: 0 !important;
+  border-color: rgba(235,210,145,.34) !important;
+  background: linear-gradient(135deg, #172a32, #142129 58%, #192a32) !important;
+  box-shadow: 10px 10px 0 rgba(190,142,49,.16), 0 25px 55px -30px rgba(0,0,0,.8) !important;
+}
+.dashboard-classic-hero::after {
+  content: "RUNNER PORTAL • VERIFIED MILES • RUNNER PORTAL";
+  position: absolute;
+  right: -2rem;
+  top: .7rem;
+  color: rgba(231,190,102,.15);
+  font-size: .55rem;
+  font-weight: 800;
+  letter-spacing: .16em;
+  transform: rotate(4deg);
+  pointer-events: none;
+}
+.dashboard-classic-hero h1,
+.dashboard-classic h2,
+.dashboard-classic h3 { font-family: Georgia, "Times New Roman", serif; letter-spacing: -.035em; }
+.dashboard-classic-hero > div:last-child { border-color: rgba(238,223,190,.14); }
+.dashboard-classic-hero [class*="rounded-2xl"] { border-radius: .4rem; }
+
+.dashboard-classic-content > div:nth-child(4) button { border-radius: .35rem; }
+.dashboard-classic-content > div:nth-child(4) button[class*="bg-(--sage)"] { background: #e0b75e; color: #132027; }
+.dashboard-race-card {
+  border-radius: 0 !important;
+  border-color: rgba(235,210,145,.25) !important;
+  box-shadow: 7px 7px 0 rgba(190,142,49,.1);
+}
+.dashboard-race-card:hover { border-color: rgba(224,183,94,.6) !important; box-shadow: 10px 10px 0 rgba(190,142,49,.17), 0 20px 42px -30px rgba(0,0,0,.8) !important; }
+.dashboard-race-card > div:first-child { background: rgba(224,183,94,.055) !important; }
+.dashboard-race-card > div:first-child h2 { font-size: clamp(1.3rem, 2.5vw, 1.65rem); }
+.dashboard-race-card .rounded-full { border-radius: .25rem; }
+.dashboard-classic .rounded-3xl { border-radius: 1rem; }
+.dashboard-classic .rounded-2xl { border-radius: .65rem; }
+
+@media (max-width: 639px) {
+  .dashboard-classic-hero { box-shadow: 6px 6px 0 rgba(190,142,49,.14), 0 18px 42px -28px rgba(0,0,0,.75) !important; }
+  .dashboard-race-card { box-shadow: 5px 5px 0 rgba(190,142,49,.1); }
+}
+
+/* Continuous Marquee Ticker */
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee-slow {
+  display: flex;
+  width: max-content;
+  animation: marquee 40s linear infinite;
+}
+
+.animate-marquee-slow:hover {
+  animation-play-state: paused;
+}
+

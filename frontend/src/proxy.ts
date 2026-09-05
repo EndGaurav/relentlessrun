@@ -1,27 +1,7 @@
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-
-// Auth UI routes must stay public (including OAuth SSO callbacks).
-const isPublicRoute = createRouteMatcher([
-  "/",
-  "/events(.*)",
-  "/gallery(.*)",
-  "/leaderboard(.*)",
-  "/certificates(.*)",
-  "/sign-in(.*)",
-  "/sign-up(.*)",
-]);
-
-const isProtectedRoute = createRouteMatcher([
-  "/admin(.*)",
-]);
+import { clerkMiddleware } from "@clerk/nextjs/server";
 
 export default clerkMiddleware(async (auth, request) => {
-  if (isPublicRoute(request)) {
-    return;
-  }
-
-  if (isProtectedRoute(request)) {
-    // Keep return URL so /admin → sign-in → back to /admin (not /register)
+  if (request.nextUrl.pathname.startsWith("/admin")) {
     await auth.protect({
       unauthenticatedUrl: new URL(
         `/sign-in?redirect_url=${encodeURIComponent(request.nextUrl.pathname)}`,

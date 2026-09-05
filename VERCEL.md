@@ -77,7 +77,7 @@ Env change **does not** update a live deployment by itself.
 
 Add your Vercel domain under allowed origins / domains:
 
-`https://mountainrun-ji6l.vercel.app`
+`https://relentlessrun-ji6l.vercel.app`
 
 ## Verify
 

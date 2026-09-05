@@ -1,8 +1,8 @@
 import { MetadataRoute } from 'next';
 import { allPublicEvents } from './data/events';
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://mountainrun.in';
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.mountainrun.in';
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://relentlessrun.in';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.relentlessrun.in';
 
 interface EventData {
   id?: string;

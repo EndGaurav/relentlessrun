@@ -36,18 +36,17 @@ function ToastContainer({ toasts, dismiss }: { toasts: Toast[]; dismiss: (id: nu
       {toasts.map((t) => (
         <div
           key={t.id}
-          className={`pointer-events-auto flex items-start gap-3 rounded-xl border px-4 py-3 shadow-lg text-sm font-medium min-w-[260px] max-w-sm ${
-            t.type === "success"
-              ? "border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-800/40 dark:bg-emerald-950/60 dark:text-emerald-300"
-              : t.type === "error"
+          className={`pointer-events-auto flex items-start gap-3 rounded-xl border px-4 py-3 shadow-lg text-sm font-medium min-w-[260px] max-w-sm ${t.type === "success"
+            ? "border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-800/40 dark:bg-emerald-950/60 dark:text-emerald-300"
+            : t.type === "error"
               ? "border-red-200 bg-red-50 text-red-800 dark:border-red-800/40 dark:bg-red-950/60 dark:text-red-300"
               : "border-[var(--line)] bg-[var(--panel)] text-[var(--foreground)]"
-          }`}
+            }`}
         >
           <span className="mt-0.5 shrink-0">
             {t.type === "success" ? <CheckCircle className="h-4 w-4 text-emerald-600 dark:text-emerald-400" /> :
-             t.type === "error" ? <XCircle className="h-4 w-4 text-red-600 dark:text-red-400" /> :
-             <AlertCircle className="h-4 w-4" />}
+              t.type === "error" ? <XCircle className="h-4 w-4 text-red-600 dark:text-red-400" /> :
+                <AlertCircle className="h-4 w-4" />}
           </span>
           <span className="flex-1 leading-snug">{t.message}</span>
           <button type="button" onClick={() => dismiss(t.id)} className="shrink-0 opacity-50 hover:opacity-100 transition-opacity cursor-pointer">
@@ -367,7 +366,7 @@ export default function AdminEventsPage() {
                         const res = await fetch(getApiUrl("/api/uploads/image"), {
                           method: "POST",
                           headers: authHeaders(token),
-                          body: JSON.stringify({ file: base64, folder: "mountainrun/admin" }),
+                          body: JSON.stringify({ file: base64, folder: "relentlessrun/admin" }),
                         });
                         if (!res.ok) { toast("error", "Upload failed. Try again."); return; }
                         const json = await res.json();
@@ -433,8 +432,8 @@ export default function AdminEventsPage() {
                 <select className="input"
                   onChange={(e) => setForm((f) => ({ ...f, status: e.target.value }))}
                   value={form.status}>
-                  {[["DRAFT","Draft (not visible)"],["OPEN","Open (accepting registrations)"],
-                    ["CLOSED","Closed"],["COMPLETED","Completed"],["CANCELLED","Cancelled"],
+                  {[["DRAFT", "Draft (not visible)"], ["OPEN", "Open (accepting registrations)"],
+                  ["CLOSED", "Closed"], ["COMPLETED", "Completed"], ["CANCELLED", "Cancelled"],
                   ].map(([val, label]) => <option key={val} value={val}>{label}</option>)}
                 </select>
               </label>
@@ -608,11 +607,10 @@ function EventCard({ event, onEdit, onDelete, onToggleFeatured, onSetStatus, isP
             type="button"
             onClick={onToggleFeatured}
             title={event.featured ? "Remove from homepage" : "Feature on homepage"}
-            className={`inline-flex h-8 w-8 items-center justify-center rounded-lg border transition-colors cursor-pointer ${
-              event.featured
-                ? "border-amber-300 bg-amber-50 text-amber-600 hover:bg-amber-100 dark:border-amber-700/50 dark:bg-amber-950/40 dark:text-amber-400"
-                : "border-[var(--line)] bg-[var(--panel)] text-[var(--muted)] hover:text-amber-500 hover:border-amber-300"
-            }`}
+            className={`inline-flex h-8 w-8 items-center justify-center rounded-lg border transition-colors cursor-pointer ${event.featured
+              ? "border-amber-300 bg-amber-50 text-amber-600 hover:bg-amber-100 dark:border-amber-700/50 dark:bg-amber-950/40 dark:text-amber-400"
+              : "border-[var(--line)] bg-[var(--panel)] text-[var(--muted)] hover:text-amber-500 hover:border-amber-300"
+              }`}
           >
             {event.featured ? <Star className="h-3.5 w-3.5 fill-current" /> : <StarOff className="h-3.5 w-3.5" />}
           </button>

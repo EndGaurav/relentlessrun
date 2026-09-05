@@ -8,6 +8,7 @@ import {
   verifyWebhookSignature,
 } from "../services/razorpay.service.js";
 import { ApiError } from "../utils/api-error.js";
+import { logger } from "../utils/logger.js";
 import { validateBody } from "../utils/validate.js";
 import { createPaymentOrderSchema, verifyPaymentSchema } from "../validators/payment.validator.js";
 
@@ -25,6 +26,12 @@ export async function createPaymentOrder(request: Request, response: Response) {
   if (registration.payment?.status === "PAID") {
     throw new ApiError(409, "Registration is already paid");
   }
+
+  logger.info("[Payment] Creating Razorpay order", {
+    registrationId: registration.id,
+    bibNumber: registration.bibNumber,
+    amountInPaise: registration.event.priceInPaise,
+  });
 
   const order = await createRazorpayOrder({
     amountInPaise: registration.event.priceInPaise,
@@ -77,6 +84,10 @@ export async function verifyPayment(request: Request, response: Response) {
   });
 
   if (!isValid) {
+    logger.warn("[Payment] Invalid signature attempt", {
+      orderId: payload.razorpay_order_id,
+      paymentId: payload.razorpay_payment_id,
+    });
     throw new ApiError(400, "Invalid Razorpay payment signature");
   }
 
@@ -88,6 +99,12 @@ export async function verifyPayment(request: Request, response: Response) {
       status: "PAID",
       paidAt: new Date(),
     },
+  });
+
+  logger.info("[Payment] Verified payment successfully", {
+    orderId: payload.razorpay_order_id,
+    paymentId: payload.razorpay_payment_id,
+    registrationId: payment.registrationId,
   });
 
   let emailSent = false;
@@ -127,7 +144,9 @@ export async function verifyPayment(request: Request, response: Response) {
       },
     });
   } catch (err) {
-    console.error("[verifyPayment] Registration update or email failed:", err);
+    logger.error("[verifyPayment] Registration update or email failed", err, {
+      registrationId: payment.registrationId,
+    });
   }
 
   response.json({
@@ -145,6 +164,7 @@ export async function handleRazorpayWebhook(request: Request, response: Response
   const isValid = verifyWebhookSignature(rawBody, request.header("x-razorpay-signature"));
 
   if (!isValid) {
+    logger.warn("[Webhook] Invalid signature on Razorpay webhook");
     throw new ApiError(400, "Invalid Razorpay webhook signature");
   }
 
@@ -159,12 +179,15 @@ export async function handleRazorpayWebhook(request: Request, response: Response
   const orderId = event.payload?.payment?.entity?.order_id ?? event.payload?.order?.entity?.id;
   const paymentId = event.payload?.payment?.entity?.id;
 
+  logger.info("[Webhook] Received Razorpay event", { eventType: event.event, orderId, paymentId });
+
   if (orderId && (event.event === "payment.captured" || event.event === "order.paid")) {
     const existingPayment = await prisma.payment.findUnique({
       where: { razorpayOrderId: orderId },
       select: { status: true },
     });
     if (existingPayment?.status === "PAID") {
+      logger.info("[Webhook] Payment already marked as PAID, ignoring event", { orderId });
       return response.json({ received: true });
     }
     const payment = await prisma.payment.update({
@@ -192,7 +215,7 @@ export async function handleRazorpayWebhook(request: Request, response: Response
         amountInPaise: payment.amountInPaise,
       });
     } catch (err) {
-      console.error("[webhook] Failed to update registration or send email:", err);
+      logger.error("[Webhook] Failed to update registration or send email", err, { orderId });
     }
   }
 

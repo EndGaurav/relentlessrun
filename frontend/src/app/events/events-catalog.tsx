@@ -34,7 +34,7 @@ function EventCard({ event, variant = "upcoming" }: { event: PublicEvent; varian
   const hasBannerImage = Boolean(event.bannerImageUrl);
 
   return (
-    <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-(--line) bg-(--panel) transition-all duration-300 hover:border-(--sage)/30 hover:shadow-lg">
+    <article className="events-classic-card group flex h-full flex-col overflow-hidden rounded-2xl border border-(--line) bg-(--panel) transition-all duration-300 hover:border-(--sage)/30 hover:shadow-lg">
       <div className={`relative overflow-hidden ${hasBannerImage ? "min-h-36 bg-(--panel-soft)" : isPast ? "bg-(--panel-soft)" : "bg-gradient-to-br from-(--sage) to-emerald-600"}`}>
         {event.bannerImageUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -60,14 +60,13 @@ function EventCard({ event, variant = "upcoming" }: { event: PublicEvent; varian
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.2, duration: 0.4 }}
-                className="shrink-0 inline-flex items-center gap-1.5 rounded-full bg-white/20 px-2.5 py-0.5 text-[0.6rem] font-bold uppercase tracking-wider text-white backdrop-blur-sm"
+                className="shrink-0 inline-flex items-center gap-1.5 rounded-full bg-white/20 px-2.5 py-0.5 text-[0.6rem] font-bold uppercase tracking-wider text-[#f0f0f0] backdrop-blur-sm"
               >
-                <motion.span
-                  animate={{ opacity: [1, 0.4, 1] }}
-                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                  className="h-1.5 w-1.5 rounded-full bg-emerald-300"
-                />
-                Registration Open
+                <span className="relative flex h-1.5 w-1.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-400" />
+                </span>
+                <span>Registration Open</span>
               </motion.span>
             )}
           </div>
@@ -177,7 +176,7 @@ export function EventsCatalog() {
         <div className="flex items-end justify-between gap-2">
           <div>
             <p className="eyebrow">Open now</p>
-            <h2 className="mt-1.5 text-2xl font-bold tracking-tight text-(--foreground) sm:text-3xl">Upcoming events</h2>
+          <h2 className="events-classic-heading mt-1.5 text-2xl font-bold tracking-tight text-(--foreground) sm:text-3xl">Open races</h2>
           </div>
           <p className="shrink-0 text-xs text-(--muted)">
             {upcoming.length} race{upcoming.length === 1 ? "" : "s"}
@@ -208,7 +207,7 @@ export function EventsCatalog() {
           <div className="flex items-end justify-between gap-2">
             <div>
               <p className="eyebrow">Archive</p>
-              <h2 className="mt-1.5 text-2xl font-bold tracking-tight text-(--foreground) sm:text-3xl">Past events</h2>
+          <h2 className="events-classic-heading mt-1.5 text-2xl font-bold tracking-tight text-(--foreground) sm:text-3xl">Race archive</h2>
             </div>
             <p className="shrink-0 text-xs text-(--muted)">
               {past.length} completed race{past.length === 1 ? "" : "s"}

@@ -45,17 +45,17 @@ function StatCard({ label, value, icon: Icon }: { label: string; value: number; 
   return (
     <div
       ref={ref}
-      className="group relative overflow-hidden rounded-2xl border border-(--line) bg-(--panel) px-4 py-5 text-center transition-shadow hover:shadow-sm sm:px-5 sm:py-6"
+      className="group relative overflow-hidden rounded-2xl border border-white/10 bg-[#0d1322]/80 px-4 py-5 text-center backdrop-blur-xl shadow-lg transition-all hover:border-[#38bdf8]/40 hover:-translate-y-1 sm:px-5 sm:py-6"
     >
-      <div aria-hidden className="pointer-events-none absolute -top-6 -right-6 h-16 w-16 rounded-full bg-(--sage)/5 blur-xl transition-all group-hover:bg-(--sage)/10" />
-      <span className="mx-auto flex h-10 w-10 items-center justify-center rounded-xl border border-(--line) bg-(--panel-soft) text-(--sage) transition-all group-hover:border-(--sage)/30 group-hover:bg-(--sage)/10">
+      <div aria-hidden className="pointer-events-none absolute -top-6 -right-6 h-16 w-16 rounded-full bg-sky-500/10 blur-xl transition-all group-hover:bg-sky-500/20" />
+      <span className="mx-auto flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] text-[#38bdf8] transition-all group-hover:border-[#38bdf8]/30 group-hover:bg-[#38bdf8]/10">
         <Icon className="h-5 w-5" strokeWidth={1.75} />
       </span>
-      <p className="mt-2 text-2xl font-bold tracking-tight tabular-nums text-(--foreground) sm:text-3xl">
+      <p className="mt-2 font-display text-2xl font-black tracking-tight tabular-nums text-[#f0f0f0] sm:text-3xl">
         {count.toLocaleString("en-IN")}
         {value >= 100 ? "+" : ""}
       </p>
-      <p className="mt-0.5 text-[0.65rem] font-semibold uppercase tracking-wider text-(--muted) sm:text-xs">{label}</p>
+      <p className="mt-0.5 text-[0.65rem] font-bold uppercase tracking-wider text-slate-400 sm:text-xs">{label}</p>
     </div>
   );
 }
@@ -81,7 +81,7 @@ function GalleryCard({
       transition={{ duration: 0.45, delay: Math.min(index * 0.05, 0.3), ease: [0.22, 1, 0.36, 1] }}
       whileHover={reduce ? undefined : { y: -5 }}
       className={cn(
-        "group relative w-full overflow-hidden rounded-2xl border border-(--line) bg-(--panel) text-left shadow-(--shadow)",
+        "gallery-classic-card group relative w-full overflow-hidden rounded-2xl border border-(--line) bg-(--panel) text-left shadow-(--shadow)",
         "transition-[box-shadow,border-color] duration-300",
         "hover:border-(--sage)/30 hover:shadow-(--shadow-hover)",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--sage)/40",
@@ -534,37 +534,24 @@ export function GalleryClient() {
     <div className="min-w-0">
 
       {/* ── HERO ──────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden border-b border-(--line)">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 -z-10"
-          style={{
-            background: [
-              "radial-gradient(ellipse 80% 50% at 0% 0%, color-mix(in srgb, var(--sage) 12%, transparent) 0%, transparent 60%)",
-              "radial-gradient(ellipse 50% 40% at 100% 100%, color-mix(in srgb, var(--sage) 6%, transparent) 0%, transparent 50%)",
-              "var(--background)",
-            ].join(", "),
-          }}
-        />
-        <div aria-hidden className="pointer-events-none absolute top-8 right-8 flex gap-1.5 opacity-20">
-          {[...Array(3)].map((_, i) => (
-            <div key={i} className="h-1.5 w-1.5 rounded-full bg-(--sage) animate-pulse" style={{ animationDelay: `${i * 0.3}s` }} />
-          ))}
-        </div>
+      <section className="relative overflow-hidden border-b border-white/10 py-10 sm:py-14">
+        <div aria-hidden className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[350px] w-[500px] rounded-full bg-sky-500/5 blur-[100px]" />
 
-        <div className="container-page py-10 sm:py-12 md:py-14">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
           <motion.div
             className="mx-auto max-w-xl text-center"
             initial={reduce ? false : { opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
           >
-            <p className="eyebrow">Gallery</p>
-            <h1 className="mt-3 text-4xl font-bold leading-[1.1] tracking-tight text-(--foreground) sm:text-5xl">
-              Captured moments
+            <span className="inline-block rounded-full border border-[#38bdf8]/30 bg-[#38bdf8]/10 px-3.5 py-1 text-xs font-bold uppercase tracking-widest text-[#38bdf8]">
+              Runner Showcase
+            </span>
+            <h1 className="mt-4 font-display font-black text-4xl sm:text-5xl uppercase tracking-tight text-[#f0f0f0]">
+              Miles Worth Remembering
             </h1>
-            <p className="lede mx-auto mt-4 max-w-lg">
-              Race finishes, training miles, community runs &mdash; every frame tells a story from the Mountain Run community.
+            <p className="mt-4 text-base text-slate-300 max-w-lg mx-auto">
+              Race finishes, training miles, community runs &mdash; every frame tells a story from the RelentlessRun community.
             </p>
           </motion.div>
 
@@ -582,8 +569,8 @@ export function GalleryClient() {
       </section>
 
       {/* ── FILTERS + GRID ────────────────────────────────────── */}
-      <section className="section pt-8 sm:pt-10">
-        <div className="container-page">
+      <section className="py-8 sm:py-10">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="no-scrollbar -mx-1 flex gap-2 overflow-x-auto px-1 pb-1 sm:flex-wrap sm:overflow-visible">
             {galleryCategories.map((cat) => {
               const on = category === cat;
@@ -593,10 +580,10 @@ export function GalleryClient() {
                   type="button"
                   onClick={() => setCategory(cat)}
                   className={cn(
-                    "shrink-0 rounded-full border px-4 py-2 text-sm font-medium transition-all",
+                    "shrink-0 rounded-full border px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer",
                     on
-                      ? "border-(--sage) bg-(--sage) text-(--on-accent) shadow-xs"
-                      : "border-(--line) bg-(--panel) text-(--muted) hover:border-(--line-strong) hover:text-(--foreground)",
+                      ? "border-[#38bdf8] bg-gradient-to-r from-sky-500 to-blue-600 text-slate-950 shadow-md shadow-sky-500/20"
+                      : "border-white/10 bg-[#0d1322]/80 text-slate-300 hover:border-white/20 hover:text-white",
                   )}
                 >
                   {cat}

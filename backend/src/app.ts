@@ -1,8 +1,8 @@
 import cors from "cors";
 import express, { type NextFunction, type Request, type Response } from "express";
 import helmet from "helmet";
-import morgan from "morgan";
 import { env } from "./config/env.js";
+import { requestTraceMiddleware } from "./middleware/request-trace.js";
 import { adminRouter } from "./routes/admin.routes.js";
 import { certificateRouter } from "./routes/certificate.routes.js";
 import { adminContentRouter, contentRouter } from "./routes/content.routes.js";
@@ -16,6 +16,7 @@ import { subscriberRouter } from "./routes/subscriber.routes.js";
 import { uploadRouter } from "./routes/upload.routes.js";
 import { userRouter } from "./routes/user.routes.js";
 import { ApiError } from "./utils/api-error.js";
+import { logger } from "./utils/logger.js";
 
 export const app = express();
 const allowedOrigins = new Set(env.allowedOrigins);
@@ -42,6 +43,7 @@ function isAllowedOrigin(origin: string | undefined) {
   return false;
 }
 
+app.use(requestTraceMiddleware);
 app.use(helmet());
 app.use(cors({
   origin: (origin, callback) => {
@@ -57,15 +59,14 @@ app.use(cors({
 app.use("/api/payments/webhook", express.raw({ type: "application/json" }));
 // 2mb: proof screenshots as data URLs before Cloudinary (prefer Cloudinary in prod)
 app.use(express.json({ limit: "2mb" }));
-app.use(morgan(env.nodeEnv === "production" ? "combined" : "dev"));
 
 app.get("/health", (_request, response) => {
-  response.json({ status: "ok", service: "mountainrun-api" });
+  response.json({ status: "ok", service: "relentlessrun-api" });
 });
 
 app.get("/", (_request, response) => {
   response.json({
-    service: "mountainrun-api",
+    service: "relentlessrun-api",
     status: "ok",
     health: "/health",
     docs: "API routes are under /api/*",
@@ -90,11 +91,13 @@ app.use((_request, _response, next) => {
   next(new ApiError(404, "Route not found"));
 });
 
-app.use((error: Error, _request: Request, response: Response, _next: NextFunction) => {
+app.use((error: Error, request: Request, response: Response, _next: NextFunction) => {
   void _next;
   const statusCode = error instanceof ApiError ? error.statusCode : 500;
   if (statusCode === 500) {
-    console.error("[Unhandled Server Error]", error);
+    logger.error("[Unhandled Server Error]", error, { path: request.path, method: request.method });
+  } else {
+    logger.warn(`API Error (${statusCode}): ${error.message}`, { statusCode, path: request.path, method: request.method });
   }
 
   response.status(statusCode).json({

@@ -217,7 +217,7 @@ export default function AdminMedalDispatchPage() {
       const downloadUrl = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = downloadUrl;
-      a.download = `mountainrun-medal-dispatch-${new Date().toISOString().split("T")[0]}.csv`;
+      a.download = `relentlessrun-medal-dispatch-${new Date().toISOString().split("T")[0]}.csv`;
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -251,17 +251,17 @@ export default function AdminMedalDispatchPage() {
       setActiveItem((prev) =>
         prev
           ? {
-              ...prev,
-              medalDelivery: {
-                id: prev.medalDelivery?.id || `new-${Date.now()}`,
-                status: editStatus as NonNullable<DispatchItem["medalDelivery"]>["status"],
-                courier: editCourier.trim() || null,
-                trackingNumber: editTrackingNumber.trim() || null,
-                trackingUrl: editTrackingUrl.trim() || null,
-                dispatchedAt: editStatus === "DISPATCHED" ? new Date().toISOString() : prev.medalDelivery?.dispatchedAt || null,
-                deliveredAt: editStatus === "DELIVERED" ? new Date().toISOString() : prev.medalDelivery?.deliveredAt || null,
-              },
-            }
+            ...prev,
+            medalDelivery: {
+              id: prev.medalDelivery?.id || `new-${Date.now()}`,
+              status: editStatus as NonNullable<DispatchItem["medalDelivery"]>["status"],
+              courier: editCourier.trim() || null,
+              trackingNumber: editTrackingNumber.trim() || null,
+              trackingUrl: editTrackingUrl.trim() || null,
+              dispatchedAt: editStatus === "DISPATCHED" ? new Date().toISOString() : prev.medalDelivery?.dispatchedAt || null,
+              deliveredAt: editStatus === "DELIVERED" ? new Date().toISOString() : prev.medalDelivery?.deliveredAt || null,
+            },
+          }
           : null,
       );
     } catch (err) {
@@ -306,11 +306,10 @@ export default function AdminMedalDispatchPage() {
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
         <div
           onClick={() => setStatusTab("PENDING")}
-          className={`cursor-pointer rounded-2xl border p-4 transition-all ${
-            statusTab === "PENDING"
+          className={`cursor-pointer rounded-2xl border p-4 transition-all ${statusTab === "PENDING"
               ? "border-(--sage) bg-(--sage)/10 shadow-sm"
               : "border-(--line) bg-(--panel) hover:border-(--line-strong)"
-          }`}
+            }`}
         >
           <div className="flex items-center justify-between text-(--muted)">
             <span className="text-xs font-bold uppercase tracking-wider">Ready To Ship</span>
@@ -324,11 +323,10 @@ export default function AdminMedalDispatchPage() {
 
         <div
           onClick={() => setStatusTab("DISPATCHED")}
-          className={`cursor-pointer rounded-2xl border p-4 transition-all ${
-            statusTab === "DISPATCHED"
+          className={`cursor-pointer rounded-2xl border p-4 transition-all ${statusTab === "DISPATCHED"
               ? "border-sky-500 bg-sky-500/10 shadow-sm"
               : "border-(--line) bg-(--panel) hover:border-(--line-strong)"
-          }`}
+            }`}
         >
           <div className="flex items-center justify-between text-(--muted)">
             <span className="text-xs font-bold uppercase tracking-wider">In Transit</span>
@@ -342,11 +340,10 @@ export default function AdminMedalDispatchPage() {
 
         <div
           onClick={() => setStatusTab("DELIVERED")}
-          className={`cursor-pointer rounded-2xl border p-4 transition-all ${
-            statusTab === "DELIVERED"
+          className={`cursor-pointer rounded-2xl border p-4 transition-all ${statusTab === "DELIVERED"
               ? "border-emerald-500 bg-emerald-500/10 shadow-sm"
               : "border-(--line) bg-(--panel) hover:border-(--line-strong)"
-          }`}
+            }`}
         >
           <div className="flex items-center justify-between text-(--muted)">
             <span className="text-xs font-bold uppercase tracking-wider">Delivered</span>
@@ -363,11 +360,10 @@ export default function AdminMedalDispatchPage() {
             setStatusTab("ALL");
             setProofFilter("APPROVED");
           }}
-          className={`cursor-pointer rounded-2xl border p-4 transition-all ${
-            statusTab === "ALL"
+          className={`cursor-pointer rounded-2xl border p-4 transition-all ${statusTab === "ALL"
               ? "border-amber-500 bg-amber-500/10 shadow-sm"
               : "border-(--line) bg-(--panel) hover:border-(--line-strong)"
-          }`}
+            }`}
         >
           <div className="flex items-center justify-between text-(--muted)">
             <span className="text-xs font-bold uppercase tracking-wider">Total Approved</span>
@@ -463,11 +459,10 @@ export default function AdminMedalDispatchPage() {
               key={tab.id}
               type="button"
               onClick={() => setStatusTab(tab.id)}
-              className={`rounded-lg px-3 py-1.5 text-xs font-bold transition ${
-                statusTab === tab.id
+              className={`rounded-lg px-3 py-1.5 text-xs font-bold transition ${statusTab === tab.id
                   ? "bg-(--foreground) text-(--background)"
                   : "text-(--muted) hover:bg-(--line) hover:text-(--foreground)"
-              }`}
+                }`}
             >
               {tab.label}
             </button>
@@ -812,11 +807,10 @@ export default function AdminMedalDispatchPage() {
                           key={preset}
                           type="button"
                           onClick={() => setEditCourier(preset)}
-                          className={`rounded-md px-2 py-0.5 text-[0.65rem] font-semibold transition ${
-                            editCourier === preset
+                          className={`rounded-md px-2 py-0.5 text-[0.65rem] font-semibold transition ${editCourier === preset
                               ? "bg-(--sage) text-(--on-accent)"
                               : "bg-(--line) text-(--muted) hover:text-(--foreground)"
-                          }`}
+                            }`}
                         >
                           {preset}
                         </button>

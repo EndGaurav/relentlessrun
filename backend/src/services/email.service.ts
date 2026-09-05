@@ -1,5 +1,6 @@
 import { Resend } from "resend";
 import { env } from "../config/env.js";
+import { logger } from "../utils/logger.js";
 import {
   buildCertificateEmailHtml,
   type CertificateRenderData,
@@ -161,7 +162,7 @@ function buildConfirmationHtml(payload: RegistrationEmailPayload) {
                     </p>
                     <p style="margin:0 0 16px;font-size:11px;color:${GOLD};letter-spacing:0.2em;text-transform:uppercase;">── Every Finish Has a Story ──</p>
                     <p style="margin:0 0 2px;font-size:13px;font-weight:700;color:#ffffff;">Mountain Run Team</p>
-                    <p style="margin:0 0 16px;font-size:11px;color:rgba(255,255,255,0.4);">Organizer · mountainrun.in</p>
+                    <p style="margin:0 0 16px;font-size:11px;color:rgba(255,255,255,0.4);">Organizer · relentlessrun.in</p>
                     <table width="200" cellpadding="0" cellspacing="0" border="0" align="center" style="margin:0 auto;">
                       <tr>
                         <td width="66" height="3" style="background:#FF9933;border-radius:2px 0 0 2px;"></td>
@@ -207,11 +208,8 @@ export async function sendRegistrationConfirmationEmail(
   payload: RegistrationEmailPayload,
 ): Promise<EmailSendResult> {
   if (!resend) {
-    console.warn(
-      "[email] RESEND_API_KEY is not set. Skipping confirmation email to",
-      payload.to,
-    );
-    console.info("[email] Would send:", {
+    logger.warn("[email] RESEND_API_KEY is not set. Skipping confirmation email", { to: payload.to });
+    logger.info("[email] Would send confirmation email", {
       to: payload.to,
       bibNumber: payload.bibNumber,
       eventTitle: payload.eventTitle,
@@ -229,18 +227,22 @@ export async function sendRegistrationConfirmationEmail(
     });
 
     if (result.error) {
-      console.error("[email] Resend error:", result.error, { from });
+      logger.error("[email] Resend error", result.error, { from, to: payload.to });
       return {
         sent: false,
         error: `${result.error.message} (from: ${from})`,
       };
     }
 
-    console.info("[email] Confirmation sent:", result.data?.id, "to", payload.to);
+    logger.info("[email] Confirmation email sent successfully", {
+      emailId: result.data?.id,
+      to: payload.to,
+      bibNumber: payload.bibNumber,
+    });
     return { sent: true, id: result.data?.id };
   } catch (error) {
+    logger.error("[email] Failed to send confirmation email", error, { to: payload.to });
     const message = error instanceof Error ? error.message : "Unknown email error";
-    console.error("[email] Failed to send confirmation:", message);
     return { sent: false, error: message };
   }
 }
@@ -250,11 +252,8 @@ export async function sendCertificateEmail(input: {
   data: CertificateRenderData;
 }): Promise<EmailSendResult> {
   if (!resend) {
-    console.warn(
-      "[email] RESEND_API_KEY is not set. Skipping certificate email to",
-      input.to,
-    );
-    console.info("[email] Would send certificate:", {
+    logger.warn("[email] RESEND_API_KEY is not set. Skipping certificate email", { to: input.to });
+    logger.info("[email] Would send certificate email", {
       to: input.to,
       certificateNumber: input.data.certificateNumber,
       verifyUrl: input.data.verifyUrl,
@@ -272,24 +271,22 @@ export async function sendCertificateEmail(input: {
     });
 
     if (result.error) {
-      console.error("[email] Certificate Resend error:", result.error, { from });
+      logger.error("[email] Certificate Resend error", result.error, { from, to: input.to });
       return {
         sent: false,
         error: `${result.error.message} (from: ${from})`,
       };
     }
 
-    console.info(
-      "[email] Certificate sent:",
-      result.data?.id,
-      "to",
-      input.to,
-      input.data.certificateNumber,
-    );
+    logger.info("[email] Certificate email sent successfully", {
+      emailId: result.data?.id,
+      to: input.to,
+      certificateNumber: input.data.certificateNumber,
+    });
     return { sent: true, id: result.data?.id };
   } catch (error) {
+    logger.error("[email] Failed to send certificate email", error, { to: input.to });
     const message = error instanceof Error ? error.message : "Unknown email error";
-    console.error("[email] Failed to send certificate:", message);
     return { sent: false, error: message };
   }
 }

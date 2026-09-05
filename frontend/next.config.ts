@@ -17,7 +17,7 @@ const nextConfig: NextConfig = {
   },
 
   // ── Webhook proxy ─────────────────────────────────────────
-  // Razorpay webhook URL points to mountainrun.in (Vercel).
+  // Razorpay webhook URL points to relentlessrun.in (Vercel).
   // This rewrite forwards it to the Railway backend so the
   // Express handler can process the raw body + signature.
   async rewrites() {

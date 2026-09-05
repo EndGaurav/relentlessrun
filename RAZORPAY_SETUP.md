@@ -13,7 +13,7 @@ NEXT_PUBLIC_API_URL="http://127.0.0.1:49154"
 Create `backend/.env`:
 
 ```env
-DATABASE_URL="postgresql://USER:PASSWORD@HOST:5432/mountainrun?schema=public"
+DATABASE_URL="postgresql://USER:PASSWORD@HOST:5432/relentlessrun?schema=public"
 PORT=49154
 FRONTEND_URL="http://127.0.0.1:49160"
 RAZORPAY_KEY_ID="rzp_test_xxxxxxxxxx"

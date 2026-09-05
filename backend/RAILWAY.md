@@ -2,7 +2,7 @@
 
 ## Service settings
 
-In Railway → **mountainrun** service → **Settings**:
+In Railway → **relentlessrun** service → **Settings**:
 
 | Setting | Value |
 |---------|--------|
@@ -18,7 +18,7 @@ If Root Directory is the repo root, Railway builds the Next.js frontend instead 
 |----------|----------|
 | `DATABASE_URL` | Yes — PostgreSQL connection string (Railway Postgres plugin) |
 | `CLERK_SECRET_KEY` | Yes — `sk_test_...` or `sk_live_...` |
-| `FRONTEND_URL` | Yes — e.g. `https://mountainrun.in,https://www.mountainrun.in` |
+| `FRONTEND_URL` | Yes — e.g. `https://relentlessrun.in,https://www.relentlessrun.in` |
 | `NODE_ENV` | `production` |
 | `ADMIN_EMAILS` | Your admin email(s), comma-separated |
 | `ADMIN_BOOTSTRAP` | `false` in production |
@@ -33,13 +33,13 @@ If Root Directory is the repo root, Railway builds the Next.js frontend instead 
 After deploy:
 
 ```text
-GET https://mountainrun-production-c2c6.up.railway.app/health
+GET https://relentlessrun-production-c2c6.up.railway.app/health
 ```
 
 Expected:
 
 ```json
-{ "status": "ok", "service": "mountainrun-api" }
+{ "status": "ok", "service": "relentlessrun-api" }
 ```
 
 ## Common failures

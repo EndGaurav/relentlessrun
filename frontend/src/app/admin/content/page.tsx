@@ -389,7 +389,7 @@ export default function AdminContentPage() {
                           const res = await fetch(getApiUrl("/api/uploads/image"), {
                             method: "POST",
                             headers: authHeaders(token),
-                            body: JSON.stringify({ file: base64, folder: "mountainrun/admin" }),
+                            body: JSON.stringify({ file: base64, folder: "relentlessrun/admin" }),
                           });
                           if (!res.ok) { alert("Upload failed. Try again."); return; }
                           const json = await res.json();

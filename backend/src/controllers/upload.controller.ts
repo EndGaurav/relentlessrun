@@ -28,7 +28,7 @@ export async function uploadProofImage(request: AuthenticatedRequest, response: 
   if (isCloudinaryConfigured()) {
     const uploaded = await uploadImageToCloudinary(
       payload.file,
-      payload.folder ?? "mountainrun/proofs",
+      payload.folder ?? "relentlessrun/proofs",
     );
     response.status(201).json({
       data: {

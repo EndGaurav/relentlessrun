@@ -48,10 +48,10 @@ const stats: Stat[] = [
 
 export function EventStats() {
   return (
-    <section className="border-b border-(--line)">
+    <section className="event-classic-stats border-b border-(--line)">
       <div className="container-page -mt-7 sm:-mt-8">
         <Reveal>
-          <div className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-(--line) bg-(--line) shadow-premium sm:grid-cols-4">
+          <div className="grid grid-cols-2 gap-px overflow-hidden border border-(--line) bg-(--line) shadow-premium sm:grid-cols-4">
             {stats.map(({ icon: Icon, value, suffix, label }) => (
               <div
                 key={label}

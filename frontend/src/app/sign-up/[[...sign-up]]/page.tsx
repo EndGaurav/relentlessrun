@@ -3,6 +3,7 @@
 import { ClerkLoaded, ClerkLoading, SignUp } from "@clerk/nextjs";
 import Link from "next/link";
 import { useEffect } from "react";
+import { ChevronRight, Medal, Route } from "lucide-react";
 import { PageShell } from "../../components/app-shell";
 import { useTheme } from "../../components/theme-provider";
 
@@ -72,19 +73,28 @@ function ThemedSignUp() {
 export default function SignUpPage() {
   return (
     <PageShell>
-      <section className="section">
-        <div className="container-page px-4">
-          <div className="mx-auto flex max-w-md flex-col items-center text-center">
-            <p className="eyebrow">Get started</p>
-            <h1 className="mt-3 text-2xl font-semibold tracking-tight sm:text-4xl">
-              Create account
-            </h1>
-            <p className="mt-3 text-sm leading-6 text-(--muted)">
-              Sign up with Google or email. You&apos;ll land on the homepage after.
+      <div className="auth-classic">
+      <section className="auth-classic-shell section">
+        <div className="container-page grid min-h-[calc(100vh-11rem)] items-center gap-10 py-6 sm:py-10 lg:grid-cols-[.9fr_1.1fr] lg:gap-16">
+          <div className="auth-classic-intro hidden lg:block">
+            <p className="auth-classic-kicker">Join Mountain Run</p>
+            <h1 className="auth-classic-title mt-5">Your finish line starts here.</h1>
+            <p className="mt-6 max-w-md text-base leading-7 text-[#adbbb6]">
+              Pick a race, run on your own route, and turn each verified mile into something worth keeping.
             </p>
+            <div className="mt-9 space-y-4 border-t border-white/15 pt-7 text-sm text-[#d7ddd7]">
+              <p className="flex items-center gap-3"><Route className="h-4 w-4 text-[#e0b75e]" /> Run, walk or cycle your way</p>
+              <p className="flex items-center gap-3"><Medal className="h-4 w-4 text-[#e0b75e]" /> Earn official finisher rewards</p>
+            </div>
           </div>
 
-          <div className="mx-auto mt-6 w-full max-w-[400px] sm:mt-8">
+          <div className="auth-classic-form mx-auto w-full max-w-[430px]">
+            <div className="text-center lg:text-left">
+              <p className="auth-classic-kicker">Get started</p>
+              <h1 className="auth-classic-form-title mt-3">Create your runner account</h1>
+              <p className="mt-3 text-sm leading-6 text-(--muted)">Sign up with Google or email. You&apos;ll land on your runner portal after.</p>
+            </div>
+          <div className="mt-6 w-full sm:mt-8">
             <ClerkLoading>
               <div className="w-full rounded-2xl border border-(--line) bg-(--panel) p-6">
                 <div className="h-5 w-36 rounded-full bg-(--panel-soft)" />
@@ -100,12 +110,14 @@ export default function SignUpPage() {
 
           <p className="mt-6 text-center text-sm text-(--muted)">
             Already have an account?{" "}
-            <Link className="font-medium text-(--foreground) underline-offset-4 hover:underline" href="/sign-in">
-              Sign in
+            <Link className="inline-flex items-center gap-1 font-semibold text-[#e0b75e] hover:text-[#f0c974]" href="/sign-in">
+              Sign in <ChevronRight className="h-3.5 w-3.5" />
             </Link>
           </p>
+          </div>
         </div>
       </section>
+      </div>
     </PageShell>
   );
 }

@@ -35,7 +35,7 @@ export function EventHero({ event, isPast }: { event: PublicEvent; isPast: boole
       : `Register now — ${event.price.replace(/^Rs\.\s*/, "₹")}`;
 
   return (
-    <section className="relative overflow-hidden border-b border-(--line)">
+    <section className="event-classic-hero relative overflow-hidden border-b border-(--line)">
       <div className="hero-mesh-bg" />
       <div
         aria-hidden
@@ -69,7 +69,7 @@ export function EventHero({ event, isPast }: { event: PublicEvent; isPast: boole
             India&rsquo;s premium virtual run
           </p>
 
-          <h1 className="mt-5 text-[2rem] font-black leading-[1.05] tracking-tight text-(--foreground) sm:text-5xl lg:text-6xl">
+          <h1 className="event-classic-title mt-5 text-[2rem] font-black leading-[1.05] tracking-tight text-(--foreground) sm:text-5xl lg:text-6xl">
             <span className="block">{isPast ? "The" : "India's Premium"}</span>
             <span className="text-gradient-premium block">{event.name}</span>
           </h1>
@@ -141,7 +141,7 @@ export function EventHero({ event, isPast }: { event: PublicEvent; isPast: boole
           transition={{ delay: 0.25, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           className="relative mx-auto mt-8 max-w-5xl sm:mt-14"
         >
-          <div className="relative overflow-hidden rounded-2xl sm:rounded-[1.75rem] border border-(--line) bg-slate-950 shadow-premium">
+          <div className="event-classic-poster relative overflow-hidden border border-(--line) bg-slate-950 shadow-premium">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={event.bannerImageUrl ?? "/images/mountain-run-hero.svg"}

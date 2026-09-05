@@ -17,14 +17,16 @@ export function HomeSectionHeader({
 }) {
   if (align === "split") {
     return (
-      <div className="flex flex-col gap-4 sm:gap-5 md:flex-row md:items-end md:justify-between">
+      <div className="flex flex-col gap-4 sm:gap-5 md:flex-row md:items-end md:justify-between mb-8">
         <div className="min-w-0">
-          <p className="eyebrow">{eyebrow}</p>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight text-(--foreground) sm:text-4xl">
+          <span className="inline-block rounded-full border border-sky-500/30 bg-sky-500/10 px-3.5 py-1 text-xs font-bold uppercase tracking-widest text-[#38bdf8]">
+            {eyebrow}
+          </span>
+          <h2 className="mt-3 font-display font-black text-4xl sm:text-5xl uppercase tracking-tight text-[#f0f0f0]">
             {title}
           </h2>
           {lead ? (
-            <p className="lede mt-3 max-w-xl">{lead}</p>
+            <p className="mt-3 text-base text-slate-300 max-w-xl">{lead}</p>
           ) : null}
         </div>
         {action ? (
@@ -35,14 +37,18 @@ export function HomeSectionHeader({
   }
 
   return (
-    <div>
-      <p className="eyebrow">{eyebrow}</p>
-      <h2 className="mt-3 text-3xl font-bold tracking-tight text-(--foreground) sm:text-4xl">
+    <div className="mb-8">
+      <span className="inline-block rounded-full border border-sky-500/30 bg-sky-500/10 px-3.5 py-1 text-xs font-bold uppercase tracking-widest text-[#38bdf8]">
+        {eyebrow}
+      </span>
+      <h2 className="mt-3 font-display font-black text-4xl sm:text-5xl uppercase tracking-tight text-[#f0f0f0]">
         {title}
       </h2>
       {lead ? (
-        <p className="lede mt-4 max-w-2xl">{lead}</p>
+        <p className="mt-3 text-base text-slate-300 max-w-2xl">{lead}</p>
       ) : null}
     </div>
   );
 }
+
+

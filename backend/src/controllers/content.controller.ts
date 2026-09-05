@@ -91,7 +91,7 @@ export async function submitGalleryPhoto(request: Request, response: Response) {
 
   let imageUrl: string;
   if (isCloudinaryConfigured()) {
-    const uploaded = await uploadImageToCloudinary(payload.file, "mountainrun/gallery");
+    const uploaded = await uploadImageToCloudinary(payload.file, "relentlessrun/gallery");
     imageUrl = uploaded.secure_url;
   } else {
     if (!payload.file.startsWith("https://")) {

@@ -27,7 +27,7 @@ export function isCloudinaryConfigured() {
  */
 export async function uploadImageToCloudinary(
   file: string,
-  folder = "mountainrun/proofs",
+  folder = "relentlessrun/proofs",
 ): Promise<CloudinaryUploadResult> {
   if (!isCloudinaryConfigured()) {
     throw new ApiError(503, "Image upload is not configured (Cloudinary)");

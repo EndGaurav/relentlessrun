@@ -8,7 +8,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Camera,
   LayoutDashboard,
-  LogIn,
   Settings,
   LogOut,
   CalendarDays,
@@ -228,23 +227,24 @@ function NavLink({
     <Link
       href={href}
       onClick={onClick}
-      className={`relative rounded-full px-4 py-1.5 text-sm font-medium tracking-tight transition-all duration-300 ${
+      className={`relative rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-wider transition-all duration-300 ${
         active
-          ? "text-(--foreground)"
-          : "text-(--muted-soft) hover:text-(--foreground)"
+          ? "text-white"
+          : "text-white/70 hover:text-white"
       }`}
     >
       {label}
       {active && (
         <motion.span
           layoutId="nav-pill"
-          className="absolute inset-0 -z-10 rounded-full bg-(--panel) shadow-[0_1px_4px_-1px_rgba(0,0,0,0.04)]"
+          className="absolute inset-0 -z-10 rounded-full bg-orange-500/20 border border-orange-500/40"
           transition={{ type: "spring", stiffness: 400, damping: 30 }}
         />
       )}
     </Link>
   );
 }
+
 
 /* ─── Main header ─── */
 export function AppHeader() {
@@ -273,99 +273,122 @@ export function AppHeader() {
     <header className="fixed inset-x-0 top-0 z-50 flex justify-center px-4 pt-3 sm:pt-4">
       {/* ─── Desktop floating bar ─── */}
       <div
-        className={`hidden w-full max-w-[1280px] transition-all duration-500 ease-out md:block ${
+        className={`hidden w-full max-w-7xl transition-all duration-500 ease-out md:block ${
           scrolled ? "-translate-y-0.5" : ""
         }`}
       >
         <div
-          className={`flex items-center justify-between rounded-2xl border border-(--line) transition-all duration-500 ease-out ${
+          className={`overflow-hidden rounded-full border border-white/15 shadow-2xl transition-all duration-500 ease-out ${
             scrolled
-              ? "bg-(--header-bg) py-2 pl-4 pr-2 shadow-[0_4px_24px_-6px_rgba(0,0,0,0.04)] backdrop-blur-2xl"
-              : "bg-(--header-bg)/70 py-2.5 pl-5 pr-2.5 shadow-none backdrop-blur-lg"
+              ? "bg-[#090d16]/95 backdrop-blur-2xl"
+              : "bg-[#090d16]/85 backdrop-blur-xl"
           }`}
         >
-          {/* Left — Logo */}
-          <Link
-            href="/"
-            aria-label="Mountain Run home"
-            className="group flex shrink-0 items-center gap-2.5"
-          >
-            <img
-              src="/logo-mark.svg"
-              alt="Mountain Run"
-              width={28}
-              height={28}
-              className={`shrink-0 transition-all duration-500 ease-out group-hover:scale-110 group-hover:rotate-3 ${
-                scrolled ? "h-6 w-6 sm:h-7 sm:w-7" : "h-7 w-7 sm:h-8 sm:w-8"
-              }`}
-            />
-            <span className={`font-bold tracking-tight text-(--foreground) transition-all duration-500 ease-out ${
-              scrolled ? "text-sm sm:text-base" : "text-base sm:text-lg"
-            }`}>
-              <BrandText />
-            </span>
-          </Link>
-
-          {/* Center — Nav pill */}
-          <nav className="flex items-center gap-0.5 rounded-full border border-(--line) bg-(--panel-soft)/60 px-1 py-1 shadow-sm" aria-label="Main navigation">
-            {publicNav.map(([label, href]) => (
-              <NavLink
-                key={href}
-                active={isActive(href)}
-                href={href}
-                label={label}
+          <div className="flex items-center justify-between gap-4 px-6 py-2.5">
+            {/* Left — Brand */}
+            <Link
+              href="/"
+              aria-label="Relentless Run home"
+              className="group flex min-w-0 shrink-0 items-center gap-3"
+            >
+              <motion.img
+                src="/3d-header-logo.png"
+                alt="Relentless Run"
+                width={240}
+                height={64}
+                animate={{ y: [0, -3, 0], scale: [1, 1.02, 1] }}
+                transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut" }}
+                whileHover={{ scale: 1.08 }}
+                className="h-14 sm:h-16 lg:h-18 max-h-18 w-auto object-contain drop-shadow-[0_4px_16px_rgba(56,189,248,0.3)]"
               />
-            ))}
-            <Show when="signed-in">
-              <NavLink
-                active={isActive("/dashboard")}
-                href="/dashboard"
-                label="Dashboard"
-              />
-            </Show>
-          </nav>
+              <span className="hidden xl:inline-flex items-center gap-1.5 rounded-md bg-sky-500/20 px-2.5 py-0.5 font-mono text-[0.6rem] font-bold text-[#f0f0f0] uppercase tracking-widest border border-sky-500/30">
+                <span className="relative flex h-1.5 w-1.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-400" />
+                </span>
+                <span>LIVE RACES</span>
+              </span>
+            </Link>
 
-          {/* Right — Actions pill */}
-          <div className="flex items-center gap-1.5 rounded-full border border-(--line) bg-(--panel-soft)/60 px-2 py-1 shadow-sm">
-            <ThemeToggle size="sm" />
-            <div className="h-5 w-px bg-(--line)" />
-            <Show when="signed-out">
-              <Link
-                className="btn btn-primary h-8 px-3.5 text-xs font-semibold sm:h-9 sm:px-4 sm:text-sm"
-                href="/events"
-              >
-                Browse events
-              </Link>
-            </Show>
-            <Show when="signed-in">
-              <ProfileDropdown />
-            </Show>
+
+            {/* Center — Nav pill */}
+            <nav
+              className="hidden items-center gap-1 rounded-full border border-white/10 bg-white/[0.04] px-2 py-1 backdrop-blur-md lg:flex"
+              aria-label="Main navigation"
+            >
+              {publicNav.map(([label, href]) => (
+                <NavLink
+                  key={href}
+                  active={isActive(href)}
+                  href={href}
+                  label={label}
+                />
+              ))}
+              <Show when="signed-in">
+                <NavLink
+                  active={isActive("/dashboard")}
+                  href="/dashboard"
+                  label="Dashboard"
+                />
+              </Show>
+            </nav>
+
+            {/* Right — Actions */}
+            <div className="flex items-center gap-3">
+              <Show when="signed-out">
+                <Link
+                  className="hidden h-9 items-center rounded-full px-4 text-xs font-bold uppercase tracking-wider text-slate-300 transition-colors hover:text-white sm:inline-flex"
+                  href="/sign-in"
+                >
+                  Sign in
+                </Link>
+                <Link
+                  className="neon-btn-blue hidden h-9 items-center rounded-full px-5 text-xs font-black uppercase tracking-wider text-white shadow-lg transition-transform hover:scale-105 sm:inline-flex"
+                  href="/register"
+                >
+                  Register Now
+                </Link>
+              </Show>
+              <Show when="signed-in">
+                <ProfileDropdown />
+              </Show>
+            </div>
           </div>
         </div>
       </div>
 
+
+
       {/* ─── Mobile bar ─── */}
       <div className="flex w-full items-center justify-between md:hidden">
-        <div className={`flex w-full items-center justify-between rounded-2xl border border-(--line) px-4 py-2 transition-all duration-500 ${
+        <div className={`flex w-full items-center justify-between rounded-[1.2rem] border border-(--line-strong) px-4 py-2.5 transition-all duration-500 ${
           scrolled
-            ? "bg-(--header-bg) shadow-[0_4px_24px_-6px_rgba(0,0,0,0.04)] backdrop-blur-2xl"
-            : "bg-(--header-bg)/70 backdrop-blur-lg"
+            ? "bg-(--header-bg) shadow-[0_18px_40px_-28px_rgba(0,0,0,0.65)] backdrop-blur-2xl"
+            : "bg-(--header-bg)/80 backdrop-blur-xl"
         }`}>
-          <Link href="/" aria-label="Mountain Run home" className="group flex shrink-0 items-center gap-2">
-            <img
-              src="/logo-mark.svg"
-              alt="Mountain Run"
-              width={24}
-              height={24}
-              className="h-6 w-6 shrink-0 transition-transform duration-300 group-hover:scale-110"
+          <Link href="/" aria-label="Relentless Run home" className="group flex min-w-0 shrink-0 items-center">
+            <motion.img
+              src="/3d-header-logo.png"
+              alt="Relentless Run"
+              width={180}
+              height={48}
+              animate={{ y: [0, -2, 0], scale: [1, 1.02, 1] }}
+              transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut" }}
+              whileHover={{ scale: 1.06 }}
+              className="h-11 sm:h-13 w-auto object-contain shrink-0 drop-shadow-[0_4px_12px_rgba(56,189,248,0.25)]"
             />
-            <span className="text-sm font-bold tracking-tight text-(--foreground)">
-              <BrandText />
-            </span>
           </Link>
 
           <div className="flex items-center gap-1.5">
             <ThemeToggle size="sm" />
+            <Show when="signed-out">
+              <Link
+                href="/sign-in"
+                className="hidden rounded-full border border-(--line-strong) px-3 py-2 text-xs font-semibold text-(--foreground) sm:inline-flex"
+              >
+                Sign in
+              </Link>
+            </Show>
             <Show when="signed-in">
               <ProfileDropdown />
             </Show>
@@ -396,8 +419,17 @@ export function AppHeader() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 24, scale: 0.96 }}
               transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-              className="relative z-10 flex w-[85vw] max-w-sm flex-col gap-1.5 rounded-3xl border border-(--line-strong) bg-(--panel) p-3 shadow-2xl"
+              className="relative z-10 flex w-[88vw] max-w-sm flex-col gap-2 rounded-[1.5rem] border border-(--line-strong) bg-(--panel) p-3 shadow-2xl"
             >
+              <div className="rounded-[1.1rem] border border-(--line) bg-(--panel-soft)/70 px-4 py-3">
+                <p className="text-[0.7rem] font-semibold uppercase tracking-[0.22em] text-(--sage)">
+                  Mountain Run
+                </p>
+                <p className="mt-1 text-sm text-(--muted)">
+                  Plan a run, join a race, or check your results.
+                </p>
+              </div>
+
               {publicNav.map(([label, href, Icon], i) => {
                 const active = isActive(href);
                 return (
@@ -472,18 +504,38 @@ export function AppHeader() {
                   transition={{ delay: publicNav.length * 0.05, duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
                 >
                   <div className="mx-3 my-1.5 h-px bg-gradient-to-r from-(--line) via-(--line) to-transparent" />
+                  <div className="grid grid-cols-2 gap-2">
+                    <Link
+                      href="/sign-in"
+                      onClick={() => setOpen(false)}
+                      className="flex items-center justify-center rounded-2xl border border-(--line-strong) px-4 py-3 text-sm font-semibold text-(--foreground) transition-all duration-200 hover:bg-(--panel-soft)"
+                    >
+                      Sign in
+                    </Link>
+                    <Link
+                      href="/sign-up"
+                      onClick={() => setOpen(false)}
+                      className="flex items-center justify-center rounded-2xl bg-(--accent) px-4 py-3 text-sm font-semibold text-(--on-accent) transition-all duration-200 hover:bg-(--accent-hover)"
+                    >
+                      Create account
+                    </Link>
+                  </div>
+                </motion.div>
+              </Show>
+
+              <Show when="signed-in">
+                <motion.div
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: publicNav.length * 0.05, duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <div className="mx-3 my-1.5 h-px bg-gradient-to-r from-(--line) via-(--line) to-transparent" />
                   <Link
-                    href="/sign-in"
+                    href="/dashboard"
                     onClick={() => setOpen(false)}
-                    className="group flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-(--muted) transition-all duration-200 hover:bg-(--sage-soft)/40 hover:text-(--foreground)"
+                    className="flex items-center justify-center rounded-2xl bg-(--accent) px-4 py-3 text-sm font-semibold text-(--on-accent) transition-all duration-200 hover:bg-(--accent-hover)"
                   >
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-(--panel-soft) text-(--muted-soft) group-hover:bg-(--line)">
-                      <LogIn className="h-4 w-4" strokeWidth={1.75} />
-                    </span>
-                    <span className="flex-1">Sign in</span>
-                    <svg className="h-4 w-4 text-(--muted-soft) transition-all group-hover:translate-x-0.5" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="m6 4 4 4-4 4" />
-                    </svg>
+                    Open dashboard
                   </Link>
                 </motion.div>
               </Show>

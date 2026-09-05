@@ -499,7 +499,7 @@ function PaymentRegistrationFormInner() {
         currency: order.currency ?? "INR",
         name: "Mountain Run",
         description: `${activeEvent.label} · ${selectedDistance}`,
-        image: "https://mountainrun.in/icon.png",
+        image: "https://relentlessrun.in/icon.png",
         order_id: order.orderId,
         prefill: {
           name: payload.name,

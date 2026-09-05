@@ -1,4 +1,5 @@
 import "dotenv/config";
+import { logger } from "../utils/logger.js";
 
 function readEnv(name: string, fallback = "") {
   return (process.env[name] ?? fallback).trim();
@@ -39,7 +40,7 @@ function parseOriginList(raw: string) {
 }
 
 const configuredFrontendOrigins = parseOriginList(
-  readEnv("FRONTEND_URL", "https://mountainrun.in"),
+  readEnv("FRONTEND_URL", "https://relentlessrun.in"),
 );
 
 /** Browser origins allowed for CORS + Clerk token verification. */
@@ -49,8 +50,8 @@ const allowedOrigins = Array.from(
     "http://localhost:3000",
     "http://127.0.0.1:3000",
     "http://127.0.0.1:49154",
-    "https://mountainrun.in",
-    "https://www.mountainrun.in",
+    "https://relentlessrun.in",
+    "https://www.relentlessrun.in",
   ]),
 );
 
@@ -93,7 +94,7 @@ function normalizeResendFrom(raw: string | undefined): string {
     return name ? `${name} <${email}>` : `Mountain Run <${email}>`;
   }
 
-  console.warn(
+  logger.warn(
     `[env] RESEND_FROM_EMAIL is invalid ("${raw}"). Expected "Name <email@domain.com>" or "email@domain.com". Using fallback.`,
   );
   return fallback;
@@ -101,7 +102,7 @@ function normalizeResendFrom(raw: string | undefined): string {
 
 export const env = {
   port: Number(process.env.PORT ?? 4000),
-  frontendUrl: configuredFrontendOrigins[0] ?? "https://mountainrun.in",
+  frontendUrl: configuredFrontendOrigins[0] ?? "https://relentlessrun.in",
   allowedOrigins,
   nodeEnv: process.env.NODE_ENV ?? "development",
   razorpayKeyId: process.env.RAZORPAY_KEY_ID ?? "",

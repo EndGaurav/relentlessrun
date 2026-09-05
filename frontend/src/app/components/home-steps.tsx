@@ -2,62 +2,82 @@
 
 import { Award, MapPinned, Upload } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { HomeSectionHeader } from "./home-section-header";
 
 const steps: { step: string; title: string; text: string; icon: LucideIcon }[] = [
   {
     step: "01",
-    title: "Choose your run",
-    text: "Pick an event, distance, and reward kit before you register.",
+    title: "Choose Your Challenge",
+    text: "Pick an event, choose your distance (1.5K, 5K, 10K, 21K), and select your finisher reward kit.",
     icon: MapPinned,
   },
   {
     step: "02",
-    title: "Run & upload proof",
-    text: "Finish anywhere, then submit your GPS activity screenshot.",
+    title: "Run & Track Proof",
+    text: "Run anywhere at your own pace. Sync with Strava or Garmin and upload your activity screenshot.",
     icon: Upload,
   },
   {
     step: "03",
-    title: "Get verified rewards",
-    text: "Unlock leaderboard rank, certificate, medal, and selected merch.",
+    title: "Earn Finisher Medals",
+    text: "Get instantly verified to claim your official metal medal, DRI-FIT t-shirt, and E-certificate.",
     icon: Award,
   },
 ];
 
 export function HomeSteps() {
   return (
-    <section className="section border-b border-(--line)">
-      <div className="container-page">
-        <HomeSectionHeader eyebrow="How it works" title="Three simple steps" />
+    <section className="relative py-16 bg-[#0b0f19] text-[#f0f0f0]">
+      <div className="container-page max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        {/* Section Header */}
+        <div className="flex flex-col items-center text-center max-w-2xl mx-auto mb-12">
+          <span className="rounded-full border border-sky-500/30 bg-sky-500/10 px-4 py-1 text-xs font-bold uppercase tracking-widest text-[#38bdf8]">
+            HOW IT WORKS
+          </span>
+          <h2 className="mt-4 font-display font-black text-4xl sm:text-5xl uppercase tracking-tight text-[#f0f0f0]">
+            THREE SIMPLE <span className="text-[#38bdf8]">STEPS</span>
+          </h2>
+          <p className="mt-3 text-base text-slate-300">
+            From registration to your doorstep — how peak performance yields real rewards.
+          </p>
+        </div>
 
-        <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-5 sm:mt-10">
+        {/* 3 Step Glass Cards */}
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
           {steps.map((item) => {
             const Icon = item.icon;
             return (
-              <article
+              <div
                 key={item.step}
-                className="group flex flex-col rounded-2xl border border-(--line) bg-(--panel) p-5 transition-all duration-300 hover:-translate-y-0.5 hover:border-(--sage)/30 hover:shadow-lg sm:p-6"
+                className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03] p-8 backdrop-blur-xl transition-all duration-300 hover:border-[#38bdf8]/50 hover:bg-white/[0.06] hover:shadow-2xl hover:shadow-blue-950/40 hover:-translate-y-1"
               >
+                {/* Glowing step badge top right */}
                 <div className="flex items-center justify-between">
-                  <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-(--line) bg-(--panel-soft) text-(--sage) transition-colors duration-300 group-hover:bg-(--sage-soft) group-hover:text-(--sage)">
-                    <Icon aria-hidden="true" className="h-5 w-5" strokeWidth={1.75} />
-                  </span>
-                  <span className="font-mono text-2xl font-bold tabular-nums text-(--line-strong) transition-colors duration-300 group-hover:text-(--sage)/40">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-white/15 bg-blue-500/15 text-[#38bdf8] shadow-lg group-hover:bg-[#2563eb] group-hover:text-white transition-all duration-300">
+                    <Icon className="h-7 w-7" strokeWidth={2} />
+                  </div>
+                  <span className="font-display font-black text-4xl text-slate-600 group-hover:text-[#38bdf8]/60 transition-colors">
                     {item.step}
                   </span>
                 </div>
-                <h3 className="mt-5 text-lg font-bold tracking-tight text-(--foreground) transition-colors duration-300 group-hover:text-(--sage)">
+
+                <h3 className="mt-6 font-display font-bold text-2xl uppercase tracking-tight text-[#f0f0f0]">
                   {item.title}
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-(--muted) sm:text-base">
+                <p className="mt-3 text-sm leading-relaxed text-slate-300">
                   {item.text}
                 </p>
-              </article>
+
+                {/* Bottom subtle accent line */}
+                <div className="mt-6 h-1 w-12 rounded-full bg-white/10 group-hover:w-full group-hover:bg-[#38bdf8] transition-all duration-500" />
+              </div>
             );
           })}
         </div>
+
       </div>
     </section>
   );
 }
+
+

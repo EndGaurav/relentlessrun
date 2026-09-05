@@ -21,10 +21,10 @@ export function EventCta({ event }: { event: PublicEvent }) {
     : `Register now - ${formatPrice(event.price)}`;
 
   return (
-    <section className="relative overflow-hidden">
+    <section className="event-classic-cta relative overflow-hidden">
       <div className="container-page py-14 sm:py-20">
         <Reveal>
-          <div className="relative overflow-hidden rounded-[2.25rem] border border-(--gold-line) bg-gradient-to-b from-(--gold-soft) via-(--panel) to-(--panel) px-6 py-12 text-center shadow-premium sm:px-12 sm:py-16">
+          <div className="event-classic-cta-card relative overflow-hidden border border-(--gold-line) bg-gradient-to-b from-(--gold-soft) via-(--panel) to-(--panel) px-6 py-12 text-center shadow-premium sm:px-12 sm:py-16">
             <div
               aria-hidden
               className="sun-pulse pointer-events-none absolute -top-24 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full blur-3xl"

@@ -10,7 +10,7 @@ const traditional = [
   { text: "Pay for transport + kit", mark: "x" },
 ];
 
-const mountainRun = [
+const relentlessrun = [
   { text: "Run in your own city", mark: "ok" },
   { text: "Choose your time & pace", mark: "ok" },
   { text: "Verified, fair results", mark: "ok" },
@@ -70,7 +70,7 @@ export function EventCompare() {
                 </span>
               </div>
               <ul className="mt-5 space-y-3.5">
-                {mountainRun.map(({ text }) => (
+                {relentlessrun.map(({ text }) => (
                   <li key={text} className="flex items-center gap-3 text-sm font-semibold text-(--foreground)">
                     <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-emerald-600">
                       <Check className="h-3 w-3" strokeWidth={3} />

@@ -3,6 +3,7 @@ import type { NextFunction, Request, Response } from "express";
 import { env } from "../config/env.js";
 import { prisma } from "../lib/prisma.js";
 import { ApiError } from "../utils/api-error.js";
+import { updateLogContext } from "../utils/logger.js";
 
 export type AuthenticatedRequest = Request & {
   auth?: {
@@ -68,6 +69,8 @@ export async function requireClerkAuth(
       userId: payload.sub,
       sessionId: typeof payload.sid === "string" ? payload.sid : undefined,
     };
+
+    updateLogContext({ userId: payload.sub });
 
     next();
   } catch (error) {

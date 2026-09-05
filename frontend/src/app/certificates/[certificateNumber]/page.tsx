@@ -53,26 +53,24 @@ function TricolorRibbon() {
   );
 }
 
-function MountainRunCrestLogo() {
+function RelentlessRunCrestLogo() {
   return (
     <div className="flex flex-col items-center text-center">
       <svg width="64" height="42" viewBox="0 0 64 42" fill="none" xmlns="http://www.w3.org/2000/svg">
         {/* Mountain range background */}
-        <polygon points="32,4 12,34 52,34" fill="#1a3a2e" />
-        <polygon points="46,14 34,34 58,34" fill="#0d5c45" opacity="0.8" />
-        <polygon points="18,16 6,34 30,34" fill="#2d5a47" opacity="0.9" />
-        {/* Snow peak */}
-        <polygon points="32,4 27,14 32,12 37,14" fill="#ffffff" />
-        {/* Sun */}
-        <circle cx="48" cy="10" r="4" fill="#c9a227" />
-        {/* Running silhouette leaping on the peak */}
-        <ellipse cx="36" cy="7" rx="1.5" ry="1.5" fill="#fcfaf5" />
-        <path d="M36 8.5 L35 13 L32 16 L34 17 L36 14 L39 17 L41 16 L38 13 L37 8.5 Z" fill="#fcfaf5" />
+        <path d="M4 36 L22 12 L34 26 L44 10 L60 36 Z" fill="#1a3a2e" opacity="0.15" />
+        <path d="M8 36 L26 16 L38 28 L48 14 L56 36 Z" fill="#1a3a2e" opacity="0.3" />
+        <path d="M12 36 L28 18 L38 30 L46 18 L52 36 Z" fill="#1a3a2e" />
+        {/* Sun behind peaks */}
+        <circle cx="46" cy="14" r="5" fill="#d97706" />
+        {/* Runner silhouette in foreground */}
+        <circle cx="28" cy="14" r="2.5" fill="#c9a227" />
+        <path d="M28 17.5 L29 24 L32 23 M29 20 L25 22 M29 24 L27 30 M29 24 L32 29" stroke="#c9a227" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
-      <p className="text-base sm:text-lg font-black uppercase tracking-[0.2em] text-[#1a3a2e] leading-tight mt-1 font-serif">
-        MOUNTAIN <span className="text-[#d97706]">RUN</span>
+      <p className="font-display text-sm sm:text-base font-black uppercase tracking-[0.18em] text-[#1a3a2e] leading-none mt-1">
+        RELENTLESS<span className="text-[#d97706]">RUN</span>
       </p>
-      <p className="text-[0.55rem] font-extrabold uppercase tracking-[0.25em] text-[#7a6e5a]">
+      <p className="text-[0.55rem] font-bold uppercase tracking-[0.25em] text-[#7a6e5a] mt-0.5">
         — RUN ANYWHERE, ANYTIME —
       </p>
     </div>
@@ -244,9 +242,9 @@ export default function CertificateVerifyPage() {
                     <VirtualRunBadge />
                   </div>
 
-                  {/* Center Mountain Run Logo */}
+                  {/* Center RelentlessRun Crest Logo */}
                   <div className="w-2/4 flex justify-center">
-                    <MountainRunCrestLogo />
+                    <RelentlessRunCrestLogo />
                   </div>
 
                   {/* Right Event Header + Ribbon */}

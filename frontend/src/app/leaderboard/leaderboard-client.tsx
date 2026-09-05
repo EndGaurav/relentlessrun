@@ -155,7 +155,7 @@ function PodiumCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: position * 0.1 }}
       className={cn(
-        "relative flex flex-col items-center justify-between rounded-2xl border bg-(--panel) p-3.5 text-center transition-all duration-300 hover:shadow-xl sm:p-5",
+        "leaderboard-podium-card relative flex flex-col items-center justify-between rounded-2xl border bg-(--panel) p-3.5 text-center transition-all duration-300 hover:shadow-xl sm:p-5",
         medalMeta.borderClass,
         isFirst && "sm:-translate-y-2 ring-1 ring-amber-500/30 bg-linear-to-b from-amber-500/5 via-(--panel) to-(--panel)",
       )}
@@ -422,9 +422,9 @@ export function LeaderboardClient() {
   }, [currentClerkId, entries, isSignedIn, selectedDistance, user, userRegistrations]);
 
   return (
-    <div className="min-w-0 pb-16 px-1 sm:px-0">
+    <div className="leaderboard-classic-content min-w-0 pb-16 px-1 sm:px-0">
       {/* ── HERO ──────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden border-b border-(--line)">
+      <section className="leaderboard-classic-hero relative overflow-hidden border-b border-(--line)">
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 -z-10"
@@ -447,8 +447,8 @@ export function LeaderboardClient() {
             <div className="inline-flex items-center gap-1.5 sm:gap-2 rounded-full border border-(--sage)/30 bg-(--sage-soft) px-2.5 py-0.5 sm:px-3 sm:py-1 text-[0.65rem] sm:text-xs font-bold uppercase tracking-wider text-(--sage)">
               <Sparkles className="h-3 w-3 sm:h-3.5 sm:w-3.5" /> Official Event Leaderboard
             </div>
-            <h1 className="mt-2.5 sm:mt-3 text-3xl font-black leading-[1.1] tracking-tight text-foreground sm:text-5xl">
-              Verified Race Rankings
+            <h1 className="leaderboard-classic-title mt-2.5 sm:mt-3 text-3xl font-black leading-[1.1] tracking-tight text-foreground sm:text-5xl">
+              The finishers&apos; board
             </h1>
             <p className="lede mx-auto mt-2.5 sm:mt-3 max-w-lg text-xs sm:text-base">
               Explore real-time standings across all distance categories. Every finish is verified with GPS tracking.
@@ -728,7 +728,7 @@ export function LeaderboardClient() {
                   )}
 
                   {/* FULL RANKINGS TABLE */}
-                  <div className="overflow-hidden rounded-2xl border border-(--line) bg-(--panel) shadow-xs">
+                  <div className="leaderboard-table-shell overflow-hidden rounded-2xl border border-(--line) bg-(--panel) shadow-xs">
                     <div className="border-b border-(--line) bg-(--panel-soft) px-3.5 py-3 sm:px-6 flex items-center justify-between">
                       <h3 className="text-xs sm:text-sm font-bold text-foreground">
                         All Verified Finishers · {selectedDistance}
@@ -860,7 +860,7 @@ export function LeaderboardClient() {
               {/* ── TAB 2: PARTICIPANTS ROSTER ─────────────────────── */}
               {activeTab === "participants" && (
                 <div className="mt-6 sm:mt-8 space-y-6">
-                  <div className="overflow-hidden rounded-2xl border border-(--line) bg-(--panel) shadow-xs">
+                  <div className="leaderboard-table-shell overflow-hidden rounded-2xl border border-(--line) bg-(--panel) shadow-xs">
                     <div className="border-b border-(--line) bg-(--panel-soft) px-3.5 py-3 sm:px-6 flex items-center justify-between">
                       <div>
                         <h3 className="text-xs sm:text-sm font-bold text-foreground">

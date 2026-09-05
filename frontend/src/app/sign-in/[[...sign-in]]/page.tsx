@@ -3,6 +3,7 @@
 import { ClerkLoaded, ClerkLoading, SignIn } from "@clerk/nextjs";
 import Link from "next/link";
 import { useEffect } from "react";
+import { BadgeCheck, ChevronRight, Trophy } from "lucide-react";
 import { PageShell } from "../../components/app-shell";
 import { useTheme } from "../../components/theme-provider";
 
@@ -72,19 +73,28 @@ function ThemedSignIn() {
 export default function SignInPage() {
   return (
     <PageShell>
-      <section className="section">
-        <div className="container-page px-4">
-          <div className="mx-auto flex max-w-md flex-col items-center text-center">
-            <p className="eyebrow">Welcome back</p>
-            <h1 className="mt-3 text-2xl font-semibold tracking-tight sm:text-4xl">
-              Sign in
-            </h1>
-            <p className="mt-3 text-sm leading-6 text-(--muted)">
-              Use Google or your email and password.
+      <div className="auth-classic">
+      <section className="auth-classic-shell section">
+        <div className="container-page grid min-h-[calc(100vh-11rem)] items-center gap-10 py-6 sm:py-10 lg:grid-cols-[.9fr_1.1fr] lg:gap-16">
+          <div className="auth-classic-intro hidden lg:block">
+            <p className="auth-classic-kicker">Mountain Run runners&apos; club</p>
+            <h1 className="auth-classic-title mt-5">Welcome back to the road.</h1>
+            <p className="mt-6 max-w-md text-base leading-7 text-[#adbbb6]">
+              Your next finish line is waiting. Check your runs, upload proof, and follow your place on the board.
             </p>
+            <div className="mt-9 space-y-4 border-t border-white/15 pt-7 text-sm text-[#d7ddd7]">
+              <p className="flex items-center gap-3"><BadgeCheck className="h-4 w-4 text-[#e0b75e]" /> GPS-verified race results</p>
+              <p className="flex items-center gap-3"><Trophy className="h-4 w-4 text-[#e0b75e]" /> Medals, certificates & milestones</p>
+            </div>
           </div>
 
-          <div className="mx-auto mt-6 w-full max-w-[400px] sm:mt-8">
+          <div className="auth-classic-form mx-auto w-full max-w-[430px]">
+            <div className="text-center lg:text-left">
+              <p className="auth-classic-kicker">Welcome back</p>
+              <h1 className="auth-classic-form-title mt-3">Sign in to your runner portal</h1>
+              <p className="mt-3 text-sm leading-6 text-(--muted)">Use Google or your email and password.</p>
+            </div>
+          <div className="mt-6 w-full sm:mt-8">
             <ClerkLoading>
               <div className="w-full rounded-2xl border border-(--line) bg-(--panel) p-6">
                 <div className="h-5 w-32 rounded-full bg-(--panel-soft)" />
@@ -100,12 +110,14 @@ export default function SignInPage() {
 
           <p className="mt-6 text-center text-sm text-(--muted)">
             New here?{" "}
-            <Link className="font-medium text-(--foreground) underline-offset-4 hover:underline" href="/sign-up">
-              Create an account
+            <Link className="inline-flex items-center gap-1 font-semibold text-[#e0b75e] hover:text-[#f0c974]" href="/sign-up">
+              Create an account <ChevronRight className="h-3.5 w-3.5" />
             </Link>
           </p>
+          </div>
         </div>
       </section>
+      </div>
     </PageShell>
   );
 }

@@ -4,6 +4,7 @@ import { z } from "zod";
 import { env } from "../config/env.js";
 import { prisma } from "../lib/prisma.js";
 import type { AuthenticatedRequest } from "../middleware/clerk-auth.js";
+import { logger } from "../utils/logger.js";
 import { Resend } from "resend";
 import { writeAdminAudit } from "../services/admin-audit.service.js";
 import {
@@ -286,11 +287,11 @@ export async function adminListEvents(request: AuthenticatedRequest, response: R
     ...(status ? { status: status as Prisma.EnumEventStatusFilter["equals"] } : {}),
     ...(search
       ? {
-          OR: [
-            { title: { contains: search, mode: "insensitive" } },
-            { slug: { contains: search, mode: "insensitive" } },
-          ],
-        }
+        OR: [
+          { title: { contains: search, mode: "insensitive" } },
+          { slug: { contains: search, mode: "insensitive" } },
+        ],
+      }
       : {}),
   };
 
@@ -461,14 +462,14 @@ export async function adminListRegistrations(request: AuthenticatedRequest, resp
     ...(eventId ? { eventId } : {}),
     ...(search
       ? {
-          OR: [
-            { bibNumber: { contains: search, mode: "insensitive" } },
-            { shippingName: { contains: search, mode: "insensitive" } },
-            { shippingPhone: { contains: search, mode: "insensitive" } },
-            { user: { email: { contains: search, mode: "insensitive" } } },
-            { user: { name: { contains: search, mode: "insensitive" } } },
-          ],
-        }
+        OR: [
+          { bibNumber: { contains: search, mode: "insensitive" } },
+          { shippingName: { contains: search, mode: "insensitive" } },
+          { shippingPhone: { contains: search, mode: "insensitive" } },
+          { user: { email: { contains: search, mode: "insensitive" } } },
+          { user: { name: { contains: search, mode: "insensitive" } } },
+        ],
+      }
       : {}),
   };
 
@@ -699,21 +700,21 @@ export async function adminListPayments(request: AuthenticatedRequest, response:
     ...(status ? { status: status as never } : {}),
     ...(search
       ? {
-          OR: [
-            { razorpayOrderId: { contains: search, mode: "insensitive" } },
-            { razorpayPaymentId: { contains: search, mode: "insensitive" } },
-            {
-              registration: {
-                user: { email: { contains: search, mode: "insensitive" } },
-              },
+        OR: [
+          { razorpayOrderId: { contains: search, mode: "insensitive" } },
+          { razorpayPaymentId: { contains: search, mode: "insensitive" } },
+          {
+            registration: {
+              user: { email: { contains: search, mode: "insensitive" } },
             },
-            {
-              registration: {
-                bibNumber: { contains: search, mode: "insensitive" },
-              },
+          },
+          {
+            registration: {
+              bibNumber: { contains: search, mode: "insensitive" },
             },
-          ],
-        }
+          },
+        ],
+      }
       : {}),
   };
 
@@ -904,13 +905,13 @@ export async function adminListUsers(request: AuthenticatedRequest, response: Re
     ...(role ? { role: role as never } : {}),
     ...(search
       ? {
-          OR: [
-            { name: { contains: search, mode: "insensitive" } },
-            { email: { contains: search, mode: "insensitive" } },
-            { phone: { contains: search, mode: "insensitive" } },
-            { clerkId: { contains: search, mode: "insensitive" } },
-          ],
-        }
+        OR: [
+          { name: { contains: search, mode: "insensitive" } },
+          { email: { contains: search, mode: "insensitive" } },
+          { phone: { contains: search, mode: "insensitive" } },
+          { clerkId: { contains: search, mode: "insensitive" } },
+        ],
+      }
       : {}),
   };
 
@@ -1030,12 +1031,12 @@ export async function adminReviewProof(request: AuthenticatedRequest, response: 
       finishTimeSeconds: payload.finishTimeSeconds ?? existing.finishTimeSeconds,
       proofUpload: existing.proofUpload
         ? {
-            update: {
-              status,
-              reviewerNote: payload.reviewerNote,
-              reviewedAt: new Date(),
-            },
-          }
+          update: {
+            status,
+            reviewerNote: payload.reviewerNote,
+            reviewedAt: new Date(),
+          },
+        }
         : undefined,
     },
     include: {
@@ -1063,7 +1064,7 @@ export async function adminReviewProof(request: AuthenticatedRequest, response: 
     try {
       certificateIssue = await issueCertificateAfterApproval(id);
     } catch (err) {
-      console.error("[admin] certificate issue after approve failed:", err);
+      logger.error("[admin] Certificate issue after approval failed", err, { registrationId: id });
       await ensureCertificateForRegistration(id);
     }
   }
@@ -1091,15 +1092,15 @@ export async function adminReviewProof(request: AuthenticatedRequest, response: 
     meta: {
       certificate: certificateIssue
         ? {
-            id: certificateIssue.certificate.id,
-            status: certificateIssue.certificate.status,
-            certificateNumber: certificateIssue.certificate.certificateNumber,
-            pdfUrl: certificateIssue.certificate.pdfUrl,
-            emailSent: certificateIssue.email.sent,
-            emailError: certificateIssue.email.error ?? null,
-          }
+          id: certificateIssue.certificate.id,
+          status: certificateIssue.certificate.status,
+          certificateNumber: certificateIssue.certificate.certificateNumber,
+          pdfUrl: certificateIssue.certificate.pdfUrl,
+          emailSent: certificateIssue.email.sent,
+          emailError: certificateIssue.email.error ?? null,
+        }
         : refreshed?.certificate
-        ? {
+          ? {
             id: refreshed.certificate.id,
             status: refreshed.certificate.status,
             certificateNumber: refreshed.certificate.certificateNumber,
@@ -1107,7 +1108,7 @@ export async function adminReviewProof(request: AuthenticatedRequest, response: 
             emailSent: false,
             emailError: null,
           }
-        : null,
+          : null,
     },
   });
 }
@@ -1127,32 +1128,32 @@ export async function adminListMedals(request: AuthenticatedRequest, response: R
     ...(proofStatus && proofStatus !== "ALL"
       ? { proofStatus: proofStatus as never }
       : !proofStatus
-      ? { proofStatus: "APPROVED" }
-      : {}),
+        ? { proofStatus: "APPROVED" }
+        : {}),
     ...(status && status !== "ALL"
       ? status === "PENDING"
         ? {
-            OR: [
-              { medalDelivery: null },
-              { medalDelivery: { status: "PENDING" } },
-            ],
-          }
+          OR: [
+            { medalDelivery: null },
+            { medalDelivery: { status: "PENDING" } },
+          ],
+        }
         : {
-            medalDelivery: { status: status as never },
-          }
+          medalDelivery: { status: status as never },
+        }
       : {}),
     ...(search
       ? {
-          OR: [
-            { bibNumber: { contains: search, mode: "insensitive" } },
-            { shippingName: { contains: search, mode: "insensitive" } },
-            { shippingPhone: { contains: search, mode: "insensitive" } },
-            { shippingCity: { contains: search, mode: "insensitive" } },
-            { shippingPincode: { contains: search, mode: "insensitive" } },
-            { user: { name: { contains: search, mode: "insensitive" } } },
-            { user: { email: { contains: search, mode: "insensitive" } } },
-          ],
-        }
+        OR: [
+          { bibNumber: { contains: search, mode: "insensitive" } },
+          { shippingName: { contains: search, mode: "insensitive" } },
+          { shippingPhone: { contains: search, mode: "insensitive" } },
+          { shippingCity: { contains: search, mode: "insensitive" } },
+          { shippingPincode: { contains: search, mode: "insensitive" } },
+          { user: { name: { contains: search, mode: "insensitive" } } },
+          { user: { email: { contains: search, mode: "insensitive" } } },
+        ],
+      }
       : {}),
   };
 
@@ -1235,32 +1236,32 @@ export async function adminExportMedalsCsv(
     ...(proofStatus && proofStatus !== "ALL"
       ? { proofStatus: proofStatus as never }
       : !proofStatus
-      ? { proofStatus: "APPROVED" }
-      : {}),
+        ? { proofStatus: "APPROVED" }
+        : {}),
     ...(status && status !== "ALL"
       ? status === "PENDING"
         ? {
-            OR: [
-              { medalDelivery: null },
-              { medalDelivery: { status: "PENDING" } },
-            ],
-          }
+          OR: [
+            { medalDelivery: null },
+            { medalDelivery: { status: "PENDING" } },
+          ],
+        }
         : {
-            medalDelivery: { status: status as never },
-          }
+          medalDelivery: { status: status as never },
+        }
       : {}),
     ...(search
       ? {
-          OR: [
-            { bibNumber: { contains: search, mode: "insensitive" } },
-            { shippingName: { contains: search, mode: "insensitive" } },
-            { shippingPhone: { contains: search, mode: "insensitive" } },
-            { shippingCity: { contains: search, mode: "insensitive" } },
-            { shippingPincode: { contains: search, mode: "insensitive" } },
-            { user: { name: { contains: search, mode: "insensitive" } } },
-            { user: { email: { contains: search, mode: "insensitive" } } },
-          ],
-        }
+        OR: [
+          { bibNumber: { contains: search, mode: "insensitive" } },
+          { shippingName: { contains: search, mode: "insensitive" } },
+          { shippingPhone: { contains: search, mode: "insensitive" } },
+          { shippingCity: { contains: search, mode: "insensitive" } },
+          { shippingPincode: { contains: search, mode: "insensitive" } },
+          { user: { name: { contains: search, mode: "insensitive" } } },
+          { user: { email: { contains: search, mode: "insensitive" } } },
+        ],
+      }
       : {}),
   };
 
@@ -1342,7 +1343,7 @@ export async function adminExportMedalsCsv(
     ),
   ];
 
-  const filename = `mountainrun-dispatch-${new Date().toISOString().split("T")[0]}.csv`;
+  const filename = `relentlessrun-dispatch-${new Date().toISOString().split("T")[0]}.csv`;
   response.setHeader("Content-Type", "text/csv; charset=utf-8");
   response.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
   response.send(lines.join("\n"));
@@ -1415,14 +1416,14 @@ export async function adminListCertificates(request: AuthenticatedRequest, respo
     ...(status ? { status: status as never } : {}),
     ...(search
       ? {
-          OR: [
-            { certificateNumber: { contains: search, mode: "insensitive" } },
-            { registration: { bibNumber: { contains: search, mode: "insensitive" } } },
-            { registration: { user: { name: { contains: search, mode: "insensitive" } } } },
-            { registration: { user: { email: { contains: search, mode: "insensitive" } } } },
-            { registration: { event: { title: { contains: search, mode: "insensitive" } } } },
-          ],
-        }
+        OR: [
+          { certificateNumber: { contains: search, mode: "insensitive" } },
+          { registration: { bibNumber: { contains: search, mode: "insensitive" } } },
+          { registration: { user: { name: { contains: search, mode: "insensitive" } } } },
+          { registration: { user: { email: { contains: search, mode: "insensitive" } } } },
+          { registration: { event: { title: { contains: search, mode: "insensitive" } } } },
+        ],
+      }
       : {}),
   };
 

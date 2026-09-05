@@ -4,10 +4,10 @@ import { PageShell } from "../components/app-shell";
 import { Breadcrumb } from "../components/breadcrumb";
 import { EventsCatalog } from "./events-catalog";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://mountainrun.in";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://relentlessrun.in";
 
 export const metadata: Metadata = {
-  title: "Upcoming Virtual Running Events India 2026 | 5K, 10K, 21K Races — Mountain Run",
+  title: "Upcoming Virtual Running Events India 2026 | 5K, 10K, 21K Races — RelentlessRun",
   description:
     "Explore and register for upcoming virtual running events across India. Complete 1.5K, 5K, 10K, or 21K half marathons from anywhere. GPS verification, custom metal medals, DRI-FIT t-shirts, and instant E-certificates.",
   keywords: [
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     "virtual marathon 2026",
   ],
   openGraph: {
-    title: "Upcoming Virtual Running Events India 2026 | 5K, 10K, 21K Races — Mountain Run",
+    title: "Upcoming Virtual Running Events India 2026 | 5K, 10K, 21K Races — RelentlessRun",
     description:
       "Explore and register for upcoming virtual running events across India. GPS verification, custom medals & instant certificates.",
     url: "/events",
@@ -37,60 +37,53 @@ export const metadata: Metadata = {
 export default function EventsPage() {
   return (
     <PageShell>
-      <section className="relative overflow-hidden border-b border-(--line)">
-        <div aria-hidden className="pointer-events-none absolute inset-0 -z-10"
-          style={{
-            background: [
-              "radial-gradient(ellipse 80% 50% at 0% 0%, color-mix(in srgb, var(--sage) 12%, transparent) 0%, transparent 60%)",
-              "radial-gradient(ellipse 50% 40% at 100% 100%, color-mix(in srgb, var(--sage) 6%, transparent) 0%, transparent 50%)",
-              "var(--background)",
-            ].join(", "),
-          }}
-        />
-        <div aria-hidden className="pointer-events-none absolute top-8 right-8 flex gap-1.5 opacity-20">
-          {[...Array(3)].map((_, i) => (
-            <div key={i} className="h-1.5 w-1.5 rounded-full bg-(--sage) animate-pulse" style={{ animationDelay: `${i * 0.3}s` }} />
-          ))}
-        </div>
+      <div className="relative overflow-hidden bg-[#090d16]">
+        {/* Hero Banner */}
+        <section className="relative overflow-hidden border-b border-white/10 py-10 sm:py-14">
+          <div aria-hidden className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[350px] w-[500px] rounded-full bg-sky-500/5 blur-[100px]" />
 
-        <div className="container-page py-6 sm:py-8">
-          <Breadcrumb
-            items={[
-              { name: "Home", href: "/" },
-              { name: "Events", href: "/events" },
-            ]}
-          />
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
+            <Breadcrumb
+              items={[
+                { name: "Home", href: "/" },
+                { name: "Events", href: "/events" },
+              ]}
+            />
 
-          <div className="mx-auto mt-6 max-w-xl text-center sm:mt-8">
-            <p className="eyebrow">Events</p>
-            <h1 className="mt-3 text-4xl font-bold leading-[1.1] tracking-tight text-(--foreground) sm:text-5xl">
-              Upcoming virtual races
-            </h1>
-            <p className="lede mx-auto mt-4 max-w-lg">
-              Choose a run, register once, upload GPS proof, and appear on the verified leaderboard.
-            </p>
-            <div className="mt-5 flex flex-wrap justify-center gap-2">
-              {[
-                { label: "Medals", icon: Medal },
-                { label: "T-shirts", icon: Shirt },
-                { label: "Certificates", icon: FileText },
-                { label: "Leaderboard", icon: Trophy },
-              ].map(({ label, icon: Icon }) => (
-                <span key={label} className="inline-flex items-center gap-1.5 rounded-full border border-(--line) bg-(--sage-soft) px-3 py-1 text-xs font-semibold text-(--sage)">
-                  <Icon className="h-3.5 w-3.5" strokeWidth={1.75} />
-                  {label}
-                </span>
-              ))}
+            <div className="mx-auto mt-6 max-w-2xl text-center sm:mt-8">
+              <span className="inline-block rounded-full border border-[#38bdf8]/30 bg-[#38bdf8]/10 px-3.5 py-1 text-xs font-bold uppercase tracking-widest text-[#38bdf8]">
+                Official Races & Challenges
+              </span>
+              <h1 className="mt-4 font-display font-black text-4xl sm:text-5xl uppercase tracking-tight text-[#f0f0f0]">
+                Find Your Next Finish Line
+              </h1>
+              <p className="mt-4 text-base text-slate-300 max-w-lg mx-auto">
+                Choose a run, register once, upload GPS proof, and earn your heavy metal finisher medal &amp; certificate.
+              </p>
+              <div className="mt-6 flex flex-wrap justify-center gap-2.5">
+                {[
+                  { label: "Heavy Medals", icon: Medal },
+                  { label: "DRI-FIT T-shirts", icon: Shirt },
+                  { label: "E-Certificates", icon: FileText },
+                  { label: "Live Leaderboard", icon: Trophy },
+                ].map(({ label, icon: Icon }) => (
+                  <span key={label} className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-1.5 text-xs font-bold text-[#f0f0f0] backdrop-blur-md shadow-sm">
+                    <Icon className="h-3.5 w-3.5 text-[#38bdf8]" strokeWidth={2} />
+                    {label}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section className="page-section">
-        <div className="container-page">
-          <EventsCatalog />
-        </div>
-      </section>
+        <section className="py-12 sm:py-16">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <EventsCatalog />
+          </div>
+        </section>
+      </div>
     </PageShell>
   );
 }
+

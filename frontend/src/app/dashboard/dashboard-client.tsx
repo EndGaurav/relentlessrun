@@ -389,7 +389,7 @@ export function DashboardClient() {
           const up = await fetch(getApiUrl("/api/uploads/image"), {
             method: "POST",
             headers: authHeaders(token),
-            body: JSON.stringify({ file: url, folder: "mountainrun/proofs" }),
+            body: JSON.stringify({ file: url, folder: "relentlessrun/proofs" }),
           });
           if (!up.ok) {
             if (!url.startsWith("https://")) {
@@ -443,8 +443,8 @@ export function DashboardClient() {
   }
 
   function handleCopyReferral() {
-    const code = dbUser?.referralCode || user?.id?.slice(-6) || "MOUNTAINRUN";
-    const link = `https://mountainrun.in/register?ref=${code}`;
+    const code = dbUser?.referralCode || user?.id?.slice(-6) || "relentlessrun";
+    const link = `https://relentlessrun.in/register?ref=${code}`;
     void navigator.clipboard.writeText(link);
     setCopiedCode(true);
     setTimeout(() => setCopiedCode(false), 2500);
@@ -489,9 +489,9 @@ export function DashboardClient() {
   const firstName = name.split(" ")[0];
 
   return (
-    <div className="space-y-6 sm:space-y-8 pb-16">
+    <div className="dashboard-classic-content space-y-6 sm:space-y-8 pb-16">
       {/* ── 1. PREMIUM RUNNER PROFILE HERO (Strava / Nike Style) ── */}
-      <div className="relative overflow-hidden rounded-3xl border border-(--line) bg-(--panel) p-5 sm:p-7 shadow-xs">
+      <div className="dashboard-classic-hero relative overflow-hidden rounded-3xl border border-(--line) bg-(--panel) p-5 sm:p-7 shadow-xs">
         {/* Soft Ambient Mesh */}
         <div
           aria-hidden
@@ -698,7 +698,7 @@ export function DashboardClient() {
                 <div
                   key={reg.id}
                   id={`reg-${reg.id}`}
-                  className="rounded-3xl border border-(--line) bg-(--panel) overflow-hidden shadow-xs transition-all hover:shadow-md"
+                  className="dashboard-race-card rounded-3xl border border-(--line) bg-(--panel) overflow-hidden shadow-xs transition-all hover:shadow-md"
                 >
                   {/* Event Card Header */}
                   <div className="p-4 sm:p-6 border-b border-(--line) bg-(--panel-soft)/40 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -1205,7 +1205,7 @@ export function DashboardClient() {
                 <input
                   type="text"
                   readOnly
-                  value={`https://mountainrun.in/register?ref=${dbUser?.referralCode || user?.id?.slice(-6) || "MOUNTAINRUN"}`}
+                  value={`https://relentlessrun.in/register?ref=${dbUser?.referralCode || user?.id?.slice(-6) || "relentlessrun"}`}
                   className="input font-mono text-xs w-full bg-(--panel)"
                 />
                 <button

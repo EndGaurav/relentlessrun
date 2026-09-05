@@ -78,12 +78,12 @@ import { uploadImageToCloudinary, deleteImageFromCloudinary } from '../services/
 // Upload image
 const result = await uploadImageToCloudinary(
   'data:image/jpeg;base64,...',
-  'mountainrun/proofs'
+  'relentlessrun/proofs'
 );
 console.log(result.secure_url); // Cloudinary URL
 
 // Delete image
-await deleteImageFromCloudinary('mountainrun/proofs/abc123');
+await deleteImageFromCloudinary('relentlessrun/proofs/abc123');
 ```
 
 ### Frontend Usage
@@ -103,7 +103,7 @@ async function handleFileUpload(file: File) {
   const dataUrl = await fileToDataUrl(file);
 
   // Upload via backend
-  const result = await uploadImage(dataUrl, 'mountainrun/proofs');
+  const result = await uploadImage(dataUrl, 'relentlessrun/proofs');
   console.log(result.url); // Cloudinary URL
 }
 ```
@@ -118,7 +118,7 @@ Upload an image to Cloudinary.
 ```json
 {
   "file": "data:image/jpeg;base64,...",
-  "folder": "mountainrun/proofs" // optional
+  "folder": "relentlessrun/proofs" // optional
 }
 ```
 
@@ -152,7 +152,7 @@ Get upload configuration.
 
 ### Upload Options
 
-- **Folder organization**: Images stored in folders (e.g., `mountainrun/proofs`)
+- **Folder organization**: Images stored in folders (e.g., `relentlessrun/proofs`)
 - **Auto resource type**: Detects image/video/raw automatically
 - **Secure URLs**: HTTPS by default
 - **Size limits**: ~1.3MB for data URLs (configurable)

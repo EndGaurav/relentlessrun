@@ -13,10 +13,10 @@ import { HomeSectionHeader } from "./components/home-section-header";
 import { HomeSteps } from "./components/home-steps";
 import { fetchOpenEvents, fetchHomeContent } from "../lib/events-api";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://mountainrun.in";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://relentlessrun.in";
 
 export const metadata: Metadata = {
-  title: "Virtual Running Events India 2026 | Real Medals & GPS Verified Races — Mountain Run",
+  title: "Virtual Running Events India 2026 | Real Medals & GPS Verified Races — Peak Run",
   description:
     "Join India's premier virtual running events. Run 1.5K, 5K, 10K, 21K marathons from anywhere. Track with Strava, Garmin, Nike, earn authentic metal finisher medals, t-shirts, and instant E-certificates.",
   keywords: [
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     "virtual race registration",
   ],
   openGraph: {
-    title: "Virtual Running Events India 2026 | Real Medals & GPS Verified Races — Mountain Run",
+    title: "Virtual Running Events India 2026 | Real Medals & GPS Verified Races — Peak Run",
     description:
       "Join India's premier virtual running events. Run anywhere with Strava/Garmin, earn authentic metal finisher medals and digital certificates.",
     url: "/",
@@ -53,44 +53,32 @@ export default async function Home() {
   const serverHome = await fetchHomeContent().catch(() => undefined);
 
   return (
-    <div className="page-shell flex min-h-screen flex-col">
+    <div className="page-shell flex min-h-screen flex-col bg-[#090d16] text-[#f0f0f0]">
       <AppHeader />
 
-      <main className="flex-1 pt-[4.5rem] sm:pt-[5rem] md:pt-[5.5rem]">
+      <main className="flex-1 pt-0">
         <HomeHero />
         <HomeSteps />
 
-        <section
-          className="section border-b border-(--line) relative overflow-hidden"
-          style={{
-            background:
-              "radial-gradient(at 100% 0%, rgba(13, 148, 136, 0.03) 0px, transparent 65%), radial-gradient(at 0% 100%, rgba(99, 102, 241, 0.04) 0px, transparent 65%), var(--background)",
-          }}
-        >
-          <div
-            aria-hidden="true"
-            className="absolute top-1/4 left-10 h-80 w-80 rounded-full bg-teal-500/3 blur-3xl pointer-events-none"
-          />
-          <div
-            aria-hidden="true"
-            className="absolute bottom-1/4 right-10 h-80 w-80 rounded-full bg-indigo-500/4 blur-3xl pointer-events-none"
-          />
-
-          <div className="container-page relative z-10">
+        <section className="relative py-20 bg-[#0b0f19] text-[#f0f0f0] border-t border-white/10">
+          <div className="container-page max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <HomeSectionHeader
               action={
-                <Link className="btn btn-secondary group w-full sm:w-auto" href="/events">
-                  View all events
+                <Link
+                  className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[0.05] px-6 py-3 text-xs font-black uppercase tracking-wider text-[#f0f0f0] backdrop-blur-md transition-all hover:bg-white/[0.12] hover:border-white/40"
+                  href="/events"
+                >
+                  <span>View All Races</span>
                   <ArrowUpRight
                     aria-hidden="true"
-                    className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                    className="h-4 w-4 text-[#38bdf8] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
                   />
                 </Link>
               }
               align="split"
-              eyebrow="Upcoming"
-              lead="Admin-featured events show first. Choose a distance and register from the event page."
-              title="Open events"
+              eyebrow="UPCOMING RACES"
+              lead="Featured virtual challenges. Choose your target distance and claim your official bib & finisher medal kit."
+              title="OPEN CHALLENGES"
             />
 
             <HomeEvents initial={serverEvents} />
@@ -107,4 +95,6 @@ export default async function Home() {
       <AppFooter />
     </div>
   );
+
+
 }

@@ -21,7 +21,7 @@ export async function uploadImage(
     cloudinary.uploader.upload(
       file,
       {
-        folder: options?.folder || 'mountainrun',
+        folder: options?.folder || 'relentlessrun',
         resource_type: options?.resourceType || 'auto',
         transformation: options?.transformation,
       },

@@ -19,7 +19,7 @@ import { EventFaq } from "./faq-accordion";
 import { EventStickyCta } from "./sticky-cta-bar";
 import { Reveal, SectionHeader } from "./reveal";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://mountainrun.in";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://relentlessrun.in";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -175,71 +175,73 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
         dangerouslySetInnerHTML={{ __html: JSON.stringify(eventFaqSchema) }}
       />
 
-      {isPast ? (
-        <>
-          <EventHero event={event} isPast />
-          <EventStats />
-          <EventCommunity />
-          <EventReviews />
+      <div className="event-classic">
+        {isPast ? (
+          <>
+            <EventHero event={event} isPast />
+            <EventStats />
+            <EventCommunity />
+            <EventReviews />
 
-          <section
-            className="section relative overflow-hidden"
-            style={{
-              background:
-                "radial-gradient(ellipse 70% 60% at 50% 0%, color-mix(in srgb, var(--sage) 10%, transparent) 0%, transparent 60%), var(--background)",
-            }}
-          >
-            <div className="container-page text-center">
-              <Reveal>
-                <div className="mx-auto flex max-w-2xl flex-col items-center gap-5">
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-(--line) bg-(--panel) px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-(--muted)">
-                    <Sparkles className="h-3.5 w-3.5 text-(--sage)" />
-                    {event.name} - finished
-                  </span>
-                  <h2 className="heading text-(--foreground)">{event.name} recap</h2>
-                  <p className="lede max-w-lg">{event.highlight}</p>
-                  <Link className="btn btn-gold gap-2 text-sm" href="/events">
-                    Join the next event
-                    <ArrowRight className="h-4 w-4" />
-                  </Link>
-                </div>
-              </Reveal>
-            </div>
-          </section>
-        </>
-      ) : (
-        <>
-          <EventHero event={event} isPast={false} />
-          <EventSelect event={event} />
-          <EventStats />
-          <EventWhy />
-          <EventRewards />
-          <EventHow event={event} />
-          <EventCompare />
-          <EventCommunity />
-          <EventReviews />
-
-          <section className="section border-b border-(--line)">
-            <div className="container-page">
-              <SectionHeader
-                eyebrow="Questions"
-                title={
-                  <>
-                    Everything you need to <span className="text-gradient-premium">know</span>
-                  </>
-                }
-                lead="If it's not covered here, our team is one WhatsApp message away."
-              />
-              <div className="mt-10 sm:mt-14">
-                <EventFaq />
+            <section
+              className="section relative overflow-hidden"
+              style={{
+                background:
+                  "radial-gradient(ellipse 70% 60% at 50% 0%, color-mix(in srgb, var(--sage) 10%, transparent) 0%, transparent 60%), var(--background)",
+              }}
+            >
+              <div className="container-page text-center">
+                <Reveal>
+                  <div className="mx-auto flex max-w-2xl flex-col items-center gap-5">
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-(--line) bg-(--panel) px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-(--muted)">
+                      <Sparkles className="h-3.5 w-3.5 text-(--sage)" />
+                      {event.name} - finished
+                    </span>
+                    <h2 className="heading text-(--foreground)">{event.name} recap</h2>
+                    <p className="lede max-w-lg">{event.highlight}</p>
+                    <Link className="btn btn-gold gap-2 text-sm" href="/events">
+                      Join the next event
+                      <ArrowRight className="h-4 w-4" />
+                    </Link>
+                  </div>
+                </Reveal>
               </div>
-            </div>
-          </section>
+            </section>
+          </>
+        ) : (
+          <>
+            <EventHero event={event} isPast={false} />
+            <EventSelect event={event} />
+            <EventStats />
+            <EventWhy />
+            <EventRewards />
+            <EventHow event={event} />
+            <EventCompare />
+            <EventCommunity />
+            <EventReviews />
 
-          <EventCta event={event} />
-          <EventStickyCta price={event.price} compareAtPrice={event.compareAtPrice} slug={event.slug} />
-        </>
-      )}
+            <section className="section border-b border-(--line)">
+              <div className="container-page">
+                <SectionHeader
+                  eyebrow="Questions"
+                  title={
+                    <>
+                      Everything you need to <span className="text-gradient-premium">know</span>
+                    </>
+                  }
+                  lead="If it's not covered here, our team is one WhatsApp message away."
+                />
+                <div className="mt-10 sm:mt-14">
+                  <EventFaq />
+                </div>
+              </div>
+            </section>
+
+            <EventCta event={event} />
+            <EventStickyCta price={event.price} compareAtPrice={event.compareAtPrice} slug={event.slug} />
+          </>
+        )}
+      </div>
     </PageShell>
   );
 }
