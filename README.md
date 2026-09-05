@@ -1,23 +1,17 @@
-# Mountain Run
+# Relentless Run
 
-Mountain Run is split into a Next.js frontend and an Express/Prisma backend.
+Relentless Run is India's premier GPS-verified virtual running platform, split into a Next.js frontend and an Express/Prisma backend.
 
-## Project structure
+## Project Structure
 
 ```text
-frontend/  Next.js app (Clerk auth UI)
-backend/   API server, Prisma, Clerk token verification
+frontend/  Next.js 16 app (Clerk Auth, Framer Motion, Tailwind CSS)
+backend/   Express API server, Prisma ORM, PostgreSQL database, Clerk Verification
 ```
 
-## Auth (Clerk)
+## Setup & Quickstart
 
-Clerk is already integrated. Add API keys from [dashboard.clerk.com](https://dashboard.clerk.com):
-
-1. Put `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` + `CLERK_SECRET_KEY` in `frontend/.env`
-2. Put the same `CLERK_SECRET_KEY` in `backend/.env`
-3. Full steps: [CLERK_SETUP.md](./CLERK_SETUP.md)
-
-## Frontend
+### 1. Frontend
 
 ```bash
 cd frontend
@@ -25,7 +19,7 @@ npm install
 npm run dev
 ```
 
-## Backend
+### 2. Backend
 
 ```bash
 cd backend
@@ -33,3 +27,10 @@ npm install
 npm run prisma:generate
 npm run dev
 ```
+
+## Features
+
+- **GPS Verified Races**: Complete 1.5K, 5K, 10K, 21K virtual marathons with Strava/Garmin tracking.
+- **Finisher Medals & Certificates**: Automated verification, instant E-Certificates with QR verification, and real heavy metal finisher medals.
+- **Live Leaderboards**: Verified finisher rankings, pace calculations, and runner achievements.
+
