@@ -78,7 +78,7 @@ function NewsletterForm() {
     }
   }, [email]);
   if (done) return (
-    <div className="flex items-center gap-2 rounded-lg border border-(--sage)/20 bg-(--sage-soft) px-3 py-2 text-xs font-medium text-(--sage)">
+    <div className="flex items-center gap-2 rounded-xl border border-sky-500/30 bg-sky-500/10 px-3 py-2 text-xs font-bold text-[#38bdf8]">
       <Check className="h-3.5 w-3.5 shrink-0" /> You&rsquo;re subscribed!
     </div>
   );
@@ -86,12 +86,12 @@ function NewsletterForm() {
     <form onSubmit={onSubmit} noValidate className="flex gap-2">
       <input type="email" value={email} onChange={e => setEmail(e.target.value)}
         placeholder="your@email.com" aria-label="Newsletter email"
-        className="h-9 min-w-0 flex-1 rounded-lg border border-(--line) bg-(--panel) px-3 text-xs text-(--foreground) placeholder:text-(--muted-soft) focus:border-(--sage)/40 focus:outline-none focus:ring-2 focus:ring-(--sage)/10" />
+        className="h-10 min-w-0 flex-1 rounded-xl border border-white/15 bg-white/[0.06] px-3.5 text-xs text-white placeholder:text-slate-500 focus:border-[#38bdf8] focus:outline-none focus:ring-2 focus:ring-[#38bdf8]/20" />
       <button type="submit" disabled={busy} aria-label="Subscribe"
-        className="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-lg bg-(--sage) text-white transition-all hover:bg-emerald-600 active:scale-95 disabled:opacity-60">
-        {busy ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Send className="h-3.5 w-3.5" />}
+        className="neon-btn-blue flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-xl text-white transition-all shadow-md active:scale-95 disabled:opacity-60">
+        {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
       </button>
-      {error ? <p className="text-xs text-red-500">{error}</p> : null}
+      {error ? <p className="text-xs text-rose-400 font-semibold">{error}</p> : null}
     </form>
   );
 }
@@ -100,12 +100,12 @@ function NewsletterForm() {
 function FooterCol({ title, links }: { title: string; links: [string, string][] }) {
   return (
     <div>
-      <p className="text-[0.6rem] font-bold uppercase tracking-[0.12em] text-(--muted-soft)">{title}</p>
-      <ul className="mt-3 space-y-2">
+      <p className="text-xs font-black uppercase tracking-wider text-slate-300">{title}</p>
+      <ul className="mt-4 space-y-2.5">
         {links.map(([label, href]) => (
           <li key={label}>
             <Link href={href}
-              className="text-xs text-(--muted) transition-colors hover:text-(--foreground)">
+              className="text-xs font-medium text-slate-400 transition-colors hover:text-[#38bdf8]">
               {label}
             </Link>
           </li>
@@ -118,27 +118,144 @@ function FooterCol({ title, links }: { title: string; links: [string, string][] 
 /* ─── Main ─── */
 export function AppFooter() {
   return (
-    <footer className="relative mt-auto">
-      {/* Main footer */}
-      <div className="bg-(--panel)">
-        {/* Mountain skyline — scales perfectly, no pixelation */}
-        <div aria-hidden="true" className="w-full overflow-hidden" style={{ lineHeight: 0 }}>
-          <svg viewBox="0 0 1440 100" preserveAspectRatio="xMidYMax meet"
-            xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
-            style={{ width: "100%", height: "auto", display: "block", maxHeight: "100px" }}>
-            {/* Deep background peaks */}
-            <path d="M0 100 L0 50 L60 38 L130 52 L220 28 L310 48 L410 22 L500 40 L610 12 L700 35 L800 20 L890 42 L1000 18 L1100 40 L1190 26 L1280 48 L1380 35 L1440 45 L1440 100 Z"
-              fill="var(--sage)" opacity="0.06" />
-            {/* Mid mountains */}
-            <path d="M0 100 L0 62 L90 44 L180 58 L280 32 L380 50 L500 25 L590 42 L700 15 L790 34 L890 22 L990 42 L1080 30 L1180 48 L1280 34 L1380 52 L1440 48 L1440 100 Z"
-              fill="var(--sage)" opacity="0.15" />
-            {/* Foreground hills */}
-            <path d="M0 100 L0 74 L120 58 L240 68 L360 50 L480 62 L600 44 L720 56 L840 42 L960 56 L1080 48 L1200 60 L1320 52 L1440 58 L1440 100 Z"
-              fill="var(--sage)" opacity="0.3" />
-          </svg>
-        </div>
+    <footer className="relative mt-auto bg-[#090d16] text-[#f0f0f0]">
+      {/* ─── Ultra-Premium Alpine Trail Elevation & Mountain Horizon Divider ─── */}
+      <div aria-hidden="true" className="relative w-full overflow-hidden leading-none select-none -mb-1 pointer-events-none">
+        {/* Ambient Aurora Horizon Glow */}
+        <div className="pointer-events-none absolute -bottom-4 left-1/2 -translate-x-1/2 h-36 w-full max-w-5xl rounded-full bg-gradient-to-t from-[#0284c7]/25 via-[#38bdf8]/15 to-transparent blur-[80px]" />
+        
+        {/* Peak Summit Accent Light */}
+        <div className="pointer-events-none absolute top-4 left-[58%] -translate-x-1/2 h-16 w-32 rounded-full bg-sky-400/30 blur-[40px]" />
 
-        <div className="border-t border-(--line) container-page py-8 sm:py-10">
+        <svg
+          viewBox="0 0 1440 220"
+          fill="none"
+          preserveAspectRatio="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className="relative z-10 block w-full h-24 sm:h-36 md:h-44 lg:h-52"
+        >
+          <defs>
+            {/* Sky / Atmospheric Mist Gradient */}
+            <linearGradient id="skyAtmosphere" x1="50%" y1="0%" x2="50%" y2="100%">
+              <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.12" />
+              <stop offset="60%" stopColor="#0284c7" stopOpacity="0.05" />
+              <stop offset="100%" stopColor="#090d16" stopOpacity="0" />
+            </linearGradient>
+
+            {/* Distant Alpine Crests */}
+            <linearGradient id="crestFar" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.35" />
+              <stop offset="30%" stopColor="#0284c7" stopOpacity="0.2" />
+              <stop offset="100%" stopColor="#090d16" stopOpacity="0.9" />
+            </linearGradient>
+
+            {/* Mid Alpine Range */}
+            <linearGradient id="crestMid" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="#0ea5e9" stopOpacity="0.55" />
+              <stop offset="40%" stopColor="#0369a1" stopOpacity="0.35" />
+              <stop offset="100%" stopColor="#090d16" stopOpacity="0.98" />
+            </linearGradient>
+
+            {/* Foreground Alpine Range */}
+            <linearGradient id="crestNear" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="#0c192e" stopOpacity="1" />
+              <stop offset="50%" stopColor="#0a1324" stopOpacity="1" />
+              <stop offset="100%" stopColor="#090d16" stopOpacity="1" />
+            </linearGradient>
+
+            {/* Glowing Race Path Trail */}
+            <linearGradient id="trailGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.1" />
+              <stop offset="15%" stopColor="#38bdf8" stopOpacity="0.7" />
+              <stop offset="45%" stopColor="#00f2fe" stopOpacity="1" />
+              <stop offset="58%" stopColor="#38bdf8" stopOpacity="0.95" />
+              <stop offset="85%" stopColor="#0284c7" stopOpacity="0.7" />
+              <stop offset="100%" stopColor="#0284c7" stopOpacity="0.1" />
+            </linearGradient>
+
+            {/* Subtle Topo Grid Pattern */}
+            <pattern id="topoGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(56,189,248,0.03)" strokeWidth="1" />
+            </pattern>
+          </defs>
+
+          {/* Background Topo Atmosphere Grid */}
+          <rect width="1440" height="220" fill="url(#skyAtmosphere)" />
+          <rect width="1440" height="220" fill="url(#topoGrid)" opacity="0.7" />
+
+          {/* ═══ Layer 1: Distant Jagged Alpine Peaks (Himalayan Range) ═══ */}
+          <path
+            d="M0 220 L0 120 
+               L60 98 L120 115 L180 82 L240 102 L310 65 L370 90 L440 50 L510 85 
+               L580 40 L650 78 L720 30 L800 68 L880 25 L960 70 L1040 38 L1120 75 
+               L1200 48 L1280 80 L1360 60 L1440 95 L1440 220 Z"
+            fill="url(#crestFar)"
+          />
+
+          {/* ═══ Layer 2: Mid-Range Rocky Ridges with Snow Highlights ═══ */}
+          <path
+            d="M0 220 L0 145 
+               L80 125 L160 140 L250 105 L330 130 L420 92 L500 120 L600 70 L690 110 
+               L780 62 L850 95 L930 55 L1020 98 L1110 68 L1200 108 L1290 80 L1370 115 L1440 100 L1440 220 Z"
+            fill="url(#crestMid)"
+          />
+
+          {/* ═══ Layer 3: Glowing Trail Marathon Elevation Contour Line ═══ */}
+          <path
+            d="M0 180 
+               C120 170 200 135 320 142 
+               C420 148 480 105 590 100 
+               C680 96 720 72 830 68 
+               C940 64 990 118 1100 112 
+               C1220 106 1310 145 1440 135"
+            stroke="url(#trailGlow)"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            fill="none"
+            className="drop-shadow-[0_0_12px_rgba(56,189,248,0.8)]"
+          />
+
+          {/* Elevation Checkpoint Pulse Markers (Start, 10K, 21K Summit, Finish) */}
+          {/* Checkpoint 1 (10K) */}
+          <circle cx="320" cy="142" r="3.5" fill="#38bdf8" className="drop-shadow-[0_0_8px_rgba(56,189,248,0.9)]" />
+          <circle cx="320" cy="142" r="7" stroke="#38bdf8" strokeWidth="1" opacity="0.5" fill="none" />
+
+          {/* Checkpoint 2 (21K Halfway) */}
+          <circle cx="590" cy="100" r="4" fill="#00f2fe" className="drop-shadow-[0_0_10px_rgba(0,242,254,1)]" />
+          <circle cx="590" cy="100" r="8" stroke="#00f2fe" strokeWidth="1.2" opacity="0.6" fill="none" />
+
+          {/* Checkpoint 3 (Summit 42K Peak Marker) */}
+          <circle cx="830" cy="68" r="5" fill="#ffffff" className="drop-shadow-[0_0_14px_rgba(255,255,255,1)]" />
+          <circle cx="830" cy="68" r="10" stroke="#38bdf8" strokeWidth="1.5" opacity="0.8" fill="none" />
+
+          {/* Checkpoint 4 (Finish Descent) */}
+          <circle cx="1100" cy="112" r="3.5" fill="#38bdf8" className="drop-shadow-[0_0_8px_rgba(56,189,248,0.9)]" />
+          <circle cx="1100" cy="112" r="7" stroke="#38bdf8" strokeWidth="1" opacity="0.5" fill="none" />
+
+          {/* ═══ Layer 4: Foreground Ridge & Foothills Blending Seamlessly into #090d16 ═══ */}
+          <path
+            d="M0 220 L0 175 
+               C100 168 190 152 280 158 
+               C380 165 470 138 560 142 
+               C660 147 750 120 850 125 
+               C960 131 1060 158 1160 150 
+               C1260 142 1350 162 1440 155 L1440 220 Z"
+            fill="url(#crestNear)"
+          />
+
+          {/* ═══ Layer 5: Base Floor Transition ═══ */}
+          <path
+            d="M0 220 L0 195 
+               C240 185 480 198 720 188 
+               C960 178 1200 192 1440 185 L1440 220 Z"
+            fill="#090d16"
+          />
+        </svg>
+      </div>
+
+      {/* Main footer body */}
+      <div className="bg-[#090d16] border-t border-white/10">
+        <div className="container-page max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
 
           {/* Grid — 2 cols mobile, 4 cols tablet, 5 cols desktop */}
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 md:grid-cols-5">
@@ -146,81 +263,85 @@ export function AppFooter() {
             {/* Brand */}
             <div className="col-span-2 sm:col-span-3 md:col-span-2">
               <Link href="/" aria-label="RelentlessRun home" className="group inline-flex items-center">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/3d-header-logo.png" alt="RelentlessRun" width={220} height={56}
-                  className="h-14 sm:h-16 w-auto shrink-0 object-contain transition-transform duration-300 group-hover:scale-105" />
+                <div className="rounded-2xl bg-[#0d1322] p-1.5 border border-white/10 shadow-lg">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/3d-header-logo.png" alt="RelentlessRun" width={220} height={56}
+                    className="h-12 sm:h-14 w-auto shrink-0 object-contain transition-transform duration-300 group-hover:scale-105 drop-shadow-[0_4px_16px_rgba(56,189,248,0.4)]" />
+                </div>
               </Link>
-              <p className="mt-2 text-xs leading-relaxed text-[#94a3b8] max-w-xs">
-                Virtual running events with GPS-verified finishes, digital medals, and leaderboards — run anywhere across India.
+              <p className="mt-4 text-xs leading-relaxed text-slate-400 max-w-xs font-medium">
+                India&apos;s premier virtual running platform. GPS-verified races, custom metal medals, DRI-FIT apparel, and live national leaderboards.
               </p>
-              <div className="mt-3 flex items-center gap-2">
+              <div className="mt-4 flex items-center gap-2.5">
                 {socials.map(({ label, href, icon }) => (
                   <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label}
-                    className="flex h-7 w-7 items-center justify-center rounded-full border border-white/10 bg-slate-900 text-slate-400 transition-all hover:border-[#38bdf8]/40 hover:text-[#38bdf8]">
+                    className="flex h-8 w-8 items-center justify-center rounded-xl border border-white/15 bg-white/[0.04] text-slate-300 transition-all hover:border-[#38bdf8] hover:bg-[#38bdf8]/15 hover:text-[#38bdf8] shadow-sm">
                     {icon}
                   </a>
                 ))}
                 <a href="mailto:relentlessrunofficial@gmail.com" aria-label="Email"
-                  className="flex h-7 w-7 items-center justify-center rounded-full border border-white/10 bg-slate-900 text-slate-400 transition-all hover:border-[#38bdf8]/40 hover:text-[#38bdf8]">
-                  <Mail className="h-3.5 w-3.5" />
+                  className="flex h-8 w-8 items-center justify-center rounded-xl border border-white/15 bg-white/[0.04] text-slate-300 transition-all hover:border-[#38bdf8] hover:bg-[#38bdf8]/15 hover:text-[#38bdf8] shadow-sm">
+                  <Mail className="h-4 w-4" />
                 </a>
               </div>
             </div>
 
-            <FooterCol title="Events" links={[
-              ["Upcoming Events", "/events"],
-              ["Past Races", "/events"],
-              ["Event Gallery", "/gallery"],
-              ["Leaderboard", "/leaderboard"],
+            <FooterCol title="Races & Events" links={[
+              ["Upcoming Challenges", "/events"],
+              ["Past Race Archive", "/events"],
+              ["Runner Photo Wall", "/gallery"],
+              ["National Leaderboard", "/leaderboard"],
             ]} />
 
             <FooterCol title="Help & Support" links={[
               ["Official Gallery", "/gallery"],
-              ["Leaderboard", "/leaderboard"],
+              ["Leaderboard Rankings", "/leaderboard"],
+              ["GPS Verification FAQ", "/#faq"],
               ["Contact Support", "mailto:relentlessrunofficial@gmail.com"],
             ]} />
 
-            <FooterCol title="Account" links={[
-              ["Sign In", "/sign-in"],
-              ["Create Account", "/sign-up"],
+            <FooterCol title="Athlete Portal" links={[
+              ["Athlete Sign In", "/sign-in"],
+              ["Register Account", "/sign-up"],
               ["My Dashboard", "/dashboard"],
-              ["My Certificates", "/dashboard"],
+              ["Submit Run Proof", "/dashboard"],
             ]} />
 
           </div>
 
           {/* Newsletter + Contact row */}
-          <div className="mt-8 grid grid-cols-1 gap-6 border-t border-white/10 pt-6 sm:grid-cols-2">
+          <div className="mt-10 grid grid-cols-1 gap-6 border-t border-white/10 pt-8 sm:grid-cols-2 items-center">
             <div className="flex items-start gap-4">
               <div className="min-w-0 flex-1">
-                <p className="text-[0.6rem] font-bold uppercase tracking-[0.12em] text-slate-400">Stay Updated</p>
-                <p className="mt-1 text-xs text-slate-400">New events, results, tips — no spam.</p>
-                <div className="mt-3 max-w-xs">
+                <p className="text-xs font-black uppercase tracking-wider text-white">Stay in the Race</p>
+                <p className="mt-1 text-xs text-slate-400 font-medium">Get early race drops, medal releases & training guides.</p>
+                <div className="mt-3.5 max-w-sm">
                   <NewsletterForm />
                 </div>
               </div>
             </div>
             <div className="flex flex-col items-start gap-2 sm:items-end sm:text-right">
-              <p className="text-[0.6rem] font-bold uppercase tracking-[0.12em] text-slate-400">Contact</p>
-              <a href="mailto:relentlessrunofficial@gmail.com" className="flex items-center gap-1.5 text-xs text-slate-400 transition-colors hover:text-[#f0f0f0]">
-                <Mail className="h-3 w-3 shrink-0 text-slate-400" />
+              <p className="text-xs font-black uppercase tracking-wider text-white">Support Desk</p>
+              <a href="mailto:relentlessrunofficial@gmail.com" className="flex items-center gap-2 text-xs font-medium text-slate-300 transition-colors hover:text-[#38bdf8]">
+                <Mail className="h-3.5 w-3.5 text-[#38bdf8]" />
                 <span>relentlessrunofficial@gmail.com</span>
               </a>
-              <a href="https://wa.me/917518418960" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-xs text-slate-400 transition-colors hover:text-[#38bdf8]">
-                <svg viewBox="0 0 24 24" className="h-3 w-3 shrink-0 fill-current"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" /></svg>
+              <a href="https://wa.me/917518418960" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs font-medium text-slate-300 transition-colors hover:text-[#38bdf8]">
+                <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 fill-current text-emerald-400"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" /></svg>
                 <span>+91 7518 418 960</span>
               </a>
             </div>
           </div>
 
           {/* Bottom bar */}
-          <div className="mt-6 flex flex-col items-center gap-2 border-t border-white/10 pt-4 sm:flex-row sm:justify-between">
-            <p className="text-[0.6rem] text-slate-400">&copy; {new Date().getFullYear()} RelentlessRun. All rights reserved.</p>
-            <p className="hidden text-[0.6rem] text-(--muted-soft) sm:block">Made with ♥ for Indian runners</p>
+          <div className="mt-8 flex flex-col items-center gap-3 border-t border-white/10 pt-6 sm:flex-row sm:justify-between">
+            <p className="text-xs text-slate-400 font-medium">&copy; {new Date().getFullYear()} RelentlessRun India. All rights reserved.</p>
+            <p className="hidden text-xs text-slate-500 font-medium sm:block">Engineered with ❤️ for runners across India</p>
             <button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} type="button"
               aria-label="Scroll to top"
-              className="group flex cursor-pointer items-center gap-1 text-[0.6rem] font-medium text-(--muted-soft) transition-all hover:text-(--sage)">
-              Back to top <ArrowUp className="h-3 w-3 transition-transform group-hover:-translate-y-0.5" />
+              className="group flex cursor-pointer items-center gap-1.5 text-xs font-bold text-slate-300 transition-all hover:text-[#38bdf8]">
+              <span>Back to top</span>
+              <ArrowUp className="h-3.5 w-3.5 transition-transform group-hover:-translate-y-0.5" />
             </button>
           </div>
 

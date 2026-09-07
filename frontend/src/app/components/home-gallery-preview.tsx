@@ -40,12 +40,13 @@ export function HomeGalleryPreview({
   }
 
   return (
-    <section className="relative py-20 bg-[#0b0f19] text-[#f0f0f0] border-t border-white/10 overflow-hidden">
+    <section className="relative py-20 bg-[#090d16] text-[#f0f0f0] border-t border-white/10 overflow-hidden">
       <div className="container-page max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <HomeSectionHeader
+          theme="dark"
           action={
             <Link
-              className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[0.05] px-6 py-3 text-xs font-black uppercase tracking-wider text-[#f0f0f0] backdrop-blur-md transition-all hover:bg-white/[0.12] hover:border-white/40"
+              className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-6 py-3 text-xs font-black uppercase tracking-wider text-[#f0f0f0] shadow-md transition-all hover:bg-white/20 hover:border-white/30"
               href="/gallery"
             >
               <span>Explore Community Gallery</span>
@@ -65,10 +66,10 @@ export function HomeGalleryPreview({
           {moments.map((moment, index) => (
             <Link
               key={moment.id ?? `${moment.title}-${index}`}
-              className="group block overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03] shadow-2xl backdrop-blur-xl transition-all duration-300 hover:border-[#38bdf8]/50 hover:bg-white/[0.06] hover:-translate-y-1.5"
+              className="group block overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03] shadow-xl transition-all duration-300 hover:border-[#38bdf8]/50 hover:bg-white/[0.06] hover:shadow-2xl hover:-translate-y-1.5"
               href="/gallery"
             >
-              <div className="relative aspect-4/3 overflow-hidden bg-black/60">
+              <div className="relative aspect-4/3 overflow-hidden bg-slate-900">
                 <Image
                   alt={moment.title}
                   className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
@@ -78,7 +79,7 @@ export function HomeGalleryPreview({
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                   loading="lazy"
                 />
-                <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-[#090d16]/90 via-transparent to-transparent pointer-events-none" />
+                <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-[#090d16]/80 via-transparent to-transparent pointer-events-none" />
                 <span className="absolute left-3.5 bottom-3.5 z-10 rounded-full border border-white/20 bg-slate-900/80 px-3 py-1 text-[0.65rem] font-black uppercase tracking-wider text-[#38bdf8] backdrop-blur-md shadow-md">
                   {moment.meta}
                 </span>

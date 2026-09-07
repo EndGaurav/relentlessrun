@@ -3,6 +3,8 @@ import { PageShell } from "../components/app-shell";
 import { DashboardClient } from "./dashboard-client";
 
 export const metadata: Metadata = {
+  title: "Athlete Dashboard | RelentlessRun India",
+  description: "Manage your registered races, upload GPS activity proofs, track finisher medal shipments, and download official certificates.",
   robots: {
     index: false,
     follow: false,
@@ -12,13 +14,7 @@ export const metadata: Metadata = {
 export default function DashboardPage() {
   return (
     <PageShell>
-      <div className="relative overflow-hidden bg-[#090d16]">
-        <section className="py-8 sm:py-10">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <DashboardClient />
-          </div>
-        </section>
-      </div>
+      <DashboardClient />
     </PageShell>
   );
 }

@@ -122,15 +122,6 @@ export function ReferClient() {
 
   return (
     <>
-      {/* Breadcrumb */}
-      <div className="container-page pt-6 sm:pt-8">
-        <Breadcrumb
-          items={[
-            { name: "Home", href: "/" },
-            { name: "Refer & Earn", href: "/refer" },
-          ]}
-        />
-      </div>
 
       {/* Hero */}
       <section className="relative overflow-hidden border-b border-(--line)">

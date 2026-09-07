@@ -60,12 +60,13 @@ export default async function Home() {
         <HomeHero />
         <HomeSteps />
 
-        <section className="relative py-20 bg-[#0b0f19] text-[#f0f0f0] border-t border-white/10">
+        <section className="relative py-20 bg-[#090d16] text-[#f0f0f0] border-t border-white/10">
           <div className="container-page max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <HomeSectionHeader
+              theme="dark"
               action={
                 <Link
-                  className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[0.05] px-6 py-3 text-xs font-black uppercase tracking-wider text-[#f0f0f0] backdrop-blur-md transition-all hover:bg-white/[0.12] hover:border-white/40"
+                  className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-6 py-3 text-xs font-black uppercase tracking-wider text-[#f0f0f0] shadow-md transition-all hover:bg-white/20 hover:border-white/30"
                   href="/events"
                 >
                   <span>View All Races</span>

@@ -28,43 +28,43 @@ const rewards: { title: string; text: string; icon: LucideIcon }[] = [
 
 export function HomeRewards() {
   return (
-    <section className="relative py-20 bg-[#090d16] text-[#f0f0f0] overflow-hidden border-t border-white/10">
+    <section className="relative py-20 bg-[#f8fafc] text-[#090d16] overflow-hidden border-t border-slate-200">
       <div className="container-page max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
         <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-14">
-          <span className="rounded-full border border-sky-500/30 bg-sky-500/10 px-4 py-1 text-xs font-bold uppercase tracking-widest text-[#38bdf8]">
+          <span className="rounded-full border border-sky-600/30 bg-sky-50 px-4 py-1 text-xs font-bold uppercase tracking-widest text-[#0284c7]">
             FINISHER REWARDS
           </span>
-          <h2 className="mt-4 font-display font-black text-4xl sm:text-5xl uppercase tracking-tight text-[#f0f0f0]">
-            REWARDS THAT MAKE THE <span className="text-[#38bdf8]">FINISH REAL</span>
+          <h2 className="mt-4 font-display font-black text-4xl sm:text-5xl uppercase tracking-tight text-[#090d16]">
+            REWARDS THAT MAKE THE <span className="text-[#0284c7]">FINISH REAL</span>
           </h2>
-          <p className="mt-4 text-base text-slate-300">
+          <p className="mt-4 text-base text-slate-600 font-medium">
             Every finisher deserves tangible proof of victory. Earn authentic metal medals, tech apparel, and verified timing certificates.
           </p>
         </div>
 
-        {/* 4 Glass Reward Cards */}
+        {/* 4 Reward Cards */}
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {rewards.map((item) => {
             const Icon = item.icon;
             return (
               <div
                 key={item.title}
-                className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03] p-7 backdrop-blur-xl transition-all duration-300 hover:border-[#38bdf8]/50 hover:bg-white/[0.07] hover:shadow-2xl hover:shadow-blue-950/50 hover:-translate-y-1.5"
+                className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-white p-7 shadow-xl transition-all duration-300 hover:border-[#0284c7]/50 hover:shadow-2xl hover:shadow-sky-100/80 hover:-translate-y-1.5"
               >
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-white/15 bg-gradient-to-tr from-[#2563eb]/25 to-sky-500/10 text-[#38bdf8] shadow-lg group-hover:scale-110 group-hover:bg-[#2563eb] group-hover:text-white transition-all duration-300">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-sky-200 bg-sky-50 text-[#0284c7] shadow-sm group-hover:scale-110 group-hover:bg-[#0284c7] group-hover:text-white transition-all duration-300">
                   <Icon className="h-7 w-7" strokeWidth={2} />
                 </div>
 
-                <h3 className="mt-6 font-display font-bold text-xl uppercase tracking-tight text-[#f0f0f0]">
+                <h3 className="mt-6 font-display font-bold text-xl uppercase tracking-tight text-[#090d16]">
                   {item.title}
                 </h3>
-                <p className="mt-3 text-xs sm:text-sm leading-relaxed text-slate-300">
+                <p className="mt-3 text-xs sm:text-sm leading-relaxed text-slate-600 font-medium">
                   {item.text}
                 </p>
 
-                <div className="mt-6 flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#38bdf8] opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="mt-6 flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#0284c7] opacity-0 group-hover:opacity-100 transition-opacity">
                   <span>Guaranteed Quality</span>
                   <span>→</span>
                 </div>

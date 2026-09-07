@@ -49,13 +49,6 @@ export function EventHero({ event, isPast }: { event: PublicEvent; isPast: boole
       />
 
       <div className="container-page pb-16 pt-5 sm:pt-7">
-        <Breadcrumb
-          items={[
-            { name: "Home", href: "/" },
-            { name: "Events", href: "/events" },
-            { name: event.name, href: `/events/${event.slug}` },
-          ]}
-        />
 
         {/* ─── Headline block ─── */}
         <motion.div

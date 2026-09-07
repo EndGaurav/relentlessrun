@@ -7,6 +7,7 @@ import {
   CheckCircle2,
   Clock,
   Crown,
+  Flame,
   MapPin,
   Ruler,
   Search,
@@ -15,12 +16,14 @@ import {
   Trophy,
   Users,
   X,
+  ArrowRight,
+  ArrowUpRight,
+  Zap,
 } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { getApiUrl } from "../../lib/api";
-import { cn } from "../../lib/cn";
 import { publicEvents } from "../data/events";
 
 export type LeaderboardEntry = {
@@ -113,123 +116,177 @@ function getInitials(name: string): string {
   return name.slice(0, 2).toUpperCase();
 }
 
-// ── Top 3 Podium Card Component ─────────────────────────────────────────────
-function PodiumCard({
-  entry,
-  position,
+// ── 3D Stepped Podium Component (Authentic Isometric Pillars & Avatar Crowns) ──
+function Podium3D({
+  topThree,
   activeDistance,
 }: {
-  entry: LeaderboardEntry;
-  position: 1 | 2 | 3;
+  topThree: {
+    first?: LeaderboardEntry;
+    second?: LeaderboardEntry;
+    third?: LeaderboardEntry;
+  };
   activeDistance: string;
 }) {
-  const isFirst = position === 1;
-
-  const medalMeta = {
-    1: {
-      badgeClass: "bg-amber-500/15 text-amber-600 dark:text-amber-400 border-amber-500/30",
-      borderClass: "border-amber-500/40 shadow-amber-500/10",
-      avatarClass: "from-amber-400 to-yellow-600 text-white ring-amber-400/40",
-      crown: true,
-      rankLabel: "Gold 🥇",
-    },
-    2: {
-      badgeClass: "bg-slate-400/15 text-slate-600 dark:text-slate-300 border-slate-400/30",
-      borderClass: "border-slate-300 dark:border-slate-700",
-      avatarClass: "from-slate-400 to-slate-600 text-white ring-slate-400/30",
-      crown: false,
-      rankLabel: "Silver 🥈",
-    },
-    3: {
-      badgeClass: "bg-amber-800/15 text-amber-800 dark:text-amber-300 border-amber-800/30",
-      borderClass: "border-amber-700/30",
-      avatarClass: "from-amber-700 to-amber-900 text-white ring-amber-700/30",
-      crown: false,
-      rankLabel: "Bronze 🥉",
-    },
-  }[position];
+  if (!topThree.first) return null;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: isFirst ? -8 : 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, delay: position * 0.1 }}
-      className={cn(
-        "leaderboard-podium-card relative flex flex-col items-center justify-between rounded-2xl border bg-(--panel) p-3.5 text-center transition-all duration-300 hover:shadow-xl sm:p-5",
-        medalMeta.borderClass,
-        isFirst && "sm:-translate-y-2 ring-1 ring-amber-500/30 bg-linear-to-b from-amber-500/5 via-(--panel) to-(--panel)",
-      )}
-    >
-      {/* Crown for #1 */}
-      {medalMeta.crown && (
-        <div className="absolute -top-3 left-1/2 -translate-x-1/2 flex items-center gap-1 rounded-full bg-linear-to-r from-amber-500 to-yellow-400 px-2.5 py-0.5 text-[0.6rem] sm:text-[0.65rem] font-black uppercase tracking-wider text-slate-950 shadow-md whitespace-nowrap">
-          <Crown className="h-3 w-3" /> Champion
-        </div>
-      )}
+    <div className="relative mx-auto w-full max-w-xl px-2 py-4">
+      {/* Radiant Golden/Cyan Spotlight Glow behind Podium */}
+      <div className="pointer-events-none absolute left-1/2 top-10 -translate-x-1/2 h-56 w-72 rounded-full bg-amber-500/15 blur-[80px]" />
+      <div className="pointer-events-none absolute left-1/2 bottom-0 -translate-x-1/2 h-20 w-80 rounded-full bg-sky-500/20 blur-[60px]" />
 
-      {/* Header Badge */}
-      <div className="mb-2 flex w-full items-center justify-between">
-        <span
-          className={cn(
-            "rounded-full border px-2 py-0.5 text-[0.6rem] sm:text-[0.65rem] font-bold uppercase tracking-wider",
-            medalMeta.badgeClass,
-          )}
-        >
-          {medalMeta.rankLabel}
-        </span>
-        {entry.bibNumber && (
-          <span className="font-mono text-[0.6rem] sm:text-[0.65rem] font-medium text-(--muted)">
-            {entry.bibNumber}
-          </span>
+      {/* 3D Pillars Grid: 2nd (Left), 1st (Center), 3rd (Right) */}
+      <div className="relative z-10 flex items-end justify-center gap-2 sm:gap-4 pt-12 pb-2">
+        
+        {/* ═══ 2nd Place Pillar (Left) ═══ */}
+        {topThree.second ? (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="flex flex-1 flex-col items-center max-w-[130px] sm:max-w-[170px]"
+          >
+            {/* Avatar */}
+            <div className="relative mb-2">
+              <div className="flex h-13 w-13 sm:h-16 sm:w-16 items-center justify-center rounded-full bg-gradient-to-tr from-slate-200 via-slate-400 to-slate-200 text-slate-950 font-black text-sm sm:text-base ring-3 ring-slate-300 shadow-[0_0_15px_rgba(203,213,225,0.4)]">
+                {getInitials(topThree.second.runnerName)}
+              </div>
+              <span className="absolute -bottom-1 -right-1 flex h-5 w-5 sm:h-6 sm:w-6 items-center justify-center rounded-full bg-slate-300 text-[0.65rem] sm:text-xs font-black text-slate-950 shadow">
+                2
+              </span>
+            </div>
+
+            {/* Runner Name */}
+            <p className="w-full truncate text-center text-xs sm:text-sm font-bold text-slate-200">
+              {topThree.second.runnerName}
+            </p>
+
+            {/* Time / Pace Badge */}
+            <div className="mt-1.5 mb-2.5 inline-flex items-center gap-1 rounded-full border border-white/15 bg-white/10 px-2.5 py-0.5 text-[0.6rem] sm:text-[0.68rem] font-bold text-slate-300 backdrop-blur-md shadow-sm whitespace-nowrap">
+              <span>{formatTime(topThree.second.finishTimeSeconds)}</span>
+              <Flame className="h-3 w-3 text-orange-400 fill-orange-400" />
+            </div>
+
+            {/* 3D Pillar Box #2 */}
+            <div className="relative w-full">
+              {/* 3D Top Bevel Face */}
+              <div className="h-5 sm:h-6 w-full rounded-t-xl bg-gradient-to-r from-slate-400/50 via-slate-300/40 to-slate-500/50 border-t border-x border-white/30 shadow-inner" />
+              {/* Front Face */}
+              <div className="relative flex h-28 sm:h-36 md:h-40 w-full items-center justify-center rounded-b-2xl bg-gradient-to-b from-slate-700/80 via-slate-800/95 to-[#0b101c] border-x border-b border-white/15 shadow-[0_15px_30px_rgba(0,0,0,0.6)]">
+                <span className="font-display font-black text-4xl sm:text-6xl text-slate-400/60 select-none drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                  2
+                </span>
+              </div>
+            </div>
+          </motion.div>
+        ) : (
+          <div className="flex-1 max-w-[130px] sm:max-w-[170px]" />
+        )}
+
+        {/* ═══ 1st Place Pillar (Center - Tallest) ═══ */}
+        {topThree.first && (
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="flex flex-1 flex-col items-center max-w-[145px] sm:max-w-[190px] -mt-6"
+          >
+            {/* Floating Crown / Trophy on Top */}
+            <motion.div
+              animate={{ y: [0, -4, 0] }}
+              transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
+              className="mb-1 flex items-center justify-center"
+            >
+              <span className="text-2xl sm:text-3xl drop-shadow-[0_0_15px_rgba(251,191,36,0.8)]">
+                🏆
+              </span>
+            </motion.div>
+
+            {/* Avatar */}
+            <div className="relative mb-2">
+              <div className="flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-full bg-gradient-to-tr from-amber-300 via-yellow-400 to-amber-500 text-slate-950 font-black text-base sm:text-xl ring-4 ring-amber-400 shadow-[0_0_25px_rgba(251,191,36,0.7)]">
+                {getInitials(topThree.first.runnerName)}
+              </div>
+              <span className="absolute -bottom-1 -right-1 flex h-6 w-6 sm:h-7 sm:w-7 items-center justify-center rounded-full bg-gradient-to-r from-amber-400 to-yellow-400 text-xs sm:text-sm font-black text-slate-950 shadow-md">
+                1
+              </span>
+            </div>
+
+            {/* Runner Name */}
+            <p className="w-full truncate text-center text-xs sm:text-sm font-black uppercase tracking-tight text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)]">
+              {topThree.first.runnerName}
+            </p>
+
+            {/* Time / Pace Badge */}
+            <div className="mt-1.5 mb-2.5 inline-flex items-center gap-1 rounded-full border border-amber-400/50 bg-amber-500/20 px-3 py-0.5 text-[0.65rem] sm:text-xs font-black text-amber-300 backdrop-blur-md shadow-[0_0_10px_rgba(251,191,36,0.3)] whitespace-nowrap">
+              <span>{formatTime(topThree.first.finishTimeSeconds)}</span>
+              <Flame className="h-3.5 w-3.5 text-amber-400 fill-amber-400" />
+            </div>
+
+            {/* 3D Pillar Box #1 */}
+            <div className="relative w-full">
+              {/* 3D Top Bevel Face */}
+              <div className="h-6 sm:h-7 w-full rounded-t-xl bg-gradient-to-r from-amber-300/60 via-yellow-200/50 to-amber-400/60 border-t border-x border-amber-300/60 shadow-inner" />
+              {/* Front Face */}
+              <div className="relative flex h-38 sm:h-48 md:h-52 w-full items-center justify-center rounded-b-2xl bg-gradient-to-b from-slate-600/90 via-slate-800 to-[#090d16] border-x border-b border-amber-400/40 shadow-[0_20px_40px_rgba(0,0,0,0.8),0_0_20px_rgba(251,191,36,0.2)]">
+                <span className="font-display font-black text-5xl sm:text-7xl text-white/90 select-none drop-shadow-[0_0_20px_rgba(251,191,36,0.6)]">
+                  1
+                </span>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        {/* ═══ 3rd Place Pillar (Right) ═══ */}
+        {topThree.third ? (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="flex flex-1 flex-col items-center max-w-[130px] sm:max-w-[170px]"
+          >
+            {/* Avatar */}
+            <div className="relative mb-2">
+              <div className="flex h-13 w-13 sm:h-16 sm:w-16 items-center justify-center rounded-full bg-gradient-to-tr from-amber-700 via-amber-600 to-amber-800 text-white font-black text-sm sm:text-base ring-3 ring-amber-700 shadow-[0_0_15px_rgba(180,83,9,0.4)]">
+                {getInitials(topThree.third.runnerName)}
+              </div>
+              <span className="absolute -bottom-1 -right-1 flex h-5 w-5 sm:h-6 sm:w-6 items-center justify-center rounded-full bg-amber-700 text-[0.65rem] sm:text-xs font-black text-white shadow">
+                3
+              </span>
+            </div>
+
+            {/* Runner Name */}
+            <p className="w-full truncate text-center text-xs sm:text-sm font-bold text-slate-200">
+              {topThree.third.runnerName}
+            </p>
+
+            {/* Time / Pace Badge */}
+            <div className="mt-1.5 mb-2.5 inline-flex items-center gap-1 rounded-full border border-white/15 bg-white/10 px-2.5 py-0.5 text-[0.6rem] sm:text-[0.68rem] font-bold text-slate-300 backdrop-blur-md shadow-sm whitespace-nowrap">
+              <span>{formatTime(topThree.third.finishTimeSeconds)}</span>
+              <Flame className="h-3 w-3 text-orange-400 fill-orange-400" />
+            </div>
+
+            {/* 3D Pillar Box #3 */}
+            <div className="relative w-full">
+              {/* 3D Top Bevel Face */}
+              <div className="h-5 sm:h-6 w-full rounded-t-xl bg-gradient-to-r from-amber-700/50 via-amber-600/40 to-amber-800/50 border-t border-x border-amber-600/30 shadow-inner" />
+              {/* Front Face */}
+              <div className="relative flex h-22 sm:h-28 md:h-32 w-full items-center justify-center rounded-b-2xl bg-gradient-to-b from-slate-800/80 via-slate-900/95 to-[#0b101c] border-x border-b border-white/15 shadow-[0_15px_30px_rgba(0,0,0,0.6)]">
+                <span className="font-display font-black text-3xl sm:text-5xl text-amber-600/70 select-none drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                  3
+                </span>
+              </div>
+            </div>
+          </motion.div>
+        ) : (
+          <div className="flex-1 max-w-[130px] sm:max-w-[170px]" />
         )}
       </div>
 
-      {/* Avatar */}
-      <div className="relative my-1.5 sm:my-2">
-        <div
-          className={cn(
-            "flex h-12 w-12 sm:h-16 sm:w-16 items-center justify-center rounded-2xl bg-linear-to-tr font-bold tracking-tight shadow-md ring-4 text-sm sm:text-lg",
-            medalMeta.avatarClass,
-          )}
-        >
-          {getInitials(entry.runnerName)}
-        </div>
-        <span className="absolute -bottom-1 -right-1 flex h-5 w-5 sm:h-6 sm:w-6 items-center justify-center rounded-full bg-(--panel) text-[0.65rem] sm:text-xs font-bold shadow border border-(--line)">
-          #{position}
-        </span>
-      </div>
-
-      {/* Runner Info */}
-      <div className="mt-1 sm:mt-2 w-full min-w-0">
-        <h3 className="truncate text-sm sm:text-base font-bold tracking-tight text-foreground">
-          {entry.runnerName}
-        </h3>
-        {entry.city && (
-          <p className="flex items-center justify-center gap-1 text-[0.7rem] sm:text-xs text-(--muted) truncate">
-            <MapPin className="h-3 w-3 shrink-0 text-(--muted-soft)" />
-            {entry.city}
-          </p>
-        )}
-      </div>
-
-      {/* Time & Pace stats */}
-      <div className="mt-3 w-full rounded-xl border border-(--line) bg-(--panel-soft) p-2 sm:p-2.5">
-        <div className="grid grid-cols-2 gap-1 sm:gap-2 text-center">
-          <div>
-            <p className="text-[0.55rem] sm:text-[0.6rem] font-semibold uppercase tracking-wider text-(--muted)">Time</p>
-            <p className="font-mono text-xs sm:text-sm font-bold tracking-wide text-foreground">
-              {formatTime(entry.finishTimeSeconds)}
-            </p>
-          </div>
-          <div className="border-l border-(--line)">
-            <p className="text-[0.55rem] sm:text-[0.6rem] font-semibold uppercase tracking-wider text-(--muted)">Pace</p>
-            <p className="font-mono text-xs sm:text-sm font-bold tracking-wide text-(--sage)">
-              {formatPace(entry.finishTimeSeconds, activeDistance)}
-            </p>
-          </div>
-        </div>
-      </div>
-    </motion.div>
+      {/* Base Podium Shadow */}
+      <div className="mx-auto h-3 w-4/5 rounded-full bg-black/60 blur-md -mt-1" />
+    </div>
   );
 }
 
@@ -422,131 +479,122 @@ export function LeaderboardClient() {
   }, [currentClerkId, entries, isSignedIn, selectedDistance, user, userRegistrations]);
 
   return (
-    <div className="leaderboard-classic-content min-w-0 pb-16 px-1 sm:px-0">
-      {/* ── HERO ──────────────────────────────────────────────── */}
-      <section className="leaderboard-classic-hero relative overflow-hidden border-b border-(--line)">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 -z-10"
-          style={{
-            background: [
-              "radial-gradient(ellipse 80% 50% at 0% 0%, color-mix(in srgb, var(--sage) 14%, transparent) 0%, transparent 60%)",
-              "radial-gradient(ellipse 60% 40% at 100% 100%, color-mix(in srgb, #eab308 10%, transparent) 0%, transparent 50%)",
-              "var(--background)",
-            ].join(", "),
-          }}
-        />
+    <div className="min-w-0">
 
-        <div className="container-page py-8 sm:py-12 md:py-14">
+      {/* ── SECTION 1: HERO & CONTROLS (OFF-WHITE #f8fafc) ──────────── */}
+      <section className="relative overflow-hidden border-b border-slate-200 pt-24 pb-12 sm:pt-28 sm:pb-16 isolate text-[#090d16] bg-[#f8fafc]">
+        <div aria-hidden className="pointer-events-none absolute top-1/3 left-1/2 -z-10 h-[400px] w-[600px] -translate-x-1/2 rounded-full bg-sky-200/40 blur-[140px]" />
+        <div aria-hidden className="pointer-events-none absolute bottom-0 right-10 -z-10 h-[250px] w-[250px] rounded-full bg-blue-100/50 blur-[100px]" />
+
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
           <motion.div
-            className="mx-auto max-w-2xl text-center"
+            className="mx-auto max-w-3xl text-center"
             initial={reduce ? false : { opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
           >
-            <div className="inline-flex items-center gap-1.5 sm:gap-2 rounded-full border border-(--sage)/30 bg-(--sage-soft) px-2.5 py-0.5 sm:px-3 sm:py-1 text-[0.65rem] sm:text-xs font-bold uppercase tracking-wider text-(--sage)">
-              <Sparkles className="h-3 w-3 sm:h-3.5 sm:w-3.5" /> Official Event Leaderboard
-            </div>
-            <h1 className="leaderboard-classic-title mt-2.5 sm:mt-3 text-3xl font-black leading-[1.1] tracking-tight text-foreground sm:text-5xl">
-              The finishers&apos; board
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-sky-600/30 bg-sky-50 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-[#0284c7] mb-4 shadow-sm">
+              <Trophy className="h-3.5 w-3.5" />
+              OFFICIAL NATIONAL LEADERBOARD
+            </span>
+            <h1 className="font-display font-black text-4xl sm:text-6xl uppercase tracking-tight text-[#090d16]">
+              THE FINISHERS&apos;{" "}
+              <span className="text-[#0284c7]">
+                BOARD
+              </span>
             </h1>
-            <p className="lede mx-auto mt-2.5 sm:mt-3 max-w-lg text-xs sm:text-base">
-              Explore real-time standings across all distance categories. Every finish is verified with GPS tracking.
+            <p className="mt-4 text-sm sm:text-base text-slate-600 max-w-xl mx-auto font-medium leading-relaxed">
+              Explore real-time rankings across all distance categories. Every finish is verified with Strava & Garmin GPS tracking.
             </p>
           </motion.div>
-        </div>
-      </section>
 
-      {/* ── CONTROLS & FILTERS ─────────────────────────────────── */}
-      <section className="section pt-5 sm:pt-8">
-        <div className="container-page">
-          <div className="flex flex-col gap-4 sm:gap-5">
-            {/* Event Selector & Search Bar */}
-            <div className="grid grid-cols-1 gap-3.5 sm:gap-4 lg:grid-cols-12">
+          {/* Filter Bar Box */}
+          <div className="mt-10 rounded-3xl border border-slate-200 bg-white p-5 sm:p-7 shadow-xl space-y-5">
+            {/* Event Selector & Search Input */}
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
               {/* Event Select */}
               <div className="lg:col-span-6">
-                <label className="block text-[0.65rem] sm:text-xs font-bold uppercase tracking-wider text-(--muted) mb-1.5">
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">
                   <span className="flex items-center gap-1.5">
-                    <Calendar className="h-3.5 w-3.5 text-(--sage)" /> Select Event
+                    <Calendar className="h-4 w-4 text-[#0284c7]" /> Select Event
                   </span>
                 </label>
-                <select
-                  className="input w-full font-medium text-xs sm:text-sm"
-                  value={selectedSlug}
-                  onChange={(e) => {
-                    setSelectedSlug(e.target.value);
-                    setSearchQuery("");
-                  }}
-                >
-                  {events.map((ev) => (
-                    <option key={ev.slug} value={ev.slug}>
-                      {ev.name}
-                    </option>
-                  ))}
-                </select>
+                <div className="relative">
+                  <select
+                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-bold text-[#090d16] outline-none transition focus:border-[#0284c7] focus:ring-2 focus:ring-[#0284c7]/20 cursor-pointer"
+                    value={selectedSlug}
+                    onChange={(e) => {
+                      setSelectedSlug(e.target.value);
+                      setSearchQuery("");
+                    }}
+                  >
+                    {events.map((ev) => (
+                      <option key={ev.slug} value={ev.slug} className="bg-white text-[#090d16]">
+                        {ev.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
 
-              {/* Instant Search Bar with Overlap-Free Padding */}
+              {/* Instant Search Bar */}
               <div className="lg:col-span-6">
-                <label className="block text-[0.65rem] sm:text-xs font-bold uppercase tracking-wider text-(--muted) mb-1.5">
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">
                   <span className="flex items-center gap-1.5">
-                    <Search className="h-3.5 w-3.5 text-(--sage)" /> Search Runner or Bib #
+                    <Search className="h-4 w-4 text-[#0284c7]" /> Search Runner, City or Bib #
                   </span>
                 </label>
                 <div className="relative flex items-center">
                   <Search
                     aria-hidden="true"
-                    className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-(--muted-soft)"
+                    className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400"
                   />
                   <input
                     type="text"
                     placeholder="Search runner name, city, or bib (e.g. MR-5K-101)..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    style={{ paddingLeft: "2.65rem", paddingRight: "2.25rem" }}
-                    className="input w-full text-xs sm:text-sm"
+                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 pl-11 pr-10 py-3 text-sm text-[#090d16] placeholder-slate-400 outline-none transition focus:border-[#0284c7] focus:ring-2 focus:ring-[#0284c7]/20"
                   />
                   {searchQuery && (
                     <button
+                      type="button"
                       onClick={() => setSearchQuery("")}
-                      className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded-full p-1 text-(--muted) hover:bg-(--panel-soft) hover:text-foreground cursor-pointer"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-slate-400 hover:bg-slate-200 hover:text-slate-700 cursor-pointer"
                     >
-                      <X className="h-3.5 w-3.5" />
+                      <X className="h-4 w-4" />
                     </button>
                   )}
                 </div>
               </div>
             </div>
 
-            {/* ── DISTANCE CATEGORY PILLS (Swipeable on Mobile) ── */}
-            <div>
-              <p className="mb-2 text-[0.65rem] sm:text-xs font-bold uppercase tracking-wider text-(--muted)">
+            {/* Distance Category Pills */}
+            <div className="pt-2 border-t border-slate-100">
+              <p className="mb-3 text-xs font-bold uppercase tracking-wider text-slate-500">
                 Choose Distance Category:
               </p>
-              <div
-                className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none touch-pan-x"
-                style={{ WebkitOverflowScrolling: "touch" }}
-              >
+              <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
                 {distanceOptions.map((dist) => {
                   const isSelected = selectedDistance.toLowerCase().trim() === dist.toLowerCase().trim();
                   return (
                     <button
                       key={dist}
+                      type="button"
                       onClick={() => {
                         setSelectedDistance(dist);
                         setSearchQuery("");
                       }}
-                      className={cn(
-                        "group relative flex shrink-0 items-center gap-1.5 sm:gap-2 rounded-xl px-3.5 py-2 text-xs font-bold transition-all sm:px-4 sm:py-2.5 sm:text-sm cursor-pointer select-none",
+                      className={`group relative flex shrink-0 items-center gap-2 rounded-full px-4 py-2.5 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer select-none ${
                         isSelected
-                          ? "bg-(--sage) text-(--on-accent) shadow-md shadow-(--sage)/20"
-                          : "border border-(--line) bg-(--panel) text-(--muted) hover:border-(--sage)/40 hover:text-foreground",
-                      )}
+                          ? "bg-[#0284c7] text-white shadow-lg shadow-sky-600/30 border border-[#0284c7]"
+                          : "border border-slate-200 bg-slate-50 text-slate-700 hover:border-slate-300 hover:bg-slate-100"
+                      }`}
                     >
-                      <Ruler className={cn("h-3.5 w-3.5", isSelected ? "text-white" : "text-(--muted-soft) group-hover:text-(--sage)")} />
-                      {dist}
+                      <Ruler className={`h-3.5 w-3.5 ${isSelected ? "text-white" : "text-slate-400 group-hover:text-[#0284c7]"}`} />
+                      <span>{dist}</span>
                       {isSelected && (
-                        <span className="rounded-full bg-white/20 px-1.5 py-0.2 text-[0.6rem] font-mono">
+                        <span className="rounded-full bg-white/20 px-1.5 py-0.2 text-[0.6rem] font-mono font-bold">
                           Active
                         </span>
                       )}
@@ -555,70 +603,80 @@ export function LeaderboardClient() {
                 })}
               </div>
             </div>
+          </div>
+        </div>
+      </section>
 
-            {/* ── DUAL TAB TOGGLE (Mobile Grid Responsive) ── */}
-            <div className="mt-1 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 border-b border-(--line) pb-3">
-              <div className="grid grid-cols-2 gap-2 sm:flex sm:items-center">
-                <button
-                  onClick={() => setActiveTab("verified")}
-                  className={cn(
-                    "flex items-center justify-center gap-1.5 sm:gap-2 rounded-xl px-3 py-2 text-[0.7rem] sm:text-sm font-bold uppercase tracking-wider transition-all cursor-pointer text-center",
-                    activeTab === "verified"
-                      ? "border border-amber-500/30 bg-amber-500/10 text-amber-600 dark:text-amber-400 shadow-xs"
-                      : "text-(--muted) hover:text-foreground border border-transparent",
-                  )}
-                >
-                  <Trophy className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
-                  <span className="truncate">Verified Leaderboard</span>
-                </button>
-                <button
-                  onClick={() => setActiveTab("participants")}
-                  className={cn(
-                    "flex items-center justify-center gap-1.5 sm:gap-2 rounded-xl px-3 py-2 text-[0.7rem] sm:text-sm font-bold uppercase tracking-wider transition-all cursor-pointer text-center",
-                    activeTab === "participants"
-                      ? "border border-(--sage)/30 bg-(--sage-soft) text-(--sage) shadow-xs"
-                      : "text-(--muted) hover:text-foreground border border-transparent",
-                  )}
-                >
-                  <Users className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
-                  <span className="truncate">Event Roster</span>
-                </button>
-              </div>
+      {/* ── SECTION 2: PODIUM & RANKINGS TABLE (DARK #090d16) ────────── */}
+      <section className="relative py-16 sm:py-20 bg-[#090d16] text-[#f0f0f0] border-b border-white/10 overflow-hidden isolate">
+        <div aria-hidden className="pointer-events-none absolute top-1/2 left-10 -z-10 h-[350px] w-[350px] -translate-y-1/2 rounded-full bg-[#0284c7]/15 blur-[130px]" />
 
-              <div className="hidden sm:flex items-center gap-1.5 text-xs text-(--muted)">
-                <ShieldCheck className="h-4 w-4 text-(--sage)" /> GPS Timestamp Verified
-              </div>
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
+
+          {/* Dual Tab Switcher & GPS Badge */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 border-b border-white/10 pb-5">
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setActiveTab("verified")}
+                className={`flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                  activeTab === "verified"
+                    ? "bg-[#0284c7] text-white shadow-md shadow-sky-600/20 border border-[#0284c7]"
+                    : "border border-white/15 bg-white/[0.04] text-slate-300 hover:border-white/30"
+                }`}
+              >
+                <Trophy className="h-4 w-4 shrink-0" />
+                <span>Verified Leaderboard</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveTab("participants")}
+                className={`flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                  activeTab === "participants"
+                    ? "bg-[#0284c7] text-white shadow-md shadow-sky-600/20 border border-[#0284c7]"
+                    : "border border-white/15 bg-white/[0.04] text-slate-300 hover:border-white/30"
+                }`}
+              >
+                <Users className="h-4 w-4 shrink-0" />
+                <span>Event Roster</span>
+              </button>
+            </div>
+
+            <div className="flex items-center gap-1.5 text-xs font-bold text-slate-300 bg-white/[0.06] px-3.5 py-1.5 rounded-full border border-white/10 shadow-xs w-fit">
+              <ShieldCheck className="h-4 w-4 text-emerald-400" />
+              <span>GPS Timestamp Verified</span>
             </div>
           </div>
 
-          {/* ── USER RECOGNITION / PERSONAL STANDING BANNER ──────── */}
+          {/* User's Personal Recognition Banner */}
           {isLoaded && isSignedIn && !loading && (
-            <div className="mt-4 sm:mt-6">
+            <div className="mt-6">
               {userStanding?.rankedEntry ? (
                 <motion.div
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="flex flex-col gap-3 rounded-2xl border border-amber-500/30 bg-amber-500/5 p-3.5 sm:flex-row sm:items-center sm:justify-between sm:p-5"
+                  className="flex flex-col gap-4 rounded-3xl border border-amber-500/40 bg-amber-500/10 p-5 sm:flex-row sm:items-center sm:justify-between shadow-2xl"
                 >
-                  <div className="flex items-center gap-3">
-                    <span className="flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-xl bg-amber-500 text-slate-950 font-black shadow text-sm sm:text-base">
+                  <div className="flex items-center gap-3.5">
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-amber-500 text-slate-950 font-black shadow text-lg">
                       #{userStanding.rankedEntry.rank}
                     </span>
                     <div>
-                      <p className="text-xs sm:text-sm font-bold text-foreground">
-                        You are ranked <span className="text-amber-500">#{userStanding.rankedEntry.rank}</span> in {selectedDistance}!
+                      <p className="font-display font-black text-base text-white uppercase tracking-tight">
+                        You are ranked <span className="text-amber-400">#{userStanding.rankedEntry.rank}</span> in {selectedDistance}!
                       </p>
-                      <p className="text-[0.7rem] sm:text-xs text-(--muted)">
-                        Time: <span className="font-mono font-bold text-foreground">{formatTime(userStanding.rankedEntry.finishTimeSeconds)}</span>
+                      <p className="mt-0.5 text-xs font-medium text-slate-300">
+                        Time: <span className="font-mono font-bold text-white">{formatTime(userStanding.rankedEntry.finishTimeSeconds)}</span>
                         {" · "}
-                        Pace: <span className="font-mono font-bold text-(--sage)">{formatPace(userStanding.rankedEntry.finishTimeSeconds, selectedDistance)}</span>
+                        Pace: <span className="font-mono font-bold text-[#38bdf8]">{formatPace(userStanding.rankedEntry.finishTimeSeconds, selectedDistance)}</span>
                         {userStanding.rankedEntry.bibNumber && ` · Bib: ${userStanding.rankedEntry.bibNumber}`}
                       </p>
                     </div>
                   </div>
                   <Link
                     href="/dashboard"
-                    className="btn btn-secondary text-xs w-full sm:w-fit py-1.5 px-3 text-center"
+                    className="neon-btn-blue text-xs font-bold uppercase tracking-wider py-2.5 px-5 rounded-full text-center shrink-0 shadow-md text-white"
                   >
                     View in Dashboard
                   </Link>
@@ -627,134 +685,157 @@ export function LeaderboardClient() {
                 <motion.div
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="flex flex-col gap-2 rounded-2xl border border-(--line) bg-(--panel-soft) p-3.5 sm:flex-row sm:items-center sm:justify-between sm:p-4"
+                  className="flex flex-col gap-3 rounded-3xl border border-white/15 bg-[#0d1322] p-5 sm:flex-row sm:items-center sm:justify-between shadow-xl"
                 >
-                  <p className="text-xs sm:text-sm text-(--muted)">
-                    You are registered for <span className="font-bold text-foreground">{userStanding.otherDistanceReg.distance}</span> in this event.
+                  <p className="text-xs sm:text-sm font-medium text-slate-300">
+                    You are registered for <span className="font-bold text-white">{userStanding.otherDistanceReg.distance}</span> in this event.
                   </p>
                   <button
+                    type="button"
                     onClick={() => setSelectedDistance(userStanding.otherDistanceReg!.distance)}
-                    className="text-xs font-bold text-(--sage) underline-offset-2 hover:underline w-fit cursor-pointer"
+                    className="text-xs font-bold uppercase tracking-wider text-[#38bdf8] hover:underline w-fit cursor-pointer"
                   >
                     Switch to {userStanding.otherDistanceReg.distance} Leaderboard →
                   </button>
                 </motion.div>
-              ) : (
-                <motion.div
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="flex flex-col gap-2 rounded-2xl border border-dashed border-(--line) p-3.5 sm:flex-row sm:items-center sm:justify-between sm:p-4 text-xs sm:text-sm text-(--muted)"
-                >
-                  <span>
-                    Want to see your name on the board? Register for this event or submit your run from Dashboard.
-                  </span>
-                  <div className="flex gap-2">
-                    <Link href={`/events/${selectedSlug}`} className="font-bold text-foreground hover:underline">
-                      Register Now
-                    </Link>
-                    <span>·</span>
-                    <Link href="/dashboard" className="font-bold text-(--sage) hover:underline">
-                      Upload GPS Proof
-                    </Link>
-                  </div>
-                </motion.div>
-              )}
+              ) : null}
             </div>
           )}
 
-          {/* ── LOADING STATE ────────────────────────────────────── */}
+          {/* Loading / Error States */}
           {loading ? (
-            <div className="mt-10 flex flex-col items-center justify-center rounded-2xl border border-(--line) bg-(--panel) py-14">
-              <div className="h-8 w-8 animate-spin rounded-full border-3 border-(--line) border-t-(--sage)" />
-              <p className="mt-4 text-xs sm:text-sm font-medium text-(--muted)">Loading {selectedDistance} rankings...</p>
+            <div className="mt-12 flex flex-col items-center justify-center rounded-3xl border border-white/10 bg-[#0d1322] py-16 shadow-2xl">
+              <div className="h-8 w-8 animate-spin rounded-full border-3 border-white/10 border-t-[#38bdf8]" />
+              <p className="mt-4 text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-400">
+                Loading {selectedDistance} rankings...
+              </p>
             </div>
           ) : error ? (
-            <div className="mt-6 rounded-2xl border border-red-200 bg-red-50 p-5 text-center text-xs sm:text-sm text-red-700">
+            <div className="mt-8 rounded-3xl border border-rose-500/30 bg-rose-500/10 p-6 text-center text-sm font-bold text-rose-300 shadow-sm">
               {error}
             </div>
           ) : (
             <>
               {/* ── TAB 1: VERIFIED LEADERBOARD ─────────────────────── */}
               {activeTab === "verified" && (
-                <div className="mt-6 sm:mt-8 space-y-6 sm:space-y-8">
-                  {/* TOP 3 PODIUM (Visible when no search active and at least 3 entries exist) */}
+                <div className="mt-8 space-y-10">
+                  {/* Top 3 3D Stepped Podium */}
                   {!searchQuery && entries.length >= 3 && (
                     <div>
-                      <div className="mb-3.5 text-center">
-                        <p className="text-[0.65rem] sm:text-xs font-bold uppercase tracking-wider text-amber-500">
-                          Podium Finishers
-                        </p>
-                        <h2 className="text-lg sm:text-2xl font-bold tracking-tight text-foreground">
-                          Top 3 in {selectedDistance}
+                      <div className="mb-4 text-center">
+                        <span className="rounded-full border border-amber-500/30 bg-amber-500/10 px-3.5 py-1 text-xs font-bold uppercase tracking-widest text-amber-400">
+                          PODIUM FINISHERS
+                        </span>
+                        <h2 className="mt-3 font-display font-black text-2xl sm:text-4xl uppercase tracking-tight text-white">
+                          TOP 3 CHAMPIONS · <span className="text-[#38bdf8]">{selectedDistance}</span>
                         </h2>
                       </div>
 
-                      {/* Responsive Podium Grid: 1st Place on Top on Mobile, 3 cols on Desktop */}
-                      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-5">
-                        {/* 2nd Place (Desktop Left, Mobile 2nd) */}
-                        {topThree.second && (
-                          <div className="order-2 sm:order-1">
-                            <PodiumCard
-                              entry={topThree.second}
-                              position={2}
-                              activeDistance={selectedDistance}
-                            />
-                          </div>
-                        )}
-
-                        {/* 1st Place (Desktop Center Elevated, Mobile 1st) */}
-                        {topThree.first && (
-                          <div className="order-1 sm:order-2">
-                            <PodiumCard
-                              entry={topThree.first}
-                              position={1}
-                              activeDistance={selectedDistance}
-                            />
-                          </div>
-                        )}
-
-                        {/* 3rd Place (Desktop Right, Mobile 3rd) */}
-                        {topThree.third && (
-                          <div className="order-3 sm:order-3">
-                            <PodiumCard
-                              entry={topThree.third}
-                              position={3}
-                              activeDistance={selectedDistance}
-                            />
-                          </div>
-                        )}
-                      </div>
+                      <Podium3D
+                        topThree={topThree}
+                        activeDistance={selectedDistance}
+                      />
                     </div>
                   )}
 
-                  {/* FULL RANKINGS TABLE */}
-                  <div className="leaderboard-table-shell overflow-hidden rounded-2xl border border-(--line) bg-(--panel) shadow-xs">
-                    <div className="border-b border-(--line) bg-(--panel-soft) px-3.5 py-3 sm:px-6 flex items-center justify-between">
-                      <h3 className="text-xs sm:text-sm font-bold text-foreground">
+                  {/* Full Rankings: Mobile Card List + Desktop Table */}
+                  <div className="overflow-hidden rounded-3xl border border-white/10 bg-[#0d1322] shadow-2xl">
+                    <div className="border-b border-white/10 bg-white/[0.04] px-5 sm:px-6 py-4 flex items-center justify-between">
+                      <h3 className="font-display font-black text-sm sm:text-base uppercase tracking-tight text-white">
                         All Verified Finishers · {selectedDistance}
                       </h3>
+                      <span className="text-xs font-mono font-bold text-slate-400">
+                        {filteredEntries.length} verified runner{filteredEntries.length === 1 ? "" : "s"}
+                      </span>
                     </div>
 
-                    <div className="overflow-x-auto touch-pan-x" style={{ WebkitOverflowScrolling: "touch" }}>
-                      <table className="w-full min-w-140 sm:min-w-152 text-left text-xs sm:text-sm">
+                    {/* 📱 MOBILE CARD VIEW (Under 640px) */}
+                    <div className="block sm:hidden divide-y divide-white/5 p-3 space-y-2.5">
+                      {filteredEntries.map((row, idx) => {
+                        const isYou =
+                          Boolean(currentClerkId && row.clerkId === currentClerkId) ||
+                          Boolean(user?.fullName && row.runnerName.toLowerCase() === user.fullName.toLowerCase());
+
+                        return (
+                          <motion.div
+                            key={`mob-${row.rank}-${row.bibNumber || row.runnerName}`}
+                            initial={reduce ? false : { opacity: 0, y: 6 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.2, delay: Math.min(idx * 0.02, 0.25) }}
+                            className={`rounded-2xl border p-3.5 transition-all ${
+                              isYou
+                                ? "bg-sky-500/15 border-sky-400/50 shadow-md shadow-sky-500/10"
+                                : "bg-white/[0.03] border-white/10 hover:bg-white/[0.06]"
+                            }`}
+                          >
+                            <div className="flex items-center justify-between gap-2">
+                              {/* Rank & Runner Details */}
+                              <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                                <span
+                                  className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-xs font-black ${
+                                    row.rank === 1
+                                      ? "bg-amber-500/20 text-amber-400 border border-amber-400/40 text-sm"
+                                      : row.rank === 2
+                                        ? "bg-slate-400/20 text-slate-200 border border-slate-400/40 text-sm"
+                                        : row.rank === 3
+                                          ? "bg-amber-800/20 text-amber-300 border border-amber-700/40 text-sm"
+                                          : "bg-white/[0.08] text-slate-300 border border-white/10"
+                                  }`}
+                                >
+                                  {row.rank === 1 ? "🥇" : row.rank === 2 ? "🥈" : row.rank === 3 ? "🥉" : `#${row.rank}`}
+                                </span>
+
+                                <div className="min-w-0 flex-1">
+                                  <p className="truncate font-bold text-xs text-white flex items-center gap-1.5">
+                                    {row.runnerName}
+                                    {isYou && (
+                                      <span className="rounded-full bg-[#0284c7] px-1.5 py-0.2 text-[0.55rem] font-bold uppercase tracking-wider text-white">
+                                        You
+                                      </span>
+                                    )}
+                                  </p>
+                                  <p className="text-[0.65rem] text-slate-400 font-mono mt-0.5 truncate">
+                                    {row.bibNumber || `MR-${parseKm(selectedDistance)}K-${100 + row.rank}`}
+                                    {row.city && ` · ${row.city}`}
+                                  </p>
+                                </div>
+                              </div>
+
+                              {/* Timing & Verified Badge */}
+                              <div className="text-right shrink-0">
+                                <p className="font-mono text-sm font-black text-white">
+                                  {formatTime(row.finishTimeSeconds)}
+                                </p>
+                                <p className="font-mono text-[0.65rem] font-bold text-[#38bdf8]">
+                                  {formatPace(row.finishTimeSeconds, selectedDistance)}
+                                </p>
+                              </div>
+                            </div>
+                          </motion.div>
+                        );
+                      })}
+                    </div>
+
+                    {/* 💻 DESKTOP DATA TABLE (640px and above) */}
+                    <div className="hidden sm:block overflow-x-auto">
+                      <table className="w-full text-left text-xs sm:text-sm">
                         <thead>
-                          <tr className="border-b border-(--line) bg-(--panel-soft)/50 text-[0.6rem] sm:text-[0.65rem] font-bold uppercase tracking-wider text-(--muted)">
-                            <th className="px-3 py-3 sm:px-4 sm:py-3.5">Rank</th>
-                            <th className="px-3 py-3 sm:px-4 sm:py-3.5">Runner</th>
-                            <th className="px-3 py-3 sm:px-4 sm:py-3.5">Bib #</th>
-                            <th className="px-3 py-3 sm:px-4 sm:py-3.5">City</th>
-                            <th className="px-3 py-3 sm:px-4 sm:py-3.5">Distance</th>
-                            <th className="px-3 py-3 sm:px-4 sm:py-3.5">Pace</th>
-                            <th className="px-3 py-3 sm:px-4 sm:py-3.5">Finish Time</th>
-                            <th className="px-3 py-3 sm:px-4 sm:py-3.5">Status</th>
+                          <tr className="border-b border-white/10 bg-white/[0.02] text-[0.65rem] font-black uppercase tracking-wider text-slate-400">
+                            <th className="px-4 py-3.5">Rank</th>
+                            <th className="px-4 py-3.5">Runner</th>
+                            <th className="px-4 py-3.5">Bib #</th>
+                            <th className="px-4 py-3.5">City</th>
+                            <th className="px-4 py-3.5">Distance</th>
+                            <th className="px-4 py-3.5">Avg Pace</th>
+                            <th className="px-4 py-3.5">Finish Time</th>
+                            <th className="px-4 py-3.5">Status</th>
                           </tr>
                         </thead>
-                        <tbody>
+                        <tbody className="divide-y divide-white/5">
                           {filteredEntries.map((row, idx) => {
                             const isYou =
                               Boolean(currentClerkId && row.clerkId === currentClerkId) ||
                               Boolean(user?.fullName && row.runnerName.toLowerCase() === user.fullName.toLowerCase());
-                            const isTop3 = row.rank <= 3;
 
                             return (
                               <motion.tr
@@ -762,29 +843,27 @@ export function LeaderboardClient() {
                                 initial={reduce ? false : { opacity: 0, x: -6 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ duration: 0.2, delay: Math.min(idx * 0.02, 0.3) }}
-                                className={cn(
-                                  "border-b border-(--line) last:border-b-0 transition-colors hover:bg-(--panel-soft)/70",
-                                  isYou && "bg-(--sage-soft) ring-1 ring-(--sage)/40",
-                                  isTop3 && "font-medium",
-                                )}
+                                className={`transition-colors hover:bg-white/[0.04] ${
+                                  isYou ? "bg-sky-500/15 font-semibold" : ""
+                                }`}
                               >
                                 {/* Rank */}
-                                <td className="px-3 py-2.5 sm:px-4 sm:py-3.5">
-                                  <div className="flex items-center gap-1 font-mono text-xs font-bold">
+                                <td className="px-4 py-3.5">
+                                  <div className="flex items-center gap-1 font-mono text-xs font-black">
                                     {row.rank === 1 ? (
-                                      <span className="flex h-5 w-5 sm:h-6 sm:w-6 items-center justify-center rounded-md sm:rounded-lg bg-amber-500/20 text-amber-600 dark:text-amber-400">
+                                      <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-amber-500/20 text-amber-400 text-sm">
                                         🥇
                                       </span>
                                     ) : row.rank === 2 ? (
-                                      <span className="flex h-5 w-5 sm:h-6 sm:w-6 items-center justify-center rounded-md sm:rounded-lg bg-slate-400/20 text-slate-600 dark:text-slate-300">
+                                      <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-slate-400/20 text-slate-300 text-sm">
                                         🥈
                                       </span>
                                     ) : row.rank === 3 ? (
-                                      <span className="flex h-5 w-5 sm:h-6 sm:w-6 items-center justify-center rounded-md sm:rounded-lg bg-amber-800/20 text-amber-800 dark:text-amber-300">
+                                      <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-amber-800/20 text-amber-400 text-sm">
                                         🥉
                                       </span>
                                     ) : (
-                                      <span className="w-5 sm:w-6 text-center text-(--muted)">
+                                      <span className="w-6 text-center text-slate-400 font-bold">
                                         #{row.rank}
                                       </span>
                                     )}
@@ -792,16 +871,16 @@ export function LeaderboardClient() {
                                 </td>
 
                                 {/* Runner Avatar & Name */}
-                                <td className="px-3 py-2.5 sm:px-4 sm:py-3.5">
-                                  <div className="flex items-center gap-2 sm:gap-2.5">
-                                    <div className="flex h-6 w-6 sm:h-7 sm:w-7 shrink-0 items-center justify-center rounded-lg border border-(--line) bg-(--panel-soft) text-[0.6rem] sm:text-[0.65rem] font-bold text-foreground">
+                                <td className="px-4 py-3.5">
+                                  <div className="flex items-center gap-2.5">
+                                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white/[0.06] text-xs font-bold text-white border border-white/10">
                                       {getInitials(row.runnerName)}
                                     </div>
                                     <div>
-                                      <p className="font-semibold text-foreground flex items-center gap-1.5 text-xs sm:text-sm">
+                                      <p className="font-bold text-white flex items-center gap-1.5 text-xs sm:text-sm">
                                         {row.runnerName}
                                         {isYou && (
-                                          <span className="rounded-full bg-(--sage) px-1.5 py-0.2 text-[0.55rem] sm:text-[0.6rem] font-bold uppercase tracking-wider text-white">
+                                          <span className="rounded-full bg-[#0284c7] px-2 py-0.2 text-[0.6rem] font-bold uppercase tracking-wider text-white">
                                             You
                                           </span>
                                         )}
@@ -811,34 +890,34 @@ export function LeaderboardClient() {
                                 </td>
 
                                 {/* Bib */}
-                                <td className="px-3 py-2.5 sm:px-4 sm:py-3.5 font-mono text-[0.7rem] sm:text-xs text-(--muted)">
+                                <td className="px-4 py-3.5 font-mono text-xs text-slate-400 font-semibold">
                                   {row.bibNumber || `MR-${parseKm(selectedDistance)}K-${100 + row.rank}`}
                                 </td>
 
                                 {/* City */}
-                                <td className="px-3 py-2.5 sm:px-4 sm:py-3.5 text-[0.7rem] sm:text-xs text-(--muted)">
+                                <td className="px-4 py-3.5 text-xs text-slate-300 font-medium">
                                   {row.city || "India"}
                                 </td>
 
                                 {/* Distance */}
-                                <td className="px-3 py-2.5 sm:px-4 sm:py-3.5 font-medium text-foreground text-[0.7rem] sm:text-xs">
+                                <td className="px-4 py-3.5 font-bold text-white text-xs">
                                   {row.distance || selectedDistance}
                                 </td>
 
                                 {/* Pace */}
-                                <td className="px-3 py-2.5 sm:px-4 sm:py-3.5 font-mono text-[0.7rem] sm:text-xs font-semibold text-(--sage)">
+                                <td className="px-4 py-3.5 font-mono text-xs font-bold text-[#38bdf8]">
                                   {formatPace(row.finishTimeSeconds, selectedDistance)}
                                 </td>
 
                                 {/* Time */}
-                                <td className="px-3 py-2.5 sm:px-4 sm:py-3.5 font-mono text-[0.7rem] sm:text-xs font-bold text-foreground">
+                                <td className="px-4 py-3.5 font-mono text-xs font-black text-white">
                                   {formatTime(row.finishTimeSeconds)}
                                 </td>
 
                                 {/* Status */}
-                                <td className="px-3 py-2.5 sm:px-4 sm:py-3.5">
-                                  <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[0.6rem] sm:text-[0.65rem] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
-                                    <CheckCircle2 className="h-2.5 w-2.5 sm:h-3 sm:w-3" /> Verified
+                                <td className="px-4 py-3.5">
+                                  <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-0.5 text-[0.65rem] font-bold uppercase tracking-wider text-emerald-400">
+                                    <CheckCircle2 className="h-3 w-3 text-emerald-400" /> Verified
                                   </span>
                                 </td>
                               </motion.tr>
@@ -849,7 +928,7 @@ export function LeaderboardClient() {
                     </div>
 
                     {filteredEntries.length === 0 && (
-                      <div className="py-10 text-center text-xs sm:text-sm text-(--muted)">
+                      <div className="py-12 text-center text-sm font-medium text-slate-400">
                         No runners match &ldquo;{searchQuery}&rdquo;. Try another name or bib number.
                       </div>
                     )}
@@ -859,32 +938,94 @@ export function LeaderboardClient() {
 
               {/* ── TAB 2: PARTICIPANTS ROSTER ─────────────────────── */}
               {activeTab === "participants" && (
-                <div className="mt-6 sm:mt-8 space-y-6">
-                  <div className="leaderboard-table-shell overflow-hidden rounded-2xl border border-(--line) bg-(--panel) shadow-xs">
-                    <div className="border-b border-(--line) bg-(--panel-soft) px-3.5 py-3 sm:px-6 flex items-center justify-between">
+                <div className="mt-8 space-y-6">
+                  <div className="overflow-hidden rounded-3xl border border-white/10 bg-[#0d1322] shadow-2xl">
+                    <div className="border-b border-white/10 bg-white/[0.04] px-5 sm:px-6 py-4 flex items-center justify-between">
                       <div>
-                        <h3 className="text-xs sm:text-sm font-bold text-foreground">
+                        <h3 className="font-display font-black text-sm sm:text-base uppercase tracking-tight text-white">
                           Registered Event Participants · {selectedDistance}
                         </h3>
-                        <p className="text-[0.65rem] sm:text-xs text-(--muted)">
-                          All runners confirmed for this event. Verified times appear on the Leaderboard tab.
+                        <p className="text-xs text-slate-400 font-medium mt-0.5">
+                          Confirmed participants. Official timings appear on the Leaderboard tab upon GPS verification.
                         </p>
                       </div>
+                      <span className="text-xs font-mono font-bold text-slate-400">
+                        {filteredParticipants.length} runner{filteredParticipants.length === 1 ? "" : "s"}
+                      </span>
                     </div>
 
-                    <div className="overflow-x-auto touch-pan-x" style={{ WebkitOverflowScrolling: "touch" }}>
-                      <table className="w-full min-w-140 sm:min-w-152 text-left text-xs sm:text-sm">
+                    {/* 📱 Mobile Participant Card View */}
+                    <div className="block sm:hidden divide-y divide-white/5 p-3 space-y-2.5">
+                      {filteredParticipants.map((p, idx) => {
+                        const isYou =
+                          Boolean(currentClerkId && p.clerkId === currentClerkId) ||
+                          Boolean(user?.fullName && p.runnerName.toLowerCase() === user.fullName.toLowerCase());
+
+                        return (
+                          <div
+                            key={`mob-part-${p.rosterNumber}-${p.bibNumber}`}
+                            className={`rounded-2xl border p-3 transition-all ${
+                              isYou
+                                ? "bg-sky-500/15 border-sky-400/50"
+                                : "bg-white/[0.03] border-white/10"
+                            }`}
+                          >
+                            <div className="flex items-center justify-between gap-2">
+                              <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white/[0.08] text-xs font-bold text-slate-300 font-mono">
+                                  #{idx + 1}
+                                </span>
+                                <div className="min-w-0 flex-1">
+                                  <p className="truncate font-bold text-xs text-white flex items-center gap-1.5">
+                                    {p.runnerName}
+                                    {isYou && (
+                                      <span className="rounded-full bg-[#0284c7] px-1.5 py-0.2 text-[0.55rem] font-bold uppercase tracking-wider text-white">
+                                        You
+                                      </span>
+                                    )}
+                                  </p>
+                                  <p className="text-[0.65rem] text-slate-400 font-mono mt-0.5 truncate">
+                                    {p.bibNumber} {p.city && `· ${p.city}`}
+                                  </p>
+                                </div>
+                              </div>
+
+                              <span
+                                className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[0.6rem] font-bold uppercase tracking-wider border shrink-0 ${
+                                  p.status === "Verified Finisher"
+                                    ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30"
+                                    : p.status === "Under Review"
+                                      ? "bg-amber-500/10 text-amber-400 border-amber-500/30"
+                                      : "bg-sky-500/10 text-sky-400 border-sky-500/30"
+                                }`}
+                              >
+                                {p.status === "Verified Finisher" ? (
+                                  <CheckCircle2 className="h-3 w-3 text-emerald-400" />
+                                ) : (
+                                  <Clock className="h-3 w-3 text-slate-400" />
+                                )}
+                                {p.status}
+                              </span>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    {/* 💻 Desktop Participant Table */}
+                    <div className="hidden sm:block overflow-x-auto">
+                      <table className="w-full text-left text-xs sm:text-sm">
                         <thead>
-                          <tr className="border-b border-(--line) bg-(--panel-soft)/50 text-[0.6rem] sm:text-[0.65rem] font-bold uppercase tracking-wider text-(--muted)">
-                            <th className="px-3 py-3 sm:px-4 sm:py-3.5">#</th>
-                            <th className="px-3 py-3 sm:px-4 sm:py-3.5">Runner Name</th>
-                            <th className="px-3 py-3 sm:px-4 sm:py-3.5">Bib Number</th>
-                            <th className="px-3 py-3 sm:px-4 sm:py-3.5">City</th>
-                            <th className="px-3 py-3 sm:px-4 sm:py-3.5">Distance</th>
-                            <th className="px-3 py-3 sm:px-4 sm:py-3.5">Status</th>
+                          <tr className="border-b border-white/10 bg-white/[0.02] text-[0.65rem] font-black uppercase tracking-wider text-slate-400">
+                            <th className="px-4 py-3.5">#</th>
+                            <th className="px-4 py-3.5">Runner Name</th>
+                            <th className="px-4 py-3.5">Bib Number</th>
+                            <th className="px-4 py-3.5">City</th>
+                            <th className="px-4 py-3.5">Distance</th>
+                            <th className="px-4 py-3.5">Status</th>
                           </tr>
                         </thead>
-                        <tbody>
+                        <tbody className="divide-y divide-white/5">
                           {filteredParticipants.map((p, idx) => {
                             const isYou =
                               Boolean(currentClerkId && p.clerkId === currentClerkId) ||
@@ -893,53 +1034,51 @@ export function LeaderboardClient() {
                             return (
                               <tr
                                 key={`${p.rosterNumber}-${p.bibNumber}`}
-                                className={cn(
-                                  "border-b border-(--line) last:border-b-0 transition-colors hover:bg-(--panel-soft)/70",
-                                  isYou && "bg-(--sage-soft) ring-1 ring-(--sage)/40",
-                                )}
+                                className={`transition-colors hover:bg-white/[0.04] ${
+                                  isYou ? "bg-sky-500/15 font-semibold" : ""
+                                }`}
                               >
-                                <td className="px-3 py-2.5 sm:px-4 sm:py-3.5 font-mono text-[0.7rem] sm:text-xs text-(--muted)">
+                                <td className="px-4 py-3.5 font-mono text-xs text-slate-400 font-bold">
                                   {idx + 1}
                                 </td>
-                                <td className="px-3 py-2.5 sm:px-4 sm:py-3.5">
-                                  <div className="flex items-center gap-2">
-                                    <div className="flex h-6 w-6 sm:h-7 sm:w-7 shrink-0 items-center justify-center rounded-lg border border-(--line) bg-(--panel-soft) text-[0.6rem] sm:text-[0.65rem] font-bold text-foreground">
+                                <td className="px-4 py-3.5">
+                                  <div className="flex items-center gap-2.5">
+                                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white/[0.06] text-xs font-bold text-white border border-white/10">
                                       {getInitials(p.runnerName)}
                                     </div>
-                                    <p className="font-semibold text-foreground flex items-center gap-1.5 text-xs sm:text-sm">
+                                    <p className="font-bold text-white flex items-center gap-1.5 text-xs sm:text-sm">
                                       {p.runnerName}
                                       {isYou && (
-                                        <span className="rounded-full bg-(--sage) px-1.5 py-0.2 text-[0.55rem] sm:text-[0.6rem] font-bold uppercase tracking-wider text-white">
+                                        <span className="rounded-full bg-[#0284c7] px-2 py-0.2 text-[0.6rem] font-bold uppercase tracking-wider text-white">
                                           You
                                         </span>
                                       )}
                                     </p>
                                   </div>
                                 </td>
-                                <td className="px-3 py-2.5 sm:px-4 sm:py-3.5 font-mono text-[0.7rem] sm:text-xs font-bold text-foreground">
+                                <td className="px-4 py-3.5 font-mono text-xs font-bold text-white">
                                   {p.bibNumber}
                                 </td>
-                                <td className="px-3 py-2.5 sm:px-4 sm:py-3.5 text-[0.7rem] sm:text-xs text-(--muted)">
+                                <td className="px-4 py-3.5 text-xs text-slate-300 font-medium">
                                   {p.city || "India"}
                                 </td>
-                                <td className="px-3 py-2.5 sm:px-4 sm:py-3.5 text-[0.7rem] sm:text-xs font-medium text-foreground">
+                                <td className="px-4 py-3.5 text-xs font-bold text-white">
                                   {p.distance}
                                 </td>
-                                <td className="px-3 py-2.5 sm:px-4 sm:py-3.5">
+                                <td className="px-4 py-3.5">
                                   <span
-                                    className={cn(
-                                      "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[0.6rem] sm:text-[0.65rem] font-bold uppercase tracking-wider",
+                                    className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[0.65rem] font-bold uppercase tracking-wider border ${
                                       p.status === "Verified Finisher"
-                                        ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+                                        ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30"
                                         : p.status === "Under Review"
-                                          ? "bg-amber-500/10 text-amber-600 dark:text-amber-400"
-                                          : "bg-blue-500/10 text-blue-600 dark:text-blue-400",
-                                    )}
+                                          ? "bg-amber-500/10 text-amber-400 border-amber-500/30"
+                                          : "bg-sky-500/10 text-sky-400 border-sky-500/30"
+                                    }`}
                                   >
                                     {p.status === "Verified Finisher" ? (
-                                      <CheckCircle2 className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
+                                      <CheckCircle2 className="h-3 w-3 text-emerald-400" />
                                     ) : (
-                                      <Clock className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
+                                      <Clock className="h-3 w-3 text-slate-400" />
                                     )}
                                     {p.status}
                                   </span>
@@ -952,7 +1091,7 @@ export function LeaderboardClient() {
                     </div>
 
                     {filteredParticipants.length === 0 && (
-                      <div className="py-10 text-center text-xs sm:text-sm text-(--muted)">
+                      <div className="py-12 text-center text-sm font-medium text-slate-400">
                         No registered runners found for {selectedDistance}.
                       </div>
                     )}
@@ -963,6 +1102,44 @@ export function LeaderboardClient() {
           )}
         </div>
       </section>
+
+      {/* ── SECTION 3: CLAIM YOUR RANK / GPS BANNER (OFF-WHITE #f8fafc) ── */}
+      <section className="relative py-16 sm:py-20 bg-[#f8fafc] text-[#090d16] overflow-hidden isolate border-b border-slate-200">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="relative overflow-hidden rounded-3xl border border-slate-200 bg-white p-8 sm:p-12 shadow-xl flex flex-col md:flex-row items-center justify-between gap-8">
+            <div className="max-w-xl text-center md:text-left">
+              <span className="inline-flex items-center gap-2 rounded-full border border-sky-600/30 bg-sky-50 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-[#0284c7]">
+                <Zap className="h-3.5 w-3.5" />
+                CLAIM YOUR TIMING
+              </span>
+              <h2 className="mt-4 font-display font-black text-3xl sm:text-4xl uppercase tracking-tight text-[#090d16]">
+                WANT YOUR NAME ON THE <span className="text-[#0284c7]">LEADERBOARD?</span>
+              </h2>
+              <p className="mt-3 text-sm text-slate-600 font-medium leading-relaxed">
+                Upload your Strava or Garmin GPS activity proof from the dashboard to claim your verified ranking, pace splits, and medal dispatch.
+              </p>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-center gap-3 shrink-0">
+              <Link
+                href="/dashboard"
+                className="neon-btn-blue inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5 text-xs font-black uppercase tracking-wider text-white shadow-xl hover:scale-105 active:scale-95 transition-transform"
+              >
+                <span>Upload GPS Proof</span>
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+              <Link
+                href="/events"
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-6 py-3.5 text-xs font-bold uppercase tracking-wider text-slate-700 hover:bg-slate-100 transition-all"
+              >
+                <span>Browse Races</span>
+                <ArrowUpRight className="h-4 w-4 text-slate-400" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
     </div>
   );
 }

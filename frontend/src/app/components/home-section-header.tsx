@@ -8,25 +8,35 @@ export function HomeSectionHeader({
   lead,
   action,
   align = "left",
+  theme = "dark",
 }: {
   eyebrow: string;
   title: string;
   lead?: string;
   action?: ReactNode;
   align?: "left" | "split";
+  theme?: "light" | "dark";
 }) {
+  const isLight = theme === "light";
+  const titleClass = isLight
+    ? "mt-3 font-display font-black text-4xl sm:text-5xl uppercase tracking-tight text-[#090d16]"
+    : "mt-3 font-display font-black text-4xl sm:text-5xl uppercase tracking-tight text-[#f0f0f0]";
+  const leadClass = isLight
+    ? "mt-3 text-base text-slate-600 max-w-xl font-medium"
+    : "mt-3 text-base text-slate-300 max-w-xl";
+
   if (align === "split") {
     return (
       <div className="flex flex-col gap-4 sm:gap-5 md:flex-row md:items-end md:justify-between mb-8">
         <div className="min-w-0">
-          <span className="inline-block rounded-full border border-sky-500/30 bg-sky-500/10 px-3.5 py-1 text-xs font-bold uppercase tracking-widest text-[#38bdf8]">
+          <span className="inline-block rounded-full border border-sky-500/30 bg-sky-500/10 px-3.5 py-1 text-xs font-bold uppercase tracking-widest text-sky-600 dark:text-[#38bdf8]">
             {eyebrow}
           </span>
-          <h2 className="mt-3 font-display font-black text-4xl sm:text-5xl uppercase tracking-tight text-[#f0f0f0]">
+          <h2 className={titleClass}>
             {title}
           </h2>
           {lead ? (
-            <p className="mt-3 text-base text-slate-300 max-w-xl">{lead}</p>
+            <p className={leadClass}>{lead}</p>
           ) : null}
         </div>
         {action ? (
@@ -38,14 +48,14 @@ export function HomeSectionHeader({
 
   return (
     <div className="mb-8">
-      <span className="inline-block rounded-full border border-sky-500/30 bg-sky-500/10 px-3.5 py-1 text-xs font-bold uppercase tracking-widest text-[#38bdf8]">
+      <span className="inline-block rounded-full border border-sky-500/30 bg-sky-500/10 px-3.5 py-1 text-xs font-bold uppercase tracking-widest text-sky-600 dark:text-[#38bdf8]">
         {eyebrow}
       </span>
-      <h2 className="mt-3 font-display font-black text-4xl sm:text-5xl uppercase tracking-tight text-[#f0f0f0]">
+      <h2 className={titleClass}>
         {title}
       </h2>
       {lead ? (
-        <p className="mt-3 text-base text-slate-300 max-w-2xl">{lead}</p>
+        <p className={leadClass}>{lead}</p>
       ) : null}
     </div>
   );

@@ -51,41 +51,41 @@ export function HomeFaq() {
   };
 
   return (
-    <section className="relative py-16 lg:py-20 bg-[#090d16] text-[#f0f0f0] border-t border-white/10 overflow-hidden">
-      {/* Background Glow */}
-      <div className="pointer-events-none absolute top-1/2 left-0 -z-10 h-[350px] w-[350px] -translate-y-1/2 rounded-full bg-[#2563eb]/10 blur-[100px]" />
+    <section className="relative py-16 lg:py-20 bg-[#f8fafc] text-[#090d16] border-t border-slate-200 overflow-hidden">
+      {/* Background Subtle Accent Glow */}
+      <div className="pointer-events-none absolute top-1/2 left-0 -z-10 h-[350px] w-[350px] -translate-y-1/2 rounded-full bg-sky-200/30 blur-[100px]" />
 
       <div className="container-page max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Side-by-side Grid Layout to reduce vertical height */}
+        {/* Side-by-side Grid Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
           
           {/* LEFT COLUMN - Sticky Header & Quick Support CTA */}
           <div className="lg:col-span-5 lg:sticky lg:top-28">
-            <span className="inline-block rounded-full border border-sky-500/30 bg-sky-500/10 px-3.5 py-1 text-xs font-bold uppercase tracking-widest text-[#38bdf8]">
+            <span className="inline-block rounded-full border border-sky-600/30 bg-sky-50 px-3.5 py-1 text-xs font-bold uppercase tracking-widest text-[#0284c7]">
               FREQUENTLY ASKED QUESTIONS
             </span>
-            <h2 className="mt-4 font-display font-black text-3xl sm:text-4xl lg:text-5xl uppercase tracking-tight text-[#f0f0f0] leading-tight">
-              EVERYTHING YOU NEED TO KNOW ABOUT <span className="text-[#38bdf8]">VIRTUAL RACES</span>
+            <h2 className="mt-4 font-display font-black text-3xl sm:text-4xl lg:text-5xl uppercase tracking-tight text-[#090d16] leading-tight">
+              EVERYTHING YOU NEED TO KNOW ABOUT <span className="text-[#0284c7]">VIRTUAL RACES</span>
             </h2>
-            <p className="mt-4 text-sm sm:text-base text-slate-300 leading-relaxed">
+            <p className="mt-4 text-sm sm:text-base text-slate-600 font-medium leading-relaxed">
               Got questions about GPS verification, metal medals, or certificate delivery? We&apos;ve got clear answers for every runner.
             </p>
 
-            {/* Quick Contact Glass Card */}
-            <div className="mt-8 rounded-2xl border border-white/10 bg-white/[0.03] p-5 backdrop-blur-xl flex items-center justify-between gap-4">
+            {/* Quick Contact Light Card */}
+            <div className="mt-8 rounded-2xl border border-slate-200 bg-white p-5 shadow-lg flex items-center justify-between gap-4">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-500/20 text-[#38bdf8]">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sky-50 text-[#0284c7]">
                   <MessageSquare className="h-5 w-5" />
                 </div>
                 <div>
-                  <span className="block text-xs font-bold text-[#f0f0f0]">Still have questions?</span>
-                  <span className="block text-[0.7rem] text-slate-400">Our support team is live 24/7</span>
+                  <span className="block text-xs font-bold text-[#090d16]">Still have questions?</span>
+                  <span className="block text-[0.7rem] text-slate-500 font-medium">Our support team is live 24/7</span>
                 </div>
               </div>
               <Link
                 href="/about"
-                className="shrink-0 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#f0f0f0] hover:bg-[#2563eb] hover:border-[#2563eb] transition-all"
+                className="shrink-0 rounded-full border border-slate-300 bg-slate-100 px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#090d16] hover:bg-[#0284c7] hover:text-white hover:border-[#0284c7] transition-all shadow-sm"
               >
                 Contact Us
               </Link>
@@ -101,22 +101,22 @@ export function HomeFaq() {
                   key={faq.question}
                   className={`overflow-hidden rounded-2xl border transition-all duration-300 ${
                     isOpen
-                      ? "border-[#38bdf8]/50 bg-white/[0.06] shadow-xl shadow-blue-950/30"
-                      : "border-white/10 bg-white/[0.03] hover:border-white/20 hover:bg-white/[0.04]"
+                      ? "border-[#0284c7] bg-white shadow-xl shadow-sky-100/60"
+                      : "border-slate-200 bg-white/80 hover:border-slate-300 hover:bg-white"
                   }`}
                 >
                   <button
                     type="button"
                     onClick={() => toggle(index)}
-                    className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left font-display font-bold text-sm sm:text-base text-[#f0f0f0] transition-colors"
+                    className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left font-display font-bold text-sm sm:text-base text-[#090d16] transition-colors"
                     aria-expanded={isOpen}
                   >
                     <span className="flex items-center gap-3">
-                      <HelpCircle className={`h-4 w-4 shrink-0 transition-colors ${isOpen ? "text-[#38bdf8]" : "text-slate-400"}`} />
+                      <HelpCircle className={`h-4 w-4 shrink-0 transition-colors ${isOpen ? "text-[#0284c7]" : "text-slate-400"}`} />
                       <span>{faq.question}</span>
                     </span>
                     <div className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border transition-all ${
-                      isOpen ? "border-[#38bdf8] bg-[#2563eb] text-white" : "border-white/15 bg-white/5 text-slate-400"
+                      isOpen ? "border-[#0284c7] bg-[#0284c7] text-white" : "border-slate-200 bg-slate-100 text-slate-500"
                     }`}>
                       <ChevronDown
                         className={`h-4 w-4 transition-transform duration-300 ${
@@ -134,8 +134,8 @@ export function HomeFaq() {
                         exit={{ height: 0, opacity: 0 }}
                         transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                       >
-                        <div className="px-5 pb-5 pt-1 border-t border-white/5">
-                          <p className="text-xs sm:text-sm leading-relaxed text-slate-300">
+                        <div className="px-5 pb-5 pt-1 border-t border-slate-100">
+                          <p className="text-xs sm:text-sm leading-relaxed text-slate-600 font-medium">
                             {faq.answer}
                           </p>
                         </div>

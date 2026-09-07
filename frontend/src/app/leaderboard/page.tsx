@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import { PageShell } from "../components/app-shell";
-import { Breadcrumb } from "../components/breadcrumb";
 import { LeaderboardClient } from "./leaderboard-client";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://relentlessrun.in";
@@ -57,27 +56,17 @@ export default function LeaderboardPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
-      <div className="relative overflow-hidden bg-[#090d16]">
-        <section className="py-8 sm:py-10">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <Breadcrumb
-              items={[
-                { name: "Home", href: "/" },
-                { name: "Leaderboard", href: "/leaderboard" },
-              ]}
-            />
-            <Suspense
-              fallback={
-                <div className="mt-12 flex flex-col items-center justify-center rounded-2xl border border-white/10 bg-[#0d1322]/80 py-16 backdrop-blur-xl">
-                  <div className="h-8 w-8 animate-spin rounded-full border-3 border-white/10 border-t-[#38bdf8]" />
-                  <p className="mt-4 text-sm font-medium text-slate-400">Loading leaderboard...</p>
-                </div>
-              }
-            >
-              <LeaderboardClient />
-            </Suspense>
-          </div>
-        </section>
+      <div className="relative min-w-0 bg-[#f8fafc]">
+        <Suspense
+          fallback={
+            <div className="flex min-h-[60vh] flex-col items-center justify-center py-20 text-center">
+              <div className="h-10 w-10 animate-spin rounded-full border-3 border-slate-200 border-t-[#0284c7]" />
+              <p className="mt-4 text-sm font-bold uppercase tracking-wider text-slate-500">Loading live leaderboard...</p>
+            </div>
+          }
+        >
+          <LeaderboardClient />
+        </Suspense>
       </div>
     </PageShell>
   );

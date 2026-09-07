@@ -1,6 +1,7 @@
 "use client";
 
-import { useAuth, useUser } from "@clerk/nextjs";
+import { useAuth, useUser, useClerk } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 import { motion, useReducedMotion } from "framer-motion";
 import {
   AlertCircle,
@@ -29,6 +30,8 @@ import {
   UploadCloud,
   Users,
   X,
+  LogOut,
+  Settings,
 } from "lucide-react";
 import Link from "next/link";
 import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -184,6 +187,8 @@ export function DashboardClient() {
   const reduce = useReducedMotion();
   const { getToken, isLoaded, isSignedIn } = useAuth();
   const { user } = useUser();
+  const { signOut, openUserProfile } = useClerk();
+  const router = useRouter();
 
   const [dbUser, setDbUser] = useState<DbUser | null>(null);
   const [loading, setLoading] = useState(true);
@@ -452,10 +457,11 @@ export function DashboardClient() {
 
   if (!isLoaded || loading) {
     return (
-      <div className="flex items-center justify-center rounded-3xl border border-(--line) bg-(--panel) px-4 py-20 shadow-xs">
-        <div className="flex flex-col items-center gap-3">
-          <div className="h-8 w-8 animate-spin rounded-full border-3 border-(--line) border-t-(--sage)" />
-          <p className="text-xs sm:text-sm font-medium text-(--muted)">Loading your runner profile...</p>
+      <div className="min-h-[75vh] w-full bg-[#090d16] text-white flex items-center justify-center pt-28 pb-20 relative overflow-hidden">
+        <div className="pointer-events-none absolute h-72 w-72 rounded-full bg-sky-500/20 blur-[120px]" />
+        <div className="relative z-10 flex flex-col items-center gap-3">
+          <div className="h-10 w-10 animate-spin rounded-full border-3 border-white/20 border-t-sky-400" />
+          <p className="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-400">Loading Athlete Profile...</p>
         </div>
       </div>
     );
@@ -463,23 +469,28 @@ export function DashboardClient() {
 
   if (!isSignedIn) {
     return (
-      <div className="rounded-3xl border border-(--line) bg-(--panel) px-6 py-12 text-center sm:px-10 sm:py-16 shadow-premium">
-        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-(--sage-soft) text-(--sage) shadow-sm">
-          <Users className="h-7 w-7" />
-        </div>
-        <h1 className="mt-5 text-2xl sm:text-3xl font-black tracking-tight text-(--foreground)">
-          Runner Sign In Required
-        </h1>
-        <p className="mx-auto mt-3 max-w-md text-xs sm:text-sm leading-relaxed text-(--muted)">
-          Access your registered race bibs, GPS proof submission portal, and official certificates.
-        </p>
-        <div className="mt-8 flex flex-wrap justify-center gap-3">
-          <Link className="btn btn-primary px-6" href="/sign-in">
-            Sign in
-          </Link>
-          <Link className="btn btn-secondary px-6" href="/sign-up">
-            Create Account
-          </Link>
+      <div className="w-full min-h-[80vh] bg-[#090d16] text-white pt-28 sm:pt-32 pb-20 relative overflow-hidden flex items-center justify-center">
+        <div className="pointer-events-none absolute h-96 w-96 rounded-full bg-sky-500/20 blur-[140px]" />
+        <div className="mx-auto max-w-xl px-4 text-center relative z-10">
+          <div className="rounded-[28px] border border-white/20 bg-white/[0.06] p-8 sm:p-12 backdrop-blur-3xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_25px_60px_rgba(0,0,0,0.8)]">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-sky-500/20 text-sky-400 border border-sky-400/30 shadow-inner">
+              <Users className="h-8 w-8" />
+            </div>
+            <h1 className="mt-5 font-display text-2xl sm:text-3xl font-black uppercase tracking-tight text-white">
+              Athlete Sign In Required
+            </h1>
+            <p className="mx-auto mt-3 max-w-md text-xs sm:text-sm leading-relaxed text-slate-300 font-medium">
+              Access your registered race bibs, GPS proof submission portal, medal tracking, and official verified certificates.
+            </p>
+            <div className="mt-8 flex flex-wrap justify-center gap-3">
+              <Link className="neon-btn-blue rounded-full px-7 py-3.5 text-xs font-black uppercase tracking-wider text-white shadow-xl" href="/sign-in">
+                Sign In Now
+              </Link>
+              <Link className="rounded-full border border-white/20 bg-white/[0.08] px-7 py-3.5 text-xs font-bold uppercase tracking-wider text-white backdrop-blur-xl hover:bg-white/20 transition-all shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]" href="/sign-up">
+                Create Account
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -489,753 +500,836 @@ export function DashboardClient() {
   const firstName = name.split(" ")[0];
 
   return (
-    <div className="dashboard-classic-content space-y-6 sm:space-y-8 pb-16">
-      {/* ── 1. PREMIUM RUNNER PROFILE HERO (Strava / Nike Style) ── */}
-      <div className="dashboard-classic-hero relative overflow-hidden rounded-3xl border border-(--line) bg-(--panel) p-5 sm:p-7 shadow-xs">
-        {/* Soft Ambient Mesh */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 -z-10"
-          style={{
-            background: [
-              "radial-gradient(ellipse 70% 60% at 0% 0%, color-mix(in srgb, var(--sage) 12%, transparent) 0%, transparent 60%)",
-              "radial-gradient(ellipse 60% 50% at 100% 100%, color-mix(in srgb, #eab308 10%, transparent) 0%, transparent 60%)",
-            ].join(", "),
-          }}
-        />
+    <div className="w-full min-h-screen bg-[#090d16] text-white relative overflow-hidden isolate">
+      {/* ─── Ambient Radiant Aurora Orbs ─── */}
+      <div className="pointer-events-none absolute top-20 left-1/2 -translate-x-1/2 -z-10 h-[500px] w-[800px] rounded-full bg-[#0284c7]/20 blur-[150px]" />
+      <div className="pointer-events-none absolute top-1/2 right-10 -z-10 h-[400px] w-[400px] rounded-full bg-indigo-600/15 blur-[140px]" />
+      <div className="pointer-events-none absolute bottom-20 left-10 -z-10 h-[350px] w-[350px] rounded-full bg-amber-500/10 blur-[130px]" />
 
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-          {/* Runner Bio */}
-          <div className="flex items-center gap-4">
-            <div className="relative flex h-14 w-14 sm:h-16 sm:w-16 shrink-0 items-center justify-center rounded-2xl bg-linear-to-tr from-(--sage) to-emerald-600 font-bold text-white text-lg sm:text-xl shadow-md ring-4 ring-(--sage)/20">
-              {user?.imageUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={user.imageUrl}
-                  alt={name}
-                  className="h-full w-full rounded-2xl object-cover"
-                />
-              ) : (
-                name.slice(0, 2).toUpperCase()
-              )}
-              {verifiedFinishesCount > 0 && (
-                <span className="absolute -bottom-1.5 -right-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-amber-500 text-slate-950 text-xs shadow">
-                  🥇
-                </span>
-              )}
-            </div>
+      {/* ═══════════════════════════════════════════════════════════════
+          SECTION 1: ATHLETE FROSTED GLASS HERO & METRICS (MOBILE OPTIMIZED)
+      ═══════════════════════════════════════════════════════════════ */}
+      <section className="relative w-full pt-20 sm:pt-28 pb-6 sm:pb-10">
+        <div className="mx-auto max-w-7xl px-3.5 sm:px-6 lg:px-8">
+          
+          {/* Athlete Glass Hero Card */}
+          <div className="relative overflow-hidden rounded-3xl sm:rounded-[28px] border border-white/20 bg-white/[0.06] p-4.5 sm:p-8 backdrop-blur-3xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.35),0_20px_50px_rgba(0,0,0,0.7),0_0_30px_rgba(56,189,248,0.12)]">
+            {/* Top Specular Neon Energy Strip */}
+            <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-500 opacity-90" />
 
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="rounded-full bg-amber-500/15 border border-amber-500/30 px-2 py-0.5 text-[0.6rem] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
-                  {isAdmin ? "Admin Ops Account" : "Verified Athlete"}
-                </span>
-                {verifiedFinishesCount > 0 && (
-                  <span className="hidden sm:inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[0.6rem] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
-                    <ShieldCheck className="h-3 w-3" /> Finisher
-                  </span>
-                )}
-              </div>
-              <h1 className="mt-1 text-xl sm:text-3xl font-black tracking-tight text-foreground">
-                Hi, {firstName}
-              </h1>
-              <p className="text-xs text-(--muted) flex items-center gap-2 mt-0.5">
-                <span>{user?.primaryEmailAddress?.emailAddress}</span>
-              </p>
-            </div>
-          </div>
-
-          {/* Clean Metric Counters (Total KM, Finishes, Active Events) */}
-          <div className="grid grid-cols-3 gap-2.5 sm:gap-4 border-t border-(--line) pt-4 lg:border-t-0 lg:pt-0">
-            <div className="rounded-2xl border border-(--line) bg-(--panel-soft) p-3 text-center sm:px-5 sm:py-3.5">
-              <p className="text-[0.6rem] font-bold uppercase tracking-wider text-(--muted)">
-                Total Distance
-              </p>
-              <p className="mt-0.5 font-mono text-lg sm:text-2xl font-black text-foreground">
-                {totalKmRun} <span className="text-xs font-semibold text-(--sage)">KM</span>
-              </p>
-            </div>
-
-            <div className="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-3 text-center sm:px-5 sm:py-3.5">
-              <p className="text-[0.6rem] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
-                Finisher Medals
-              </p>
-              <p className="mt-0.5 font-mono text-lg sm:text-2xl font-black text-amber-600 dark:text-amber-400">
-                {verifiedFinishesCount} 🏅
-              </p>
-            </div>
-
-            <div className="rounded-2xl border border-(--line) bg-(--panel-soft) p-3 text-center sm:px-5 sm:py-3.5">
-              <p className="text-[0.6rem] font-bold uppercase tracking-wider text-(--muted)">
-                Active Events
-              </p>
-              <p className="mt-0.5 font-mono text-lg sm:text-2xl font-black text-foreground">
-                {activeRegistrations.length}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Action Header Strip */}
-        <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-(--line) pt-4">
-          <div className="flex items-center gap-1.5 text-xs text-(--muted)">
-            <Sparkles className="h-3.5 w-3.5 text-amber-500" />
-            <span>GPS Tracking · Automated Certificates · Doorstep Delivery</span>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-2">
-            <button
-              onClick={() => void handleRefresh()}
-              disabled={refreshing}
-              className="btn btn-secondary h-8 px-3 text-xs flex items-center gap-1.5 cursor-pointer"
-              type="button"
-            >
-              <RefreshCw className={`h-3 w-3 ${refreshing ? "animate-spin" : ""}`} />
-              <span>Refresh</span>
-            </button>
-            {isAdmin && (
-              <Link className="btn btn-secondary h-8 px-3 text-xs" href="/admin">
-                Admin Console
-              </Link>
-            )}
-            <Link className="btn btn-primary h-8 px-3.5 text-xs flex items-center gap-1" href="/events">
-              <Plus className="h-3.5 w-3.5" /> Join an Event
-            </Link>
-          </div>
-        </div>
-      </div>
-
-      {error && (
-        <div className="flex items-center justify-between rounded-2xl border border-red-200 bg-red-50 p-4 text-xs sm:text-sm text-red-700">
-          <span>{error}</span>
-          <button
-            onClick={() => void load()}
-            className="font-bold underline cursor-pointer"
-            type="button"
-          >
-            Retry
-          </button>
-        </div>
-      )}
-
-      {proofMessage && (
-        <div className="flex items-center gap-2 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-4 text-xs sm:text-sm font-semibold text-emerald-700 dark:text-emerald-300">
-          <CheckCircle2 className="h-4 w-4 shrink-0" />
-          <span>{proofMessage}</span>
-        </div>
-      )}
-
-      {/* ── 2. ZERO-CLUTTER TAB NAVIGATION ───────────────────── */}
-      <div className="flex items-center gap-2 border-b border-(--line) pb-3 overflow-x-auto scrollbar-none">
-        <button
-          onClick={() => setActiveTab("active")}
-          className={cn(
-            "flex items-center gap-2 rounded-xl px-4 py-2 text-xs sm:text-sm font-bold transition-all cursor-pointer select-none shrink-0",
-            activeTab === "active"
-              ? "bg-(--sage) text-white shadow-md shadow-(--sage)/20"
-              : "border border-(--line) bg-(--panel) text-(--muted) hover:text-foreground",
-          )}
-        >
-          <Route className="h-4 w-4" />
-          <span>My Registered Events ({activeRegistrations.length})</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab("trophies")}
-          className={cn(
-            "flex items-center gap-2 rounded-xl px-4 py-2 text-xs sm:text-sm font-bold transition-all cursor-pointer select-none shrink-0",
-            activeTab === "trophies"
-              ? "bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20"
-              : "border border-(--line) bg-(--panel) text-(--muted) hover:text-foreground",
-          )}
-        >
-          <Trophy className="h-4 w-4" />
-          <span>Trophy Cabinet & Medals ({trophyRegistrations.length})</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab("refer")}
-          className={cn(
-            "flex items-center gap-2 rounded-xl px-4 py-2 text-xs sm:text-sm font-bold transition-all cursor-pointer select-none shrink-0",
-            activeTab === "refer"
-              ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/20"
-              : "border border-(--line) bg-(--panel) text-(--muted) hover:text-foreground",
-          )}
-        >
-          <Gift className="h-4 w-4" />
-          <span>Refer & Earn</span>
-        </button>
-      </div>
-
-      {/* ── TAB 1: MY REGISTERED EVENTS (UNIFIED JOURNEY CARDS) ── */}
-      {activeTab === "active" && (
-        <div className="space-y-5">
-          {activeRegistrations.length === 0 ? (
-            <div className="flex flex-col items-center justify-center rounded-3xl border border-dashed border-(--line) bg-(--panel) p-10 sm:p-14 text-center">
-              <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-(--panel-soft) text-(--muted)">
-                <Medal className="h-7 w-7" />
-              </span>
-              <h3 className="mt-4 text-base sm:text-lg font-bold text-foreground">
-                No active race registrations yet
-              </h3>
-              <p className="mt-1 max-w-sm text-xs sm:text-sm text-(--muted)">
-                Choose your distance, get your official bib, and run at your own pace anywhere in India.
-              </p>
-              <Link className="btn btn-primary mt-6" href="/events">
-                Explore Open Events <ArrowRight className="h-4 w-4 ml-1" />
-              </Link>
-            </div>
-          ) : (
-            activeRegistrations.map((reg) => {
-              const isPaid = reg.payment?.status === "PAID" || reg.status === "CONFIRMED";
-              const isProofSubmitted = reg.proofStatus === "SUBMITTED";
-              const isVerified = reg.proofStatus === "APPROVED";
-              const isCertReady = Boolean(reg.certificate && reg.certificate.status !== "QUEUED");
-              const isMedalDispatched = Boolean(reg.medalDelivery && (reg.medalDelivery.status === "DISPATCHED" || reg.medalDelivery.status === "DELIVERED"));
-              const formOpen = proofRegId === reg.id;
-
-              return (
-                <div
-                  key={reg.id}
-                  id={`reg-${reg.id}`}
-                  className="dashboard-race-card rounded-3xl border border-(--line) bg-(--panel) overflow-hidden shadow-xs transition-all hover:shadow-md"
-                >
-                  {/* Event Card Header */}
-                  <div className="p-4 sm:p-6 border-b border-(--line) bg-(--panel-soft)/40 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                    <div>
-                      <div className="flex flex-wrap items-center gap-2">
-                        <h2 className="text-base sm:text-xl font-bold tracking-tight text-foreground">
-                          {reg.event.title}
-                        </h2>
-                        <span className="rounded-full bg-(--sage-soft) border border-(--sage)/30 px-2.5 py-0.5 font-mono text-xs font-bold text-(--sage)">
-                          {reg.distance}
-                        </span>
-                      </div>
-
-                      <div className="mt-1.5 flex flex-wrap items-center gap-3 text-xs text-(--muted)">
-                        <span className="font-mono font-bold text-foreground">
-                          Bib: {reg.bibNumber}
-                        </span>
-                        <span>·</span>
-                        <span>
-                          Joined{" "}
-                          {new Date(reg.registeredAt).toLocaleDateString("en-IN", {
-                            day: "numeric",
-                            month: "short",
-                            year: "numeric",
-                          })}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Payment Status Pill */}
-                    <div className="flex items-center gap-2">
-                      {isPaid ? (
-                        <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 px-3 py-1 text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
-                          <CheckCircle2 className="h-3.5 w-3.5" />
-                          Paid {reg.payment?.amountInPaise ? formatMoney(reg.payment.amountInPaise) : ""}
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 px-3 py-1 text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
-                          <Clock className="h-3.5 w-3.5" />
-                          Payment Pending
-                        </span>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* ── 4-STEP RUNNER JOURNEY TRACK ── */}
-                  <div className="p-4 sm:p-6 border-b border-(--line) bg-(--panel)">
-                    <p className="text-[0.65rem] sm:text-xs font-bold uppercase tracking-wider text-(--muted) mb-3">
-                      Event Progress Pipeline
-                    </p>
-
-                    <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3">
-                      {/* Step 1: Registered & Paid */}
-                      <div
-                        className={cn(
-                          "rounded-2xl border p-3 transition-all",
-                          isPaid
-                            ? "border-emerald-500/30 bg-emerald-500/5 text-emerald-700 dark:text-emerald-400"
-                            : "border-amber-500/30 bg-amber-500/5 text-amber-700 dark:text-amber-400",
-                        )}
-                      >
-                        <div className="flex items-center gap-2">
-                          <span
-                            className={cn(
-                              "flex h-6 w-6 shrink-0 items-center justify-center rounded-lg text-xs font-bold",
-                              isPaid ? "bg-emerald-500 text-white" : "bg-amber-500 text-slate-950",
-                            )}
-                          >
-                            1
-                          </span>
-                          <span className="text-xs font-bold">Registration</span>
-                        </div>
-                        <p className="mt-1.5 text-[0.65rem] sm:text-xs text-(--muted)">
-                          {isPaid ? "Confirmed & Bib Assigned" : "Payment Required"}
-                        </p>
-                      </div>
-
-                      {/* Step 2: GPS Proof Submission */}
-                      <div
-                        className={cn(
-                          "rounded-2xl border p-3 transition-all",
-                          isVerified
-                            ? "border-emerald-500/30 bg-emerald-500/5 text-emerald-700 dark:text-emerald-400"
-                            : isProofSubmitted
-                              ? "border-amber-500/30 bg-amber-500/5 text-amber-700 dark:text-amber-400"
-                              : "border-(--line) bg-(--panel-soft) text-(--muted)",
-                        )}
-                      >
-                        <div className="flex items-center gap-2">
-                          <span
-                            className={cn(
-                              "flex h-6 w-6 shrink-0 items-center justify-center rounded-lg text-xs font-bold",
-                              isVerified
-                                ? "bg-emerald-500 text-white"
-                                : isProofSubmitted
-                                  ? "bg-amber-500 text-slate-950"
-                                  : "bg-(--line) text-(--muted)",
-                            )}
-                          >
-                            2
-                          </span>
-                          <span className="text-xs font-bold">GPS Activity</span>
-                        </div>
-                        <p className="mt-1.5 text-[0.65rem] sm:text-xs text-(--muted)">
-                          {isVerified
-                            ? "Proof Approved"
-                            : isProofSubmitted
-                              ? "Under Review (24-48h)"
-                              : "Pending Run Upload"}
-                        </p>
-                      </div>
-
-                      {/* Step 3: Verified Timing */}
-                      <div
-                        className={cn(
-                          "rounded-2xl border p-3 transition-all",
-                          isVerified
-                            ? "border-emerald-500/30 bg-emerald-500/5 text-emerald-700 dark:text-emerald-400"
-                            : "border-(--line) bg-(--panel-soft) text-(--muted)",
-                        )}
-                      >
-                        <div className="flex items-center gap-2">
-                          <span
-                            className={cn(
-                              "flex h-6 w-6 shrink-0 items-center justify-center rounded-lg text-xs font-bold",
-                              isVerified ? "bg-emerald-500 text-white" : "bg-(--line) text-(--muted)",
-                            )}
-                          >
-                            3
-                          </span>
-                          <span className="text-xs font-bold">Official Time</span>
-                        </div>
-                        <p className="mt-1.5 text-[0.65rem] sm:text-xs font-mono font-bold text-foreground">
-                          {isVerified && reg.finishTimeSeconds
-                            ? formatDuration(reg.finishTimeSeconds)
-                            : "Awaiting Verification"}
-                        </p>
-                      </div>
-
-                      {/* Step 4: Certificate & Rewards */}
-                      <div
-                        className={cn(
-                          "rounded-2xl border p-3 transition-all",
-                          isCertReady
-                            ? "border-amber-500/40 bg-amber-500/5 text-amber-700 dark:text-amber-400"
-                            : "border-(--line) bg-(--panel-soft) text-(--muted)",
-                        )}
-                      >
-                        <div className="flex items-center gap-2">
-                          <span
-                            className={cn(
-                              "flex h-6 w-6 shrink-0 items-center justify-center rounded-lg text-xs font-bold",
-                              isCertReady ? "bg-amber-500 text-slate-950" : "bg-(--line) text-(--muted)",
-                            )}
-                          >
-                            4
-                          </span>
-                          <span className="text-xs font-bold">Rewards Kit</span>
-                        </div>
-                        <p className="mt-1.5 text-[0.65rem] sm:text-xs text-(--muted)">
-                          {isCertReady
-                            ? isMedalDispatched
-                              ? "Medal On The Way"
-                              : "Certificate Ready"
-                            : "Unlocked on Finish"}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* ── ACTION HUB BAR ── */}
-                  <div className="p-4 sm:p-5 bg-(--panel-soft)/30 flex flex-wrap items-center justify-between gap-3">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <Link
-                        className="btn btn-secondary h-9 px-3.5 text-xs inline-flex items-center gap-1.5"
-                        href={`/events/${reg.event.slug}`}
-                      >
-                        Event Page <ExternalLink className="h-3 w-3" />
-                      </Link>
-
-                      <Link
-                        className="btn btn-secondary h-9 px-3.5 text-xs inline-flex items-center gap-1.5"
-                        href={`/leaderboard?event=${reg.event.slug}&distance=${encodeURIComponent(reg.distance)}`}
-                      >
-                        Leaderboard <Trophy className="h-3.5 w-3.5 text-amber-500" />
-                      </Link>
-
-                      {isCertReady && (
-                        <Link
-                          className="btn btn-primary h-9 px-3.5 text-xs inline-flex items-center gap-1.5"
-                          href={`/certificates/${reg.certificate!.certificateNumber}`}
-                        >
-                          <Award className="h-3.5 w-3.5" /> View Certificate
-                        </Link>
-                      )}
-
-                      {reg.medalDelivery?.trackingNumber && (
-                        <span className="inline-flex items-center gap-1.5 rounded-xl border border-(--line) bg-(--panel) px-3 py-1.5 text-xs text-(--muted)">
-                          <Truck className="h-3.5 w-3.5 text-(--sage)" />
-                          Tracking: <span className="font-mono font-bold text-foreground">{reg.medalDelivery.trackingNumber}</span>
-                        </span>
-                      )}
-                    </div>
-
-                    {/* Primary Action Button */}
-                    <div>
-                      {!isPaid ? (
-                        <Link className="btn btn-primary h-9 px-4 text-xs font-bold" href="/register">
-                          Complete Payment →
-                        </Link>
-                      ) : canUpload(reg) ? (
-                        <button
-                          onClick={() => {
-                            setProofRegId(formOpen ? null : reg.id);
-                            setProofMessage(null);
-                            setProofError(null);
-                          }}
-                          className={cn(
-                            "h-9 px-4 text-xs font-bold rounded-xl transition-all cursor-pointer inline-flex items-center gap-1.5",
-                            formOpen
-                              ? "border border-(--line) bg-(--panel) text-(--muted)"
-                              : "btn btn-primary shadow-md shadow-(--sage)/20",
-                          )}
-                          type="button"
-                        >
-                          <UploadCloud className="h-4 w-4" />
-                          {formOpen ? "Close Uploader" : "Upload GPS Run Proof"}
-                        </button>
-                      ) : isProofSubmitted ? (
-                        <span className="inline-flex items-center gap-1.5 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3.5 py-1.5 text-xs font-bold text-amber-600 dark:text-amber-400">
-                          <Clock className="h-3.5 w-3.5" /> Proof Under Review
-                        </span>
-                      ) : null}
-                    </div>
-                  </div>
-
-                  {/* ── INLINE GPS PROOF SUBMISSION DRAWER ── */}
-                  {formOpen && (
-                    <form
-                      className="border-t border-(--line) bg-(--panel-soft) p-4 sm:p-6"
-                      onSubmit={submitProof}
-                      noValidate
-                    >
-                      <div className="space-y-4 max-w-2xl">
-                        <div className="flex items-center justify-between">
-                          <h3 className="text-sm sm:text-base font-bold text-foreground flex items-center gap-2">
-                            <UploadCloud className="h-4 w-4 text-(--sage)" />
-                            Submit GPS Proof for {reg.event.title} ({reg.distance})
-                          </h3>
-                          <button
-                            type="button"
-                            onClick={() => setProofRegId(null)}
-                            className="text-(--muted) hover:text-foreground cursor-pointer"
-                          >
-                            <X className="h-4 w-4" />
-                          </button>
-                        </div>
-
-                        {proofError && (
-                          <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-xs text-red-700">
-                            {proofError}
-                          </div>
-                        )}
-
-                        <label className="block">
-                          <span className="block text-xs font-bold uppercase tracking-wider text-(--muted) mb-1.5">
-                            Activity Screenshot (Strava / Nike / Garmin)
-                          </span>
-                          <input
-                            accept="image/*"
-                            className="input cursor-pointer py-2 file:mr-3 file:rounded-xl file:border-0 file:bg-(--sage) file:px-3 file:py-1.5 file:text-xs file:font-semibold file:text-white"
-                            disabled={proofBusy}
-                            onChange={(e) => void onPickFile(e.target.files?.[0] ?? null)}
-                            type="file"
-                          />
-                          {proofFileName && (
-                            <p className="mt-1.5 text-xs font-medium text-(--sage)">Ready: {proofFileName}</p>
-                          )}
-                        </label>
-
-                        {proofUrl && (proofUrl.startsWith("data:") || /\.(png|jpe?g|webp)/i.test(proofUrl)) && (
-                          <div className="overflow-hidden rounded-xl border border-(--line) bg-(--panel) max-w-sm">
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img alt="Preview" className="max-h-48 w-full object-contain" src={proofUrl} />
-                          </div>
-                        )}
-
-                        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                          <label className="block">
-                            <span className="block text-xs font-bold uppercase tracking-wider text-(--muted) mb-1.5">
-                              Tracking App
-                            </span>
-                            <select
-                              className="input w-full text-xs font-medium"
-                              onChange={(e) => setSourceApp(e.target.value)}
-                              required
-                              value={sourceApp}
-                            >
-                              {SOURCE_APPS.map((a) => (
-                                <option key={a} value={a}>
-                                  {a}
-                                </option>
-                              ))}
-                            </select>
-                          </label>
-
-                          <div>
-                            <span className="block text-xs font-bold uppercase tracking-wider text-(--muted) mb-1.5">
-                              Finish Time (Optional)
-                            </span>
-                            <div className="flex items-center gap-1.5">
-                              <input
-                                ref={hoursInputRef}
-                                aria-label="Hours"
-                                className="input text-center font-mono text-xs font-bold h-10 w-16"
-                                max={23}
-                                min={0}
-                                onPaste={handleTimePaste}
-                                onChange={(e) => {
-                                  const val = e.target.value.slice(0, 2);
-                                  setFinishHours(val);
-                                  if (val.length === 2 && minutesInputRef.current) {
-                                    minutesInputRef.current.focus();
-                                  }
-                                }}
-                                placeholder="HH"
-                                type="number"
-                                value={finishHours}
-                              />
-                              <span className="font-mono text-sm text-(--muted)">:</span>
-                              <input
-                                ref={minutesInputRef}
-                                aria-label="Minutes"
-                                className="input text-center font-mono text-xs font-bold h-10 w-16"
-                                max={59}
-                                min={0}
-                                onPaste={handleTimePaste}
-                                onChange={(e) => {
-                                  const val = e.target.value.slice(0, 2);
-                                  setFinishMinutes(val);
-                                  if (val.length === 2 && secondsInputRef.current) {
-                                    secondsInputRef.current.focus();
-                                  }
-                                }}
-                                placeholder="MM"
-                                type="number"
-                                value={finishMinutes}
-                              />
-                              <span className="font-mono text-sm text-(--muted)">:</span>
-                              <input
-                                ref={secondsInputRef}
-                                aria-label="Seconds"
-                                className="input text-center font-mono text-xs font-bold h-10 w-16"
-                                max={59}
-                                min={0}
-                                onPaste={handleTimePaste}
-                                onChange={(e) => {
-                                  setFinishSeconds(e.target.value.slice(0, 2));
-                                }}
-                                placeholder="SS"
-                                type="number"
-                                value={finishSeconds}
-                              />
-                            </div>
-                          </div>
-                        </div>
-
-                        {formattedTimePreview && (
-                          <p className="text-xs text-(--sage) font-medium">
-                            ⏱ Entered Time: {formattedTimePreview.label} ({formattedTimePreview.digital})
-                          </p>
-                        )}
-
-                        <div className="flex items-center gap-2 pt-2">
-                          <button
-                            className="btn btn-primary h-9 px-4 text-xs font-bold cursor-pointer"
-                            disabled={proofBusy}
-                            type="submit"
-                          >
-                            {proofBusy ? "Submitting..." : "Submit Proof"}
-                          </button>
-                          <button
-                            className="btn btn-secondary h-9 px-3 text-xs cursor-pointer"
-                            onClick={() => {
-                              setProofRegId(null);
-                              setProofUrl("");
-                              setProofFileName(null);
-                              setProofError(null);
-                            }}
-                            type="button"
-                          >
-                            Cancel
-                          </button>
-                        </div>
-                      </div>
-                    </form>
+            <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between pt-1">
+              
+              {/* Profile Bio */}
+              <div className="flex items-center gap-3.5 sm:gap-5">
+                <div className="relative flex h-14 w-14 sm:h-20 sm:w-20 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-tr from-sky-500 via-blue-600 to-indigo-700 font-black text-white text-lg sm:text-2xl shadow-xl ring-2 sm:ring-4 ring-sky-400/40">
+                  {user?.imageUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={user.imageUrl}
+                      alt={name}
+                      className="h-full w-full rounded-2xl object-cover"
+                    />
+                  ) : (
+                    name.slice(0, 2).toUpperCase()
+                  )}
+                  {verifiedFinishesCount > 0 && (
+                    <span className="absolute -bottom-1 -right-1 sm:-bottom-1.5 sm:-right-1.5 flex h-5 w-5 sm:h-7 sm:w-7 items-center justify-center rounded-full bg-amber-400 text-slate-950 text-xs sm:text-sm font-black shadow-lg border-2 border-[#090d16]">
+                      🥇
+                    </span>
                   )}
                 </div>
-              );
-            })
-          )}
-        </div>
-      )}
 
-      {/* ── TAB 2: TROPHY CABINET & CERTIFICATES ──────────────── */}
-      {activeTab === "trophies" && (
-        <div className="space-y-6">
-          {trophyRegistrations.length === 0 ? (
-            <div className="flex flex-col items-center justify-center rounded-3xl border border-dashed border-(--line) bg-(--panel) p-10 sm:p-14 text-center">
-              <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-500/10 text-amber-500 text-2xl">
-                🏆
-              </span>
-              <h3 className="mt-4 text-base sm:text-lg font-bold text-foreground">
-                Trophy Cabinet is currently empty
-              </h3>
-              <p className="mt-1 max-w-sm text-xs sm:text-sm text-(--muted)">
-                Complete any virtual race and upload your GPS activity to unlock your official e-certificate and medal tracking!
-              </p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              {trophyRegistrations.map((reg) => (
-                <div
-                  key={reg.id}
-                  className="rounded-3xl border border-amber-500/30 bg-linear-to-b from-amber-500/5 via-(--panel) to-(--panel) p-5 sm:p-6 shadow-xs flex flex-col justify-between"
-                >
-                  <div>
-                    <div className="flex items-center justify-between">
-                      <span className="rounded-full bg-amber-500/15 border border-amber-500/30 px-2.5 py-0.5 text-[0.6rem] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
-                        Official Finisher 🥇
-                      </span>
-                      <span className="font-mono text-xs text-(--muted)">Bib: {reg.bibNumber}</span>
-                    </div>
-
-                    <h3 className="mt-3 text-lg font-bold text-foreground">{reg.event.title}</h3>
-                    <p className="text-xs text-(--sage) font-semibold">{reg.distance} Category</p>
-
-                    {reg.finishTimeSeconds && (
-                      <p className="mt-2 text-xs text-(--muted)">
-                        Official Finish Time:{" "}
-                        <strong className="text-foreground font-mono">
-                          {formatDuration(reg.finishTimeSeconds)}
-                        </strong>
-                      </p>
-                    )}
-
-                    {/* Medal Delivery Info */}
-                    {reg.medalDelivery && (
-                      <div className="mt-3 rounded-xl border border-(--line) bg-(--panel-soft) p-3 text-xs">
-                        <p className="font-semibold text-foreground flex items-center gap-1.5">
-                          <Medal className="h-3.5 w-3.5 text-amber-500" /> Medal Status:{" "}
-                          <span className="text-(--sage)">{reg.medalDelivery.status}</span>
-                        </p>
-                        {reg.medalDelivery.trackingNumber && (
-                          <p className="mt-1 text-(--muted) font-mono text-[0.7rem]">
-                            Courier: {reg.medalDelivery.courier || "SpeedPost"} · {reg.medalDelivery.trackingNumber}
-                          </p>
-                        )}
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="mt-5 pt-4 border-t border-(--line) flex items-center gap-2">
-                    {reg.certificate && reg.certificate.status !== "QUEUED" ? (
-                      <Link
-                        className="btn btn-primary h-9 w-full text-xs font-bold flex items-center justify-center gap-1.5"
-                        href={`/certificates/${reg.certificate.certificateNumber}`}
-                      >
-                        <Award className="h-4 w-4" /> Download Certificate
-                      </Link>
-                    ) : (
-                      <span className="text-xs text-(--muted) text-center w-full">
-                        Certificate generating upon verification...
+                <div className="min-w-0 flex-1">
+                  <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                    <span className="rounded-full bg-sky-500/25 border border-sky-400/50 px-2.5 py-0.5 text-[0.6rem] sm:text-[0.65rem] font-black uppercase tracking-wider text-sky-300 shadow-[0_0_10px_rgba(56,189,248,0.3)]">
+                      {isAdmin ? "Admin Ops" : "Verified Athlete ⚡"}
+                    </span>
+                    {verifiedFinishesCount > 0 && (
+                      <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/20 border border-emerald-500/40 px-2 py-0.5 text-[0.6rem] sm:text-[0.65rem] font-bold uppercase tracking-wider text-emerald-300">
+                        <ShieldCheck className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-emerald-400" /> Finisher
                       </span>
                     )}
                   </div>
+                  <h1 className="mt-1 font-display text-xl sm:text-3xl lg:text-4xl font-black uppercase tracking-tight text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)] truncate">
+                    Welcome Back, {firstName}
+                  </h1>
+                  <p className="text-[0.75rem] sm:text-xs text-slate-300 font-medium truncate mt-0.5">
+                    {user?.primaryEmailAddress?.emailAddress}
+                  </p>
                 </div>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
+              </div>
 
-      {/* ── TAB 3: REFER & EARN REWARDS ──────────────────────── */}
-      {activeTab === "refer" && (
-        <div className="rounded-3xl border border-(--line) bg-(--panel) p-6 sm:p-8 shadow-xs">
-          <div className="max-w-xl">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/30 px-3 py-1 text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
-              <Gift className="h-3.5 w-3.5" /> Referral Program
-            </span>
-            <h2 className="mt-3 text-xl sm:text-2xl font-black tracking-tight text-foreground">
-              Invite Friends, Earn Free Race Entries
-            </h2>
-            <p className="mt-2 text-xs sm:text-sm text-(--muted) leading-relaxed">
-              Share your unique runner link with running clubs, friends, and family. Get rewarded for every friend who joins any Mountain Run event!
-            </p>
+              {/* 3 Frosted Glass Metric Tiles (Mobile Ergonomic) */}
+              <div className="grid grid-cols-3 gap-2 sm:gap-4 border-t border-white/10 pt-3.5 lg:border-t-0 lg:pt-0">
+                <div className="rounded-2xl border border-white/15 bg-white/[0.05] p-2.5 sm:p-4 text-center backdrop-blur-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] transition-all hover:bg-white/[0.08]">
+                  <p className="text-[0.6rem] sm:text-[0.65rem] font-bold uppercase tracking-wider text-slate-400 truncate">
+                    Distance
+                  </p>
+                  <p className="mt-0.5 sm:mt-1 font-mono text-lg sm:text-2xl lg:text-3xl font-black text-white drop-shadow-[0_0_12px_rgba(56,189,248,0.5)]">
+                    {totalKmRun} <span className="text-[0.65rem] sm:text-xs font-bold text-sky-400">KM</span>
+                  </p>
+                </div>
 
-            {/* Referral Link Box */}
-            <div className="mt-6 rounded-2xl border border-(--line) bg-(--panel-soft) p-4">
-              <p className="text-[0.65rem] font-bold uppercase tracking-wider text-(--muted) mb-2">
-                Your Unique Runner Link
-              </p>
-              <div className="flex items-center gap-2">
-                <input
-                  type="text"
-                  readOnly
-                  value={`https://relentlessrun.in/register?ref=${dbUser?.referralCode || user?.id?.slice(-6) || "relentlessrun"}`}
-                  className="input font-mono text-xs w-full bg-(--panel)"
-                />
-                <button
-                  onClick={handleCopyReferral}
-                  className="btn btn-primary h-10 px-4 text-xs font-bold shrink-0 cursor-pointer flex items-center gap-1.5"
-                  type="button"
-                >
-                  <Copy className="h-3.5 w-3.5" />
-                  {copiedCode ? "Copied!" : "Copy Link"}
-                </button>
+                <div className="rounded-2xl border border-amber-400/30 bg-amber-500/10 p-2.5 sm:p-4 text-center backdrop-blur-xl shadow-[inset_0_1px_0_rgba(251,191,36,0.25)] transition-all hover:bg-amber-500/15">
+                  <p className="text-[0.6rem] sm:text-[0.65rem] font-bold uppercase tracking-wider text-amber-300 truncate">
+                    Medals
+                  </p>
+                  <p className="mt-0.5 sm:mt-1 font-mono text-lg sm:text-2xl lg:text-3xl font-black text-amber-400 drop-shadow-[0_0_12px_rgba(251,191,36,0.5)]">
+                    {verifiedFinishesCount} <span className="text-sm sm:text-base">🏅</span>
+                  </p>
+                </div>
+
+                <div className="rounded-2xl border border-white/15 bg-white/[0.05] p-2.5 sm:p-4 text-center backdrop-blur-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] transition-all hover:bg-white/[0.08]">
+                  <p className="text-[0.6rem] sm:text-[0.65rem] font-bold uppercase tracking-wider text-slate-400 truncate">
+                    Races
+                  </p>
+                  <p className="mt-0.5 sm:mt-1 font-mono text-lg sm:text-2xl lg:text-3xl font-black text-sky-400 drop-shadow-[0_0_12px_rgba(56,189,248,0.5)]">
+                    {activeRegistrations.length}
+                  </p>
+                </div>
               </div>
             </div>
 
-            <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
-              <div className="rounded-2xl border border-(--line) p-4">
-                <h4 className="text-xs font-bold text-foreground">1. Share Your Link</h4>
-                <p className="mt-1 text-[0.7rem] text-(--muted)">
-                  Send your link on WhatsApp, Strava, or Instagram.
-                </p>
+            {/* Glass Action Bar Strip (Mobile Optimized) */}
+            <div className="mt-4 sm:mt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-t border-white/10 pt-3.5 sm:pt-4">
+              <div className="hidden sm:flex items-center gap-1.5 text-xs text-slate-300 font-medium">
+                <Sparkles className="h-4 w-4 text-amber-400 shrink-0" />
+                <span>GPS Activity Sync · Verified Timings · Doorstep Medal Delivery</span>
               </div>
-              <div className="rounded-2xl border border-(--line) p-4">
-                <h4 className="text-xs font-bold text-foreground">2. Earn Free Kit & Discounts</h4>
-                <p className="mt-1 text-[0.7rem] text-(--muted)">
-                  Get coupon codes applied automatically to future race registrations.
-                </p>
+
+              {/* Action Buttons */}
+              <div className="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto">
+                <div className="flex items-center gap-1.5 sm:gap-2 flex-1 sm:flex-initial">
+                  <Link
+                    className="neon-btn-blue flex-1 sm:flex-initial justify-center rounded-full px-4 sm:px-5 py-2 sm:py-2.5 text-xs font-black uppercase tracking-wider text-white shadow-lg inline-flex items-center gap-1.5"
+                    href="/events"
+                  >
+                    <Plus className="h-3.5 w-3.5" /> <span>Join Race</span>
+                  </Link>
+                  {isAdmin && (
+                    <Link
+                      className="rounded-full border border-white/20 bg-white/[0.08] px-3 sm:px-3.5 py-2 sm:py-2.5 text-xs font-bold text-white hover:bg-white/20 backdrop-blur-xl shrink-0"
+                      href="/admin"
+                    >
+                      Admin
+                    </Link>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-1.5 shrink-0">
+                  <button
+                    onClick={() => void handleRefresh()}
+                    disabled={refreshing}
+                    className="h-9 w-9 sm:h-auto sm:w-auto rounded-full border border-white/15 bg-white/[0.06] p-2 sm:px-3.5 sm:py-2 text-xs font-bold text-slate-200 hover:bg-white/15 hover:text-white backdrop-blur-xl transition-all inline-flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
+                    type="button"
+                    title="Refresh Data"
+                  >
+                    <RefreshCw className={`h-3.5 w-3.5 ${refreshing ? "animate-spin" : ""}`} />
+                    <span className="hidden sm:inline">Refresh</span>
+                  </button>
+                  <button
+                    onClick={() => openUserProfile()}
+                    className="h-9 w-9 sm:h-auto sm:w-auto rounded-full border border-white/15 bg-white/[0.06] p-2 sm:px-3 sm:py-2 text-xs font-bold text-slate-300 hover:bg-white/15 hover:text-white backdrop-blur-xl cursor-pointer inline-flex items-center justify-center"
+                    type="button"
+                    title="Account Settings"
+                  >
+                    <Settings className="h-3.5 w-3.5" />
+                  </button>
+                  <button
+                    onClick={() => void signOut(() => router.push("/"))}
+                    className="h-9 w-9 sm:h-auto sm:w-auto rounded-full border border-rose-500/40 bg-rose-500/15 p-2 sm:px-3.5 sm:py-2 text-xs font-bold text-rose-300 hover:bg-rose-500/25 hover:text-white backdrop-blur-xl cursor-pointer inline-flex items-center justify-center gap-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.15)]"
+                    type="button"
+                    title="Sign out"
+                  >
+                    <LogOut className="h-3.5 w-3.5 text-rose-300" />
+                    <span className="hidden sm:inline">Sign out</span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
+
+          {/* Error Message */}
+          {error && (
+            <div className="mt-3.5 sm:mt-4 flex items-center justify-between rounded-2xl border border-rose-500/40 bg-rose-500/15 p-3.5 sm:p-4 text-xs sm:text-sm font-bold text-rose-200 backdrop-blur-xl">
+              <span>{error}</span>
+              <button
+                onClick={() => void load()}
+                className="font-black underline cursor-pointer"
+                type="button"
+              >
+                Retry
+              </button>
+            </div>
+          )}
+
+          {/* Success Proof Message */}
+          {proofMessage && (
+            <div className="mt-3.5 sm:mt-4 flex items-center gap-2 rounded-2xl border border-emerald-500/40 bg-emerald-500/15 p-3.5 sm:p-4 text-xs sm:text-sm font-bold text-emerald-200 backdrop-blur-xl shadow-[0_0_15px_rgba(52,211,153,0.2)]">
+              <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400" />
+              <span>{proofMessage}</span>
+            </div>
+          )}
+
+          {/* Frosted Glass Navigation Tabs (Mobile Clean Responsive) */}
+          <div className="mt-5 sm:mt-6 rounded-2xl sm:rounded-full bg-black/40 p-1 border border-white/10 backdrop-blur-2xl flex items-center gap-1 overflow-x-auto no-scrollbar">
+            <button
+              onClick={() => setActiveTab("active")}
+              className={`flex flex-1 sm:flex-initial items-center justify-center gap-1.5 rounded-xl sm:rounded-full px-3.5 sm:px-5 py-2.5 text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap ${
+                activeTab === "active"
+                  ? "bg-gradient-to-r from-sky-500/40 via-blue-600/35 to-sky-500/20 border border-sky-400/80 text-white shadow-[0_0_18px_rgba(56,189,248,0.35),inset_0_1px_1px_rgba(255,255,255,0.3)] backdrop-blur-xl"
+                  : "text-slate-300 hover:text-white hover:bg-white/[0.06]"
+              }`}
+            >
+              <Route className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-sky-400" />
+              <span>
+                <span className="sm:hidden">Events</span>
+                <span className="hidden sm:inline">My Registered Events</span> ({activeRegistrations.length})
+              </span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab("trophies")}
+              className={`flex flex-1 sm:flex-initial items-center justify-center gap-1.5 rounded-xl sm:rounded-full px-3.5 sm:px-5 py-2.5 text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap ${
+                activeTab === "trophies"
+                  ? "bg-gradient-to-r from-amber-500/40 via-yellow-600/35 to-amber-500/20 border border-amber-400/80 text-white shadow-[0_0_18px_rgba(251,191,36,0.35),inset_0_1px_1px_rgba(255,255,255,0.3)] backdrop-blur-xl"
+                  : "text-slate-300 hover:text-white hover:bg-white/[0.06]"
+              }`}
+            >
+              <Trophy className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-amber-400" />
+              <span>
+                <span className="sm:hidden">Trophies</span>
+                <span className="hidden sm:inline">Trophy Cabinet</span> ({trophyRegistrations.length})
+              </span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab("refer")}
+              className={`flex flex-1 sm:flex-initial items-center justify-center gap-1.5 rounded-xl sm:rounded-full px-3.5 sm:px-5 py-2.5 text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap ${
+                activeTab === "refer"
+                  ? "bg-gradient-to-r from-indigo-500/40 via-purple-600/35 to-indigo-500/20 border border-indigo-400/80 text-white shadow-[0_0_18px_rgba(99,102,241,0.35),inset_0_1px_1px_rgba(255,255,255,0.3)] backdrop-blur-xl"
+                  : "text-slate-300 hover:text-white hover:bg-white/[0.06]"
+              }`}
+            >
+              <Gift className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-indigo-400" />
+              <span>
+                <span className="sm:hidden">Refer & Earn</span>
+                <span className="hidden sm:inline">Refer & Earn Rewards</span>
+              </span>
+            </button>
+          </div>
         </div>
-      )}
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════
+          SECTION 2: FROSTED GLASS CARDS & PROOFS
+      ═══════════════════════════════════════════════════════════════ */}
+      <section className="relative w-full py-6 sm:py-12">
+        <div className="mx-auto max-w-7xl px-3.5 sm:px-6 lg:px-8">
+          
+          {/* ── TAB 1: MY REGISTERED EVENTS ── */}
+          {activeTab === "active" && (
+            <div className="space-y-6">
+              {activeRegistrations.length === 0 ? (
+                <div className="flex flex-col items-center justify-center rounded-[28px] border border-white/15 bg-white/[0.04] p-10 sm:p-16 text-center backdrop-blur-3xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.2),0_25px_60px_rgba(0,0,0,0.7)]">
+                  <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/[0.08] text-sky-400 border border-white/10">
+                    <Medal className="h-8 w-8" />
+                  </span>
+                  <h3 className="mt-4 font-display font-black text-lg sm:text-xl uppercase tracking-tight text-white">
+                    No active race registrations yet
+                  </h3>
+                  <p className="mt-1.5 max-w-sm text-xs sm:text-sm text-slate-300 font-medium">
+                    Pick your challenge distance, get your official bib, and run at your own pace anywhere in India.
+                  </p>
+                  <Link className="neon-btn-blue mt-6 inline-flex items-center gap-2 rounded-full px-8 py-3.5 text-xs font-black uppercase tracking-wider text-white shadow-xl" href="/events">
+                    <span>Explore Open Events</span>
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                </div>
+              ) : (
+                activeRegistrations.map((reg) => {
+                  const isPaid = reg.payment?.status === "PAID" || reg.status === "CONFIRMED";
+                  const isProofSubmitted = reg.proofStatus === "SUBMITTED";
+                  const isVerified = reg.proofStatus === "APPROVED";
+                  const isCertReady = Boolean(reg.certificate && reg.certificate.status !== "QUEUED");
+                  const isMedalDispatched = Boolean(reg.medalDelivery && (reg.medalDelivery.status === "DISPATCHED" || reg.medalDelivery.status === "DELIVERED"));
+                  const formOpen = proofRegId === reg.id;
+
+                  return (
+                    <div
+                      key={reg.id}
+                      id={`reg-${reg.id}`}
+                      className="rounded-3xl sm:rounded-[28px] border border-white/15 bg-white/[0.05] overflow-hidden backdrop-blur-3xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.25),0_20px_50px_rgba(0,0,0,0.7)] transition-all duration-300 hover:border-sky-400/50"
+                    >
+                      {/* Event Header */}
+                      <div className="p-4 sm:p-6 border-b border-white/10 bg-white/[0.04] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
+                        <div>
+                          <div className="flex flex-wrap items-center gap-2">
+                            <h2 className="font-display font-black text-base sm:text-2xl uppercase tracking-tight text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
+                              {reg.event.title}
+                            </h2>
+                            <span className="rounded-full bg-sky-500/25 border border-sky-400/50 px-2.5 py-0.5 font-mono text-[0.65rem] sm:text-xs font-bold text-sky-300 shadow-[0_0_8px_rgba(56,189,248,0.3)]">
+                              {reg.distance}
+                            </span>
+                          </div>
+
+                          <div className="mt-1 flex flex-wrap items-center gap-2 sm:gap-3 text-[0.7rem] sm:text-xs text-slate-300 font-medium">
+                            <span className="font-mono font-bold text-white">
+                              Bib: {reg.bibNumber}
+                            </span>
+                            <span>·</span>
+                            <span>
+                              Joined{" "}
+                              {new Date(reg.registeredAt).toLocaleDateString("en-IN", {
+                                day: "numeric",
+                                month: "short",
+                                year: "numeric",
+                              })}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Payment Status Pill */}
+                        <div className="flex items-center gap-2 self-start sm:self-auto">
+                          {isPaid ? (
+                            <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/20 border border-emerald-400/50 px-3 py-1 text-[0.65rem] sm:text-xs font-black uppercase tracking-wider text-emerald-300 shadow-[0_0_10px_rgba(52,211,153,0.3)]">
+                              <CheckCircle2 className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                              Paid {reg.payment?.amountInPaise ? formatMoney(reg.payment.amountInPaise) : ""}
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/20 border border-amber-400/50 px-3 py-1 text-[0.65rem] sm:text-xs font-black uppercase tracking-wider text-amber-300 shadow-[0_0_10px_rgba(251,191,36,0.3)]">
+                              <Clock className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                              Payment Pending
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* 4-Step Runner Journey Track (Mobile Ergonomic) */}
+                      <div className="p-3.5 sm:p-6 border-b border-white/10 bg-black/20">
+                        <p className="text-[0.6rem] sm:text-xs font-black uppercase tracking-wider text-slate-400 mb-2.5 sm:mb-3">
+                          Event Progress Pipeline
+                        </p>
+
+                        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3.5">
+                          {/* Step 1: Registered & Paid */}
+                          <div
+                            className={`rounded-2xl border p-2.5 sm:p-3.5 backdrop-blur-xl transition-all ${
+                              isPaid
+                                ? "border-emerald-500/40 bg-emerald-500/15 text-emerald-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.15)]"
+                                : "border-amber-500/40 bg-amber-500/15 text-amber-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.15)]"
+                            }`}
+                          >
+                            <div className="flex items-center gap-1.5 sm:gap-2">
+                              <span
+                                className={`flex h-5 w-5 sm:h-6 sm:w-6 shrink-0 items-center justify-center rounded-lg text-[0.65rem] sm:text-xs font-black ${
+                                  isPaid ? "bg-emerald-500 text-slate-950" : "bg-amber-500 text-slate-950"
+                                }`}
+                              >
+                                1
+                              </span>
+                              <span className="text-[0.65rem] sm:text-xs font-bold uppercase tracking-wider truncate">Registration</span>
+                            </div>
+                            <p className="mt-1 text-[0.65rem] sm:text-[0.7rem] text-slate-300 font-medium truncate">
+                              {isPaid ? "Confirmed & Bib Assigned" : "Payment Required"}
+                            </p>
+                          </div>
+
+                          {/* Step 2: GPS Proof Submission */}
+                          <div
+                            className={`rounded-2xl border p-2.5 sm:p-3.5 backdrop-blur-xl transition-all ${
+                              isVerified
+                                ? "border-emerald-500/40 bg-emerald-500/15 text-emerald-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.15)]"
+                                : isProofSubmitted
+                                  ? "border-amber-500/40 bg-amber-500/15 text-amber-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.15)]"
+                                  : "border-white/10 bg-white/[0.04] text-slate-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]"
+                            }`}
+                          >
+                            <div className="flex items-center gap-1.5 sm:gap-2">
+                              <span
+                                className={`flex h-5 w-5 sm:h-6 sm:w-6 shrink-0 items-center justify-center rounded-lg text-[0.65rem] sm:text-xs font-black ${
+                                  isVerified
+                                    ? "bg-emerald-500 text-slate-950"
+                                    : isProofSubmitted
+                                      ? "bg-amber-500 text-slate-950"
+                                      : "bg-white/10 text-slate-300"
+                                }`}
+                              >
+                                2
+                              </span>
+                              <span className="text-[0.65rem] sm:text-xs font-bold uppercase tracking-wider truncate">GPS Run</span>
+                            </div>
+                            <p className="mt-1 text-[0.65rem] sm:text-[0.7rem] text-slate-300 font-medium truncate">
+                              {isVerified
+                                ? "Proof Approved"
+                                : isProofSubmitted
+                                  ? "Under Review (24-48h)"
+                                  : "Upload Activity"}
+                            </p>
+                          </div>
+
+                          {/* Step 3: Verified Timing */}
+                          <div
+                            className={`rounded-2xl border p-2.5 sm:p-3.5 backdrop-blur-xl transition-all ${
+                              isVerified
+                                ? "border-emerald-500/40 bg-emerald-500/15 text-emerald-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.15)]"
+                                : "border-white/10 bg-white/[0.04] text-slate-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]"
+                            }`}
+                          >
+                            <div className="flex items-center gap-1.5 sm:gap-2">
+                              <span
+                                className={`flex h-5 w-5 sm:h-6 sm:w-6 shrink-0 items-center justify-center rounded-lg text-[0.65rem] sm:text-xs font-black ${
+                                  isVerified ? "bg-emerald-500 text-slate-950" : "bg-white/10 text-slate-300"
+                                }`}
+                              >
+                                3
+                              </span>
+                              <span className="text-[0.65rem] sm:text-xs font-bold uppercase tracking-wider truncate">Finish Time</span>
+                            </div>
+                            <p className="mt-1 text-[0.65rem] sm:text-[0.7rem] font-mono font-bold text-white truncate">
+                              {isVerified && reg.finishTimeSeconds
+                                ? formatDuration(reg.finishTimeSeconds)
+                                : "Pending Finish"}
+                            </p>
+                          </div>
+
+                          {/* Step 4: Certificate & Rewards */}
+                          <div
+                            className={`rounded-2xl border p-2.5 sm:p-3.5 backdrop-blur-xl transition-all ${
+                              isCertReady
+                                ? "border-amber-500/40 bg-amber-500/15 text-amber-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.15)]"
+                                : "border-white/10 bg-white/[0.04] text-slate-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]"
+                            }`}
+                          >
+                            <div className="flex items-center gap-1.5 sm:gap-2">
+                              <span
+                                className={`flex h-5 w-5 sm:h-6 sm:w-6 shrink-0 items-center justify-center rounded-lg text-[0.65rem] sm:text-xs font-black ${
+                                  isCertReady ? "bg-amber-500 text-slate-950" : "bg-white/10 text-slate-300"
+                                }`}
+                              >
+                                4
+                              </span>
+                              <span className="text-[0.65rem] sm:text-xs font-bold uppercase tracking-wider truncate">Rewards Kit</span>
+                            </div>
+                            <p className="mt-1 text-[0.65rem] sm:text-[0.7rem] text-slate-300 font-medium truncate">
+                              {isCertReady
+                                ? isMedalDispatched
+                                  ? "Medal Dispatched"
+                                  : "Certificate Ready"
+                                : "On Verified Finish"}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Action Bar (Mobile Responsive) */}
+                      <div className="p-3.5 sm:p-5 bg-white/[0.03] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                          <Link
+                            className="rounded-full border border-white/15 bg-white/[0.06] px-3 sm:px-3.5 py-1.5 sm:py-2 text-[0.7rem] sm:text-xs font-bold text-slate-200 hover:text-white hover:bg-white/15 backdrop-blur-xl transition-all inline-flex items-center gap-1"
+                            href={`/events/${reg.event.slug}`}
+                          >
+                            Details <ExternalLink className="h-3 w-3" />
+                          </Link>
+
+                          <Link
+                            className="rounded-full border border-white/15 bg-white/[0.06] px-3 sm:px-3.5 py-1.5 sm:py-2 text-[0.7rem] sm:text-xs font-bold text-slate-200 hover:text-white hover:bg-white/15 backdrop-blur-xl transition-all inline-flex items-center gap-1"
+                            href={`/leaderboard?event=${reg.event.slug}&distance=${encodeURIComponent(reg.distance)}`}
+                          >
+                            Leaderboard <Trophy className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-amber-400" />
+                          </Link>
+
+                          {isCertReady && (
+                            <Link
+                              className="neon-btn-blue rounded-full px-3.5 sm:px-4 py-1.5 sm:py-2 text-[0.7rem] sm:text-xs font-black uppercase tracking-wider text-white shadow-md inline-flex items-center gap-1"
+                              href={`/certificates/${reg.certificate!.certificateNumber}`}
+                            >
+                              <Award className="h-3.5 w-3.5" /> Certificate
+                            </Link>
+                          )}
+
+                          {reg.medalDelivery?.trackingNumber && (
+                            <span className="inline-flex items-center gap-1 rounded-full border border-white/15 bg-white/[0.06] px-3 py-1.5 text-[0.7rem] text-slate-300 backdrop-blur-xl">
+                              <Truck className="h-3 w-3 text-sky-400" />
+                              <span className="font-mono font-bold text-white">{reg.medalDelivery.trackingNumber}</span>
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Primary Action */}
+                        <div className="w-full sm:w-auto">
+                          {!isPaid ? (
+                            <Link className="neon-btn-blue w-full sm:w-auto justify-center rounded-full px-5 py-2.5 text-xs font-black uppercase tracking-wider text-white shadow-lg inline-flex items-center gap-1" href="/register">
+                              <span>Complete Payment</span>
+                              <ArrowRight className="h-3.5 w-3.5" />
+                            </Link>
+                          ) : canUpload(reg) ? (
+                            <button
+                              onClick={() => {
+                                setProofRegId(formOpen ? null : reg.id);
+                                setProofMessage(null);
+                                setProofError(null);
+                              }}
+                              className={`w-full sm:w-auto justify-center rounded-full px-5 py-2.5 text-xs font-black uppercase tracking-wider transition-all cursor-pointer inline-flex items-center gap-1.5 shadow-lg ${
+                                formOpen
+                                  ? "border border-white/20 bg-white/15 text-white backdrop-blur-xl"
+                                  : "neon-btn-blue text-white"
+                              }`}
+                              type="button"
+                            >
+                              <UploadCloud className="h-4 w-4" />
+                              {formOpen ? "Close Uploader" : "Upload GPS Run Proof"}
+                            </button>
+                          ) : isProofSubmitted ? (
+                            <span className="w-full sm:w-auto justify-center inline-flex items-center gap-1.5 rounded-full border border-amber-500/40 bg-amber-500/20 px-4 py-2 text-xs font-black uppercase tracking-wider text-amber-300 backdrop-blur-xl">
+                              <Clock className="h-3.5 w-3.5" /> Proof Under Review
+                            </span>
+                          ) : null}
+                        </div>
+                      </div>
+
+                      {/* GPS Proof Submission Drawer */}
+                      {formOpen && (
+                        <form
+                          className="border-t border-white/15 bg-slate-950/60 p-5 sm:p-7 backdrop-blur-2xl"
+                          onSubmit={submitProof}
+                          noValidate
+                        >
+                          <div className="space-y-4 max-w-2xl">
+                            <div className="flex items-center justify-between">
+                              <h3 className="text-sm sm:text-base font-black uppercase tracking-tight text-white flex items-center gap-2 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
+                                <UploadCloud className="h-4 w-4 text-sky-400" />
+                                Submit GPS Proof for {reg.event.title} ({reg.distance})
+                              </h3>
+                              <button
+                                type="button"
+                                onClick={() => setProofRegId(null)}
+                                className="text-slate-400 hover:text-white cursor-pointer"
+                              >
+                                <X className="h-4 w-4" />
+                              </button>
+                            </div>
+
+                            {proofError && (
+                              <div className="rounded-2xl border border-rose-500/40 bg-rose-500/20 p-3.5 text-xs font-bold text-rose-200 backdrop-blur-xl">
+                                {proofError}
+                              </div>
+                            )}
+
+                            <label className="block">
+                              <span className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
+                                Activity Screenshot (Strava / Nike / Garmin / Apple)
+                              </span>
+                              <input
+                                accept="image/*"
+                                className="w-full rounded-2xl border border-white/15 bg-white/[0.06] p-3 text-xs text-white file:mr-3 file:rounded-xl file:border-0 file:bg-sky-600 file:px-3 file:py-1.5 file:text-xs file:font-black file:text-white cursor-pointer backdrop-blur-xl"
+                                disabled={proofBusy}
+                                onChange={(e) => void onPickFile(e.target.files?.[0] ?? null)}
+                                type="file"
+                              />
+                              {proofFileName && (
+                                <p className="mt-1.5 text-xs font-bold text-sky-400">Ready: {proofFileName}</p>
+                              )}
+                            </label>
+
+                            {proofUrl && (proofUrl.startsWith("data:") || /\.(png|jpe?g|webp)/i.test(proofUrl)) && (
+                              <div className="overflow-hidden rounded-2xl border border-white/20 bg-slate-900/80 max-w-sm backdrop-blur-xl">
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img alt="Preview" className="max-h-48 w-full object-contain" src={proofUrl} />
+                              </div>
+                            )}
+
+                            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                              <label className="block">
+                                <span className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
+                                  Tracking App
+                                </span>
+                                <select
+                                  className="h-10 w-full rounded-2xl border border-white/15 bg-slate-900/90 px-3 text-xs font-bold text-white focus:border-sky-400 focus:outline-none backdrop-blur-xl"
+                                  onChange={(e) => setSourceApp(e.target.value)}
+                                  required
+                                  value={sourceApp}
+                                >
+                                  {SOURCE_APPS.map((a) => (
+                                    <option key={a} value={a}>
+                                      {a}
+                                    </option>
+                                  ))}
+                                </select>
+                              </label>
+
+                              <div>
+                                <span className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
+                                  Finish Time (Optional)
+                                </span>
+                                <div className="flex items-center gap-1.5">
+                                  <input
+                                    ref={hoursInputRef}
+                                    aria-label="Hours"
+                                    className="h-10 w-16 rounded-xl border border-white/15 bg-white/[0.06] text-center font-mono text-xs font-bold text-white focus:border-sky-400 focus:outline-none backdrop-blur-xl"
+                                    max={23}
+                                    min={0}
+                                    onPaste={handleTimePaste}
+                                    onChange={(e) => {
+                                      const val = e.target.value.slice(0, 2);
+                                      setFinishHours(val);
+                                      if (val.length === 2 && minutesInputRef.current) {
+                                        minutesInputRef.current.focus();
+                                      }
+                                    }}
+                                    placeholder="HH"
+                                    type="number"
+                                    value={finishHours}
+                                  />
+                                  <span className="font-mono text-sm text-slate-400">:</span>
+                                  <input
+                                    ref={minutesInputRef}
+                                    aria-label="Minutes"
+                                    className="h-10 w-16 rounded-xl border border-white/15 bg-white/[0.06] text-center font-mono text-xs font-bold text-white focus:border-sky-400 focus:outline-none backdrop-blur-xl"
+                                    max={59}
+                                    min={0}
+                                    onPaste={handleTimePaste}
+                                    onChange={(e) => {
+                                      const val = e.target.value.slice(0, 2);
+                                      setFinishMinutes(val);
+                                      if (val.length === 2 && secondsInputRef.current) {
+                                        secondsInputRef.current.focus();
+                                      }
+                                    }}
+                                    placeholder="MM"
+                                    type="number"
+                                    value={finishMinutes}
+                                  />
+                                  <span className="font-mono text-sm text-slate-400">:</span>
+                                  <input
+                                    ref={secondsInputRef}
+                                    aria-label="Seconds"
+                                    className="h-10 w-16 rounded-xl border border-white/15 bg-white/[0.06] text-center font-mono text-xs font-bold text-white focus:border-sky-400 focus:outline-none backdrop-blur-xl"
+                                    max={59}
+                                    min={0}
+                                    onPaste={handleTimePaste}
+                                    onChange={(e) => {
+                                      setFinishSeconds(e.target.value.slice(0, 2));
+                                    }}
+                                    placeholder="SS"
+                                    type="number"
+                                    value={finishSeconds}
+                                  />
+                                </div>
+                              </div>
+                            </div>
+
+                            {formattedTimePreview && (
+                              <p className="text-xs text-sky-400 font-bold drop-shadow-[0_0_8px_rgba(56,189,248,0.5)]">
+                                ⏱ Entered Time: {formattedTimePreview.label} ({formattedTimePreview.digital})
+                              </p>
+                            )}
+
+                            <div className="flex items-center gap-2.5 pt-2">
+                              <button
+                                className="neon-btn-blue rounded-full px-6 py-2.5 text-xs font-black uppercase tracking-wider text-white shadow-lg cursor-pointer disabled:opacity-50"
+                                disabled={proofBusy}
+                                type="submit"
+                              >
+                                {proofBusy ? "Submitting..." : "Submit Proof"}
+                              </button>
+                              <button
+                                className="rounded-full border border-white/20 bg-white/[0.08] px-4 py-2.5 text-xs font-bold text-slate-300 hover:text-white backdrop-blur-xl cursor-pointer"
+                                onClick={() => {
+                                  setProofRegId(null);
+                                  setProofUrl("");
+                                  setProofFileName(null);
+                                  setProofError(null);
+                                }}
+                                type="button"
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                          </div>
+                        </form>
+                      )}
+                    </div>
+                  );
+                })
+              )}
+            </div>
+          )}
+
+          {/* ── TAB 2: TROPHY CABINET & CERTIFICATES (MOBILE OPTIMIZED) ── */}
+          {activeTab === "trophies" && (
+            <div className="space-y-4 sm:space-y-6">
+              {trophyRegistrations.length === 0 ? (
+                <div className="flex flex-col items-center justify-center rounded-3xl sm:rounded-[28px] border border-amber-400/30 bg-amber-500/10 p-8 sm:p-16 text-center backdrop-blur-3xl shadow-[0_0_30px_rgba(251,191,36,0.15)]">
+                  <span className="flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center rounded-2xl bg-amber-500/20 text-amber-300 text-2xl sm:text-3xl shadow-[0_0_20px_rgba(251,191,36,0.4)]">
+                    🏆
+                  </span>
+                  <h3 className="mt-4 font-display font-black text-base sm:text-xl uppercase tracking-tight text-white">
+                    Trophy Cabinet is currently empty
+                  </h3>
+                  <p className="mt-1.5 max-w-sm text-xs sm:text-sm text-slate-300 font-medium">
+                    Complete any virtual race and upload your GPS activity to unlock your official e-certificate and medal delivery tracking!
+                  </p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 gap-4 sm:gap-5 sm:grid-cols-2">
+                  {trophyRegistrations.map((reg) => (
+                    <div
+                      key={reg.id}
+                      className="rounded-3xl sm:rounded-[28px] border border-amber-400/35 bg-gradient-to-b from-amber-500/15 via-white/[0.04] to-white/[0.02] p-4.5 sm:p-6 backdrop-blur-3xl shadow-[inset_0_1px_1px_rgba(251,191,36,0.3),0_20px_50px_rgba(0,0,0,0.7)] flex flex-col justify-between"
+                    >
+                      <div>
+                        <div className="flex items-center justify-between">
+                          <span className="rounded-full bg-amber-500/25 border border-amber-400/50 px-2.5 sm:px-3 py-0.5 text-[0.6rem] sm:text-[0.65rem] font-black uppercase tracking-wider text-amber-300 shadow-[0_0_10px_rgba(251,191,36,0.3)]">
+                            Official Finisher 🥇
+                          </span>
+                          <span className="font-mono text-xs text-slate-300 font-bold">Bib: {reg.bibNumber}</span>
+                        </div>
+
+                        <h3 className="mt-2.5 sm:mt-3 font-display font-black text-lg sm:text-xl uppercase tracking-tight text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">{reg.event.title}</h3>
+                        <p className="text-xs text-sky-400 font-bold mt-0.5">{reg.distance} Category</p>
+
+                        {reg.finishTimeSeconds && (
+                          <p className="mt-2 text-xs text-slate-300 font-medium">
+                            Official Finish Time:{" "}
+                            <strong className="text-white font-mono font-black">
+                              {formatDuration(reg.finishTimeSeconds)}
+                            </strong>
+                          </p>
+                        )}
+
+                        {/* Medal Delivery Info */}
+                        {reg.medalDelivery && (
+                          <div className="mt-3.5 sm:mt-4 rounded-2xl border border-white/10 bg-white/[0.06] p-3 text-xs backdrop-blur-xl">
+                            <p className="font-bold text-white flex items-center gap-1.5">
+                              <Medal className="h-3.5 w-3.5 text-amber-400 shrink-0" /> Medal Status:{" "}
+                              <span className="text-sky-300 font-semibold">{reg.medalDelivery.status}</span>
+                            </p>
+                            {reg.medalDelivery.trackingNumber && (
+                              <p className="mt-1 text-slate-300 font-mono text-[0.7rem]">
+                                Courier: {reg.medalDelivery.courier || "SpeedPost"} · {reg.medalDelivery.trackingNumber}
+                              </p>
+                            )}
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="mt-5 sm:mt-6 pt-3.5 sm:pt-4 border-t border-white/10 flex items-center gap-2">
+                        {reg.certificate && reg.certificate.status !== "QUEUED" ? (
+                          <Link
+                            className="neon-btn-blue rounded-full h-10 w-full text-xs font-black uppercase tracking-wider text-white shadow-lg flex items-center justify-center gap-2"
+                            href={`/certificates/${reg.certificate.certificateNumber}`}
+                          >
+                            <Award className="h-4 w-4" /> Download Certificate
+                          </Link>
+                        ) : (
+                          <span className="text-xs text-slate-400 text-center w-full font-medium">
+                            Certificate generating upon verification...
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ── TAB 3: REFER & EARN REWARDS (MOBILE OPTIMIZED) ── */}
+          {activeTab === "refer" && (
+            <div className="rounded-3xl sm:rounded-[28px] border border-indigo-400/35 bg-gradient-to-b from-indigo-500/15 via-white/[0.04] to-white/[0.02] p-4.5 sm:p-10 backdrop-blur-3xl shadow-[inset_0_1px_1px_rgba(99,102,241,0.3),0_25px_60px_rgba(0,0,0,0.7)] max-w-3xl">
+              <div>
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-indigo-500/25 border border-indigo-400/50 px-3 py-0.5 sm:py-1 text-[0.65rem] sm:text-xs font-black uppercase tracking-wider text-indigo-300 shadow-[0_0_10px_rgba(99,102,241,0.3)]">
+                  <Gift className="h-3 w-3 sm:h-3.5 sm:w-3.5" /> Referral Program
+                </span>
+                <h2 className="mt-2.5 sm:mt-3 font-display font-black text-xl sm:text-3xl uppercase tracking-tight text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
+                  Invite Friends, Earn Free Race Entries
+                </h2>
+                <p className="mt-1.5 sm:mt-2 text-xs sm:text-sm text-slate-300 leading-relaxed font-medium">
+                  Share your unique runner link with running clubs, friends, and family. Get rewarded for every friend who joins any RelentlessRun event!
+                </p>
+
+                {/* Referral Link Box */}
+                <div className="mt-4 sm:mt-6 rounded-2xl border border-white/15 bg-white/[0.05] p-3 sm:p-4 backdrop-blur-xl">
+                  <p className="text-[0.6rem] sm:text-[0.65rem] font-bold uppercase tracking-wider text-slate-400 mb-1.5 sm:mb-2">
+                    Your Unique Runner Link
+                  </p>
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                    <input
+                      type="text"
+                      readOnly
+                      value={`https://relentlessrun.in/register?ref=${dbUser?.referralCode || user?.id?.slice(-6) || "relentlessrun"}`}
+                      className="h-10 w-full rounded-xl border border-white/15 bg-slate-900/90 px-3 font-mono text-[0.7rem] sm:text-xs text-white focus:outline-none backdrop-blur-xl"
+                    />
+                    <button
+                      onClick={handleCopyReferral}
+                      className="neon-btn-blue h-10 rounded-xl px-5 text-xs font-black uppercase tracking-wider text-white shrink-0 cursor-pointer flex items-center justify-center gap-1.5 shadow-md"
+                      type="button"
+                    >
+                      <Copy className="h-3.5 w-3.5" />
+                      {copiedCode ? "Copied!" : "Copy Link"}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="mt-4 sm:mt-6 grid grid-cols-1 gap-2.5 sm:gap-3 sm:grid-cols-2">
+                  <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3.5 sm:p-4 backdrop-blur-xl">
+                    <h4 className="text-xs font-bold text-white uppercase tracking-wider">1. Share Your Link</h4>
+                    <p className="mt-1 text-[0.65rem] sm:text-[0.7rem] text-slate-400 font-medium">
+                      Send your link on WhatsApp, Strava, or Instagram runner groups.
+                    </p>
+                  </div>
+                  <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3.5 sm:p-4 backdrop-blur-xl">
+                    <h4 className="text-xs font-bold text-white uppercase tracking-wider">2. Earn Free Kit & Discounts</h4>
+                    <p className="mt-1 text-[0.65rem] sm:text-[0.7rem] text-slate-400 font-medium">
+                      Get coupon codes applied automatically to future race registrations.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════
+          SECTION 3: ATHLETE DESK & SUPPORT (MOBILE OPTIMIZED FROSTED GLASS)
+      ═══════════════════════════════════════════════════════════════ */}
+      <section className="relative w-full py-6 sm:py-14">
+        <div className="mx-auto max-w-7xl px-3.5 sm:px-6 lg:px-8">
+          <div className="rounded-3xl sm:rounded-[28px] border border-white/20 bg-white/[0.06] p-5 sm:p-10 backdrop-blur-3xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_25px_60px_rgba(0,0,0,0.7)] flex flex-col md:flex-row items-center justify-between gap-5 sm:gap-6">
+            <div className="max-w-xl text-center md:text-left">
+              <span className="rounded-full bg-sky-500/25 border border-sky-400/50 px-2.5 py-0.5 sm:px-3 sm:py-1 text-[0.65rem] sm:text-xs font-black uppercase tracking-wider text-sky-300 shadow-[0_0_8px_rgba(56,189,248,0.3)]">
+                Official Athlete Desk
+              </span>
+              <h3 className="mt-2 sm:mt-3 font-display font-black text-lg sm:text-2xl uppercase tracking-tight text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
+                Need Help With GPS Proof or Strava Sync?
+              </h3>
+              <p className="mt-1 text-xs sm:text-sm text-slate-300 font-medium">
+                Our verification team reviews runs within 24 hours. Contact our official WhatsApp runner support desk anytime.
+              </p>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2.5 sm:gap-3 w-full md:w-auto">
+              <a
+                href="https://wa.me/917518418960"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="neon-btn-blue justify-center rounded-full px-5 sm:px-6 py-2.5 sm:py-3 text-xs font-black uppercase tracking-wider text-white shadow-lg flex items-center gap-2"
+              >
+                <span>WhatsApp Runner Desk</span>
+                <ArrowRight className="h-4 w-4" />
+              </a>
+              <Link
+                href="/leaderboard"
+                className="justify-center rounded-full border border-white/20 bg-white/[0.08] px-5 sm:px-6 py-2.5 sm:py-3 text-xs font-black uppercase tracking-wider text-white backdrop-blur-xl hover:bg-white/20 transition-all shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] flex items-center"
+              >
+                View National Leaderboard
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

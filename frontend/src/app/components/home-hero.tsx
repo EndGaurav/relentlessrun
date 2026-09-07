@@ -31,83 +31,96 @@ const activityHistory = [
 
 export function HomeHero() {
   return (
-    <section
-      className="relative min-h-[85vh] w-full overflow-hidden bg-cover bg-center bg-no-repeat pt-28 pb-20 text-[#f0f0f0] isolate flex items-center justify-center"
-      style={{ backgroundImage: `url('/runner-img.jpg')` }}
-    >
-      {/* Deep Charcoal Navy Vignette Overlays */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[#090d16]/95 via-[#090d16]/80 to-[#090d16]/90" />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#090d16] via-transparent to-[#090d16]/80" />
+    <section className="relative min-h-[85vh] sm:min-h-[92vh] w-full overflow-hidden bg-[#090d16] pt-20 pb-12 sm:pt-28 sm:pb-20 text-white isolate flex items-center justify-center">
+      {/* ─── Animated Ken Burns Background Image ─── */}
+      <div className="absolute inset-0 overflow-hidden z-0">
+        {/* Mobile Full-Height Vertical 9:16 Image */}
+        <motion.img
+          src="/runner-mobile.jpg"
+          alt="Relentless Run Marathon"
+          initial={{ scale: 1, y: 0 }}
+          animate={{
+            scale: [1, 1.08, 1],
+            y: [0, -12, 0],
+          }}
+          transition={{
+            duration: 14,
+            ease: "easeInOut",
+            repeat: Infinity,
+          }}
+          className="h-full w-full object-cover object-center brightness-[0.95] contrast-[1.05] block sm:hidden will-change-transform"
+        />
+        {/* Desktop Widescreen 16:9 Image */}
+        <motion.img
+          src="/runner-hd.jpg"
+          alt="Relentless Run Marathon"
+          initial={{ scale: 1, x: 0, y: 0 }}
+          animate={{
+            scale: [1, 1.07, 1],
+            x: [0, -12, 0],
+            y: [0, -6, 0],
+          }}
+          transition={{
+            duration: 16,
+            ease: "easeInOut",
+            repeat: Infinity,
+          }}
+          className="h-full w-full object-cover object-center brightness-[0.95] contrast-[1.05] hidden sm:block will-change-transform"
+        />
+        {/* Crisp Semi-Transparent Overlay - 100% Full Background View */}
+        <div className="absolute inset-0 bg-black/40" />
+      </div>
 
-      {/* Radiant Electric Blue Glow Orbs */}
-      <div className="pointer-events-none absolute top-1/4 left-1/2 -z-10 h-[500px] w-[700px] -translate-x-1/2 rounded-full bg-[#2563eb]/20 blur-[140px]" />
-      <div className="pointer-events-none absolute bottom-10 right-10 -z-10 h-[350px] w-[350px] rounded-full bg-[#0284c7]/20 blur-[110px]" />
+      {/* Radiant Electric Blue Accent Orbs */}
+      <div className="pointer-events-none absolute top-1/3 left-1/2 -z-10 h-[300px] w-[350px] sm:h-[450px] sm:w-[650px] -translate-x-1/2 rounded-full bg-[#0284c7]/25 blur-[100px] sm:blur-[140px]" />
+      <div className="pointer-events-none absolute bottom-10 right-10 -z-10 h-[200px] w-[200px] sm:h-[300px] sm:w-[300px] rounded-full bg-[#38bdf8]/20 blur-[80px] sm:blur-[110px]" />
 
-      <div className="container-page relative z-10 mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center py-10">
-        
+      <div className="container-page relative z-10 mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center py-6 sm:py-10">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="flex flex-col items-center"
+          className="flex flex-col items-center w-full"
         >
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 rounded-full border border-[#38bdf8]/40 bg-[#0284c7]/15 px-4 py-1.5 text-xs font-black uppercase tracking-wider text-[#38bdf8] backdrop-blur-md mb-6 shadow-lg shadow-blue-950/40">
-            <Zap className="h-4 w-4 fill-[#38bdf8]" />
-            <span>INDIA&apos;S #1 VIRTUAL RUNNING PLATFORM</span>
+          <div className="inline-flex items-center gap-1.5 sm:gap-2 rounded-full border border-sky-400/40 bg-slate-900/80 px-3.5 sm:px-4.5 py-1 sm:py-1.5 text-[0.65rem] sm:text-xs font-black uppercase tracking-wider text-sky-400 backdrop-blur-md mb-4 sm:mb-6 shadow-xl shadow-black/50 max-w-full">
+            <Zap className="h-3.5 w-3.5 sm:h-4 sm:w-4 fill-sky-400 text-sky-400 shrink-0" />
+            <span className="truncate">INDIA&apos;S #1 VIRTUAL RUNNING PLATFORM</span>
           </div>
 
-          {/* Catchy Hook Line from ChatGPT list */}
-          <h1 className="font-display font-black text-6xl sm:text-7xl md:text-8xl lg:text-9xl tracking-tighter uppercase leading-[0.92] text-[#f0f0f0] drop-shadow-2xl">
+          {/* Catchy Hook Line */}
+          <h1 className="font-display font-black text-4xl sm:text-7xl md:text-8xl lg:text-9xl tracking-tight sm:tracking-tighter uppercase leading-[0.95] sm:leading-[0.92] text-white drop-shadow-[0_4px_24px_rgba(0,0,0,0.9)]">
             CHASE THE
-            <span className="block text-[#38bdf8] italic font-black">
+            <span className="block text-[#38bdf8] italic font-black drop-shadow-[0_0_25px_rgba(56,189,248,0.5)]">
               FINISH LINE
             </span>
           </h1>
 
-          <p className="mt-6 max-w-2xl text-base sm:text-xl text-slate-300 font-normal leading-relaxed drop-shadow-md">
+          <p className="mt-4 sm:mt-6 max-w-2xl text-sm sm:text-xl text-slate-100 font-medium leading-relaxed px-2 sm:px-0 drop-shadow-[0_2px_10px_rgba(0,0,0,0.9)]">
             Every mile tells a story. Pick your route, record with Strava or Garmin, and earn official heavy-metal finisher medals delivered straight to your door across India.
           </p>
 
-          <div className="mt-9 flex flex-wrap items-center justify-center gap-4">
+          <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3.5 sm:gap-5 w-full sm:w-auto px-3 sm:px-0">
             <Link
               href="/events"
-              className="neon-btn-blue inline-flex items-center gap-3 rounded-full px-9 py-4 text-sm font-black uppercase tracking-wider text-white transition-all shadow-xl hover:scale-105"
+              className="group relative inline-flex w-full sm:w-auto items-center justify-center gap-3 overflow-hidden rounded-full bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-600 px-8 py-4 text-xs sm:text-sm font-black uppercase tracking-wider text-white shadow-[0_0_30px_rgba(56,189,248,0.5),0_10px_20px_rgba(0,0,0,0.4)] border border-white/30 transition-all duration-300 hover:scale-105 hover:shadow-[0_0_40px_rgba(56,189,248,0.8),0_12px_28px_rgba(37,99,235,0.6)] active:scale-95"
             >
-              <span>Explore Challenges</span>
-              <ArrowRight className="h-4 w-4" />
+              {/* Animated Light Sweep Sheen */}
+              <div className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-1000 group-hover:translate-x-full" />
+              
+              <span className="relative z-10 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">Explore Challenges</span>
+              <ArrowRight className="relative z-10 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1.5" />
             </Link>
 
             <Link
               href="/register"
-              className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-slate-900/60 px-8 py-4 text-sm font-bold text-[#f0f0f0] backdrop-blur-md hover:bg-white/10 hover:border-white/40 transition-all shadow-lg"
+              className="group inline-flex w-full sm:w-auto items-center justify-center gap-2.5 rounded-full border border-white/20 bg-slate-900/80 px-7 py-4 text-xs sm:text-sm font-bold uppercase tracking-wider text-white backdrop-blur-xl transition-all duration-300 hover:border-sky-400/60 hover:bg-slate-800/90 hover:shadow-[0_0_20px_rgba(56,189,248,0.25)] active:scale-95"
             >
-              <ShieldCheck className="h-4 w-4 text-[#38bdf8]" />
-              <span>GPS Verified Races</span>
+              <ShieldCheck className="h-4 w-4 text-sky-400 transition-transform duration-300 group-hover:scale-110" />
+              <span className="text-slate-200 group-hover:text-white transition-colors">GPS Verified Races</span>
             </Link>
           </div>
-
-          {/* Clean Proof Bar */}
-          <div className="mt-14 pt-8 border-t border-white/10 grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-10 w-full max-w-3xl">
-            <div className="flex flex-col items-center">
-              <span className="font-display font-black text-3xl text-[#38bdf8]">45,000+</span>
-              <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 mt-1">Active Runners</span>
-            </div>
-            <div className="flex flex-col items-center">
-              <span className="font-display font-black text-3xl text-[#f0f0f0]">100%</span>
-              <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 mt-1">GPS Verified</span>
-            </div>
-            <div className="flex flex-col items-center">
-              <span className="font-display font-black text-3xl text-[#38bdf8]">19,000+</span>
-              <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 mt-1">Pincodes Delivered</span>
-            </div>
-            <div className="flex flex-col items-center">
-              <span className="font-display font-black text-3xl text-[#f0f0f0]">4.9 ★</span>
-              <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 mt-1">Runner Rating</span>
-            </div>
-          </div>
         </motion.div>
-
       </div>
     </section>
   );

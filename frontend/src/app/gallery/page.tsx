@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { PageShell } from "../components/app-shell";
-import { Breadcrumb } from "../components/breadcrumb";
 import { GalleryClient } from "./gallery-client";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://relentlessrun.in";
@@ -33,18 +32,8 @@ export const metadata: Metadata = {
 export default function GalleryPage() {
   return (
     <PageShell>
-      <div className="relative overflow-hidden bg-[#090d16]">
-        <section className="py-8 sm:py-10">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <Breadcrumb
-              items={[
-                { name: "Home", href: "/" },
-                { name: "Gallery", href: "/gallery" },
-              ]}
-            />
-            <GalleryClient />
-          </div>
-        </section>
+      <div className="relative min-w-0 bg-[#f8fafc]">
+        <GalleryClient />
       </div>
     </PageShell>
   );

@@ -56,12 +56,12 @@ function EventCard({ event, index }: { event: PublicEvent; index: number }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.4, delay: index * 0.1 }}
-      className="group flex flex-col overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03] shadow-2xl backdrop-blur-xl transition-all duration-300 hover:-translate-y-1.5 hover:border-[#38bdf8]/50 hover:bg-white/[0.06]"
+      className="group flex flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl transition-all duration-300 hover:-translate-y-1.5 hover:border-sky-400 hover:shadow-2xl"
     >
-      {/* Banner / Poster */}
+      {/* Banner / Poster - 65% Card Height */}
       <div
         className={`relative overflow-hidden ${
-          hasBannerImage ? "min-h-44 bg-[#090d16]" : "min-h-44 bg-gradient-to-br from-[#2563eb] to-sky-700"
+          hasBannerImage ? "h-64 sm:h-72 bg-[#090d16]" : "h-64 sm:h-72 bg-gradient-to-br from-[#0284c7] via-sky-600 to-sky-800"
         }`}
       >
         {event.bannerImageUrl ? (
@@ -75,14 +75,14 @@ function EventCard({ event, index }: { event: PublicEvent; index: number }) {
         {hasBannerImage ? (
           <div
             aria-hidden
-            className="absolute inset-0 bg-gradient-to-t from-[#090d16]/95 via-[#090d16]/50 to-transparent"
+            className="absolute inset-0 bg-gradient-to-t from-[#090d16]/95 via-[#090d16]/40 to-transparent"
           />
         ) : null}
 
         {/* Top Badges */}
         <div className="relative z-10 p-4 flex items-start justify-between gap-2">
           {/* Live Pulsating Scarcity Badge */}
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-[#2563eb] px-3 py-1 text-[0.65rem] font-black uppercase tracking-wider text-white shadow-lg">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-[#0284c7] px-3 py-1 text-[0.65rem] font-black uppercase tracking-wider text-white shadow-lg">
             <Flame className="h-3 w-3 animate-bounce fill-white" />
             <span>{scarcity.percent}% Booked</span>
           </span>
@@ -111,26 +111,26 @@ function EventCard({ event, index }: { event: PublicEvent; index: number }) {
         {/* Scarcity Progress Bar */}
         <div className="mb-4 space-y-1.5">
           <div className="flex items-center justify-between text-[0.68rem]">
-            <span className="font-semibold text-[#38bdf8] flex items-center gap-1">
+            <span className="font-semibold text-sky-600 flex items-center gap-1">
               <Zap className="h-3 w-3" /> Only {scarcity.bibsLeft} Bibs Remaining
             </span>
-            <span className="text-slate-400 font-mono">
+            <span className="text-slate-500 font-mono">
               {scarcity.percent}% filled
             </span>
           </div>
-          <div className="h-2 w-full overflow-hidden rounded-full bg-white/10 p-0.5 border border-white/10">
+          <div className="h-2 w-full overflow-hidden rounded-full bg-slate-100 p-0.5 border border-slate-200">
             <motion.div
               initial={{ width: 0 }}
               whileInView={{ width: `${scarcity.percent}%` }}
               viewport={{ once: true }}
               transition={{ duration: 1, ease: "easeOut" }}
-              className="h-full rounded-full bg-gradient-to-r from-sky-500 via-[#2563eb] to-blue-700"
+              className="h-full rounded-full bg-gradient-to-r from-sky-500 via-[#0284c7] to-blue-700"
             />
           </div>
         </div>
 
         {/* Title & Distance */}
-        <h3 className="font-display font-extrabold text-xl uppercase tracking-tight text-[#f0f0f0] transition-colors group-hover:text-[#38bdf8]">
+        <h3 className="font-display font-extrabold text-xl uppercase tracking-tight text-[#090d16] transition-colors group-hover:text-[#0284c7]">
           {event.name}
         </h3>
 
@@ -138,29 +138,29 @@ function EventCard({ event, index }: { event: PublicEvent; index: number }) {
           {event.distance.split(",").map((d) => (
             <span
               key={d}
-              className="rounded-lg bg-sky-500/15 border border-sky-500/30 px-2.5 py-0.5 font-mono text-[0.68rem] font-bold text-[#38bdf8]"
+              className="rounded-lg bg-sky-50 border border-sky-200 px-2.5 py-0.5 font-mono text-[0.68rem] font-bold text-sky-700"
             >
               {d.trim()}
             </span>
           ))}
         </div>
 
-        <p className="mt-3 flex-1 text-xs leading-relaxed text-slate-300 line-clamp-2">
+        <p className="mt-3 flex-1 text-xs leading-relaxed text-slate-600 line-clamp-2">
           {event.highlight}
         </p>
 
         {/* Countdown & Price Footer */}
-        <div className="mt-4 pt-4 border-t border-white/10 flex items-center justify-between gap-2">
-          <div className="flex items-center gap-1 text-[0.7rem] text-slate-400 font-medium">
-            <Timer className="h-3.5 w-3.5 text-[#38bdf8] shrink-0" />
+        <div className="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between gap-2">
+          <div className="flex items-center gap-1 text-[0.7rem] text-slate-500 font-medium">
+            <Timer className="h-3.5 w-3.5 text-sky-600 shrink-0" />
             <span>Closes in:</span>
-            <span className="font-mono font-bold text-[#f0f0f0]">
+            <span className="font-mono font-bold text-[#090d16]">
               {timeLeft.hours}h {String(timeLeft.minutes).padStart(2, "0")}m
             </span>
           </div>
 
           <div className="text-right">
-            <span className="font-mono text-lg font-black text-[#f0f0f0]">
+            <span className="font-mono text-lg font-black text-[#090d16]">
               {event.price.replace(/^Rs\.\s*/, "").replace(/^₹/, "₹")}
             </span>
           </div>

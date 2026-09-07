@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion, useInView, useReducedMotion } from "framer-motion";
-import { Camera, Heart, Loader2, MapPin, Sparkles, Trophy, Upload, X } from "lucide-react";
+import { Camera, Heart, Loader2, MapPin, Sparkles, Trophy, Upload, X, ArrowRight, Award } from "lucide-react";
 import Image from "next/image";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { getApiUrl } from "../../lib/api";
@@ -14,7 +14,6 @@ import {
   type GalleryItem,
 } from "../data/gallery";
 import { fetchGalleryContent } from "../../lib/events-api";
-import { cn } from "../../lib/cn";
 
 function useCountUp(target: number, active: boolean, duration = 1100) {
   const [value, setValue] = useState(0);
@@ -45,17 +44,17 @@ function StatCard({ label, value, icon: Icon }: { label: string; value: number; 
   return (
     <div
       ref={ref}
-      className="group relative overflow-hidden rounded-2xl border border-white/10 bg-[#0d1322]/80 px-4 py-5 text-center backdrop-blur-xl shadow-lg transition-all hover:border-[#38bdf8]/40 hover:-translate-y-1 sm:px-5 sm:py-6"
+      className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-white px-4 py-5 text-center shadow-xl transition-all duration-300 hover:border-[#0284c7]/50 hover:shadow-2xl hover:shadow-sky-100/80 hover:-translate-y-1 sm:px-5 sm:py-6"
     >
-      <div aria-hidden className="pointer-events-none absolute -top-6 -right-6 h-16 w-16 rounded-full bg-sky-500/10 blur-xl transition-all group-hover:bg-sky-500/20" />
-      <span className="mx-auto flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] text-[#38bdf8] transition-all group-hover:border-[#38bdf8]/30 group-hover:bg-[#38bdf8]/10">
-        <Icon className="h-5 w-5" strokeWidth={1.75} />
+      <div aria-hidden className="pointer-events-none absolute -top-6 -right-6 h-16 w-16 rounded-full bg-sky-100/50 blur-xl transition-all group-hover:bg-sky-200/50" />
+      <span className="mx-auto flex h-10 w-10 items-center justify-center rounded-2xl border border-sky-200 bg-sky-50 text-[#0284c7] transition-all group-hover:bg-[#0284c7] group-hover:text-white">
+        <Icon className="h-5 w-5" strokeWidth={2} />
       </span>
-      <p className="mt-2 font-display text-2xl font-black tracking-tight tabular-nums text-[#f0f0f0] sm:text-3xl">
+      <p className="mt-2.5 font-display text-2xl font-black tracking-tight tabular-nums text-[#090d16] sm:text-3xl">
         {count.toLocaleString("en-IN")}
         {value >= 100 ? "+" : ""}
       </p>
-      <p className="mt-0.5 text-[0.65rem] font-bold uppercase tracking-wider text-slate-400 sm:text-xs">{label}</p>
+      <p className="mt-0.5 text-[0.65rem] font-bold uppercase tracking-wider text-slate-500 sm:text-xs">{label}</p>
     </div>
   );
 }
@@ -79,15 +78,10 @@ function GalleryCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-6%" }}
       transition={{ duration: 0.45, delay: Math.min(index * 0.05, 0.3), ease: [0.22, 1, 0.36, 1] }}
-      whileHover={reduce ? undefined : { y: -5 }}
-      className={cn(
-        "gallery-classic-card group relative w-full overflow-hidden rounded-2xl border border-(--line) bg-(--panel) text-left shadow-(--shadow)",
-        "transition-[box-shadow,border-color] duration-300",
-        "hover:border-(--sage)/30 hover:shadow-(--shadow-hover)",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--sage)/40",
-      )}
+      whileHover={reduce ? undefined : { y: -6 }}
+      className="group relative w-full overflow-hidden rounded-3xl border border-white/10 bg-[#0d1322] text-left shadow-2xl transition-all duration-300 hover:border-[#38bdf8] hover:shadow-[0_12px_40px_rgba(56,189,248,0.25)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#38bdf8]"
     >
-      <div className="relative aspect-[4/5] w-full overflow-hidden sm:aspect-[3/4]">
+      <div className="relative aspect-[4/5] w-full overflow-hidden bg-slate-900 sm:aspect-[3/4]">
         <Image
           alt={item.title}
           src={item.image}
@@ -97,25 +91,23 @@ function GalleryCard({
         />
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/75 via-black/15 to-black/5"
-        />
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-linear-to-b from-black/25 to-transparent"
+          className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent"
         />
 
-        <span className="absolute top-3 left-3 rounded-full border border-white/20 bg-white/15 px-2.5 py-1 text-[0.62rem] font-semibold uppercase tracking-[0.12em] text-white backdrop-blur-md sm:top-3.5 sm:left-3.5">
+        {/* Category Pill */}
+        <span className="absolute top-3.5 left-3.5 rounded-full border border-white/20 bg-black/60 backdrop-blur-md px-3 py-1 text-[0.62rem] font-black uppercase tracking-wider text-[#38bdf8] shadow-md">
           {item.category}
         </span>
 
-        <div className="absolute inset-x-0 bottom-0 p-3.5 sm:p-4">
-          <h3 className="text-sm font-semibold tracking-tight text-white sm:text-base">
+        {/* Card Details Overlay */}
+        <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5">
+          <h3 className="font-display font-black text-sm sm:text-base uppercase tracking-tight text-white line-clamp-2 drop-shadow-sm group-hover:text-[#38bdf8] transition-colors">
             {item.title}
           </h3>
-          <p className="mt-1 truncate text-[0.7rem] text-white/75 sm:text-xs">
-            {item.event}
-            <span className="mx-1.5 text-white/40">·</span>
-            {item.location}
+          <p className="mt-1 flex items-center gap-1.5 text-xs font-medium text-slate-300">
+            <span className="truncate">{item.event}</span>
+            <span className="text-white/40">·</span>
+            <span className="shrink-0 text-slate-400">{item.location}</span>
           </p>
         </div>
       </div>
@@ -142,7 +134,7 @@ function Lightbox({ item, onClose }: { item: GalleryItem; onClose: () => void })
       role="dialog"
       aria-modal
       aria-label={item.title}
-      className="fixed inset-0 z-50 flex items-end justify-center p-0 sm:items-center sm:p-6"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -150,17 +142,17 @@ function Lightbox({ item, onClose }: { item: GalleryItem; onClose: () => void })
       <button
         type="button"
         aria-label="Close"
-        className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/80 backdrop-blur-md"
         onClick={onClose}
       />
       <motion.div
-        className="relative z-10 flex max-h-[92dvh] w-full max-w-3xl flex-col overflow-hidden rounded-t-3xl bg-(--panel) shadow-2xl sm:max-h-[88vh] sm:rounded-3xl"
-        initial={{ opacity: 0, y: 24 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: 16 }}
-        transition={{ type: "spring", stiffness: 360, damping: 32 }}
+        className="relative z-10 flex max-h-[90vh] w-full max-w-3xl flex-col overflow-hidden rounded-3xl border border-white/15 bg-[#0d1322] shadow-2xl"
+        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.95, y: 20 }}
+        transition={{ type: "spring", stiffness: 360, damping: 30 }}
       >
-        <div className="relative aspect-[16/11] w-full shrink-0 bg-black sm:aspect-[16/10]">
+        <div className="relative aspect-[16/11] w-full shrink-0 bg-slate-950 sm:aspect-[16/10]">
           <Image
             alt={item.title}
             src={item.image}
@@ -173,43 +165,30 @@ function Lightbox({ item, onClose }: { item: GalleryItem; onClose: () => void })
             type="button"
             aria-label="Close"
             onClick={onClose}
-            className="absolute top-3 right-3 grid h-10 w-10 place-items-center rounded-full border border-white/20 bg-black/40 text-white backdrop-blur-md transition hover:bg-black/55"
+            className="absolute top-4 right-4 grid h-10 w-10 place-items-center rounded-full border border-white/20 bg-black/60 text-white backdrop-blur-md transition hover:bg-black/80 shadow-lg cursor-pointer"
           >
-            <X className="h-4 w-4" />
+            <X className="h-5 w-5" />
           </button>
         </div>
-        <div className="min-h-0 overflow-y-auto p-4 sm:p-6">
+        <div className="min-h-0 overflow-y-auto p-5 sm:p-7 text-white">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="rounded-full bg-(--sage-soft) px-2.5 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-(--sage)">
+            <span className="rounded-full border border-sky-400/40 bg-sky-500/15 px-3 py-1 text-xs font-black uppercase tracking-wider text-[#38bdf8]">
               {item.category}
             </span>
-            <span className="text-xs text-(--muted-soft)">{item.date}</span>
+            {item.date && (
+              <span className="text-xs text-slate-400 font-medium">{item.date}</span>
+            )}
           </div>
-          <h2 className="mt-3 text-xl font-semibold tracking-tight sm:text-2xl">{item.title}</h2>
-          <p className="mt-1.5 text-sm text-(--muted)">
+          <h2 className="mt-3 font-display font-black text-2xl uppercase tracking-tight text-white sm:text-3xl">
+            {item.title}
+          </h2>
+          <p className="mt-2 text-sm text-slate-300 font-medium">
             {item.event}
-            <span className="mx-1.5 text-(--muted-soft)">·</span>
-            {item.location}
+            <span className="mx-2 text-slate-500">·</span>
+            <span className="text-slate-400">{item.location}</span>
           </p>
         </div>
       </motion.div>
-    </motion.div>
-  );
-}
-
-function FadeIn({ children, className, delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-15%" });
-  const reduce = useReducedMotion();
-  return (
-    <motion.div
-      ref={ref}
-      className={className}
-      initial={reduce ? false : { opacity: 0, y: 20 }}
-      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-      transition={{ duration: 0.5, delay, ease: [0.22, 1, 0.36, 1] }}
-    >
-      {children}
     </motion.div>
   );
 }
@@ -300,7 +279,7 @@ function SubmitPhotoModal({ onClose }: { onClose: () => void }) {
       role="dialog"
       aria-modal
       aria-label="Submit your photo"
-      className="fixed inset-0 z-50 flex items-end justify-center p-0 sm:items-center sm:p-6"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -308,85 +287,85 @@ function SubmitPhotoModal({ onClose }: { onClose: () => void }) {
       <button
         type="button"
         aria-label="Close"
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/80 backdrop-blur-md"
         onClick={submitting ? undefined : onClose}
       />
       <motion.div
-        className="relative z-10 flex max-h-[92dvh] w-full max-w-lg flex-col overflow-hidden rounded-t-3xl bg-(--panel) shadow-2xl sm:max-h-[88vh] sm:rounded-3xl"
-        initial={{ opacity: 0, y: 24 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: 16 }}
+        className="relative z-10 flex max-h-[92vh] w-full max-w-lg flex-col overflow-hidden rounded-3xl border border-white/15 bg-[#0d1322] shadow-2xl"
+        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.95, y: 20 }}
         transition={{ type: "spring", stiffness: 360, damping: 32 }}
       >
-        <div className="flex items-center justify-between border-b border-(--line) px-5 py-4">
-          <h2 className="text-lg font-semibold tracking-tight">
-            {done ? "Submitted!" : "Submit your photo"}
+        <div className="flex items-center justify-between border-b border-white/10 px-6 py-5">
+          <h2 className="font-display font-black text-lg uppercase tracking-tight text-white">
+            {done ? "Photo Submitted!" : "Submit Your Finisher Photo"}
           </h2>
           <button
             type="button"
             aria-label="Close"
             disabled={submitting}
             onClick={onClose}
-            className="grid h-9 w-9 place-items-center rounded-full text-(--muted) transition hover:bg-(--line) hover:text-(--foreground) disabled:opacity-40"
+            className="grid h-9 w-9 place-items-center rounded-full text-slate-400 hover:bg-white/10 hover:text-white transition disabled:opacity-40 cursor-pointer"
           >
-            <X className="h-4 w-4" />
+            <X className="h-5 w-5" />
           </button>
         </div>
 
         {done ? (
-          <div className="flex flex-col items-center gap-4 px-5 py-12 text-center">
-            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-(--sage)/10">
-              <Camera className="h-7 w-7 text-(--sage)" strokeWidth={1.75} />
+          <div className="flex flex-col items-center gap-4 px-6 py-12 text-center text-white">
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-sky-400/40 bg-sky-500/15 text-[#38bdf8]">
+              <Trophy className="h-8 w-8" strokeWidth={2} />
             </div>
-            <p className="text-xl font-semibold tracking-tight">Thank you!</p>
-            <p className="max-w-xs text-sm text-(--muted)">
-              Your photo has been submitted and is pending review. We&rsquo;ll notify you once it&rsquo;s live.
+            <p className="font-display font-black text-2xl uppercase tracking-tight">Thank You Runner!</p>
+            <p className="max-w-xs text-sm text-slate-300 font-medium">
+              Your photo has been submitted and is pending verification. It will appear on the public wall shortly.
             </p>
             <button
               type="button"
               onClick={onClose}
-              className="mt-2 rounded-full bg-(--sage) px-6 py-2.5 text-sm font-semibold text-(--on-accent) transition hover:opacity-90"
+              className="neon-btn-blue mt-4 rounded-full px-8 py-3 text-xs font-black uppercase tracking-wider text-white shadow-lg cursor-pointer"
             >
-              Done
+              Back to Gallery
             </button>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4 overflow-y-auto px-5 py-5">
+          <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4 overflow-y-auto px-6 py-6 text-white">
             {error ? (
-              <p className="rounded-lg bg-red-50 px-3 py-2 text-xs font-medium text-red-600 dark:bg-red-900/20 dark:text-red-400">
+              <p className="rounded-xl bg-rose-500/20 border border-rose-500/40 px-4 py-2.5 text-xs font-semibold text-rose-300">
                 {error}
               </p>
             ) : null}
 
             <div>
-              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-(--muted)">
-                Your name <span className="text-red-500">*</span>
+              <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-300">
+                Your name <span className="text-rose-400">*</span>
               </label>
               <input
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="e.g. Arjun Singh"
-                className="w-full rounded-xl border border-(--line) bg-(--panel-soft) px-4 py-2.5 text-sm text-(--foreground) outline-none transition focus:border-(--sage)/50 focus:ring-2 focus:ring-(--sage)/15"
+                className="w-full rounded-xl border border-white/15 bg-white/[0.06] px-4 py-2.5 text-sm text-white placeholder-slate-500 outline-none transition focus:border-[#38bdf8] focus:ring-2 focus:ring-[#38bdf8]/20"
               />
             </div>
 
             <div>
-              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-(--muted)">
-                Title / caption <span className="text-red-500">*</span>
+              <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-300">
+                Title / caption <span className="text-rose-400">*</span>
               </label>
               <input
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="e.g. Conquered the 10K in Bangalore"
-                className="w-full rounded-xl border border-(--line) bg-(--panel-soft) px-4 py-2.5 text-sm text-(--foreground) outline-none transition focus:border-(--sage)/50 focus:ring-2 focus:ring-(--sage)/15"
+                className="w-full rounded-xl border border-white/15 bg-white/[0.06] px-4 py-2.5 text-sm text-white placeholder-slate-500 outline-none transition focus:border-[#38bdf8] focus:ring-2 focus:ring-[#38bdf8]/20"
               />
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-(--muted)">
+                <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-300">
                   Event name
                 </label>
                 <input
@@ -394,11 +373,11 @@ function SubmitPhotoModal({ onClose }: { onClose: () => void }) {
                   value={eventLabel}
                   onChange={(e) => setEventLabel(e.target.value)}
                   placeholder="e.g. Pune Half Marathon"
-                  className="w-full rounded-xl border border-(--line) bg-(--panel-soft) px-4 py-2.5 text-sm text-(--foreground) outline-none transition focus:border-(--sage)/50 focus:ring-2 focus:ring-(--sage)/15"
+                  className="w-full rounded-xl border border-white/15 bg-white/[0.06] px-4 py-2.5 text-sm text-white placeholder-slate-500 outline-none transition focus:border-[#38bdf8] focus:ring-2 focus:ring-[#38bdf8]/20"
                 />
               </div>
               <div>
-                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-(--muted)">
+                <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-300">
                   Location
                 </label>
                 <input
@@ -406,27 +385,26 @@ function SubmitPhotoModal({ onClose }: { onClose: () => void }) {
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
                   placeholder="e.g. Mumbai"
-                  className="w-full rounded-xl border border-(--line) bg-(--panel-soft) px-4 py-2.5 text-sm text-(--foreground) outline-none transition focus:border-(--sage)/50 focus:ring-2 focus:ring-(--sage)/15"
+                  className="w-full rounded-xl border border-white/15 bg-white/[0.06] px-4 py-2.5 text-sm text-white placeholder-slate-500 outline-none transition focus:border-[#38bdf8] focus:ring-2 focus:ring-[#38bdf8]/20"
                 />
               </div>
             </div>
 
             <div>
-              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-(--muted)">
-                Photo <span className="text-red-500">*</span>
+              <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-300">
+                Photo <span className="text-rose-400">*</span>
               </label>
               <button
                 type="button"
                 onClick={() => inputRef.current?.click()}
-                className={cn(
-                  "flex w-full flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed px-4 py-8 text-center transition",
+                className={`flex w-full flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed px-4 py-8 text-center transition cursor-pointer ${
                   preview
-                    ? "border-(--sage)/30 bg-(--sage)/5"
-                    : "border-(--line) bg-(--panel-soft) hover:border-(--line-strong)",
-                )}
+                    ? "border-[#38bdf8]/50 bg-[#38bdf8]/10"
+                    : "border-white/15 bg-white/[0.03] hover:border-white/30"
+                }`}
               >
                 {preview ? (
-                  <div className="relative aspect-[4/3] w-full max-w-xs overflow-hidden rounded-lg">
+                  <div className="relative aspect-[4/3] w-full max-w-xs overflow-hidden rounded-xl">
                     <Image
                       alt="Preview"
                       src={preview}
@@ -437,9 +415,9 @@ function SubmitPhotoModal({ onClose }: { onClose: () => void }) {
                   </div>
                 ) : (
                   <>
-                    <Upload className="h-8 w-8 text-(--muted-soft)" strokeWidth={1.5} />
-                    <p className="text-sm text-(--muted)">Tap to select a photo</p>
-                    <p className="text-xs text-(--muted-soft)">JPEG · PNG · WebP · max 5 MB</p>
+                    <Upload className="h-8 w-8 text-[#38bdf8]" strokeWidth={1.5} />
+                    <p className="text-sm font-bold text-white">Tap to select a photo</p>
+                    <p className="text-xs text-slate-400">JPEG · PNG · WebP · max 5 MB</p>
                   </>
                 )}
               </button>
@@ -454,7 +432,7 @@ function SubmitPhotoModal({ onClose }: { onClose: () => void }) {
                 <button
                   type="button"
                   onClick={() => { setFile(null); setPreview(null); setError(""); }}
-                  className="mt-1.5 text-xs text-(--muted) underline transition hover:text-(--foreground)"
+                  className="mt-2 text-xs text-rose-400 hover:underline cursor-pointer"
                 >
                   Remove and choose another
                 </button>
@@ -464,7 +442,7 @@ function SubmitPhotoModal({ onClose }: { onClose: () => void }) {
             <button
               type="submit"
               disabled={submitting}
-              className="mt-2 flex w-full items-center justify-center gap-2 rounded-full bg-(--sage) px-6 py-3 text-sm font-semibold text-(--on-accent) transition hover:opacity-90 disabled:opacity-50"
+              className="neon-btn-blue mt-3 flex w-full items-center justify-center gap-2 rounded-full py-3.5 text-xs font-black uppercase tracking-wider text-white shadow-xl cursor-pointer disabled:opacity-50"
             >
               {submitting ? (
                 <>
@@ -472,12 +450,12 @@ function SubmitPhotoModal({ onClose }: { onClose: () => void }) {
                   Uploading...
                 </>
               ) : (
-                "Submit for review"
+                "Submit for verification"
               )}
             </button>
 
-            <p className="text-center text-xs text-(--muted-soft)">
-              Photos are reviewed before being published to the gallery.
+            <p className="text-center text-[0.7rem] text-slate-400">
+              Photos are reviewed for community guidelines before being published.
             </p>
           </form>
         )}
@@ -533,28 +511,33 @@ export function GalleryClient() {
   return (
     <div className="min-w-0">
 
-      {/* ── HERO ──────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden border-b border-white/10 py-10 sm:py-14">
-        <div aria-hidden className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[350px] w-[500px] rounded-full bg-sky-500/5 blur-[100px]" />
+      {/* ── SECTION 1: HERO & METRICS (OFF-WHITE #f8fafc) ─────────────── */}
+      <section className="relative overflow-hidden border-b border-slate-200 pt-24 pb-14 sm:pt-28 sm:pb-16 isolate text-[#090d16] bg-[#f8fafc]">
+        <div aria-hidden className="pointer-events-none absolute top-1/3 left-1/2 -z-10 h-[400px] w-[600px] -translate-x-1/2 rounded-full bg-sky-200/40 blur-[140px]" />
+        <div aria-hidden className="pointer-events-none absolute bottom-0 right-10 -z-10 h-[250px] w-[250px] rounded-full bg-blue-100/50 blur-[100px]" />
 
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
           <motion.div
-            className="mx-auto max-w-xl text-center"
+            className="mx-auto max-w-3xl text-center"
             initial={reduce ? false : { opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
           >
-            <span className="inline-block rounded-full border border-[#38bdf8]/30 bg-[#38bdf8]/10 px-3.5 py-1 text-xs font-bold uppercase tracking-widest text-[#38bdf8]">
-              Runner Showcase
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-sky-600/30 bg-sky-50 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-[#0284c7] mb-4 shadow-sm">
+              COMMUNITY FINISHER SHOWCASE
             </span>
-            <h1 className="mt-4 font-display font-black text-4xl sm:text-5xl uppercase tracking-tight text-[#f0f0f0]">
-              Miles Worth Remembering
+            <h1 className="font-display font-black text-4xl sm:text-6xl uppercase tracking-tight text-[#090d16]">
+              MILES WORTH{" "}
+              <span className="text-[#0284c7]">
+                REMEMBERING
+              </span>
             </h1>
-            <p className="mt-4 text-base text-slate-300 max-w-lg mx-auto">
-              Race finishes, training miles, community runs &mdash; every frame tells a story from the RelentlessRun community.
+            <p className="mt-4 text-sm sm:text-base text-slate-600 max-w-xl mx-auto font-medium leading-relaxed">
+              Race finishes, metal medal unboxings, community morning runs & milestones. Every photo tells a true finisher story.
             </p>
           </motion.div>
 
+          {/* 4 Stats Cards */}
           <motion.div
             className="mx-auto mt-8 grid max-w-4xl grid-cols-2 gap-3 sm:mt-10 sm:gap-4 md:grid-cols-4"
             initial={reduce ? false : { opacity: 0, y: 12 }}
@@ -568,31 +551,46 @@ export function GalleryClient() {
         </div>
       </section>
 
-      {/* ── FILTERS + GRID ────────────────────────────────────── */}
-      <section className="py-8 sm:py-10">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="no-scrollbar -mx-1 flex gap-2 overflow-x-auto px-1 pb-1 sm:flex-wrap sm:overflow-visible">
-            {galleryCategories.map((cat) => {
-              const on = category === cat;
-              return (
-                <button
-                  key={cat}
-                  type="button"
-                  onClick={() => setCategory(cat)}
-                  className={cn(
-                    "shrink-0 rounded-full border px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer",
-                    on
-                      ? "border-[#38bdf8] bg-gradient-to-r from-sky-500 to-blue-600 text-slate-950 shadow-md shadow-sky-500/20"
-                      : "border-white/10 bg-[#0d1322]/80 text-slate-300 hover:border-white/20 hover:text-white",
-                  )}
-                >
-                  {cat}
-                </button>
-              );
-            })}
+      {/* ── SECTION 2: PHOTO SHOWCASE & FILTERS (DARK #090d16) ──────── */}
+      <section className="relative py-16 sm:py-20 bg-[#090d16] text-[#f0f0f0] border-b border-white/10 overflow-hidden isolate">
+        <div aria-hidden className="pointer-events-none absolute top-1/2 left-10 -z-10 h-[350px] w-[350px] -translate-y-1/2 rounded-full bg-[#0284c7]/15 blur-[130px]" />
+
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
+          {/* Header & Filter Tabs */}
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-white/10 pb-6">
+            <div>
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-sky-400/30 bg-sky-500/10 px-3.5 py-1 text-xs font-bold uppercase tracking-widest text-[#38bdf8]">
+                PHOTO ARCHIVE
+              </span>
+              <h2 className="mt-3 font-display font-black text-3xl sm:text-4xl lg:text-5xl uppercase tracking-tight text-white">
+                COMMUNITY <span className="text-[#38bdf8]">MOMENTS</span>
+              </h2>
+            </div>
+
+            {/* Filter Pills */}
+            <div className="no-scrollbar flex gap-2 overflow-x-auto pb-1 sm:flex-wrap">
+              {galleryCategories.map((cat) => {
+                const on = category === cat;
+                return (
+                  <button
+                    key={cat}
+                    type="button"
+                    onClick={() => setCategory(cat)}
+                    className={`shrink-0 rounded-full px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer ${
+                      on
+                        ? "bg-[#0284c7] text-white shadow-lg shadow-sky-600/30 border border-[#0284c7]"
+                        : "border border-white/15 bg-white/[0.04] text-slate-300 hover:border-white/30 hover:text-white"
+                    }`}
+                  >
+                    {cat}
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
-          <div className="mt-6 grid grid-cols-2 gap-3 sm:mt-8 sm:gap-4 md:grid-cols-3 lg:grid-cols-4 lg:gap-5">
+          {/* Photo Grid */}
+          <div className="mt-8 grid grid-cols-2 gap-4 sm:mt-10 sm:gap-6 md:grid-cols-3 lg:grid-cols-4">
             {filtered.map((item, index) => (
               <GalleryCard
                 key={item.id}
@@ -605,44 +603,60 @@ export function GalleryClient() {
 
           {filtered.length === 0 ? (
             <motion.div
-              className="mt-16 flex flex-col items-center gap-3 text-center"
+              className="mt-16 flex flex-col items-center gap-3 text-center py-12 rounded-3xl border border-white/10 bg-[#0d1322] shadow-2xl"
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
             >
-              <Camera className="h-10 w-10 text-(--muted-soft)" strokeWidth={1.25} />
-              <p className="text-sm text-(--muted)">No moments in this category yet.</p>
+              <Camera className="h-10 w-10 text-slate-400" strokeWidth={1.5} />
+              <p className="text-sm font-bold text-slate-300">No moments found in this category yet.</p>
             </motion.div>
           ) : null}
         </div>
       </section>
 
-      {/* ── Floating submit button ───────────────────────────── */}
+      {/* ── SECTION 3: SUBMIT MOMENT BANNER (OFF-WHITE #f8fafc) ──────── */}
+      <section className="relative py-16 sm:py-20 bg-[#f8fafc] text-[#090d16] overflow-hidden isolate border-b border-slate-200">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="relative overflow-hidden rounded-3xl border border-slate-200 bg-white p-8 sm:p-12 shadow-xl flex flex-col md:flex-row items-center justify-between gap-8">
+            <div className="max-w-xl text-center md:text-left">
+              <span className="inline-flex items-center gap-2 rounded-full border border-sky-600/30 bg-sky-50 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-[#0284c7]">
+                <Award className="h-3.5 w-3.5" />
+                GET FEATURED
+              </span>
+              <h2 className="mt-4 font-display font-black text-3xl sm:text-4xl uppercase tracking-tight text-[#090d16]">
+                EARNED YOUR MEDAL? <span className="text-[#0284c7]">SHARE YOUR VICTORY!</span>
+              </h2>
+              <p className="mt-3 text-sm text-slate-600 font-medium leading-relaxed">
+                Upload your medal selfie, GPS race stats or finish line smile to inspire thousands of runners across India.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setShowSubmit(true)}
+              className="neon-btn-blue shrink-0 inline-flex items-center gap-2.5 rounded-full px-8 py-4 text-xs font-black uppercase tracking-wider text-white shadow-xl hover:scale-105 active:scale-95 transition-transform cursor-pointer"
+            >
+              <Upload className="h-4 w-4" />
+              <span>Submit Finisher Photo</span>
+              <ArrowRight className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* Floating Submit Button for Quick Mobile Access */}
       <motion.button
         type="button"
         onClick={() => setShowSubmit(true)}
         initial={{ opacity: 0, y: 32 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.6, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-        whileHover={{ y: -3 }}
-        whileTap={{ scale: 0.97 }}
-        className={cn(
-          "fixed bottom-5 left-1/2 z-40 -translate-x-1/2 whitespace-nowrap",
-          "flex items-center gap-1.5 rounded-xl",
-          "bg-(--panel) ring-1 ring-(--line) shadow-[0_8px_32px_-8px_rgba(0,0,0,0.12)]",
-          "px-3.5 py-2.5 text-xs font-semibold text-(--foreground)",
-          "transition-all hover:shadow-[0_8px_32px_-6px_rgba(0,0,0,0.18)] hover:ring-(--sage)/30",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--sage)/40",
-          "backdrop-blur-xl bg-(--header-bg)/80",
-          "sm:bottom-8 sm:gap-2.5 sm:px-5 sm:py-3 sm:text-sm sm:rounded-2xl",
-        )}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        className="fixed bottom-6 right-6 z-40 flex items-center gap-2 rounded-full border border-white/20 bg-[#090d16]/90 px-4 py-3 text-xs font-black uppercase tracking-wider text-white shadow-2xl backdrop-blur-md hover:border-[#38bdf8] cursor-pointer sm:hidden"
       >
-        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-(--sage) to-emerald-500 shadow-xs sm:h-7 sm:w-7">
-          <Upload className="h-3 w-3 text-white sm:h-3.5 sm:w-3.5" strokeWidth={2.5} />
-        </span>
-        <span>Submit<span className="hidden sm:inline">&nbsp;your photo</span></span>
-        <svg className="h-3.5 w-3.5 shrink-0 text-(--muted-soft) sm:h-4 sm:w-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-          <path d="m6 4 4 4-4 4" />
-        </svg>
+        <Upload className="h-4 w-4 text-[#38bdf8]" />
+        <span>Submit Photo</span>
       </motion.button>
 
       <AnimatePresence>

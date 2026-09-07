@@ -47,7 +47,7 @@ const trustStats = [
 
 function TrustBar() {
   return (
-    <div className="mb-12 grid grid-cols-2 gap-4 rounded-2xl border border-white/10 bg-[#0d1322]/80 p-5 backdrop-blur-xl shadow-xl shadow-black/40 sm:grid-cols-4 sm:gap-6 sm:p-7">
+    <div className="mb-12 grid grid-cols-2 gap-4 rounded-2xl border border-white/10 bg-[#0d1322] p-5 shadow-2xl sm:grid-cols-4 sm:gap-6 sm:p-7">
       {trustStats.map((stat) => {
         const Icon = stat.icon;
         return (
@@ -58,7 +58,7 @@ function TrustBar() {
                 {stat.value}
               </span>
             </div>
-            <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
               {stat.label}
             </span>
           </div>
@@ -78,7 +78,7 @@ function AvatarCircle({ name }: { name: string }) {
     .toUpperCase();
 
   return (
-    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-sky-400 to-blue-600 font-bold text-slate-950 text-sm shadow-md ring-2 ring-sky-400/40">
+    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-sky-500 to-blue-600 font-bold text-white text-sm shadow-md ring-2 ring-sky-400/50">
       {initials}
     </span>
   );
@@ -90,17 +90,17 @@ function ReviewCard({ review }: { review: HomeTestimonial }) {
   const achievement = deriveAchievement(review.role);
 
   return (
-    <article className="group relative flex w-[330px] sm:w-[380px] shrink-0 flex-col justify-between rounded-2xl border border-white/10 bg-[#0d1322]/90 p-6 sm:p-7 backdrop-blur-xl shadow-lg transition-all duration-300 hover:-translate-y-1.5 hover:border-[#38bdf8]/50 hover:bg-[#111827] hover:shadow-2xl hover:shadow-[#38bdf8]/10">
+    <article className="group relative flex w-[330px] sm:w-[380px] shrink-0 flex-col justify-between rounded-2xl border border-white/10 bg-[#0d1322] p-6 sm:p-7 shadow-2xl transition-all duration-300 hover:-translate-y-1.5 hover:border-[#38bdf8]">
       {/* Quotation watermark */}
       <Quote
         aria-hidden="true"
-        className="absolute top-5 right-5 h-12 w-12 text-[#38bdf8]/10 transition-colors duration-300 group-hover:text-[#38bdf8]/20"
+        className="absolute top-5 right-5 h-12 w-12 text-slate-800 transition-colors duration-300 group-hover:text-[#2563eb]/30"
       />
 
       <div>
         {/* Header Badge */}
         <div className="flex items-center justify-between gap-2 mb-4">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-[#38bdf8]/30 bg-[#38bdf8]/10 px-3 py-1 text-[0.65rem] font-bold uppercase tracking-wider text-[#38bdf8]">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-sky-500/30 bg-sky-500/10 px-3 py-1 text-[0.65rem] font-bold uppercase tracking-wider text-[#38bdf8]">
             <BadgeCheck className="h-3.5 w-3.5 text-[#38bdf8]" />
             {badge}
           </span>
@@ -117,7 +117,7 @@ function ReviewCard({ review }: { review: HomeTestimonial }) {
 
         {/* Quote content */}
         <blockquote className="mb-6">
-          <p className="text-sm sm:text-base leading-relaxed text-[#f0f0f0] font-medium">
+          <p className="text-sm sm:text-base leading-relaxed text-slate-200 font-medium">
             &ldquo;{review.quote}&rdquo;
           </p>
         </blockquote>
@@ -133,7 +133,7 @@ function ReviewCard({ review }: { review: HomeTestimonial }) {
             </span>
             <BadgeCheck className="h-4 w-4 shrink-0 text-[#38bdf8]" />
           </div>
-          <p className="truncate text-xs text-slate-400">
+          <p className="truncate text-xs text-slate-400 font-medium">
             {achievement} {review.city ? `· ${review.city}` : ""}
           </p>
         </div>
@@ -152,17 +152,18 @@ export function HomeReviews({ testimonials: initial }: { testimonials?: HomeTest
   const marqueeReviews = [...reviews, ...reviews];
 
   return (
-    <section className="relative py-16 sm:py-24 border-b border-white/10 overflow-hidden bg-[#090d16]">
+    <section className="relative py-16 sm:py-24 border-t border-white/10 overflow-hidden bg-[#090d16] text-[#f0f0f0]">
       {/* Background glow effects */}
-      <div aria-hidden="true" className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[450px] w-[600px] rounded-full bg-sky-500/5 blur-[120px]" />
+      <div aria-hidden="true" className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[450px] w-[600px] rounded-full bg-blue-600/10 blur-[120px]" />
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
         <TrustBar />
 
         <HomeSectionHeader
+          theme="dark"
           action={
             <Link
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 px-5 py-3 font-bold text-slate-950 text-sm hover:from-sky-400 hover:to-blue-500 transition-all shadow-lg shadow-sky-500/20 group"
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 px-5 py-3 font-bold text-white text-sm hover:from-sky-400 hover:to-blue-500 transition-all shadow-lg shadow-sky-500/20 group"
               href="/events"
             >
               Explore Events
@@ -173,11 +174,11 @@ export function HomeReviews({ testimonials: initial }: { testimonials?: HomeTest
           eyebrow="Runner Reviews"
           title="Experiences from the Community"
         />
-        {/* Infinite Auto-scrolling Marquee Track (Constrained to container width) */}
+        {/* Infinite Auto-scrolling Marquee Track */}
         <div className="relative mt-8 w-full overflow-hidden rounded-3xl py-2">
           {/* Left and Right Fade Gradient Masks */}
-          <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 left-0 z-20 w-12 sm:w-24 bg-gradient-to-r from-[#0d1322] via-[#090d16] to-transparent" />
-          <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 right-0 z-20 w-12 sm:w-24 bg-gradient-to-l from-[#0d1322] via-[#090d16] to-transparent" />
+          <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 left-0 z-20 w-12 sm:w-24 bg-gradient-to-r from-[#090d16] via-[#090d16]/80 to-transparent" />
+          <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 right-0 z-20 w-12 sm:w-24 bg-gradient-to-l from-[#090d16] via-[#090d16]/80 to-transparent" />
 
           {/* Marquee Row */}
           <div className="animate-marquee-slow flex gap-6">
