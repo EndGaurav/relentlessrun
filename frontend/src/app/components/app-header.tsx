@@ -4,6 +4,7 @@ import { SignedIn, SignedOut, useUser, useClerk } from "@clerk/nextjs";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Camera,
@@ -255,6 +256,7 @@ function NavLink({
 export function AppHeader() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
   const { user, isSignedIn, isLoaded } = useUser();
@@ -264,29 +266,43 @@ export function AppHeader() {
     pathname === href || (href !== "/" && pathname.startsWith(`${href}/`));
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Lock background scrolling completely on mobile and desktop when menu is open
   useEffect(() => {
     if (!open) return;
-    const prev = document.body.style.overflow;
+    const prevBodyOverflow = document.body.style.overflow;
+    const prevHtmlOverflow = document.documentElement.style.overflow;
+    const prevBodyTouchAction = document.body.style.touchAction;
+
     document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
+    document.body.style.touchAction = "none";
+
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") setOpen(false);
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => {
-      document.body.style.overflow = prev;
+      document.body.style.overflow = prevBodyOverflow;
+      document.documentElement.style.overflow = prevHtmlOverflow;
+      document.body.style.touchAction = prevBodyTouchAction;
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [open]);
 
   return (
-    <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ease-in-out ${
+    <>
+      <header
+        className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ease-in-out ${
         scrolled
           ? "bg-[#090d16]/92 backdrop-blur-3xl border-b border-white/10 shadow-[0_12px_40px_rgba(0,0,0,0.85),inset_0_-1px_0_rgba(255,255,255,0.06)] py-2 sm:py-2.5 px-4 sm:px-6 lg:px-8"
           : "bg-transparent border-b border-transparent py-3 sm:pt-4 px-4 sm:px-6 lg:px-8"
@@ -383,23 +399,26 @@ export function AppHeader() {
           </div>
         </div>
       </div>
+    </header>
 
-      {/* ─── Production-Grade Slide-Over Mobile Drawer Sheet ─── */}
+    {/* ─── Production-Grade Slide-Over Mobile Drawer Sheet (Portaled to document.body) ─── */}
+    {mounted && typeof document !== "undefined" && createPortal(
       <AnimatePresence>
         {open && (
-          <div className="fixed inset-0 z-50 md:hidden pointer-events-auto">
+          <div className="fixed inset-0 z-[99999] md:hidden pointer-events-auto">
             {/* Backdrop Overlay with Blur */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.25, ease: "easeOut" }}
-              className="absolute inset-0 bg-black/70 backdrop-blur-md"
+              className="fixed inset-0 bg-black/75 backdrop-blur-md"
               onClick={() => setOpen(false)}
+              onTouchMove={(e) => e.preventDefault()}
             />
 
             {/* Glowing Accent Orb behind drawer */}
-            <div className="pointer-events-none absolute right-0 top-1/3 -z-10 h-80 w-80 rounded-full bg-sky-500/20 blur-[120px]" />
+            <div className="pointer-events-none fixed right-0 top-1/3 -z-10 h-80 w-80 rounded-full bg-sky-500/20 blur-[120px]" />
 
             {/* Slide-Over Drawer Sheet */}
             <motion.nav
@@ -407,7 +426,7 @@ export function AppHeader() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 28, stiffness: 280 }}
-              className="absolute inset-y-0 right-0 z-10 flex h-full w-[85%] max-w-[340px] flex-col overflow-hidden rounded-l-[32px] border-l border-white/20 bg-slate-950/95 backdrop-blur-3xl shadow-[-25px_0_60px_rgba(0,0,0,0.85)] text-white"
+              className="fixed inset-y-0 right-0 z-10 flex h-full h-[100dvh] w-[85%] max-w-[340px] flex-col overflow-hidden rounded-l-[32px] border-l border-white/20 bg-slate-950/98 backdrop-blur-3xl shadow-[-25px_0_60px_rgba(0,0,0,0.85)] text-white"
               role="dialog"
               aria-modal="true"
               aria-label="Mobile Navigation"
@@ -444,36 +463,39 @@ export function AppHeader() {
               </div>
 
               {/* Scrollable Body */}
-              <div className="flex-1 overflow-y-auto no-scrollbar p-5 space-y-4">
+              <div
+                className="flex-1 overflow-y-auto overscroll-contain no-scrollbar p-5 space-y-4"
+                style={{ touchAction: "pan-y", WebkitOverflowScrolling: "touch" }}
+              >
                 {/* Athlete Profile (only shown when signed in) */}
-                {isLoaded && isSignedIn && user && (
+                {isLoaded && isSignedIn && user ? (
                   <div className="flex items-center gap-3 rounded-2xl border border-sky-400/30 bg-sky-500/[0.08] p-3.5 backdrop-blur-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]">
-                    {user.imageUrl ? (
+                    {user?.imageUrl ? (
                       <img
                         src={user.imageUrl}
-                        alt={user.fullName ?? "Athlete"}
+                        alt={user?.fullName ?? "Athlete"}
                         className="h-10 w-10 rounded-full object-cover ring-2 ring-sky-400/60 shadow-lg shrink-0"
                       />
                     ) : (
                       <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-tr from-sky-500 to-blue-700 text-xs font-black text-white ring-2 ring-sky-400/60 shadow-lg shrink-0">
-                        {(user.fullName ?? user.firstName ?? "A").charAt(0).toUpperCase()}
+                        {(user?.fullName ?? user?.firstName ?? "A").charAt(0).toUpperCase()}
                       </div>
                     )}
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-1.5">
                         <p className="truncate text-xs font-black uppercase tracking-wider text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
-                          {user.fullName ?? user.firstName ?? "Athlete"}
+                          {user?.fullName ?? user?.firstName ?? "Athlete"}
                         </p>
                         <span className="rounded-full bg-sky-500/25 border border-sky-400/50 px-1.5 py-0.2 text-[0.52rem] font-black uppercase tracking-wider text-sky-300">
                           PRO ⚡
                         </span>
                       </div>
                       <p className="truncate text-[0.68rem] text-slate-300 font-medium mt-0.5">
-                        {user.primaryEmailAddress?.emailAddress}
+                        {user?.primaryEmailAddress?.emailAddress}
                       </p>
                     </div>
                   </div>
-                )}
+                ) : null}
 
                 {/* Section Header */}
                 <div className="px-1 pt-1">
@@ -609,7 +631,9 @@ export function AppHeader() {
             </motion.nav>
           </div>
         )}
-      </AnimatePresence>
-    </header>
+      </AnimatePresence>,
+      document.body
+    )}
+  </>
   );
 }

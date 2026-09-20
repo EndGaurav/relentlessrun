@@ -46,6 +46,9 @@ export function FloatingContact() {
   const ref = useRef<HTMLDivElement>(null);
   const isEventPage = pathname?.startsWith("/events/");
 
+  // Only show on home page ("/")
+  if (pathname !== "/") return null;
+
   useEffect(() => {
     if (!open) return;
     function handleClick(e: MouseEvent) {
