@@ -92,7 +92,7 @@ export function HomeHero() {
           </div>
 
           {/* Catchy Hook Line - Bold and commanding on mobile, desktop unchanged */}
-          <h1 className="font-display font-black text-[2.15rem] leading-[0.98] tracking-tight sm:text-6xl md:text-7xl lg:text-8xl sm:tracking-tighter uppercase sm:leading-[0.92] text-white drop-shadow-[0_4px_24px_rgba(0,0,0,0.95)]">
+          <h1 className="font-display font-black text-[2.15rem] leading-[0.98] tracking-tight sm:text-7xl md:text-8xl lg:text-9xl sm:tracking-tighter uppercase sm:leading-[0.92] text-white drop-shadow-[0_4px_24px_rgba(0,0,0,0.95)]">
             <span className="block sm:whitespace-nowrap">CHASE THE</span>
             <span className="block text-[#38bdf8] italic font-black drop-shadow-[0_0_25px_rgba(56,189,248,0.6)] mt-0.5 sm:mt-0 sm:whitespace-nowrap">
               FINISH LINE
