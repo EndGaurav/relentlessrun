@@ -311,7 +311,7 @@ export function AppHeader() {
       {/* ─── Desktop bar ─── */}
       <div className="hidden w-full max-w-7xl mx-auto md:block">
         <div>
-          <div className="flex h-12 items-center justify-between gap-4 px-2 sm:h-13">
+          <div className="relative flex h-12 items-center justify-between gap-4 px-2 sm:h-13">
             {/* Left — Brand */}
             <Link
               href="/"
@@ -332,9 +332,9 @@ export function AppHeader() {
               </div>
             </Link>
 
-            {/* Center — Nav pill strictly */}
+            {/* Center — Nav pill strictly mathematically centered to screen */}
             <nav
-              className="hidden items-center gap-1 rounded-full border border-white/15 bg-[#090d16]/90 backdrop-blur-xl px-3 py-1.5 shadow-2xl lg:flex"
+              className="hidden items-center gap-1 rounded-full border border-white/15 bg-[#090d16]/90 backdrop-blur-xl px-3.5 py-1.5 shadow-2xl lg:flex absolute left-1/2 -translate-x-1/2 z-10"
               aria-label="Main navigation"
             >
               {publicNav.map(([label, href]) => (
@@ -347,8 +347,8 @@ export function AppHeader() {
               ))}
             </nav>
 
-            {/* Right — Actions */}
-            <div className="flex items-center gap-3">
+            {/* Right — Actions cleanly on the right */}
+            <div className="flex items-center gap-3 shrink-0 ml-auto z-10">
               {isLoaded && !isSignedIn && (
                 <>
                   <Link
