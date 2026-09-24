@@ -130,7 +130,7 @@ function EventCard({ event, index }: { event: PublicEvent; index: number }) {
         </div>
 
         {/* Title & Distance */}
-        <h3 className="font-display font-extrabold text-xl uppercase tracking-tight text-[#090d16] transition-colors group-hover:text-[#0284c7]">
+        <h3 className="text-lg sm:text-xl font-bold tracking-tight text-[#090d16] transition-colors group-hover:text-[#0284c7]">
           {event.name}
         </h3>
 

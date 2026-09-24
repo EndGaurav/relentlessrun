@@ -174,7 +174,7 @@ function Podium3D({
               <div className="h-5 sm:h-6 w-full rounded-t-xl bg-gradient-to-r from-slate-400/50 via-slate-300/40 to-slate-500/50 border-t border-x border-white/30 shadow-inner" />
               {/* Front Face */}
               <div className="relative flex h-28 sm:h-36 md:h-40 w-full items-center justify-center rounded-b-2xl bg-gradient-to-b from-slate-700/80 via-slate-800/95 to-[#0b101c] border-x border-b border-white/15 shadow-[0_15px_30px_rgba(0,0,0,0.6)]">
-                <span className="font-display font-black text-4xl sm:text-6xl text-slate-400/60 select-none drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                <span className="font-mono font-bold text-4xl sm:text-6xl text-slate-400/60 select-none drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
                   2
                 </span>
               </div>
@@ -230,7 +230,7 @@ function Podium3D({
               <div className="h-6 sm:h-7 w-full rounded-t-xl bg-gradient-to-r from-amber-300/60 via-yellow-200/50 to-amber-400/60 border-t border-x border-amber-300/60 shadow-inner" />
               {/* Front Face */}
               <div className="relative flex h-38 sm:h-48 md:h-52 w-full items-center justify-center rounded-b-2xl bg-gradient-to-b from-slate-600/90 via-slate-800 to-[#090d16] border-x border-b border-amber-400/40 shadow-[0_20px_40px_rgba(0,0,0,0.8),0_0_20px_rgba(251,191,36,0.2)]">
-                <span className="font-display font-black text-5xl sm:text-7xl text-white/90 select-none drop-shadow-[0_0_20px_rgba(251,191,36,0.6)]">
+                <span className="font-mono font-bold text-5xl sm:text-7xl text-white/90 select-none drop-shadow-[0_0_20px_rgba(251,191,36,0.6)]">
                   1
                 </span>
               </div>
@@ -273,7 +273,7 @@ function Podium3D({
               <div className="h-5 sm:h-6 w-full rounded-t-xl bg-gradient-to-r from-amber-700/50 via-amber-600/40 to-amber-800/50 border-t border-x border-amber-600/30 shadow-inner" />
               {/* Front Face */}
               <div className="relative flex h-22 sm:h-28 md:h-32 w-full items-center justify-center rounded-b-2xl bg-gradient-to-b from-slate-800/80 via-slate-900/95 to-[#0b101c] border-x border-b border-white/15 shadow-[0_15px_30px_rgba(0,0,0,0.6)]">
-                <span className="font-display font-black text-3xl sm:text-5xl text-amber-600/70 select-none drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                <span className="font-mono font-bold text-3xl sm:text-5xl text-amber-600/70 select-none drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
                   3
                 </span>
               </div>
@@ -497,10 +497,10 @@ export function LeaderboardClient() {
               <Trophy className="h-3.5 w-3.5" />
               OFFICIAL NATIONAL LEADERBOARD
             </span>
-            <h1 className="font-display font-black text-4xl sm:text-6xl uppercase tracking-tight text-[#090d16]">
-              THE FINISHERS&apos;{" "}
+            <h1 className="font-bold text-4xl sm:text-5xl lg:text-6xl tracking-tight text-[#090d16]">
+              The Finishers&apos;{" "}
               <span className="text-[#0284c7]">
-                BOARD
+                Board
               </span>
             </h1>
             <p className="mt-4 text-sm sm:text-base text-slate-600 max-w-xl mx-auto font-medium leading-relaxed">
@@ -663,7 +663,7 @@ export function LeaderboardClient() {
                       #{userStanding.rankedEntry.rank}
                     </span>
                     <div>
-                      <p className="font-display font-black text-base text-white uppercase tracking-tight">
+                      <p className="font-bold text-base text-white tracking-tight">
                         You are ranked <span className="text-amber-400">#{userStanding.rankedEntry.rank}</span> in {selectedDistance}!
                       </p>
                       <p className="mt-0.5 text-xs font-medium text-slate-300">
@@ -726,8 +726,8 @@ export function LeaderboardClient() {
                         <span className="rounded-full border border-amber-500/30 bg-amber-500/10 px-3.5 py-1 text-xs font-bold uppercase tracking-widest text-amber-400">
                           PODIUM FINISHERS
                         </span>
-                        <h2 className="mt-3 font-display font-black text-2xl sm:text-4xl uppercase tracking-tight text-white">
-                          TOP 3 CHAMPIONS · <span className="text-[#38bdf8]">{selectedDistance}</span>
+                        <h2 className="mt-3 font-bold text-2xl sm:text-3xl lg:text-4xl text-white tracking-tight">
+                          Top 3 Champions · <span className="text-[#38bdf8]">{selectedDistance}</span>
                         </h2>
                       </div>
 
@@ -741,7 +741,7 @@ export function LeaderboardClient() {
                   {/* Full Rankings: Mobile Card List + Desktop Table */}
                   <div className="overflow-hidden rounded-3xl border border-white/10 bg-[#0d1322] shadow-2xl">
                     <div className="border-b border-white/10 bg-white/[0.04] px-5 sm:px-6 py-4 flex items-center justify-between">
-                      <h3 className="font-display font-black text-sm sm:text-base uppercase tracking-tight text-white">
+                      <h3 className="font-bold text-sm sm:text-base text-white tracking-tight">
                         All Verified Finishers · {selectedDistance}
                       </h3>
                       <span className="text-xs font-mono font-bold text-slate-400">
@@ -942,7 +942,7 @@ export function LeaderboardClient() {
                   <div className="overflow-hidden rounded-3xl border border-white/10 bg-[#0d1322] shadow-2xl">
                     <div className="border-b border-white/10 bg-white/[0.04] px-5 sm:px-6 py-4 flex items-center justify-between">
                       <div>
-                        <h3 className="font-display font-black text-sm sm:text-base uppercase tracking-tight text-white">
+                        <h3 className="font-bold text-sm sm:text-base text-white tracking-tight">
                           Registered Event Participants · {selectedDistance}
                         </h3>
                         <p className="text-xs text-slate-400 font-medium mt-0.5">
@@ -1112,8 +1112,8 @@ export function LeaderboardClient() {
                 <Zap className="h-3.5 w-3.5" />
                 CLAIM YOUR TIMING
               </span>
-              <h2 className="mt-4 font-display font-black text-3xl sm:text-4xl uppercase tracking-tight text-[#090d16]">
-                WANT YOUR NAME ON THE <span className="text-[#0284c7]">LEADERBOARD?</span>
+              <h2 className="mt-4 font-bold text-3xl sm:text-4xl text-[#090d16] tracking-tight">
+                Want Your Name On The <span className="text-[#0284c7]">Leaderboard?</span>
               </h2>
               <p className="mt-3 text-sm text-slate-600 font-medium leading-relaxed">
                 Upload your Strava or Garmin GPS activity proof from the dashboard to claim your verified ranking, pace splits, and medal dispatch.

@@ -54,7 +54,7 @@ function TrustBar() {
           <div key={stat.label} className="flex flex-col items-center justify-center text-center p-2">
             <div className="flex items-center gap-2 mb-1">
               <Icon className={`h-5 w-5 ${stat.iconColor}`} />
-              <span className="font-display text-2xl font-black tracking-tight text-[#f0f0f0] sm:text-3xl">
+              <span className="text-2xl sm:text-3xl font-bold tracking-tight text-[#f0f0f0]">
                 {stat.value}
               </span>
             </div>

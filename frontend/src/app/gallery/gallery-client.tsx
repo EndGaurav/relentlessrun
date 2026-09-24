@@ -50,7 +50,7 @@ function StatCard({ label, value, icon: Icon }: { label: string; value: number; 
       <span className="mx-auto flex h-10 w-10 items-center justify-center rounded-2xl border border-sky-200 bg-sky-50 text-[#0284c7] transition-all group-hover:bg-[#0284c7] group-hover:text-white">
         <Icon className="h-5 w-5" strokeWidth={2} />
       </span>
-      <p className="mt-2.5 font-display text-2xl font-black tracking-tight tabular-nums text-[#090d16] sm:text-3xl">
+      <p className="mt-2.5 font-bold text-2xl tracking-tight tabular-nums text-[#090d16] sm:text-3xl">
         {count.toLocaleString("en-IN")}
         {value >= 100 ? "+" : ""}
       </p>
@@ -101,7 +101,7 @@ function GalleryCard({
 
         {/* Card Details Overlay */}
         <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5">
-          <h3 className="font-display font-black text-sm sm:text-base uppercase tracking-tight text-white line-clamp-2 drop-shadow-sm group-hover:text-[#38bdf8] transition-colors">
+          <h3 className="font-bold text-sm sm:text-base text-white line-clamp-2 drop-shadow-sm group-hover:text-[#38bdf8] transition-colors">
             {item.title}
           </h3>
           <p className="mt-1 flex items-center gap-1.5 text-xs font-medium text-slate-300">
@@ -179,7 +179,7 @@ function Lightbox({ item, onClose }: { item: GalleryItem; onClose: () => void })
               <span className="text-xs text-slate-400 font-medium">{item.date}</span>
             )}
           </div>
-          <h2 className="mt-3 font-display font-black text-2xl uppercase tracking-tight text-white sm:text-3xl">
+          <h2 className="mt-3 font-bold text-2xl text-white sm:text-3xl tracking-tight">
             {item.title}
           </h2>
           <p className="mt-2 text-sm text-slate-300 font-medium">
@@ -298,7 +298,7 @@ function SubmitPhotoModal({ onClose }: { onClose: () => void }) {
         transition={{ type: "spring", stiffness: 360, damping: 32 }}
       >
         <div className="flex items-center justify-between border-b border-white/10 px-6 py-5">
-          <h2 className="font-display font-black text-lg uppercase tracking-tight text-white">
+          <h2 className="font-bold text-lg text-white tracking-tight">
             {done ? "Photo Submitted!" : "Submit Your Finisher Photo"}
           </h2>
           <button
@@ -317,7 +317,7 @@ function SubmitPhotoModal({ onClose }: { onClose: () => void }) {
             <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-sky-400/40 bg-sky-500/15 text-[#38bdf8]">
               <Trophy className="h-8 w-8" strokeWidth={2} />
             </div>
-            <p className="font-display font-black text-2xl uppercase tracking-tight">Thank You Runner!</p>
+            <p className="font-bold text-2xl text-white tracking-tight">Thank You Runner!</p>
             <p className="max-w-xs text-sm text-slate-300 font-medium">
               Your photo has been submitted and is pending verification. It will appear on the public wall shortly.
             </p>
@@ -526,10 +526,10 @@ export function GalleryClient() {
             <span className="inline-flex items-center gap-1.5 rounded-full border border-sky-600/30 bg-sky-50 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-[#0284c7] mb-4 shadow-sm">
               COMMUNITY FINISHER SHOWCASE
             </span>
-            <h1 className="font-display font-black text-4xl sm:text-6xl uppercase tracking-tight text-[#090d16]">
-              MILES WORTH{" "}
+            <h1 className="font-bold text-4xl sm:text-5xl lg:text-6xl tracking-tight text-[#090d16]">
+              Miles Worth{" "}
               <span className="text-[#0284c7]">
-                REMEMBERING
+                Remembering
               </span>
             </h1>
             <p className="mt-4 text-sm sm:text-base text-slate-600 max-w-xl mx-auto font-medium leading-relaxed">
@@ -562,8 +562,8 @@ export function GalleryClient() {
               <span className="inline-flex items-center gap-1.5 rounded-full border border-sky-400/30 bg-sky-500/10 px-3.5 py-1 text-xs font-bold uppercase tracking-widest text-[#38bdf8]">
                 PHOTO ARCHIVE
               </span>
-              <h2 className="mt-3 font-display font-black text-3xl sm:text-4xl lg:text-5xl uppercase tracking-tight text-white">
-                COMMUNITY <span className="text-[#38bdf8]">MOMENTS</span>
+              <h2 className="mt-3 font-bold text-3xl sm:text-4xl lg:text-5xl text-white tracking-tight">
+                Community <span className="text-[#38bdf8]">Moments</span>
               </h2>
             </div>
 
@@ -623,8 +623,8 @@ export function GalleryClient() {
                 <Award className="h-3.5 w-3.5" />
                 GET FEATURED
               </span>
-              <h2 className="mt-4 font-display font-black text-3xl sm:text-4xl uppercase tracking-tight text-[#090d16]">
-                EARNED YOUR MEDAL? <span className="text-[#0284c7]">SHARE YOUR VICTORY!</span>
+              <h2 className="mt-4 font-bold text-3xl sm:text-4xl text-[#090d16] tracking-tight">
+                Earned Your Medal? <span className="text-[#0284c7]">Share Your Victory!</span>
               </h2>
               <p className="mt-3 text-sm text-slate-600 font-medium leading-relaxed">
                 Upload your medal selfie, GPS race stats or finish line smile to inspire thousands of runners across India.

@@ -77,9 +77,9 @@ export default async function Home() {
                 </Link>
               }
               align="split"
-              eyebrow="UPCOMING RACES"
+              eyebrow="Upcoming Races"
               lead="Featured virtual challenges. Choose your target distance and claim your official bib & finisher medal kit."
-              title="OPEN CHALLENGES"
+              title="Open Challenges"
             />
 
             <HomeEvents initial={serverEvents} />

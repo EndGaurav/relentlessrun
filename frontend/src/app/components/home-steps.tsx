@@ -34,8 +34,8 @@ export function HomeSteps() {
           <span className="rounded-full border border-sky-600/30 bg-sky-50 px-4 py-1 text-xs font-bold uppercase tracking-widest text-[#0284c7]">
             HOW IT WORKS
           </span>
-          <h2 className="mt-4 font-display font-black text-4xl sm:text-5xl uppercase tracking-tight text-[#090d16]">
-            THREE SIMPLE <span className="text-[#0284c7]">STEPS</span>
+          <h2 className="mt-4 font-bold text-3xl sm:text-4xl text-[#090d16] tracking-tight">
+            Three Simple <span className="text-[#0284c7]">Steps</span>
           </h2>
           <p className="mt-3 text-base text-slate-600 font-medium">
             From registration to your doorstep — how peak performance yields real rewards.
@@ -56,12 +56,12 @@ export function HomeSteps() {
                   <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-sky-200 bg-sky-50 text-[#0284c7] shadow-sm group-hover:bg-[#0284c7] group-hover:text-white transition-all duration-300">
                     <Icon className="h-7 w-7" strokeWidth={2} />
                   </div>
-                  <span className="font-display font-black text-4xl text-slate-300 group-hover:text-[#0284c7]/40 transition-colors">
+                  <span className="font-mono font-bold text-3xl text-slate-300 group-hover:text-[#0284c7]/50 transition-colors">
                     {item.step}
                   </span>
                 </div>
 
-                <h3 className="mt-6 font-display font-bold text-2xl uppercase tracking-tight text-[#090d16]">
+                <h3 className="mt-6 font-bold text-xl text-[#090d16] tracking-tight group-hover:text-[#0284c7] transition-colors">
                   {item.title}
                 </h3>
                 <p className="mt-3 text-sm leading-relaxed text-slate-600 font-medium">

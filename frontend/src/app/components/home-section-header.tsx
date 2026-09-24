@@ -19,8 +19,8 @@ export function HomeSectionHeader({
 }) {
   const isLight = theme === "light";
   const titleClass = isLight
-    ? "mt-3 font-display font-black text-4xl sm:text-5xl uppercase tracking-tight text-[#090d16]"
-    : "mt-3 font-display font-black text-4xl sm:text-5xl uppercase tracking-tight text-[#f0f0f0]";
+    ? "mt-3 font-bold text-3xl sm:text-4xl tracking-tight text-[#090d16]"
+    : "mt-3 font-bold text-3xl sm:text-4xl tracking-tight text-[#f0f0f0]";
   const leadClass = isLight
     ? "mt-3 text-base text-slate-600 max-w-xl font-medium"
     : "mt-3 text-base text-slate-300 max-w-xl";

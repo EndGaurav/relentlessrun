@@ -67,7 +67,7 @@ function RelentlessRunCrestLogo() {
         <circle cx="28" cy="14" r="2.5" fill="#c9a227" />
         <path d="M28 17.5 L29 24 L32 23 M29 20 L25 22 M29 24 L27 30 M29 24 L32 29" stroke="#c9a227" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
-      <p className="font-display text-sm sm:text-base font-black uppercase tracking-[0.18em] text-[#1a3a2e] leading-none mt-1">
+      <p className="text-sm sm:text-base font-black uppercase tracking-[0.18em] text-[#1a3a2e] leading-none mt-1">
         RELENTLESS<span className="text-[#d97706]">RUN</span>
       </p>
       <p className="text-[0.55rem] font-bold uppercase tracking-[0.25em] text-[#7a6e5a] mt-0.5">

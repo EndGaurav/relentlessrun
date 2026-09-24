@@ -151,7 +151,7 @@ function OpenEventCard({ event, index = 0 }: { event: PublicEvent; index?: numbe
         </div>
 
         {/* Title & Distance */}
-        <h3 className="font-display font-black text-xl uppercase tracking-tight text-white transition-colors group-hover:text-[#38bdf8]">
+        <h3 className="font-bold text-lg sm:text-xl text-white tracking-tight transition-colors group-hover:text-[#38bdf8]">
           {event.name}
         </h3>
 
@@ -257,7 +257,7 @@ function ArchiveEventCard({ event, index = 0 }: { event: PublicEvent; index?: nu
 
       {/* Body Content */}
       <div className="flex flex-1 flex-col p-5 sm:p-6 bg-white">
-        <h3 className="font-display font-black text-xl uppercase tracking-tight text-[#090d16] transition-colors group-hover:text-[#0284c7]">
+        <h3 className="font-bold text-lg sm:text-xl text-[#090d16] tracking-tight transition-colors group-hover:text-[#0284c7]">
           {event.name}
         </h3>
 
@@ -371,8 +371,8 @@ export function EventsCatalog() {
               <span className="inline-flex items-center gap-1.5 rounded-full border border-sky-400/30 bg-sky-500/10 px-3.5 py-1 text-xs font-bold uppercase tracking-widest text-[#38bdf8]">
                 REGISTRATION OPEN
               </span>
-              <h2 className="mt-3 font-display font-black text-3xl sm:text-4xl lg:text-5xl uppercase tracking-tight text-white">
-                OPEN RACES & <span className="text-[#38bdf8]">CHALLENGES</span>
+              <h2 className="mt-3 font-bold text-3xl sm:text-4xl lg:text-5xl text-white tracking-tight">
+                Open Races & <span className="text-[#38bdf8]">Challenges</span>
               </h2>
             </div>
             <p className="text-xs font-mono text-slate-300 bg-white/[0.06] px-4 py-2 rounded-full border border-white/10 shadow-sm w-fit">
@@ -408,8 +408,8 @@ export function EventsCatalog() {
                 <span className="rounded-full border border-sky-600/30 bg-sky-50 px-3.5 py-1 text-xs font-bold uppercase tracking-widest text-[#0284c7]">
                   COMPLETED EDITIONS
                 </span>
-                <h2 className="mt-3 font-display font-black text-3xl sm:text-4xl lg:text-5xl uppercase tracking-tight text-[#090d16]">
-                  RACE ARCHIVE & <span className="text-[#0284c7]">RESULTS</span>
+                <h2 className="mt-3 font-bold text-3xl sm:text-4xl lg:text-5xl text-[#090d16] tracking-tight">
+                  Race Archive & <span className="text-[#0284c7]">Results</span>
                 </h2>
               </div>
               <p className="text-xs font-mono font-bold text-slate-600 bg-white px-4 py-2 rounded-full border border-slate-200 shadow-sm w-fit">

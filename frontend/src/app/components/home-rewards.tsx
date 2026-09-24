@@ -36,8 +36,8 @@ export function HomeRewards() {
           <span className="rounded-full border border-sky-600/30 bg-sky-50 px-4 py-1 text-xs font-bold uppercase tracking-widest text-[#0284c7]">
             FINISHER REWARDS
           </span>
-          <h2 className="mt-4 font-display font-black text-4xl sm:text-5xl uppercase tracking-tight text-[#090d16]">
-            REWARDS THAT MAKE THE <span className="text-[#0284c7]">FINISH REAL</span>
+          <h2 className="mt-4 font-bold text-3xl sm:text-4xl text-[#090d16] tracking-tight">
+            Rewards That Make The <span className="text-[#0284c7]">Finish Real</span>
           </h2>
           <p className="mt-4 text-base text-slate-600 font-medium">
             Every finisher deserves tangible proof of victory. Earn authentic metal medals, tech apparel, and verified timing certificates.
@@ -57,7 +57,7 @@ export function HomeRewards() {
                   <Icon className="h-7 w-7" strokeWidth={2} />
                 </div>
 
-                <h3 className="mt-6 font-display font-bold text-xl uppercase tracking-tight text-[#090d16]">
+                <h3 className="mt-6 font-bold text-lg text-[#090d16] tracking-tight">
                   {item.title}
                 </h3>
                 <p className="mt-3 text-xs sm:text-sm leading-relaxed text-slate-600 font-medium">

@@ -476,7 +476,7 @@ export function DashboardClient() {
             <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-sky-500/20 text-sky-400 border border-sky-400/30 shadow-inner">
               <Users className="h-8 w-8" />
             </div>
-            <h1 className="mt-5 font-display text-2xl sm:text-3xl font-black uppercase tracking-tight text-white">
+            <h1 className="mt-5 font-bold text-2xl sm:text-3xl tracking-tight text-white">
               Athlete Sign In Required
             </h1>
             <p className="mx-auto mt-3 max-w-md text-xs sm:text-sm leading-relaxed text-slate-300 font-medium">
@@ -550,7 +550,7 @@ export function DashboardClient() {
                       </span>
                     )}
                   </div>
-                  <h1 className="mt-1 font-display text-xl sm:text-3xl lg:text-4xl font-black uppercase tracking-tight text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)] truncate">
+                  <h1 className="mt-1 font-bold text-xl sm:text-3xl lg:text-4xl tracking-tight text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)] truncate">
                     Welcome Back, {firstName}
                   </h1>
                   <p className="text-[0.75rem] sm:text-xs text-slate-300 font-medium truncate mt-0.5">
@@ -735,7 +735,7 @@ export function DashboardClient() {
                   <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/[0.08] text-sky-400 border border-white/10">
                     <Medal className="h-8 w-8" />
                   </span>
-                  <h3 className="mt-4 font-display font-black text-lg sm:text-xl uppercase tracking-tight text-white">
+                  <h3 className="mt-4 font-bold text-lg sm:text-xl text-white tracking-tight">
                     No active race registrations yet
                   </h3>
                   <p className="mt-1.5 max-w-sm text-xs sm:text-sm text-slate-300 font-medium">
@@ -765,7 +765,7 @@ export function DashboardClient() {
                       <div className="p-4 sm:p-6 border-b border-white/10 bg-white/[0.04] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
                         <div>
                           <div className="flex flex-wrap items-center gap-2">
-                            <h2 className="font-display font-black text-base sm:text-2xl uppercase tracking-tight text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
+                            <h2 className="font-bold text-base sm:text-2xl text-white tracking-tight drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
                               {reg.event.title}
                             </h2>
                             <span className="rounded-full bg-sky-500/25 border border-sky-400/50 px-2.5 py-0.5 font-mono text-[0.65rem] sm:text-xs font-bold text-sky-300 shadow-[0_0_8px_rgba(56,189,248,0.3)]">
@@ -1164,7 +1164,7 @@ export function DashboardClient() {
                   <span className="flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center rounded-2xl bg-amber-500/20 text-amber-300 text-2xl sm:text-3xl shadow-[0_0_20px_rgba(251,191,36,0.4)]">
                     🏆
                   </span>
-                  <h3 className="mt-4 font-display font-black text-base sm:text-xl uppercase tracking-tight text-white">
+                  <h3 className="mt-4 font-bold text-base sm:text-xl text-white tracking-tight">
                     Trophy Cabinet is currently empty
                   </h3>
                   <p className="mt-1.5 max-w-sm text-xs sm:text-sm text-slate-300 font-medium">
@@ -1186,7 +1186,7 @@ export function DashboardClient() {
                           <span className="font-mono text-xs text-slate-300 font-bold">Bib: {reg.bibNumber}</span>
                         </div>
 
-                        <h3 className="mt-2.5 sm:mt-3 font-display font-black text-lg sm:text-xl uppercase tracking-tight text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">{reg.event.title}</h3>
+                        <h3 className="mt-2.5 sm:mt-3 font-bold text-lg sm:text-xl text-white tracking-tight drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">{reg.event.title}</h3>
                         <p className="text-xs text-sky-400 font-bold mt-0.5">{reg.distance} Category</p>
 
                         {reg.finishTimeSeconds && (
@@ -1242,7 +1242,7 @@ export function DashboardClient() {
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-indigo-500/25 border border-indigo-400/50 px-3 py-0.5 sm:py-1 text-[0.65rem] sm:text-xs font-black uppercase tracking-wider text-indigo-300 shadow-[0_0_10px_rgba(99,102,241,0.3)]">
                   <Gift className="h-3 w-3 sm:h-3.5 sm:w-3.5" /> Referral Program
                 </span>
-                <h2 className="mt-2.5 sm:mt-3 font-display font-black text-xl sm:text-3xl uppercase tracking-tight text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
+                <h2 className="mt-2.5 sm:mt-3 font-bold text-xl sm:text-3xl text-white tracking-tight drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
                   Invite Friends, Earn Free Race Entries
                 </h2>
                 <p className="mt-1.5 sm:mt-2 text-xs sm:text-sm text-slate-300 leading-relaxed font-medium">
@@ -1302,7 +1302,7 @@ export function DashboardClient() {
               <span className="rounded-full bg-sky-500/25 border border-sky-400/50 px-2.5 py-0.5 sm:px-3 sm:py-1 text-[0.65rem] sm:text-xs font-black uppercase tracking-wider text-sky-300 shadow-[0_0_8px_rgba(56,189,248,0.3)]">
                 Official Athlete Desk
               </span>
-              <h3 className="mt-2 sm:mt-3 font-display font-black text-lg sm:text-2xl uppercase tracking-tight text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
+              <h3 className="mt-2 sm:mt-3 font-bold text-lg sm:text-2xl text-white tracking-tight drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
                 Need Help With GPS Proof or Strava Sync?
               </h3>
               <p className="mt-1 text-xs sm:text-sm text-slate-300 font-medium">

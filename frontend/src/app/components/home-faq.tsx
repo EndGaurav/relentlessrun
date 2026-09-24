@@ -65,8 +65,8 @@ export function HomeFaq() {
             <span className="inline-block rounded-full border border-sky-600/30 bg-sky-50 px-3.5 py-1 text-xs font-bold uppercase tracking-widest text-[#0284c7]">
               FREQUENTLY ASKED QUESTIONS
             </span>
-            <h2 className="mt-4 font-display font-black text-3xl sm:text-4xl lg:text-5xl uppercase tracking-tight text-[#090d16] leading-tight">
-              EVERYTHING YOU NEED TO KNOW ABOUT <span className="text-[#0284c7]">VIRTUAL RACES</span>
+            <h2 className="mt-4 font-bold text-3xl sm:text-4xl lg:text-5xl text-[#090d16] tracking-tight leading-tight">
+              Everything You Need To Know About <span className="text-[#0284c7]">Virtual Races</span>
             </h2>
             <p className="mt-4 text-sm sm:text-base text-slate-600 font-medium leading-relaxed">
               Got questions about GPS verification, metal medals, or certificate delivery? We&apos;ve got clear answers for every runner.
@@ -108,7 +108,7 @@ export function HomeFaq() {
                   <button
                     type="button"
                     onClick={() => toggle(index)}
-                    className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left font-display font-bold text-sm sm:text-base text-[#090d16] transition-colors"
+                    className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left font-semibold text-sm sm:text-base text-[#090d16] transition-colors"
                     aria-expanded={isOpen}
                   >
                     <span className="flex items-center gap-3">

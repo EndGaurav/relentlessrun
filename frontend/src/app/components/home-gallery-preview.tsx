@@ -85,7 +85,7 @@ export function HomeGalleryPreview({
                 </span>
               </div>
               <div className="p-5">
-                <h3 className="font-display font-extrabold text-lg uppercase tracking-tight text-[#f0f0f0] transition-colors group-hover:text-[#38bdf8]">
+                <h3 className="font-bold text-base sm:text-lg text-[#f0f0f0] tracking-tight transition-colors group-hover:text-[#38bdf8]">
                   {moment.title}
                 </h3>
                 <p className="mt-1 text-xs text-slate-400 font-medium">{moment.meta}</p>

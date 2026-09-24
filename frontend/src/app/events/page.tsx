@@ -48,10 +48,10 @@ export default function EventsPage() {
                 OFFICIAL RACES & CHALLENGES
               </span>
               
-              <h1 className="font-display font-black text-4xl sm:text-6xl uppercase tracking-tight text-[#090d16]">
-                FIND YOUR NEXT{" "}
+              <h1 className="font-bold text-4xl sm:text-5xl lg:text-6xl tracking-tight text-[#090d16]">
+                Find Your Next{" "}
                 <span className="text-[#0284c7]">
-                  FINISH LINE
+                  Finish Line
                 </span>
               </h1>
               
