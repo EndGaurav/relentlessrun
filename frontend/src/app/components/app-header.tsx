@@ -122,34 +122,58 @@ function DashboardProfileDropdown({ isMobile = false }: { isMobile?: boolean }) 
 
   if (!user) return null;
   const name = user.fullName ?? user.firstName ?? "Account";
+  const firstLetter = (
+    user.firstName ||
+    user.fullName ||
+    user.username ||
+    user.primaryEmailAddress?.emailAddress ||
+    "A"
+  )
+    .trim()
+    .charAt(0)
+    .toUpperCase();
 
   return (
     <div className="relative" ref={ref}>
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        aria-label="Open dashboard and profile menu"
-        aria-expanded={open}
-        className={`inline-flex items-center gap-2 rounded-full border border-white/15 bg-[#090d16]/85 backdrop-blur-xl transition-all duration-200 hover:border-white/30 hover:bg-[#090d16] hover:text-white shadow-xl cursor-pointer active:scale-95 ${
-          isMobile
-            ? "px-3 py-1.5 text-[0.72rem] font-bold uppercase tracking-wider text-white"
-            : "px-4 py-1.5 sm:px-4.5 sm:py-2 text-xs font-bold uppercase tracking-wider text-white"
-        } ${
-          isActive
-            ? "border-sky-400/50 bg-sky-500/20 text-sky-300 shadow-[0_0_15px_rgba(56,189,248,0.25)]"
-            : ""
-        }`}
-      >
-        <User className="h-3.5 w-3.5 text-white/90" />
-        <span>Dashboard</span>
-        <motion.span
-          animate={{ rotate: open ? 180 : 0 }}
-          transition={{ duration: 0.2 }}
-          className="text-white/60 text-[0.65rem] leading-none"
+      {isMobile ? (
+        <button
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          aria-label="Open athlete profile menu"
+          aria-expanded={open}
+          className={`relative flex h-9.5 w-9.5 cursor-pointer items-center justify-center rounded-full border border-emerald-400/50 bg-gradient-to-br from-emerald-500 to-teal-700 text-white shadow-md shadow-emerald-500/25 transition-all duration-200 hover:scale-105 active:scale-95 ${
+            isActive ? "ring-2 ring-emerald-400 ring-offset-2 ring-offset-[#090d16]" : ""
+          }`}
         >
-          ▾
-        </motion.span>
-      </button>
+          <span className="text-sm font-black uppercase text-white font-sans leading-none">
+            {firstLetter}
+          </span>
+          {/* Active status indicator dot */}
+          <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-[#090d16] bg-emerald-400" />
+        </button>
+      ) : (
+        <button
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          aria-label="Open dashboard and profile menu"
+          aria-expanded={open}
+          className={`inline-flex items-center gap-2 rounded-full border border-white/15 bg-[#090d16]/85 backdrop-blur-xl px-4 py-1.5 sm:px-4.5 sm:py-2 text-xs font-bold uppercase tracking-wider text-white shadow-xl cursor-pointer active:scale-95 transition-all duration-200 hover:border-white/30 hover:bg-[#090d16] hover:text-white ${
+            isActive
+              ? "border-sky-400/50 bg-sky-500/20 text-sky-300 shadow-[0_0_15px_rgba(56,189,248,0.25)]"
+              : ""
+          }`}
+        >
+          <User className="h-3.5 w-3.5 text-white/90" />
+          <span>Dashboard</span>
+          <motion.span
+            animate={{ rotate: open ? 180 : 0 }}
+            transition={{ duration: 0.2 }}
+            className="text-white/60 text-[0.65rem] leading-none"
+          >
+            ▾
+          </motion.span>
+        </button>
+      )}
 
       <AnimatePresence>
         {open && (
