@@ -263,11 +263,9 @@ export function AppFooter() {
             {/* Brand */}
             <div className="col-span-2 sm:col-span-3 md:col-span-2">
               <Link href="/" aria-label="RelentlessRun home" className="group inline-flex items-center">
-                <div className="rounded-2xl bg-[#0d1322] p-1.5 border border-white/10 shadow-lg">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/3d-header-logo.png" alt="RelentlessRun" width={220} height={56}
-                    className="h-12 sm:h-14 w-auto shrink-0 object-contain transition-transform duration-300 group-hover:scale-105 drop-shadow-[0_4px_16px_rgba(56,189,248,0.4)]" />
-                </div>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/3d-header-logo.png" alt="RelentlessRun" width={220} height={56}
+                  className="h-12 sm:h-14 w-auto shrink-0 object-contain transition-transform duration-300 group-hover:scale-105 drop-shadow-[0_4px_16px_rgba(56,189,248,0.4)]" />
               </Link>
               <p className="mt-4 text-xs leading-relaxed text-slate-400 max-w-xs font-medium">
                 India&apos;s premier virtual running platform. GPS-verified races, custom metal medals, DRI-FIT apparel, and live national leaderboards.

@@ -318,18 +318,16 @@ export function AppHeader() {
               aria-label="Relentless Run home"
               className="group relative flex min-w-0 shrink-0 items-center gap-3"
             >
-              <div className="relative flex items-center rounded-2xl bg-[#0d1322] p-1.5 shadow-[0_8px_25px_rgba(0,0,0,0.7)] border border-white/10 transition-all duration-300 group-hover:shadow-[0_8px_30px_rgba(56,189,248,0.3)]">
-                <motion.img
-                  src="/3d-header-logo.png"
-                  alt="Relentless Run"
-                  width={200}
-                  height={52}
-                  animate={{ y: [0, -2, 0], scale: [1, 1.02, 1] }}
-                  transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut" }}
-                  whileHover={{ scale: 1.05 }}
-                  className="h-10 sm:h-11 lg:h-12 w-auto rounded-lg object-contain drop-shadow-[0_4px_16px_rgba(56,189,248,0.4)]"
-                />
-              </div>
+              <motion.img
+                src="/3d-header-logo.png"
+                alt="Relentless Run"
+                width={200}
+                height={52}
+                animate={{ y: [0, -2, 0], scale: [1, 1.02, 1] }}
+                transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut" }}
+                whileHover={{ scale: 1.05 }}
+                className="h-10 sm:h-11 lg:h-12 w-auto object-contain drop-shadow-[0_4px_16px_rgba(56,189,248,0.4)]"
+              />
             </Link>
 
             {/* Center — Nav pill strictly mathematically centered to screen */}
@@ -377,18 +375,16 @@ export function AppHeader() {
       <div className="flex w-full items-center justify-between md:hidden">
         <div className="flex h-12 w-full items-center justify-between px-2 py-1">
           <Link href="/" aria-label="Relentless Run home" className="group flex min-w-0 shrink-0 items-center">
-            <div className="rounded-xl bg-[#0d1322] p-1 border border-white/10 shadow-md">
-              <motion.img
-                src="/3d-header-logo.png"
-                alt="Relentless Run"
-                width={160}
-                height={42}
-                animate={{ y: [0, -2, 0], scale: [1, 1.02, 1] }}
-                transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut" }}
-                whileHover={{ scale: 1.06 }}
-                className="h-8 sm:h-9 w-auto object-contain shrink-0 drop-shadow-[0_4px_12px_rgba(56,189,248,0.25)]"
-              />
-            </div>
+            <motion.img
+              src="/3d-header-logo.png"
+              alt="Relentless Run"
+              width={160}
+              height={42}
+              animate={{ y: [0, -2, 0], scale: [1, 1.02, 1] }}
+              transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut" }}
+              whileHover={{ scale: 1.06 }}
+              className="h-8 sm:h-9 w-auto object-contain shrink-0 drop-shadow-[0_4px_12px_rgba(56,189,248,0.25)]"
+            />
           </Link>
 
           <div className="flex items-center gap-2">
@@ -441,14 +437,12 @@ export function AppHeader() {
                   onClick={() => setOpen(false)}
                   className="flex items-center gap-2.5 shrink-0"
                 >
-                  <div className="flex items-center rounded-xl bg-[#0d1322] px-2.5 py-1 border border-white/15 shadow-md">
-                    <img
-                      src="/3d-header-logo.png"
-                      alt="Relentless Run"
-                      style={{ height: "26px", width: "auto" }}
-                      className="h-6.5 max-h-[28px] w-auto object-contain shrink-0 drop-shadow-[0_2px_8px_rgba(56,189,248,0.35)]"
-                    />
-                  </div>
+                  <img
+                    src="/3d-header-logo.png"
+                    alt="Relentless Run"
+                    style={{ height: "26px", width: "auto" }}
+                    className="h-6.5 max-h-[28px] w-auto object-contain shrink-0 drop-shadow-[0_2px_8px_rgba(56,189,248,0.35)]"
+                  />
                 </Link>
 
                 {/* Circular Glass Close Button */}
