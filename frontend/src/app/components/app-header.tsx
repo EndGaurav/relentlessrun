@@ -304,8 +304,8 @@ export function AppHeader() {
       <header
         className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ease-in-out ${
         scrolled
-          ? "bg-[#090d16]/92 backdrop-blur-3xl border-b border-white/10 shadow-[0_12px_40px_rgba(0,0,0,0.85),inset_0_-1px_0_rgba(255,255,255,0.06)] py-2 sm:py-2.5 px-4 sm:px-6 lg:px-8"
-          : "bg-transparent border-b border-transparent py-3 sm:pt-4 px-4 sm:px-6 lg:px-8"
+          ? "bg-[#090d16]/92 backdrop-blur-3xl border-b border-white/10 shadow-[0_12px_40px_rgba(0,0,0,0.85),inset_0_-1px_0_rgba(255,255,255,0.06)] py-2 sm:py-2.5 px-3 sm:px-6 lg:px-8"
+          : "bg-transparent border-b border-transparent py-3 sm:pt-4 px-3 sm:px-6 lg:px-8"
       }`}
     >
       {/* ─── Desktop bar ─── */}
@@ -373,21 +373,21 @@ export function AppHeader() {
 
       {/* ─── Mobile bar ─── */}
       <div className="flex w-full items-center justify-between md:hidden">
-        <div className="flex h-12 w-full items-center justify-between px-2 py-1">
+        <div className="flex h-12 w-full items-center justify-between pl-0.5 pr-1 py-1">
           <Link href="/" aria-label="Relentless Run home" className="group flex min-w-0 shrink-0 items-center">
             <motion.img
               src="/3d-header-logo.png"
               alt="Relentless Run"
-              width={160}
-              height={42}
+              width={140}
+              height={36}
               animate={{ y: [0, -2, 0], scale: [1, 1.02, 1] }}
               transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut" }}
               whileHover={{ scale: 1.06 }}
-              className="h-8 sm:h-9 w-auto object-contain shrink-0 drop-shadow-[0_4px_12px_rgba(56,189,248,0.25)]"
+              className="h-7 sm:h-8.5 w-auto object-contain shrink-0 drop-shadow-[0_4px_12px_rgba(56,189,248,0.25)]"
             />
           </Link>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2">
             {isLoaded && isSignedIn && (
               <DashboardProfileDropdown isMobile />
             )}
