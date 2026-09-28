@@ -345,12 +345,12 @@ export function AppHeader() {
               <motion.img
                 src="/3d-header-logo.png"
                 alt="Relentless Run"
-                width={200}
-                height={52}
+                width={160}
+                height={40}
                 animate={{ y: [0, -2, 0], scale: [1, 1.02, 1] }}
                 transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut" }}
                 whileHover={{ scale: 1.05 }}
-                className="h-10 sm:h-11 lg:h-12 w-auto object-contain drop-shadow-[0_4px_16px_rgba(56,189,248,0.4)]"
+                className="h-7 sm:h-7.5 lg:h-8 w-auto object-contain drop-shadow-[0_4px_16px_rgba(56,189,248,0.35)]"
               />
             </Link>
 
@@ -402,12 +402,12 @@ export function AppHeader() {
             <motion.img
               src="/3d-header-logo.png"
               alt="Relentless Run"
-              width={140}
-              height={36}
+              width={120}
+              height={30}
               animate={{ y: [0, -2, 0], scale: [1, 1.02, 1] }}
               transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut" }}
               whileHover={{ scale: 1.06 }}
-              className="h-7 sm:h-8.5 w-auto object-contain shrink-0 drop-shadow-[0_4px_12px_rgba(56,189,248,0.25)]"
+              className="h-5.5 sm:h-6.5 w-auto object-contain shrink-0 drop-shadow-[0_3px_10px_rgba(56,189,248,0.25)]"
             />
           </Link>
 
@@ -464,8 +464,8 @@ export function AppHeader() {
                   <img
                     src="/3d-header-logo.png"
                     alt="Relentless Run"
-                    style={{ height: "26px", width: "auto" }}
-                    className="h-6.5 max-h-[28px] w-auto object-contain shrink-0 drop-shadow-[0_2px_8px_rgba(56,189,248,0.35)]"
+                    style={{ height: "22px", width: "auto" }}
+                    className="h-5.5 max-h-[24px] w-auto object-contain shrink-0 drop-shadow-[0_2px_8px_rgba(56,189,248,0.35)]"
                   />
                 </Link>
 
