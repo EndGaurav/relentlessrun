@@ -323,11 +323,14 @@ export function AppHeader() {
     };
   }, [open]);
 
+  const isHome = pathname === "/";
+  const showDarkHeader = scrolled || !isHome;
+
   return (
     <>
       <header
         className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ease-in-out ${
-        scrolled
+        showDarkHeader
           ? "bg-[#090d16]/92 backdrop-blur-3xl border-b border-white/10 shadow-[0_12px_40px_rgba(0,0,0,0.85),inset_0_-1px_0_rgba(255,255,255,0.06)] py-2 sm:py-2.5 px-3 sm:px-6 lg:px-8"
           : "bg-transparent border-b border-transparent py-3 sm:pt-4 px-3 sm:px-6 lg:px-8"
       }`}
@@ -342,18 +345,16 @@ export function AppHeader() {
               aria-label="Relentless Run home"
               className="group relative flex min-w-0 shrink-0 items-center gap-3"
             >
-              <div className="flex items-center rounded-full border border-white/15 bg-[#090d16]/90 backdrop-blur-xl px-3.5 py-1.5 shadow-2xl transition-all duration-300 group-hover:border-sky-400/50 group-hover:shadow-[0_0_20px_rgba(56,189,248,0.25)]">
-                <motion.img
-                  src="/3d-header-logo.png"
-                  alt="Relentless Run"
-                  width={160}
-                  height={40}
-                  animate={{ y: [0, -2, 0], scale: [1, 1.02, 1] }}
-                  transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut" }}
-                  whileHover={{ scale: 1.05 }}
-                  className="h-7 sm:h-7.5 lg:h-8 w-auto object-contain drop-shadow-[0_4px_16px_rgba(56,189,248,0.35)]"
-                />
-              </div>
+              <motion.img
+                src="/3d-header-logo.png"
+                alt="Relentless Run"
+                width={160}
+                height={40}
+                animate={{ y: [0, -2, 0], scale: [1, 1.02, 1] }}
+                transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut" }}
+                whileHover={{ scale: 1.05 }}
+                className="h-7 sm:h-7.5 lg:h-8 w-auto object-contain drop-shadow-[0_4px_16px_rgba(56,189,248,0.35)]"
+              />
             </Link>
 
             {/* Center — Nav pill strictly mathematically centered to screen */}
@@ -401,18 +402,16 @@ export function AppHeader() {
       <div className="flex w-full items-center justify-between md:hidden">
         <div className="flex h-12 w-full items-center justify-between pl-0.5 pr-1 py-1">
           <Link href="/" aria-label="Relentless Run home" className="group flex min-w-0 shrink-0 items-center">
-            <div className="flex items-center rounded-full border border-white/15 bg-[#090d16]/90 backdrop-blur-xl px-2.5 sm:px-3 py-1 shadow-lg transition-all duration-300 group-hover:border-sky-400/50">
-              <motion.img
-                src="/3d-header-logo.png"
-                alt="Relentless Run"
-                width={120}
-                height={30}
-                animate={{ y: [0, -2, 0], scale: [1, 1.02, 1] }}
-                transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut" }}
-                whileHover={{ scale: 1.06 }}
-                className="h-5 sm:h-6 w-auto object-contain shrink-0 drop-shadow-[0_2px_8px_rgba(56,189,248,0.35)]"
-              />
-            </div>
+            <motion.img
+              src="/3d-header-logo.png"
+              alt="Relentless Run"
+              width={120}
+              height={30}
+              animate={{ y: [0, -2, 0], scale: [1, 1.02, 1] }}
+              transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut" }}
+              whileHover={{ scale: 1.06 }}
+              className="h-5.5 sm:h-6.5 w-auto object-contain shrink-0 drop-shadow-[0_3px_10px_rgba(56,189,248,0.25)]"
+            />
           </Link>
 
           <div className="flex items-center gap-1.5 sm:gap-2">
