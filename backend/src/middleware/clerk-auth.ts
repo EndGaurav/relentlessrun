@@ -79,6 +79,7 @@ export async function requireClerkAuth(
       return;
     }
 
+    logger.warn("[ClerkAuth] Token verification failed:", error);
     next(new ApiError(401, "Invalid or expired authentication token"));
   }
 }
