@@ -3,7 +3,7 @@ import type { NextFunction, Request, Response } from "express";
 import { env } from "../config/env.js";
 import { prisma } from "../lib/prisma.js";
 import { ApiError } from "../utils/api-error.js";
-import { updateLogContext } from "../utils/logger.js";
+import { logger, updateLogContext } from "../utils/logger.js";
 
 export type AuthenticatedRequest = Request & {
   auth?: {
@@ -79,7 +79,9 @@ export async function requireClerkAuth(
       return;
     }
 
-    logger.warn("[ClerkAuth] Token verification failed:", error);
+    logger.warn("[ClerkAuth] Token verification failed", {
+      error: error instanceof Error ? error.message : String(error),
+    });
     next(new ApiError(401, "Invalid or expired authentication token"));
   }
 }
