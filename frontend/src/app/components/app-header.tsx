@@ -342,16 +342,18 @@ export function AppHeader() {
               aria-label="Relentless Run home"
               className="group relative flex min-w-0 shrink-0 items-center gap-3"
             >
-              <motion.img
-                src="/3d-header-logo.png"
-                alt="Relentless Run"
-                width={160}
-                height={40}
-                animate={{ y: [0, -2, 0], scale: [1, 1.02, 1] }}
-                transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut" }}
-                whileHover={{ scale: 1.05 }}
-                className="h-7 sm:h-7.5 lg:h-8 w-auto object-contain drop-shadow-[0_4px_16px_rgba(56,189,248,0.35)]"
-              />
+              <div className="flex items-center rounded-full border border-white/15 bg-[#090d16]/90 backdrop-blur-xl px-3.5 py-1.5 shadow-2xl transition-all duration-300 group-hover:border-sky-400/50 group-hover:shadow-[0_0_20px_rgba(56,189,248,0.25)]">
+                <motion.img
+                  src="/3d-header-logo.png"
+                  alt="Relentless Run"
+                  width={160}
+                  height={40}
+                  animate={{ y: [0, -2, 0], scale: [1, 1.02, 1] }}
+                  transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut" }}
+                  whileHover={{ scale: 1.05 }}
+                  className="h-7 sm:h-7.5 lg:h-8 w-auto object-contain drop-shadow-[0_4px_16px_rgba(56,189,248,0.35)]"
+                />
+              </div>
             </Link>
 
             {/* Center — Nav pill strictly mathematically centered to screen */}
@@ -399,16 +401,18 @@ export function AppHeader() {
       <div className="flex w-full items-center justify-between md:hidden">
         <div className="flex h-12 w-full items-center justify-between pl-0.5 pr-1 py-1">
           <Link href="/" aria-label="Relentless Run home" className="group flex min-w-0 shrink-0 items-center">
-            <motion.img
-              src="/3d-header-logo.png"
-              alt="Relentless Run"
-              width={120}
-              height={30}
-              animate={{ y: [0, -2, 0], scale: [1, 1.02, 1] }}
-              transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut" }}
-              whileHover={{ scale: 1.06 }}
-              className="h-5.5 sm:h-6.5 w-auto object-contain shrink-0 drop-shadow-[0_3px_10px_rgba(56,189,248,0.25)]"
-            />
+            <div className="flex items-center rounded-full border border-white/15 bg-[#090d16]/90 backdrop-blur-xl px-2.5 sm:px-3 py-1 shadow-lg transition-all duration-300 group-hover:border-sky-400/50">
+              <motion.img
+                src="/3d-header-logo.png"
+                alt="Relentless Run"
+                width={120}
+                height={30}
+                animate={{ y: [0, -2, 0], scale: [1, 1.02, 1] }}
+                transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut" }}
+                whileHover={{ scale: 1.06 }}
+                className="h-5 sm:h-6 w-auto object-contain shrink-0 drop-shadow-[0_2px_8px_rgba(56,189,248,0.35)]"
+              />
+            </div>
           </Link>
 
           <div className="flex items-center gap-1.5 sm:gap-2">
