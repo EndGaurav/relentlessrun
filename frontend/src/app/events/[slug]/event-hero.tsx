@@ -140,6 +140,12 @@ export function EventHero({ event, isPast }: { event: PublicEvent; isPast: boole
               src={event.bannerImageUrl ?? "/images/mountain-run-hero.svg"}
               alt={`${event.name} — run toward the mountains`}
               className="w-full h-auto max-h-[520px] object-contain sm:object-cover aspect-[16/9] sm:aspect-[16/8] lg:aspect-[21/9]"
+              onError={(e) => {
+                const fallback = "/images/mountain-run-hero.svg";
+                if (!e.currentTarget.src.endsWith(fallback)) {
+                  e.currentTarget.src = fallback;
+                }
+              }}
             />
 
             {/* golden sunrise glow */}

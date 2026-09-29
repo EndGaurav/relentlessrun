@@ -59,25 +59,23 @@ function EventCard({ event, index }: { event: PublicEvent; index: number }) {
       className="group flex flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl transition-all duration-300 hover:-translate-y-1.5 hover:border-sky-400 hover:shadow-2xl"
     >
       {/* Banner / Poster - 65% Card Height */}
-      <div
-        className={`relative overflow-hidden ${
-          hasBannerImage ? "h-64 sm:h-72 bg-[#090d16]" : "h-64 sm:h-72 bg-gradient-to-br from-[#0284c7] via-sky-600 to-sky-800"
-        }`}
-      >
-        {event.bannerImageUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            alt={`${event.name} banner`}
-            className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-            src={event.bannerImageUrl}
-          />
-        ) : null}
-        {hasBannerImage ? (
-          <div
-            aria-hidden
-            className="absolute inset-0 bg-gradient-to-t from-[#090d16]/95 via-[#090d16]/40 to-transparent"
-          />
-        ) : null}
+      <div className="relative h-64 sm:h-72 overflow-hidden bg-[#090d16]">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          alt={`${event.name} banner`}
+          className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+          src={event.bannerImageUrl || "/images/mountain-run-hero.svg"}
+          onError={(e) => {
+            const fallback = "/images/mountain-run-hero.svg";
+            if (!e.currentTarget.src.endsWith(fallback)) {
+              e.currentTarget.src = fallback;
+            }
+          }}
+        />
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-gradient-to-t from-[#090d16]/95 via-[#090d16]/40 to-transparent"
+        />
 
         {/* Top Badges */}
         <div className="relative z-10 p-4 flex items-start justify-between gap-2">
