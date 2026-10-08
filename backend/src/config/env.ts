@@ -2,7 +2,14 @@ import "dotenv/config";
 import { logger } from "../utils/logger.js";
 
 function readEnv(name: string, fallback = "") {
-  return (process.env[name] ?? fallback).trim();
+  let val = (process.env[name] ?? fallback).trim();
+  if (
+    (val.startsWith('"') && val.endsWith('"')) ||
+    (val.startsWith("'") && val.endsWith("'"))
+  ) {
+    val = val.slice(1, -1).trim();
+  }
+  return val;
 }
 
 /** True when a real Clerk secret is set (not empty / placeholder). */
