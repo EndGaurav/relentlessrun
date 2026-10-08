@@ -23,6 +23,20 @@ export function getApiUrl(path = "") {
   return `${base}${path.startsWith("/") ? path : `/${path}`}`;
 }
 
+export function resolveImageUrl(url: string | null | undefined): string {
+  if (!url) return "/images/mountain-run-hero.svg";
+  if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("data:")) {
+    return url;
+  }
+  if (url.startsWith("/images/")) {
+    return url;
+  }
+  if (url.startsWith("/uploads/")) {
+    return getApiUrl(url);
+  }
+  return url;
+}
+
 export function authHeaders(token: string | null | undefined, init: HeadersInit = {}): HeadersInit {
   return {
     "Content-Type": "application/json",

@@ -9,7 +9,7 @@ import {
   formatInrFromPaise,
   toDatetimeLocalValue,
 } from "../../../lib/admin-api";
-import { authHeaders, getApiUrl } from "../../../lib/api";
+import { authHeaders, getApiUrl, resolveImageUrl } from "../../../lib/api";
 import { AdminEmpty, AdminPageHeader } from "../ui";
 import { validateMinLength } from "../../../lib/validation";
 import {
@@ -368,9 +368,14 @@ export default function AdminEventsPage() {
                           headers: authHeaders(token),
                           body: JSON.stringify({ file: base64, folder: "relentlessrun/admin" }),
                         });
-                        if (!res.ok) { toast("error", "Upload failed. Try again."); return; }
+                        if (!res.ok) {
+                          const errData = await res.json().catch(() => null);
+                          toast("error", errData?.error?.message || "Upload failed. Try again.");
+                          return;
+                        }
                         const json = await res.json();
                         setForm((f) => ({ ...f, bannerImageUrl: json.data.url }));
+                        toast("success", "Banner image uploaded successfully!");
                       };
                       reader.readAsDataURL(file);
                     } catch { toast("error", "Upload failed. Check connection."); }
@@ -396,8 +401,8 @@ export default function AdminEventsPage() {
                 /* eslint-disable-next-line @next/next/no-img-element */
                 <img
                   alt="Banner preview"
-                  src={form.bannerImageUrl}
-                  className="mt-1 h-12 w-auto max-w-full rounded-lg object-cover"
+                  src={resolveImageUrl(form.bannerImageUrl)}
+                  className="mt-2 h-16 w-auto max-w-full rounded-lg object-cover border border-white/10"
                   onError={(e) => {
                     e.currentTarget.style.display = "none";
                   }}

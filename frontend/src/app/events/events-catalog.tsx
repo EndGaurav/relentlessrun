@@ -17,7 +17,7 @@ import {
   Timer,
   ArrowRight,
 } from "lucide-react";
-import { getApiUrl } from "../../lib/api";
+import { getApiUrl, resolveImageUrl } from "../../lib/api";
 import { type ApiEvent, mapApiEventToPublic } from "../../lib/events-api";
 import {
   pastEvents as staticPastEvents,
@@ -86,7 +86,7 @@ function OpenEventCard({ event, index = 0 }: { event: PublicEvent; index?: numbe
         <img
           alt={`${event.name} banner`}
           className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-          src={event.bannerImageUrl || "/images/mountain-run-hero.svg"}
+          src={resolveImageUrl(event.bannerImageUrl)}
           onError={(e) => {
             const fallback = "/images/mountain-run-hero.svg";
             if (!e.currentTarget.src.endsWith(fallback)) {
@@ -220,7 +220,7 @@ function ArchiveEventCard({ event, index = 0 }: { event: PublicEvent; index?: nu
         <img
           alt={`${event.name} banner`}
           className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-          src={event.bannerImageUrl || "/images/mountain-run-hero.svg"}
+          src={resolveImageUrl(event.bannerImageUrl)}
           onError={(e) => {
             const fallback = "/images/mountain-run-hero.svg";
             if (!e.currentTarget.src.endsWith(fallback)) {

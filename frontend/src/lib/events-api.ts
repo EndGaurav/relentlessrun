@@ -128,7 +128,8 @@ export function mapApiEventToPublic(
 export async function fetchEventBySlug(slug: string): Promise<PublicEvent | null> {
   try {
     const response = await fetch(getApiUrl(`/api/events/${encodeURIComponent(slug)}`), {
-      next: { revalidate: 300 },
+      cache: "no-store",
+      next: { revalidate: 0 },
     });
     if (response.ok) {
       const json = (await response.json()) as { data: ApiEvent };

@@ -60,10 +60,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   };
 }
 
-export function generateStaticParams() {
-  return allPublicEvents.map((event) => ({ slug: event.slug }));
-}
-
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 export const dynamicParams = true;
 
 export default async function EventDetailPage({ params }: { params: Promise<{ slug: string }> }) {

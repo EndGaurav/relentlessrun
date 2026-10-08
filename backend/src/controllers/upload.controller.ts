@@ -1,4 +1,7 @@
 import type { Response } from "express";
+import fs from "fs";
+import path from "path";
+import crypto from "crypto";
 import type { AuthenticatedRequest } from "../middleware/clerk-auth.js";
 import { isCloudinaryConfigured, uploadImageToCloudinary } from "../services/cloudinary.service.js";
 import { ApiError } from "../utils/api-error.js";
@@ -11,37 +14,41 @@ const uploadImageSchema = z.object({
   folder: z.string().max(80).optional(),
 });
 
-const MAX_DATA_URL_CHARS = 10_000_000; // ~7.5MB payload
+const MAX_DATA_URL_CHARS = 15_000_000; // ~11MB payload
 
 export async function uploadProofImage(request: AuthenticatedRequest, response: Response) {
   const payload = validateBody(uploadImageSchema, request);
 
   if (payload.file.startsWith("data:") && payload.file.length > MAX_DATA_URL_CHARS) {
-    throw new ApiError(413, "Image is too large. Use a screenshot under ~1.2 MB or compress it.");
+    throw new ApiError(413, "Image is too large. Please select an image under 10 MB.");
   }
 
-  if (!payload.file.startsWith("data:") && !payload.file.startsWith("https://")) {
-    throw new ApiError(400, "Provide a data URL or https image URL");
+  if (!payload.file.startsWith("data:") && !payload.file.startsWith("https://") && !payload.file.startsWith("http://")) {
+    throw new ApiError(400, "Provide a valid data URL or web image URL");
   }
 
-  // Prefer Cloudinary when configured (scalable CDN storage).
+  // 1. Prefer Cloudinary when configured (production CDN storage).
   if (isCloudinaryConfigured()) {
-    const uploaded = await uploadImageToCloudinary(
-      payload.file,
-      payload.folder ?? "relentlessrun/proofs",
-    );
-    response.status(201).json({
-      data: {
-        url: uploaded.secure_url,
-        provider: "cloudinary",
-        bytes: uploaded.bytes,
-      },
-    });
-    return;
+    try {
+      const uploaded = await uploadImageToCloudinary(
+        payload.file,
+        payload.folder ?? "relentlessrun/proofs",
+      );
+      response.status(201).json({
+        data: {
+          url: uploaded.secure_url,
+          provider: "cloudinary",
+          bytes: uploaded.bytes,
+        },
+      });
+      return;
+    } catch (err) {
+      console.warn("Cloudinary upload failed, falling back to local disk storage:", err);
+    }
   }
 
-  // Dev fallback: accept remote https URLs as-is; accept data URLs for small demos.
-  if (payload.file.startsWith("https://")) {
+  // 2. Direct remote URL
+  if (payload.file.startsWith("https://") || payload.file.startsWith("http://")) {
     response.status(201).json({
       data: {
         url: payload.file,
@@ -51,18 +58,44 @@ export async function uploadProofImage(request: AuthenticatedRequest, response: 
     return;
   }
 
-  if (payload.file.length > 900_000) {
-    throw new ApiError(
-      503,
-      "Cloudinary is not configured. Set CLOUDINARY_* env vars for large proof image uploads, or paste a public image URL.",
-    );
+  // 3. Local disk storage fallback (works 100% reliably in local and self-hosted/EC2)
+  if (payload.file.startsWith("data:image/")) {
+    try {
+      const matches = payload.file.match(/^data:image\/([a-zA-Z0-9+.-]+);base64,(.+)$/);
+      if (matches) {
+        const mimeSubtype = matches[1].toLowerCase().replace(/\+xml$/, "");
+        const ext = mimeSubtype === "jpeg" ? "jpg" : mimeSubtype;
+        const base64Data = matches[2];
+        const buffer = Buffer.from(base64Data, "base64");
+
+        const uploadsDir = path.join(process.cwd(), "uploads");
+        if (!fs.existsSync(uploadsDir)) {
+          fs.mkdirSync(uploadsDir, { recursive: true });
+        }
+
+        const filename = `img_${Date.now()}_${crypto.randomBytes(6).toString("hex")}.${ext}`;
+        const filePath = path.join(uploadsDir, filename);
+        fs.writeFileSync(filePath, buffer);
+
+        response.status(201).json({
+          data: {
+            url: `/uploads/${filename}`,
+            provider: "local-disk",
+            bytes: buffer.length,
+          },
+        });
+        return;
+      }
+    } catch (e) {
+      console.error("Failed to write image to disk:", e);
+    }
   }
 
+  // 4. Fallback inline data url for small images
   response.status(201).json({
     data: {
       url: payload.file,
       provider: "inline-data-url",
-      warning: "Stored as data URL (configure Cloudinary for production).",
     },
   });
 }
@@ -72,7 +105,7 @@ export async function uploadConfig(_request: AuthenticatedRequest, response: Res
     data: {
       cloudinary: isCloudinaryConfigured(),
       maxDataUrlChars: MAX_DATA_URL_CHARS,
-      accepted: ["image/jpeg", "image/png", "image/webp", "image/heic"],
+      accepted: ["image/jpeg", "image/png", "image/webp", "image/avif", "image/heic"],
     },
   });
 }

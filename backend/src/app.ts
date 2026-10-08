@@ -1,3 +1,4 @@
+import path from "path";
 import cors from "cors";
 import express, { type NextFunction, type Request, type Response } from "express";
 import helmet from "helmet";
@@ -44,7 +45,9 @@ function isAllowedOrigin(origin: string | undefined) {
 }
 
 app.use(requestTraceMiddleware);
-app.use(helmet());
+app.use(helmet({
+  crossOriginResourcePolicy: false, // allow loading images cross-origin
+}));
 app.use(cors({
   origin: (origin, callback) => {
     if (isAllowedOrigin(origin)) {
@@ -57,8 +60,8 @@ app.use(cors({
   credentials: true,
 }));
 app.use("/api/payments/webhook", express.raw({ type: "application/json" }));
-// 2mb: proof screenshots as data URLs before Cloudinary (prefer Cloudinary in prod)
-app.use(express.json({ limit: "2mb" }));
+app.use(express.json({ limit: "15mb" }));
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
 app.get("/health", (_request, response) => {
   response.json({ status: "ok", service: "relentlessrun-api" });

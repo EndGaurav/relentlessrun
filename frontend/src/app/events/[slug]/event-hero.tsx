@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {
   CalendarDays,
@@ -14,10 +15,10 @@ import {
   Truck,
 } from "lucide-react";
 import type { PublicEvent } from "../../data/events";
-import { Breadcrumb } from "../../components/breadcrumb";
 import { RegisterCta } from "../../components/register-cta";
 import { EventCountdown } from "./countdown";
-import { Medal3D } from "./medal";
+import { getApiUrl, resolveImageUrl } from "../../../lib/api";
+import { type ApiEvent, mapApiEventToPublic } from "../../../lib/events-api";
 
 const rewardBadges = [
   { icon: Medal, label: "Finisher Medal" },
@@ -27,7 +28,43 @@ const rewardBadges = [
   { icon: Trophy, label: "Hall of Fame" },
 ];
 
-export function EventHero({ event, isPast }: { event: PublicEvent; isPast: boolean }) {
+export function EventHero({ event: initialEvent, isPast }: { event: PublicEvent; isPast: boolean }) {
+  const [event, setEvent] = useState<PublicEvent>(initialEvent);
+  const [imageSrc, setImageSrc] = useState<string>(() => resolveImageUrl(initialEvent.bannerImageUrl));
+
+  useEffect(() => {
+    setEvent(initialEvent);
+    setImageSrc(resolveImageUrl(initialEvent.bannerImageUrl));
+  }, [initialEvent]);
+
+  // Live client-side sync to fetch latest image/event details
+  useEffect(() => {
+    let cancelled = false;
+    async function refresh() {
+      try {
+        const res = await fetch(getApiUrl(`/api/events/${encodeURIComponent(initialEvent.slug)}`), {
+          cache: "no-store",
+        });
+        if (res.ok) {
+          const json = (await res.json()) as { data: ApiEvent };
+          if (json.data && !cancelled) {
+            const mapped = mapApiEventToPublic(json.data);
+            setEvent(mapped);
+            if (mapped.bannerImageUrl) {
+              setImageSrc(resolveImageUrl(mapped.bannerImageUrl));
+            }
+          }
+        }
+      } catch {
+        // silent fallback
+      }
+    }
+    void refresh();
+    return () => {
+      cancelled = true;
+    };
+  }, [initialEvent.slug]);
+
   const distances = event.distance.split(" / ");
   const priceLabel =
     event.price.toLowerCase().includes("free")
@@ -130,13 +167,13 @@ export function EventHero({ event, isPast }: { event: PublicEvent; isPast: boole
           <div className="relative overflow-hidden rounded-3xl border border-white/15 bg-slate-950 shadow-2xl">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={event.bannerImageUrl ?? "/images/mountain-run-hero.svg"}
+              src={imageSrc}
               alt={`${event.name} banner`}
               className="w-full h-auto max-h-[520px] object-contain sm:object-cover aspect-[16/9] sm:aspect-[16/8] lg:aspect-[21/9]"
-              onError={(e) => {
+              onError={() => {
                 const fallback = "/images/mountain-run-hero.svg";
-                if (!e.currentTarget.src.endsWith(fallback)) {
-                  e.currentTarget.src = fallback;
+                if (imageSrc !== fallback) {
+                  setImageSrc(fallback);
                 }
               }}
             />
