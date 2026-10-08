@@ -13,7 +13,6 @@ import { EventHow } from "./event-how";
 import { EventCompare } from "./event-compare";
 import { EventCommunity } from "./event-community";
 import { EventReviews } from "./event-reviews";
-import { EventCta } from "./event-cta";
 import { EventFaq } from "./faq-accordion";
 import { EventStickyCta } from "./sticky-cta-bar";
 import { Reveal, SectionHeader } from "./reveal";
@@ -228,7 +227,6 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
               </div>
             </section>
 
-            <EventCta event={event} />
             <EventStickyCta price={event.price} compareAtPrice={event.compareAtPrice} slug={event.slug} />
           </>
         )}
