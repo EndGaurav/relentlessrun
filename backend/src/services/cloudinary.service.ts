@@ -32,8 +32,16 @@ export function getCloudinaryConfig() {
   }
 
   const cloud_name = cleanStr(process.env.CLOUDINARY_CLOUD_NAME || env.cloudinaryCloudName);
-  const api_key = cleanStr(process.env.CLOUDINARY_API_KEY || env.cloudinaryApiKey);
-  const api_secret = cleanStr(process.env.CLOUDINARY_API_SECRET || env.cloudinaryApiSecret);
+  const api_key = cleanStr(
+    process.env.CLOUDINARY_API_KEY ||
+    process.env.CLOUDINARY_APT_KEY ||
+    env.cloudinaryApiKey,
+  );
+  const api_secret = cleanStr(
+    process.env.CLOUDINARY_API_SECRET ||
+    process.env.CLOUDINARY_APT_SECRET ||
+    env.cloudinaryApiSecret,
+  );
   return { cloud_name, api_key, api_secret };
 }
 
