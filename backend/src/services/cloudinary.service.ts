@@ -9,16 +9,31 @@ type CloudinaryUploadResult = {
   format: string;
 };
 
+function cleanStr(val: string | undefined): string {
+  if (!val) return "";
+  return val.trim().replace(/^["']|["']$/g, "").trim();
+}
+
 export function getCloudinaryConfig() {
-  const cloud_name = (process.env.CLOUDINARY_CLOUD_NAME || env.cloudinaryCloudName || "")
-    .trim()
-    .replace(/^["']|["']$/g, "");
-  const api_key = (process.env.CLOUDINARY_API_KEY || env.cloudinaryApiKey || "")
-    .trim()
-    .replace(/^["']|["']$/g, "");
-  const api_secret = (process.env.CLOUDINARY_API_SECRET || env.cloudinaryApiSecret || "")
-    .trim()
-    .replace(/^["']|["']$/g, "");
+  const cloudinaryUrl = cleanStr(process.env.CLOUDINARY_URL);
+  if (cloudinaryUrl && cloudinaryUrl.startsWith("cloudinary://")) {
+    try {
+      const match = cloudinaryUrl.match(/^cloudinary:\/\/([^:]+):([^@]+)@(.+)$/);
+      if (match) {
+        return {
+          api_key: match[1].trim(),
+          api_secret: match[2].trim(),
+          cloud_name: match[3].trim(),
+        };
+      }
+    } catch {
+      // fallback
+    }
+  }
+
+  const cloud_name = cleanStr(process.env.CLOUDINARY_CLOUD_NAME || env.cloudinaryCloudName);
+  const api_key = cleanStr(process.env.CLOUDINARY_API_KEY || env.cloudinaryApiKey);
+  const api_secret = cleanStr(process.env.CLOUDINARY_API_SECRET || env.cloudinaryApiSecret);
   return { cloud_name, api_key, api_secret };
 }
 
@@ -38,7 +53,7 @@ export async function uploadImageToCloudinary(
   if (!cfg.cloud_name || !cfg.api_key || !cfg.api_secret) {
     throw new ApiError(
       503,
-      "Cloudinary is not configured. Please ensure CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET are set in your environment.",
+      "Cloudinary is not configured. Please ensure CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET (or CLOUDINARY_URL) are set in your environment.",
     );
   }
 
