@@ -33,14 +33,15 @@ const items = [
 
 export function EventRewards() {
   return (
-    <section id="rewards" className="section scroll-mt-24 border-b border-white/10 bg-[#090d16]">
+    <section id="rewards" className="section scroll-mt-24 border-b border-slate-200 bg-[#f8fafc] text-[#090d16]">
       <div className="container-page">
         <SectionHeader
+          theme="light"
           eyebrow="What You Receive"
           title={
             <>
               A finish you&rsquo;ll be{" "}
-              <span className="text-gradient-premium">proud to own</span>
+              <span className="text-[#0284c7]">proud to own</span>
             </>
           }
           lead="Every verified finisher walks away with a complete premium reward kit — built to be worn, hung, and celebrated."
@@ -51,15 +52,15 @@ export function EventRewards() {
           <div className="space-y-3.5">
             {items.map(({ icon: Icon, title, desc }, i) => (
               <Reveal key={title} delay={i * 0.06}>
-                <article className="group flex items-start gap-4 rounded-2xl border border-white/10 bg-[#0d1322] p-4.5 transition-all duration-300 hover:-translate-y-0.5 hover:border-cyan-500/40 hover:shadow-[0_10px_25px_-5px_rgba(56,189,248,0.12)] sm:p-5">
-                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-cyan-500/20 bg-cyan-500/10 text-[#38bdf8] shadow-sm transition-transform duration-300 group-hover:scale-110 group-hover:bg-cyan-500/20">
+                <article className="group flex items-start gap-4 rounded-2xl border border-slate-200 bg-white p-4.5 transition-all duration-300 hover:-translate-y-0.5 hover:border-sky-300 hover:shadow-md sm:p-5 shadow-sm">
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-sky-200 bg-sky-50 text-[#0284c7] shadow-sm transition-transform duration-300 group-hover:scale-110 group-hover:bg-sky-100">
                     <Icon className="h-5 w-5" strokeWidth={2} />
                   </span>
                   <div className="min-w-0">
-                    <h3 className="text-sm font-bold tracking-tight text-white sm:text-base">
+                    <h3 className="text-sm font-bold tracking-tight text-[#090d16] sm:text-base">
                       {title}
                     </h3>
-                    <p className="mt-1 text-xs leading-relaxed text-slate-400 sm:text-sm">{desc}</p>
+                    <p className="mt-1 text-xs leading-relaxed text-slate-600 sm:text-sm font-medium">{desc}</p>
                   </div>
                 </article>
               </Reveal>
@@ -68,49 +69,49 @@ export function EventRewards() {
 
           {/* Product showcase */}
           <Reveal delay={0.1} className="lg:sticky lg:top-28">
-            <div className="relative overflow-hidden rounded-[2rem] border border-cyan-500/20 bg-gradient-to-b from-[#0f172a] via-[#0d1322] to-[#090d16] shadow-2xl">
+            <div className="relative overflow-hidden rounded-[2rem] border border-slate-200 bg-gradient-to-b from-sky-50/70 via-white to-slate-50 shadow-xl">
               <div
                 aria-hidden
-                className="pointer-events-none absolute -top-20 left-1/2 h-64 w-64 -translate-x-1/2 rounded-full blur-3xl opacity-30"
+                className="pointer-events-none absolute -top-20 left-1/2 h-64 w-64 -translate-x-1/2 rounded-full blur-3xl opacity-40"
                 style={{
                   background:
-                    "radial-gradient(circle, rgba(56,189,248,0.7) 0%, rgba(2,132,199,0.3) 45%, transparent 70%)",
+                    "radial-gradient(circle, rgba(2,132,199,0.3) 0%, rgba(56,189,248,0.15) 45%, transparent 70%)",
                 }}
               />
 
               <div className="relative flex items-center justify-center px-6 pt-10 pb-6">
-                <div className="w-48 drop-shadow-[0_25px_35px_rgba(2,132,199,0.3)] sm:w-56 transition-transform duration-500 hover:scale-105">
+                <div className="w-48 drop-shadow-[0_20px_30px_rgba(2,132,199,0.2)] sm:w-56 transition-transform duration-500 hover:scale-105">
                   <Medal3D className="h-auto w-full" />
                 </div>
               </div>
 
               {/* Floating mini chips */}
-              <div className="absolute left-4 top-8 inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-slate-900/90 px-3 py-1.5 text-[0.7rem] font-bold text-white shadow-xl backdrop-blur-md sm:left-7 sm:top-10">
-                <Shirt className="h-3.5 w-3.5 text-[#38bdf8]" />
+              <div className="absolute left-4 top-8 inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white/95 px-3 py-1.5 text-[0.7rem] font-bold text-slate-800 shadow-md backdrop-blur-md sm:left-7 sm:top-10">
+                <Shirt className="h-3.5 w-3.5 text-[#0284c7]" />
                 Premium T-shirt
               </div>
               <div
-                className="absolute bottom-24 right-3 inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-slate-900/90 px-3 py-1.5 text-[0.7rem] font-bold text-white shadow-xl backdrop-blur-md sm:bottom-28 sm:right-6"
+                className="absolute bottom-24 right-3 inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white/95 px-3 py-1.5 text-[0.7rem] font-bold text-slate-800 shadow-md backdrop-blur-md sm:bottom-28 sm:right-6"
               >
-                <FileBadge className="h-3.5 w-3.5 text-[#38bdf8]" />
+                <FileBadge className="h-3.5 w-3.5 text-[#0284c7]" />
                 Official certificate
               </div>
               <div
-                className="absolute bottom-12 left-3 inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-slate-900/90 px-3 py-1.5 text-[0.7rem] font-bold text-white shadow-xl backdrop-blur-md sm:bottom-16 sm:left-6"
+                className="absolute bottom-12 left-3 inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white/95 px-3 py-1.5 text-[0.7rem] font-bold text-slate-800 shadow-md backdrop-blur-md sm:bottom-16 sm:left-6"
               >
-                <Truck className="h-3.5 w-3.5 text-[#38bdf8]" />
+                <Truck className="h-3.5 w-3.5 text-[#0284c7]" />
                 Free delivery
               </div>
 
               {/* Footer tag */}
-              <div className="relative border-t border-white/10 bg-white/[0.02] px-6 py-5 text-center">
-                <p className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#38bdf8]">
+              <div className="relative border-t border-slate-200 bg-slate-50/60 px-6 py-5 text-center">
+                <p className="inline-flex items-center gap-1.5 text-xs font-bold text-[#0284c7]">
                   <Sparkles className="h-3.5 w-3.5" />
                   Kit worth ₹900+ · Included with every entry
                 </p>
                 <div>
                   <Link
-                    className="group mt-2.5 inline-flex items-center gap-1 text-[0.75rem] font-bold uppercase tracking-wider text-slate-300 transition-colors hover:text-[#38bdf8]"
+                    className="group mt-2.5 inline-flex items-center gap-1 text-[0.75rem] font-bold uppercase tracking-wider text-slate-700 transition-colors hover:text-[#0284c7]"
                     href="#select"
                   >
                     Claim yours

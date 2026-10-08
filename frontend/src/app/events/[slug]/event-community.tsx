@@ -21,14 +21,15 @@ const posts = [
 
 export function EventCommunity() {
   return (
-    <section className="section border-b border-white/10 bg-[#090d16]">
+    <section className="section border-b border-slate-200 bg-[#f8fafc] text-[#090d16]">
       <div className="container-page">
         <SectionHeader
+          theme="light"
           eyebrow="Community Highlights"
           title={
             <>
               Real runners. Real medals.{" "}
-              <span className="text-gradient-premium">Real moments.</span>
+              <span className="text-[#0284c7]">Real moments.</span>
             </>
           }
           lead="Join 25,000+ runners across India who made Mountain Run a key part of their fitness journey."
@@ -37,7 +38,7 @@ export function EventCommunity() {
         <div className="mt-10 grid grid-cols-2 gap-3 sm:mt-14 sm:grid-cols-4 sm:gap-4">
           {posts.map((post, i) => (
             <Reveal key={post.src} delay={i * 0.07}>
-              <div className="group relative aspect-square overflow-hidden rounded-2xl border border-white/10 bg-[#0d1322]">
+              <div className="group relative aspect-square overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-md">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={post.src}
@@ -62,9 +63,9 @@ export function EventCommunity() {
             href="https://instagram.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.05] px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-cyan-500/40 hover:bg-white/[0.1] hover:text-[#38bdf8]"
+            className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-slate-800 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-sky-300 hover:text-[#0284c7]"
           >
-            <InstagramGlyph className="h-4 w-4 text-[#38bdf8]" />
+            <InstagramGlyph className="h-4 w-4 text-[#0284c7]" />
             Follow @relentlessrun on Instagram
           </Link>
         </Reveal>

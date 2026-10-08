@@ -36,21 +36,30 @@ export function SectionHeader({
   title,
   lead,
   align = "center",
+  theme = "dark",
   className,
 }: {
   eyebrow: string;
   title: ReactNode;
   lead?: string;
   align?: "center" | "left";
+  theme?: "dark" | "light";
   className?: string;
 }) {
+  const isLight = theme === "light";
   const inner = (
     <>
-      <p className="text-xs font-black uppercase tracking-[0.2em] text-[#38bdf8]">
+      <p className={`text-xs font-black uppercase tracking-[0.2em] ${isLight ? "text-[#0284c7]" : "text-[#38bdf8]"}`}>
         {eyebrow}
       </p>
-      <h2 className="heading mt-3 text-white sm:mt-4">{title}</h2>
-      {lead ? <p className="lede mx-auto mt-3 max-w-2xl text-slate-400 sm:mt-4">{lead}</p> : null}
+      <h2 className={`heading mt-3 sm:mt-4 font-bold tracking-tight ${isLight ? "text-[#090d16]" : "text-white"}`}>
+        {title}
+      </h2>
+      {lead ? (
+        <p className={`lede mx-auto mt-3 max-w-2xl font-medium sm:mt-4 ${isLight ? "text-slate-600" : "text-slate-300"}`}>
+          {lead}
+        </p>
+      ) : null}
     </>
   );
 

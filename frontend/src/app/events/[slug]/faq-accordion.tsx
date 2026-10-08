@@ -47,8 +47,8 @@ export function EventFaq() {
             key={item.q}
             className={`overflow-hidden rounded-2xl border transition-all duration-200 ${
               isOpen
-                ? "border-cyan-500/40 bg-[#0d1322] shadow-[0_4px_20px_-4px_rgba(56,189,248,0.15)]"
-                : "border-white/10 bg-[#0d1322]/80 hover:border-white/20"
+                ? "border-[#0284c7] bg-white shadow-md ring-1 ring-[#0284c7]/30"
+                : "border-slate-200 bg-white hover:border-slate-300 shadow-sm"
             }`}
           >
             <button
@@ -57,10 +57,10 @@ export function EventFaq() {
               aria-expanded={isOpen}
               className="flex w-full cursor-pointer items-center justify-between gap-3 px-4 py-3.5 text-left sm:px-5 sm:py-4"
             >
-              <span className="flex items-center gap-3 text-sm font-semibold text-white sm:text-base">
+              <span className="flex items-center gap-3 text-sm font-semibold text-slate-900 sm:text-base">
                 <span
                   className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg transition-colors duration-200 ${
-                    isOpen ? "bg-[#0284c7] text-white" : "bg-white/5 text-slate-400"
+                    isOpen ? "bg-[#0284c7] text-white" : "bg-slate-100 text-slate-500"
                   }`}
                 >
                   <MessageCircleQuestion className="h-3.5 w-3.5" />
@@ -69,7 +69,7 @@ export function EventFaq() {
               </span>
               <ChevronDown
                 className={`h-4 w-4 shrink-0 transition-transform duration-200 ${
-                  isOpen ? "rotate-180 text-[#38bdf8]" : "text-slate-400"
+                  isOpen ? "rotate-180 text-[#0284c7]" : "text-slate-400"
                 }`}
               />
             </button>
@@ -82,7 +82,7 @@ export function EventFaq() {
                   exit={{ height: 0, opacity: 0 }}
                   transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
                 >
-                  <p className="border-t border-white/10 px-4 py-3.5 text-sm leading-relaxed text-slate-300 sm:px-5 sm:py-4">
+                  <p className="border-t border-slate-100 px-4 py-3.5 text-sm leading-relaxed text-slate-600 sm:px-5 sm:py-4 font-medium">
                     {item.a}
                   </p>
                 </motion.div>
