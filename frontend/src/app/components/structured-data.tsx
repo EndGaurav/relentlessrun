@@ -15,7 +15,7 @@ const organizationSchema = {
     'https://instagram.com/relentlessrunofficial',
     'https://facebook.com/relentlessrunofficial',
     'https://twitter.com/relentlessrun',
-    'https://wa.me/917518418960',
+    'https://wa.me/918287491957',
   ],
   address: {
     '@type': 'PostalAddress',
@@ -25,7 +25,7 @@ const organizationSchema = {
     '@type': 'ContactPoint',
     contactType: 'customer support',
     email: 'relentlessrunofficial@gmail.com',
-    telephone: '+91-7518418960',
+    telephone: '+91-8287491957',
     areaServed: 'IN',
     availableLanguage: ['English', 'Hindi'],
   },
