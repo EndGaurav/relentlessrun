@@ -21,23 +21,23 @@ const posts = [
 
 export function EventCommunity() {
   return (
-    <section className="section border-b border-(--line)">
+    <section className="section border-b border-white/10 bg-[#090d16]">
       <div className="container-page">
         <SectionHeader
-          eyebrow="The community"
+          eyebrow="Community Highlights"
           title={
             <>
               Real runners. Real medals.{" "}
-              <span className="text-gold">Real moments.</span>
+              <span className="text-gradient-premium">Real moments.</span>
             </>
           }
-          lead="Join 25,000+ runners who made Mountain Run part of their journey."
+          lead="Join 25,000+ runners across India who made Mountain Run a key part of their fitness journey."
         />
 
         <div className="mt-10 grid grid-cols-2 gap-3 sm:mt-14 sm:grid-cols-4 sm:gap-4">
           {posts.map((post, i) => (
             <Reveal key={post.src} delay={i * 0.07}>
-              <div className="group relative aspect-square overflow-hidden rounded-2xl border border-(--line) bg-(--panel)">
+              <div className="group relative aspect-square overflow-hidden rounded-2xl border border-white/10 bg-[#0d1322]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={post.src}
@@ -45,12 +45,12 @@ export function EventCommunity() {
                   loading="lazy"
                   className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
-                <div className="absolute inset-0 flex items-end justify-between bg-gradient-to-t from-black/70 via-transparent to-transparent p-3 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                <div className="absolute inset-0 flex items-end justify-between bg-gradient-to-t from-black/80 via-black/20 to-transparent p-3 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                   <span className="flex items-center gap-1.5 text-xs font-bold text-white">
-                    <Heart className="h-3.5 w-3.5 fill-white" />
+                    <Heart className="h-3.5 w-3.5 fill-[#38bdf8] text-[#38bdf8]" />
                     {post.likes}
                   </span>
-                  <InstagramGlyph className="h-4 w-4 text-white" />
+                  <InstagramGlyph className="h-4 w-4 text-[#38bdf8]" />
                 </div>
               </div>
             </Reveal>
@@ -62,10 +62,10 @@ export function EventCommunity() {
             href="https://instagram.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-full border border-(--line) bg-(--panel) px-5 py-2.5 text-sm font-bold text-(--foreground) shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-(--gold-line) hover:shadow-premium"
+            className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.05] px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-cyan-500/40 hover:bg-white/[0.1] hover:text-[#38bdf8]"
           >
-            <InstagramGlyph className="h-4 w-4 text-(--gold-deep)" />
-            Follow @relentlessrun
+            <InstagramGlyph className="h-4 w-4 text-[#38bdf8]" />
+            Follow @relentlessrun on Instagram
           </Link>
         </Reveal>
       </div>

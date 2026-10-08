@@ -7,21 +7,21 @@ import { Reveal, SectionHeader } from "./reveal";
 const reviews = [
   {
     name: "Aarav Sharma",
-    meta: "10 km finisher · Pune",
+    meta: "10 km Finisher · Pune",
     quote:
-      "Registration was simple and the proof upload was crystal clear. Getting my certificate the same week felt amazing.",
+      "Registration was super easy and the GPS proof verification took less than 24 hours. The medal is solid metal and looks amazing in person!",
   },
   {
     name: "Nisha Verma",
-    meta: "5 km beginner · Mumbai",
+    meta: "5 km Finisher · Mumbai",
     quote:
-      "I ran in my own city but still felt part of a real event. The medal made it genuinely memorable.",
+      "I ran in my local park at 6 AM. Getting the leaderboard ranking and the personalized certificate delivered felt super motivating.",
   },
   {
     name: "Rohan Mehta",
-    meta: "21 km finisher · Delhi",
+    meta: "21 km Half Marathon · Delhi",
     quote:
-      "The leaderboard gave my long run a real target. Clean experience from payment all the way to verification.",
+      "The leaderboard gave my training a real competitive target. Seamless experience from Razorpay checkout all the way to doorstep kit delivery.",
   },
 ];
 
@@ -46,15 +46,15 @@ export function EventReviews() {
   };
 
   return (
-    <section className="section border-b border-(--line)">
+    <section className="section border-b border-white/10 bg-[#090d16]">
       <div className="container-page">
         <div className="flex items-end justify-between gap-4">
           <SectionHeader
             align="left"
-            eyebrow="Runner reviews"
+            eyebrow="Runner Reviews"
             title={
               <>
-                Loved by runners{" "}
+                Loved by athletes{" "}
                 <span className="text-gradient-premium">across India</span>
               </>
             }
@@ -64,7 +64,7 @@ export function EventReviews() {
               type="button"
               onClick={() => scrollByCard(-1)}
               aria-label="Previous reviews"
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-(--line) bg-(--panel) text-(--muted) shadow-sm transition-all duration-200 hover:border-(--gold-line) hover:text-(--foreground)"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-[#0d1322] text-slate-300 shadow-sm transition-all duration-200 hover:border-cyan-500/40 hover:text-white"
             >
               <ChevronLeft className="h-5 w-5" />
             </button>
@@ -72,7 +72,7 @@ export function EventReviews() {
               type="button"
               onClick={() => scrollByCard(1)}
               aria-label="Next reviews"
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-(--line) bg-(--panel) text-(--muted) shadow-sm transition-all duration-200 hover:border-(--gold-line) hover:text-(--foreground)"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-[#0d1322] text-slate-300 shadow-sm transition-all duration-200 hover:border-cyan-500/40 hover:text-white"
             >
               <ChevronRight className="h-5 w-5" />
             </button>
@@ -88,28 +88,28 @@ export function EventReviews() {
               <article
                 key={review.name}
                 data-card
-                className="group relative flex h-full w-[86vw] shrink-0 snap-center flex-col rounded-3xl border border-(--line) bg-(--panel) p-6 shadow-[0_2px_20px_-4px_rgba(15,23,42,0.04)] transition-all duration-300 hover:-translate-y-1 hover:border-(--gold-line) hover:shadow-premium sm:w-[calc(50vw-2rem)] sm:p-7 lg:w-[calc(33.333vw-2.5rem)]"
+                className="group relative flex h-full w-[86vw] shrink-0 snap-center flex-col rounded-3xl border border-white/10 bg-[#0d1322] p-6 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:border-cyan-500/40 hover:shadow-[0_12px_30px_-5px_rgba(56,189,248,0.15)] sm:w-[calc(50vw-2rem)] sm:p-7 lg:w-[calc(33.333vw-2.5rem)]"
               >
                 <div className="flex items-center justify-between">
-                  <div className="flex gap-0.5">
+                  <div className="flex gap-1 text-amber-400">
                     {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="h-4 w-4 fill-(--gold) text-(--gold)" />
+                      <Star key={i} className="h-4 w-4 fill-amber-400" />
                     ))}
                   </div>
-                  <span className="rounded-full bg-(--sage-soft) px-2.5 py-1 text-[0.6rem] font-bold uppercase tracking-wider text-(--sage)">
-                    Verified
+                  <span className="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-0.5 text-[0.65rem] font-black uppercase tracking-wider text-emerald-400">
+                    Verified Finisher
                   </span>
                 </div>
-                <blockquote className="mt-4 flex-1 text-sm leading-relaxed text-(--muted) sm:text-[0.95rem]">
+                <blockquote className="mt-4 flex-1 text-sm leading-relaxed text-slate-300 sm:text-[0.95rem]">
                   &ldquo;{review.quote}&rdquo;
                 </blockquote>
-                <div className="mt-6 flex items-center gap-3 border-t border-(--line) pt-5">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full grad-gold text-xs font-black text-white shadow-gold">
+                <div className="mt-6 flex items-center gap-3 border-t border-white/10 pt-4">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-sky-400 to-blue-600 text-xs font-black text-white shadow-md shadow-sky-500/20">
                     {initials(review.name)}
                   </span>
                   <div className="min-w-0">
-                    <p className="truncate text-sm font-bold text-(--foreground)">{review.name}</p>
-                    <p className="truncate text-xs text-(--muted-soft)">{review.meta}</p>
+                    <p className="truncate text-sm font-bold text-white">{review.name}</p>
+                    <p className="truncate text-xs text-slate-400">{review.meta}</p>
                   </div>
                 </div>
               </article>

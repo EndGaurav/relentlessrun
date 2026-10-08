@@ -35,65 +35,59 @@ export function EventHero({ event, isPast }: { event: PublicEvent; isPast: boole
       : `Register now — ${event.price.replace(/^Rs\.\s*/, "₹")}`;
 
   return (
-    <section className="event-classic-hero relative overflow-hidden border-b border-(--line)">
-      <div className="hero-mesh-bg" />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background: [
-            "radial-gradient(ellipse 90% 60% at 50% -10%, color-mix(in srgb, var(--gold) 9%, transparent) 0%, transparent 55%)",
-            "radial-gradient(ellipse 60% 50% at 100% 20%, color-mix(in srgb, var(--sage) 8%, transparent) 0%, transparent 60%)",
-          ].join(", "),
-        }}
-      />
+    <section className="relative overflow-hidden border-b border-white/10 bg-[#090d16] text-[#f0f0f0] pt-20 sm:pt-24 pb-16">
+      {/* Background radiant glows */}
+      <div className="pointer-events-none absolute top-10 left-1/2 -translate-x-1/2 -z-10 h-[380px] w-[500px] sm:w-[700px] rounded-full bg-[#0284c7]/20 blur-[130px]" />
+      <div className="pointer-events-none absolute bottom-10 right-10 -z-10 h-[220px] w-[220px] rounded-full bg-[#38bdf8]/15 blur-[90px]" />
 
-      <div className="container-page pb-16 pt-5 sm:pt-7">
-
+      <div className="container-page pb-10 pt-4">
         {/* ─── Headline block ─── */}
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-8 text-center sm:mt-12"
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          className="text-center"
         >
-          <p className="inline-flex items-center gap-2 rounded-full border border-(--gold-line) bg-(--gold-soft) px-3.5 py-1.5 text-[0.65rem] font-bold uppercase tracking-widest text-(--gold-deep) shadow-sm sm:text-xs">
-            <Sparkles className="h-3 w-3" />
-            India&rsquo;s premium virtual run
-          </p>
+          <div className="inline-flex items-center gap-2 rounded-full border border-sky-400/40 bg-slate-950/80 px-4 py-1.5 text-xs font-black uppercase tracking-wider text-sky-300 backdrop-blur-md shadow-xl mb-4">
+            <Sparkles className="h-3.5 w-3.5 text-[#38bdf8]" />
+            <span>INDIA&rsquo;S PREMIER VIRTUAL RUN</span>
+          </div>
 
-          <h1 className="event-classic-title mt-5 text-[2rem] font-black leading-[1.05] tracking-tight text-(--foreground) sm:text-5xl lg:text-6xl">
-            <span className="block">{isPast ? "The" : "India's Premium"}</span>
-            <span className="text-gradient-premium block">{event.name}</span>
+          <h1 className="mt-2 font-black text-3xl sm:text-5xl lg:text-6xl uppercase tracking-tight text-white">
+            <span className="block text-slate-300 font-extrabold text-xl sm:text-2xl uppercase tracking-widest mb-1">
+              {isPast ? "OFFICIAL RECAP" : "ACTIVE CHALLENGE"}
+            </span>
+            <span className="block text-[#38bdf8] italic drop-shadow-[0_0_25px_rgba(56,189,248,0.5)]">
+              {event.name}
+            </span>
           </h1>
 
-          <p className="lede mx-auto mt-4 max-w-xl px-2 text-sm sm:mt-6 sm:text-lg">
-            Run anywhere. Your pace. Your proof.
-            <br className="hidden sm:block" /> Finish with pride — and a medal you&rsquo;ll never take off.
+          <p className="mx-auto mt-4 max-w-xl text-sm sm:text-base text-slate-300 font-medium leading-relaxed px-2">
+            Run anywhere. Your pace. Your proof. Finish with pride and earn official heavy-metal medals delivered to your doorstep.
           </p>
 
           {/* Rating */}
-          <div className="mt-5 flex items-center justify-center gap-1.5">
-            <div className="flex gap-0.5">
+          <div className="mt-4 flex items-center justify-center gap-1.5">
+            <div className="flex gap-1 text-amber-400">
               {[...Array(5)].map((_, i) => (
-                <Star key={i} className="h-4 w-4 fill-(--gold) text-(--gold)" />
+                <Star key={i} className="h-4 w-4 fill-amber-400 text-amber-400" />
               ))}
             </div>
-            <p className="text-xs font-semibold text-(--muted) sm:text-sm">
-              Trusted by runners across India
+            <p className="text-xs font-bold text-slate-300 ml-1">
+              4.9/5 Trusted by runners across India
             </p>
           </div>
 
           {/* CTAs */}
-          <div className="mx-auto mt-6 flex max-w-md flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-center">
+          <div className="mx-auto mt-6 flex max-w-md flex-col gap-3 sm:flex-row sm:items-center sm:justify-center">
             <RegisterCta
-              className="sm:min-w-56"
+              className="neon-btn-blue rounded-full px-8 py-3.5 text-xs font-black uppercase tracking-wider text-white shadow-xl hover:scale-105 transition-transform"
               signedInLabel="Register now"
               signedOutLabel={priceLabel}
               slug={event.slug}
             />
             <Link
-              className="btn btn-secondary gap-2 text-sm"
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-white/20 bg-white/10 px-6 py-3.5 text-xs font-bold uppercase tracking-wider text-white backdrop-blur-md hover:bg-white/20 transition-all shadow-md"
               href="#rewards"
               scroll
             >
@@ -103,7 +97,7 @@ export function EventHero({ event, isPast }: { event: PublicEvent; isPast: boole
 
           {!isPast && event.endsAt ? (
             <div className="mt-5 flex justify-center">
-              <span className="glass-pill inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-bold text-(--foreground)">
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-slate-900/90 backdrop-blur-xl px-4 py-1.5 text-xs font-bold text-slate-200 shadow-lg">
                 <EventCountdown targetDate={event.endsAt} compact />
               </span>
             </div>
@@ -114,31 +108,30 @@ export function EventHero({ event, isPast }: { event: PublicEvent; isPast: boole
             {rewardBadges.map(({ icon: Icon, label }, i) => (
               <motion.span
                 key={label}
-                initial={{ opacity: 0, y: 14 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.35 + i * 0.08, duration: 0.5 }}
-                className="badge-float glass-pill inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[0.7rem] font-semibold text-(--foreground) shadow-sm"
-                style={{ animationDelay: `${i * 0.55}s`, ["--tilt" as string]: `${i % 2 === 0 ? -3 : 3}deg` }}
+                transition={{ delay: 0.2 + i * 0.05, duration: 0.4 }}
+                className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/[0.04] px-3.5 py-1.5 text-[0.7rem] sm:text-xs font-bold text-slate-200 backdrop-blur-md shadow-md hover:border-sky-400/50 hover:bg-white/[0.08] transition-all"
               >
-                <Icon className="h-3.5 w-3.5 text-(--gold-deep)" />
+                <Icon className="h-3.5 w-3.5 text-[#38bdf8]" />
                 {label}
               </motion.span>
             ))}
           </div>
         </motion.div>
 
-        {/* ─── Cinematic poster frame ─── */}
+        {/* ─── Modern cinematic poster frame ─── */}
         <motion.div
-          initial={{ opacity: 0, y: 36 }}
+          initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.25, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="relative mx-auto mt-8 max-w-5xl sm:mt-14"
+          transition={{ delay: 0.2, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          className="relative mx-auto mt-8 max-w-5xl sm:mt-12"
         >
-          <div className="event-classic-poster relative overflow-hidden border border-(--line) bg-slate-950 shadow-premium">
+          <div className="relative overflow-hidden rounded-3xl border border-white/15 bg-slate-950 shadow-2xl">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={event.bannerImageUrl ?? "/images/mountain-run-hero.svg"}
-              alt={`${event.name} — run toward the mountains`}
+              alt={`${event.name} banner`}
               className="w-full h-auto max-h-[520px] object-contain sm:object-cover aspect-[16/9] sm:aspect-[16/8] lg:aspect-[21/9]"
               onError={(e) => {
                 const fallback = "/images/mountain-run-hero.svg";
@@ -148,48 +141,34 @@ export function EventHero({ event, isPast }: { event: PublicEvent; isPast: boole
               }}
             />
 
-            {/* golden sunrise glow */}
+            {/* Gradient Overlay */}
             <div
               aria-hidden
-              className="sun-pulse pointer-events-none absolute -top-16 right-8 h-40 w-40 rounded-full blur-3xl sm:h-64 sm:w-64"
-              style={{
-                background:
-                  "radial-gradient(circle, rgba(240,217,135,0.75) 0%, rgba(201,162,39,0.25) 45%, transparent 70%)",
-              }}
-            />
-            {/* soft vignette */}
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/10"
+              className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#090d16]/90 via-transparent to-transparent"
             />
 
-            {/* status badge */}
-            <span className="glass-pill absolute left-2.5 top-2.5 sm:left-5 sm:top-5 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[0.6rem] sm:text-xs font-bold uppercase tracking-wider text-white shadow-md">
+            {/* Status badge */}
+            <span className="absolute left-3 top-3 sm:left-5 sm:top-5 inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-slate-900/90 backdrop-blur-md px-3 py-1.5 text-[0.65rem] sm:text-xs font-black uppercase tracking-wider text-white shadow-xl">
               <span className="relative flex h-2 w-2">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
               </span>
-              {isPast ? "Event completed" : "Open for registration"}
+              {isPast ? "Event Completed" : "Open for Registration"}
             </span>
 
-            {/* floating medal - hidden on small mobile to not block poster text */}
-            <div className="hidden sm:block absolute -bottom-4 right-2 w-28 drop-shadow-2xl sm:-bottom-6 sm:right-8 sm:w-40 lg:w-48 pointer-events-none">
-              <div className="medal-float">
-                <Medal3D className="h-auto w-full" />
+            {/* Bottom Meta Bar */}
+            <div className="absolute inset-x-0 bottom-0 flex flex-wrap items-center justify-between gap-2 p-3 sm:p-5">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-slate-900/90 backdrop-blur-md px-3 py-1.5 text-xs font-bold text-white shadow-lg">
+                  <CalendarDays className="h-3.5 w-3.5 text-[#38bdf8]" />
+                  {event.date}
+                </span>
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-slate-900/90 backdrop-blur-md px-3 py-1.5 text-xs font-bold text-white shadow-lg">
+                  <Route className="h-3.5 w-3.5 text-[#38bdf8]" />
+                  {distances.slice(0, 3).join(" · ")}
+                  {distances.length > 3 ? " +" : ""}
+                </span>
               </div>
-            </div>
-
-            {/* bottom meta */}
-            <div className="absolute inset-x-0 bottom-0 flex flex-wrap items-center gap-2 p-2.5 sm:gap-3 sm:p-5">
-              <span className="glass-pill inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[0.65rem] font-bold text-white sm:text-xs">
-                <CalendarDays className="h-3.5 w-3.5" />
-                {event.date}
-              </span>
-              <span className="glass-pill inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[0.65rem] font-bold text-white sm:text-xs">
-                <Route className="h-3.5 w-3.5" />
-                {distances.slice(0, 3).join(" · ")}
-                {distances.length > 3 ? " +" : ""}
-              </span>
             </div>
           </div>
         </motion.div>

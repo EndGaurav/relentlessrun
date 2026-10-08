@@ -46,9 +46,11 @@ export function SectionHeader({
 }) {
   const inner = (
     <>
-      <p className="eyebrow">{eyebrow}</p>
-      <h2 className="heading mt-3 text-(--foreground) sm:mt-4">{title}</h2>
-      {lead ? <p className="lede mx-auto mt-3 max-w-2xl sm:mt-4">{lead}</p> : null}
+      <p className="text-xs font-black uppercase tracking-[0.2em] text-[#38bdf8]">
+        {eyebrow}
+      </p>
+      <h2 className="heading mt-3 text-white sm:mt-4">{title}</h2>
+      {lead ? <p className="lede mx-auto mt-3 max-w-2xl text-slate-400 sm:mt-4">{lead}</p> : null}
     </>
   );
 

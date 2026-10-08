@@ -48,23 +48,23 @@ const stats: Stat[] = [
 
 export function EventStats() {
   return (
-    <section className="event-classic-stats border-b border-(--line)">
-      <div className="container-page -mt-7 sm:-mt-8">
+    <section className="relative py-12 border-b border-white/10 bg-[#090d16]">
+      <div className="container-page">
         <Reveal>
-          <div className="grid grid-cols-2 gap-px overflow-hidden border border-(--line) bg-(--line) shadow-premium sm:grid-cols-4">
+          <div className="grid grid-cols-2 gap-4 rounded-3xl border border-white/10 bg-[#0d1322] p-4 sm:p-6 shadow-2xl sm:grid-cols-4 sm:gap-6">
             {stats.map(({ icon: Icon, value, suffix, label }) => (
               <div
                 key={label}
-                className="flex flex-col items-center gap-1.5 bg-(--panel) px-4 py-6 text-center transition-colors duration-300 hover:bg-(--panel-soft) sm:py-8"
+                className="flex flex-col items-center gap-2 p-3 text-center rounded-2xl hover:bg-white/[0.03] transition-colors"
               >
-                <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-(--gold-line) bg-(--gold-soft) text-(--gold-deep)">
-                  <Icon className="h-4.5 w-4.5" strokeWidth={1.75} />
+                <span className="flex h-11 w-11 items-center justify-center rounded-2xl border border-sky-400/30 bg-sky-500/10 text-[#38bdf8] shadow-md">
+                  <Icon className="h-5 w-5" strokeWidth={2} />
                 </span>
-                <span className="mt-1 text-2xl font-black tabular-nums tracking-tight text-(--foreground) sm:text-3xl">
+                <span className="mt-1 text-2xl font-black tabular-nums tracking-tight text-white sm:text-3xl">
                   <CountUp value={value} />
-                  <span className="text-(--gold-deep)">{suffix}</span>
+                  <span className="text-[#38bdf8]">{suffix}</span>
                 </span>
-                <span className="text-[0.6rem] font-semibold uppercase tracking-widest text-(--muted-soft) sm:text-[0.65rem]">
+                <span className="text-[0.65rem] sm:text-xs font-bold uppercase tracking-wider text-slate-400">
                   {label}
                 </span>
               </div>

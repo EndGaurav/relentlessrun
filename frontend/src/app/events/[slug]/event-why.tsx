@@ -42,36 +42,30 @@ const cards = [
 
 export function EventWhy() {
   return (
-    <section className="section border-b border-(--line)">
+    <section className="section border-b border-white/10 bg-[#090d16] text-[#f0f0f0]">
       <div className="container-page">
         <SectionHeader
-          eyebrow="Why this event"
+          eyebrow="Why This Challenge"
           title={
             <>
-              Built for every kind of{" "}
-              <span className="text-gradient-premium">runner</span>
+              Built For Every Kind Of{" "}
+              <span className="text-[#38bdf8]">Athlete</span>
             </>
           }
-          lead="No crowds. No pressure. Just you, your distance, and a finish that is 100% yours."
+          lead="No crowds. No pressure. Just you, your target distance, and a finish that is 100% verified."
         />
 
-        <div className="mt-10 grid grid-cols-1 gap-4 sm:mt-14 sm:grid-cols-2 lg:grid-cols-3">
-          {cards.map(({ icon: Icon, title, desc, tile }, i) => (
+        <div className="mt-10 grid grid-cols-1 gap-5 sm:mt-14 sm:grid-cols-2 lg:grid-cols-3">
+          {cards.map(({ icon: Icon, title, desc }, i) => (
             <Reveal key={title} delay={(i % 3) * 0.08}>
-              <article className="group relative h-full overflow-hidden rounded-3xl border border-(--line) bg-(--panel) p-6 transition-all duration-300 hover:-translate-y-1.5 hover:border-(--sage)/25 hover:shadow-premium sm:p-7">
-                <div
-                  aria-hidden
-                  className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-(--sage) opacity-[0.04] blur-2xl transition-all duration-500 group-hover:opacity-[0.09]"
-                />
-                <span
-                  className={`inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br ${tile} shadow-sm`}
-                >
-                  <Icon className="h-6 w-6" strokeWidth={1.75} />
+              <article className="group relative h-full overflow-hidden rounded-3xl border border-white/10 bg-[#0d1322] p-6 sm:p-7 shadow-xl transition-all duration-300 hover:-translate-y-1.5 hover:border-[#38bdf8] hover:shadow-[0_12px_40px_rgba(56,189,248,0.2)]">
+                <span className="inline-flex h-14 w-14 items-center justify-center rounded-2xl border border-sky-400/30 bg-sky-500/10 text-[#38bdf8] shadow-md group-hover:scale-105 group-hover:bg-[#0284c7] group-hover:text-white transition-all duration-300">
+                  <Icon className="h-6 w-6" strokeWidth={2} />
                 </span>
-                <h3 className="mt-5 text-lg font-bold tracking-tight text-(--foreground) transition-colors duration-300 group-hover:text-(--sage)">
+                <h3 className="mt-5 text-lg font-bold tracking-tight text-white transition-colors duration-300 group-hover:text-[#38bdf8]">
                   {title}
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-(--muted)">{desc}</p>
+                <p className="mt-2 text-sm leading-relaxed text-slate-300 font-medium">{desc}</p>
               </article>
             </Reveal>
           ))}

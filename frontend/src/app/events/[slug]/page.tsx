@@ -175,7 +175,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
         dangerouslySetInnerHTML={{ __html: JSON.stringify(eventFaqSchema) }}
       />
 
-      <div className="event-classic">
+      <div className="relative min-w-0 bg-[#090d16] text-[#f0f0f0]">
         {isPast ? (
           <>
             <EventHero event={event} isPast />
@@ -184,23 +184,23 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
             <EventReviews />
 
             <section
-              className="section relative overflow-hidden"
+              className="section relative overflow-hidden bg-[#090d16] border-t border-white/10"
               style={{
                 background:
-                  "radial-gradient(ellipse 70% 60% at 50% 0%, color-mix(in srgb, var(--sage) 10%, transparent) 0%, transparent 60%), var(--background)",
+                  "radial-gradient(ellipse 70% 60% at 50% 0%, rgba(2, 132, 199, 0.15) 0%, transparent 60%), #090d16",
               }}
             >
               <div className="container-page text-center">
                 <Reveal>
                   <div className="mx-auto flex max-w-2xl flex-col items-center gap-5">
-                    <span className="inline-flex items-center gap-1.5 rounded-full border border-(--line) bg-(--panel) px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-(--muted)">
-                      <Sparkles className="h-3.5 w-3.5 text-(--sage)" />
-                      {event.name} - finished
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/[0.06] px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-slate-300">
+                      <Sparkles className="h-3.5 w-3.5 text-[#38bdf8]" />
+                      {event.name} - Finished
                     </span>
-                    <h2 className="heading text-(--foreground)">{event.name} recap</h2>
-                    <p className="lede max-w-lg">{event.highlight}</p>
-                    <Link className="btn btn-gold gap-2 text-sm" href="/events">
-                      Join the next event
+                    <h2 className="heading text-white">{event.name} Recap</h2>
+                    <p className="lede max-w-lg text-slate-300">{event.highlight}</p>
+                    <Link className="neon-btn-blue inline-flex items-center gap-2 rounded-full px-7 py-3 text-xs font-black uppercase tracking-wider text-white shadow-xl" href="/events">
+                      Join Next Event
                       <ArrowRight className="h-4 w-4" />
                     </Link>
                   </div>
@@ -220,7 +220,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
             <EventCommunity />
             <EventReviews />
 
-            <section className="section border-b border-(--line)">
+            <section className="section border-b border-white/10 bg-[#090d16]">
               <div className="container-page">
                 <SectionHeader
                   eyebrow="Questions"
