@@ -6,17 +6,24 @@ import { ArrowRight } from "lucide-react";
 
 export function RegisterCta({
   slug,
+  distance,
+  activity,
   className,
   signedInLabel,
   signedOutLabel,
 }: {
   slug: string;
+  distance?: string;
+  activity?: string;
   className?: string;
   signedInLabel: string;
   signedOutLabel: string;
 }) {
   const { isSignedIn } = useUser();
-  const href = `/register?event=${encodeURIComponent(slug)}`;
+  const query = new URLSearchParams({ event: slug });
+  if (distance) query.set("distance", distance);
+  if (activity) query.set("activity", activity);
+  const href = `/register?${query.toString()}`;
 
   return (
     <Link className={`btn btn-gold gap-2 text-sm group ${className ?? ""}`} href={href}>

@@ -185,6 +185,7 @@ function PaymentRegistrationFormInner() {
   const searchParams = useSearchParams();
   const eventFromQuery = searchParams.get("event")?.trim() ?? "";
   const distanceFromQuery = searchParams.get("distance")?.trim() ?? "";
+  const activityFromQuery = searchParams.get("activity")?.trim() ?? "";
 
   const [status, setStatus] = useState<"idle" | "creating" | "paying" | "paid" | "error">("idle");
   const [message, setMessage] = useState("Complete the form and continue to secure checkout.");
@@ -196,7 +197,9 @@ function PaymentRegistrationFormInner() {
     eventFromQuery || fallbackEvents[0].value,
   );
   const [selectedDistance, setSelectedDistance] = useState(distanceFromQuery || "");
-  const [selectedActivity, setSelectedActivity] = useState("running");
+  const [selectedActivity, setSelectedActivity] = useState(
+    activityFromQuery === "run" ? "running" : activityFromQuery === "walk" ? "walking" : activityFromQuery === "cycle" ? "cycling" : activityFromQuery || "running",
+  );
   const [selectedTshirt, setSelectedTshirt] = useState("L");
   const [runnerName, setRunnerName] = useState("");
   const [errors, setErrors] = useState<FieldErrors>({});
@@ -318,15 +321,19 @@ function PaymentRegistrationFormInner() {
   useEffect(() => {
     if (distanceFromQuery && distanceOptions.includes(distanceFromQuery)) {
       setSelectedDistance(distanceFromQuery);
-      return;
-    }
-    if (!distanceOptions.includes(selectedDistance)) {
+    } else if (!distanceOptions.includes(selectedDistance)) {
       setSelectedDistance(distanceOptions[0] ?? "");
     }
-    if (!activityOptions.includes(selectedActivity)) {
+
+    const normQueryAct =
+      activityFromQuery === "run" ? "running" : activityFromQuery === "walk" ? "walking" : activityFromQuery === "cycle" ? "cycling" : activityFromQuery;
+
+    if (normQueryAct && activityOptions.includes(normQueryAct)) {
+      setSelectedActivity(normQueryAct);
+    } else if (!activityOptions.includes(selectedActivity)) {
       setSelectedActivity(activityOptions[0] ?? "running");
     }
-  }, [distanceOptions, distanceFromQuery, selectedDistance, activityOptions, selectedActivity]);
+  }, [distanceOptions, distanceFromQuery, selectedDistance, activityOptions, activityFromQuery, selectedActivity]);
 
   // Pincode auto-lookup handler
   async function handlePincodeChange(code: string) {
@@ -703,6 +710,34 @@ function PaymentRegistrationFormInner() {
               </select>
               <FieldError message={errors.distance} />
             </Field>
+
+            {activityOptions.length > 1 && (
+              <Field label="Activity Type" required>
+                <select
+                  className={inputClass}
+                  name="activityType"
+                  onChange={(e) => setSelectedActivity(e.target.value)}
+                  required
+                  value={selectedActivity}
+                >
+                  {activityOptions.map((act) => {
+                    const label =
+                      act === "running"
+                        ? "Running"
+                        : act === "walking"
+                        ? "Walking"
+                        : act === "cycling"
+                        ? "Cycling"
+                        : act.charAt(0).toUpperCase() + act.slice(1);
+                    return (
+                      <option key={act} value={act}>
+                        {label}
+                      </option>
+                    );
+                  })}
+                </select>
+              </Field>
+            )}
           </div>
 
           {/* T-Shirt Size Selector */}
