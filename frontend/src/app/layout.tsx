@@ -133,17 +133,17 @@ export default function RootLayout({
         <StructuredData />
       </head>
       <body className="relative min-h-full flex flex-col bg-[#090d16] text-[#f0f0f0] overflow-x-hidden">
-        {/* Global Runner Backdrop Image Overlay */}
+        {/* Global Runner Backdrop Image Overlay (Hardware accelerated) */}
         <div
           aria-hidden="true"
-          className="pointer-events-none fixed inset-0 z-[-1] select-none overflow-hidden"
+          className="pointer-events-none fixed inset-0 z-[-1] select-none overflow-hidden will-change-transform transform-gpu"
         >
           <img
             src="/runner-img.jpg"
             alt=""
-            className="h-full w-full object-cover object-center opacity-25 scale-105 filter blur-[4px] brightness-75 contrast-125 transition-opacity duration-1000"
+            className="h-full w-full object-cover object-center opacity-20 scale-100 brightness-75 contrast-110"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#090d16]/75 via-[#090d16]/85 to-[#090d16]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#090d16]/80 via-[#090d16]/90 to-[#090d16]" />
         </div>
 
         <ThemeProvider>

@@ -125,25 +125,25 @@ html[data-theme="dark"] {
 }
 
 .glass-card-dark {
-  background: rgba(11, 16, 26, 0.75);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  background: rgba(11, 16, 26, 0.88);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 16px 32px -8px rgba(0, 0, 0, 0.6);
 }
 
 .glass-card-accent {
-  background: linear-gradient(135deg, rgba(37, 99, 235, 0.14) 0%, rgba(11, 16, 26, 0.8) 100%);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.16) 0%, rgba(11, 16, 26, 0.9) 100%);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(56, 189, 248, 0.3);
-  box-shadow: 0 20px 40px -10px rgba(37, 99, 235, 0.25);
+  box-shadow: 0 16px 30px -8px rgba(37, 99, 235, 0.2);
 }
 
 .glass-pill-bar {
-  background: rgba(15, 23, 42, 0.75);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: rgba(15, 23, 42, 0.88);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
@@ -1010,8 +1010,8 @@ html[data-theme="dark"] .badge-danger {
 
 .glass-card {
   background: var(--glass-card-bg);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border: 1px solid var(--glass-card-border);
   box-shadow: var(--shadow);
 }
@@ -2041,16 +2041,19 @@ html[data-theme="dark"] .cl-userButtonPopoverCard {
   .dashboard-race-card { box-shadow: 5px 5px 0 rgba(190,142,49,.1); }
 }
 
-/* Continuous Marquee Ticker */
+/* Continuous Marquee Ticker with 60fps Hardware Acceleration */
 @keyframes marquee {
-  0% { transform: translateX(0%); }
-  100% { transform: translateX(-50%); }
+  0% { transform: translate3d(0%, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
 }
 
 .animate-marquee-slow {
   display: flex;
   width: max-content;
-  animation: marquee 40s linear infinite;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  animation: marquee 36s linear infinite;
 }
 
 .animate-marquee-slow:hover {

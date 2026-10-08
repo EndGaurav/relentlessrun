@@ -294,7 +294,16 @@ export function AppHeader() {
   }, []);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
+    let ticking = false;
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setScrolled(window.scrollY > 20);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
     return () => window.removeEventListener("scroll", onScroll);
@@ -345,15 +354,12 @@ export function AppHeader() {
               aria-label="Relentless Run home"
               className="group relative flex min-w-0 shrink-0 items-center gap-3"
             >
-              <motion.img
+              <img
                 src="/3d-header-logo.png"
                 alt="Relentless Run"
                 width={160}
                 height={40}
-                animate={{ y: [0, -2, 0], scale: [1, 1.02, 1] }}
-                transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut" }}
-                whileHover={{ scale: 1.05 }}
-                className="h-7 sm:h-7.5 lg:h-8 w-auto object-contain drop-shadow-[0_4px_16px_rgba(56,189,248,0.35)]"
+                className="h-7 sm:h-7.5 lg:h-8 w-auto object-contain drop-shadow-[0_4px_16px_rgba(56,189,248,0.35)] transition-transform duration-300 group-hover:scale-105"
               />
             </Link>
 
@@ -402,15 +408,12 @@ export function AppHeader() {
       <div className="flex w-full items-center justify-between md:hidden">
         <div className="flex h-12 w-full items-center justify-between pl-0.5 pr-1 py-1">
           <Link href="/" aria-label="Relentless Run home" className="group flex min-w-0 shrink-0 items-center">
-            <motion.img
+            <img
               src="/3d-header-logo.png"
               alt="Relentless Run"
               width={120}
               height={30}
-              animate={{ y: [0, -2, 0], scale: [1, 1.02, 1] }}
-              transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut" }}
-              whileHover={{ scale: 1.06 }}
-              className="h-5.5 sm:h-6.5 w-auto object-contain shrink-0 drop-shadow-[0_3px_10px_rgba(56,189,248,0.25)]"
+              className="h-5.5 sm:h-6.5 w-auto object-contain shrink-0 drop-shadow-[0_3px_10px_rgba(56,189,248,0.25)] transition-transform duration-300 active:scale-95"
             />
           </Link>
 

@@ -102,7 +102,7 @@ function OpenEventCard({ event, index = 0 }: { event: PublicEvent; index?: numbe
         {/* Top Badges */}
         <div className="relative z-10 p-4 flex items-start justify-between gap-2">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-[#0284c7] px-3 py-1 text-[0.65rem] font-black uppercase tracking-wider text-white shadow-lg">
-            <Flame className="h-3 w-3 animate-bounce fill-white" />
+            <Flame className="h-3 w-3 fill-white" />
             <span>{scarcity.percent}% Booked</span>
           </span>
 

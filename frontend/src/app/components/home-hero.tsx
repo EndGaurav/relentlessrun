@@ -32,43 +32,34 @@ const activityHistory = [
 export function HomeHero() {
   return (
     <section className="relative h-[80dvh] min-h-[500px] max-h-[640px] sm:h-auto sm:min-h-[92vh] sm:max-h-none w-full overflow-hidden bg-[#090d16] text-white isolate flex flex-col justify-between sm:justify-center items-center pt-16 pb-4 sm:pt-28 sm:pb-20">
-      {/* ─── Animated Ken Burns Background Image ─── */}
+      {/* ─── Optimized High-Performance Background Images ─── */}
       <div className="absolute inset-0 overflow-hidden z-0 pointer-events-none">
-        {/* Mobile Full-Height Vertical 9:16 Image */}
-        <motion.img
-          src="/runner-mobile.jpg"
-          alt="Relentless Run Marathon"
-          initial={{ scale: 1, y: 0 }}
-          animate={{
-            scale: [1, 1.05, 1],
-            y: [0, -6, 0],
-          }}
-          transition={{
-            duration: 14,
-            ease: "easeInOut",
-            repeat: Infinity,
-          }}
-          className="h-full w-full object-cover object-[center_30%] brightness-[0.98] contrast-[1.05] block sm:hidden will-change-transform"
-        />
-        {/* Desktop Widescreen 16:9 Image */}
-        <motion.img
-          src="/runner-hd.jpg"
-          alt="Relentless Run Marathon"
-          initial={{ scale: 1, x: 0, y: 0 }}
-          animate={{
-            scale: [1, 1.07, 1],
-            x: [0, -12, 0],
-            y: [0, -6, 0],
-          }}
-          transition={{
-            duration: 16,
-            ease: "easeInOut",
-            repeat: Infinity,
-          }}
-          className="h-full w-full object-cover object-center brightness-[0.95] contrast-[1.05] hidden sm:block will-change-transform"
-        />
+        {/* Mobile Vertical Image */}
+        <div className="relative h-full w-full block sm:hidden">
+          <Image
+            src="/runner-mobile.jpg"
+            alt="Relentless Run Marathon"
+            fill
+            priority
+            quality={85}
+            sizes="100vw"
+            className="object-cover object-[center_30%] brightness-[0.98] contrast-[1.05]"
+          />
+        </div>
+        {/* Desktop Widescreen Image */}
+        <div className="relative h-full w-full hidden sm:block">
+          <Image
+            src="/runner-hd.jpg"
+            alt="Relentless Run Marathon"
+            fill
+            priority
+            quality={85}
+            sizes="100vw"
+            className="object-cover object-center brightness-[0.95] contrast-[1.05]"
+          />
+        </div>
 
-        {/* Contrast Overlay - Mobile has top scrim for snowy mountain text readability, Desktop is unchanged */}
+        {/* Contrast Overlays */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/45 to-black/30 block sm:hidden" />
         <div className="absolute inset-0 bg-black/40 hidden sm:block" />
       </div>
