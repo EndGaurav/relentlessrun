@@ -11,6 +11,8 @@ import {
   Zap,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { getApiUrl } from "../../lib/api";
+import { type ApiEvent, mapApiEventToPublic } from "../../lib/events-api";
 import type { PublicEvent } from "../data/events";
 import { publicEvents as staticUpcoming } from "../data/events";
 
@@ -181,7 +183,40 @@ function EventCard({ event, index }: { event: PublicEvent; index: number }) {
 }
 
 export function HomeEvents({ initial = staticUpcoming.slice(0, 3) }: { initial?: PublicEvent[] }) {
-  const events = initial;
+  const [events, setEvents] = useState<PublicEvent[]>(initial);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      try {
+        const response = await fetch(getApiUrl("/api/events?scope=open"), {
+          cache: "no-store",
+        });
+        if (!response.ok) return;
+        const json = await response.json();
+        const rows = (json.data ?? []) as ApiEvent[];
+        if (cancelled) return;
+        if (Array.isArray(rows)) {
+          const sorted = [...rows].sort((a, b) => Number(Boolean(b.featured)) - Number(Boolean(a.featured)));
+          setEvents(sorted.slice(0, 3).map((event) => mapApiEventToPublic(event, "upcoming")));
+        }
+      } catch {
+        // keep initial/fallback
+      }
+    }
+    void load();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  if (events.length === 0) {
+    return (
+      <div className="mt-8 rounded-3xl border border-white/10 bg-slate-900/60 p-8 text-center text-slate-400">
+        <p className="text-sm">No active challenges at the moment. Check back soon!</p>
+      </div>
+    );
+  }
 
   return (
     <div className="mt-8 grid grid-cols-1 gap-5 sm:mt-10 sm:grid-cols-2 lg:grid-cols-3">

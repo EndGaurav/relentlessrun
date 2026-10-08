@@ -15,6 +15,9 @@ import { fetchOpenEvents, fetchHomeContent } from "../lib/events-api";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://relentlessrun.in";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export const metadata: Metadata = {
   title: "Virtual Running Events India 2026 | Real Medals & GPS Verified Races — Peak Run",
   description:

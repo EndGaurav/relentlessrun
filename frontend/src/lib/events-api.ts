@@ -151,11 +151,12 @@ export async function fetchOpenEvents(options?: {
   const limit = options?.limit;
   try {
     const response = await fetch(getApiUrl("/api/events?scope=open"), {
-      next: { revalidate: 300 },
+      next: { revalidate: 0 },
+      cache: "no-store",
     });
     if (response.ok) {
       const json = (await response.json()) as { data: ApiEvent[] };
-      if (Array.isArray(json.data) && json.data.length > 0) {
+      if (Array.isArray(json.data)) {
         let rows = [...json.data];
         if (options?.homeFeaturedFirst) {
           rows.sort((a, b) => Number(Boolean(b.featured)) - Number(Boolean(a.featured)));
@@ -167,7 +168,7 @@ export async function fetchOpenEvents(options?: {
       }
     }
   } catch {
-    // fallback
+    // fallback only on complete fetch failure
   }
 
   const fallback = allPublicEvents.filter((event) => event.status === "upcoming");
