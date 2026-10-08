@@ -10,7 +10,6 @@ import { EventStats } from "./event-stats";
 import { EventWhy } from "./event-why";
 import { EventRewards } from "./event-rewards";
 import { EventHow } from "./event-how";
-import { EventSelect } from "./event-select";
 import { EventCompare } from "./event-compare";
 import { EventCommunity } from "./event-community";
 import { EventReviews } from "./event-reviews";
@@ -209,10 +208,9 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
         ) : (
           <>
             <EventHero event={event} isPast={false} />
-            <EventSelect event={event} />
             <EventStats />
-            <EventWhy />
             <EventRewards />
+            <EventWhy />
             <EventHow event={event} />
             <EventCompare />
             <EventCommunity />
@@ -221,13 +219,13 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
             <section className="section border-b border-white/10 bg-[#090d16]">
               <div className="container-page">
                 <SectionHeader
-                  eyebrow="Questions"
+                  eyebrow="Questions & Answers"
                   title={
                     <>
                       Everything you need to <span className="text-gradient-premium">know</span>
                     </>
                   }
-                  lead="If it's not covered here, our team is one WhatsApp message away."
+                  lead="If it's not covered here, our athlete support team is one WhatsApp message away."
                 />
                 <div className="mt-10 sm:mt-14">
                   <EventFaq />
