@@ -133,27 +133,6 @@ function OpenEventCard({ event, index = 0 }: { event: PublicEvent; index?: numbe
 
       {/* Body Content */}
       <div className="flex flex-1 flex-col p-5 sm:p-6 bg-[#0d1322]">
-        {/* Scarcity Progress Bar */}
-        <div className="mb-4 space-y-1.5">
-          <div className="flex items-center justify-between text-[0.68rem]">
-            <span className="font-semibold text-sky-400 flex items-center gap-1">
-              <Zap className="h-3 w-3 text-sky-400" /> Only {scarcity.bibsLeft} Bibs Remaining
-            </span>
-            <span className="text-slate-400 font-mono font-medium">
-              {scarcity.percent}% filled
-            </span>
-          </div>
-          <div className="h-2 w-full overflow-hidden rounded-full bg-white/10 p-0.5 border border-white/10">
-            <motion.div
-              initial={{ width: 0 }}
-              whileInView={{ width: `${scarcity.percent}%` }}
-              viewport={{ once: true }}
-              transition={{ duration: 1, ease: "easeOut" }}
-              className="h-full rounded-full bg-gradient-to-r from-sky-400 via-[#38bdf8] to-blue-500"
-            />
-          </div>
-        </div>
-
         {/* Title & Distance */}
         <h3 className="font-bold text-lg sm:text-xl text-white tracking-tight transition-colors group-hover:text-[#38bdf8]">
           {event.name}

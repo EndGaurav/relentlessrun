@@ -115,27 +115,6 @@ function EventCard({ event, index }: { event: PublicEvent; index: number }) {
 
       {/* Body Content */}
       <div className="flex flex-1 flex-col p-5">
-        {/* Scarcity Progress Bar */}
-        <div className="mb-4 space-y-1.5">
-          <div className="flex items-center justify-between text-[0.68rem]">
-            <span className="font-semibold text-sky-600 flex items-center gap-1">
-              <Zap className="h-3 w-3" /> Only {scarcity.bibsLeft} Bibs Remaining
-            </span>
-            <span className="text-slate-500 font-mono">
-              {scarcity.percent}% filled
-            </span>
-          </div>
-          <div className="h-2 w-full overflow-hidden rounded-full bg-slate-100 p-0.5 border border-slate-200">
-            <motion.div
-              initial={{ width: 0 }}
-              whileInView={{ width: `${scarcity.percent}%` }}
-              viewport={{ once: true }}
-              transition={{ duration: 1, ease: "easeOut" }}
-              className="h-full rounded-full bg-gradient-to-r from-sky-500 via-[#0284c7] to-blue-700"
-            />
-          </div>
-        </div>
-
         {/* Title & Distance */}
         <h3 className="text-lg sm:text-xl font-bold tracking-tight text-[#090d16] transition-colors group-hover:text-[#0284c7]">
           {event.name}
@@ -197,24 +176,14 @@ function EventCard({ event, index }: { event: PublicEvent; index: number }) {
 }
 
 function FeaturedEventSpotlight({ event }: { event: PublicEvent }) {
-  const scarcity = useMemo(() => getEventScarcity(event.slug), [event.slug]);
-  const [timeLeft, setTimeLeft] = useState<{ hours: number; minutes: number; seconds: number }>({
-    hours: 18,
-    minutes: 32,
-    seconds: 45,
-  });
+  const [countdown, setCountdown] = useState(() => getEventCountdown(event.endsAt));
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev.seconds > 0) return { ...prev, seconds: prev.seconds - 1 };
-        if (prev.minutes > 0) return { ...prev, minutes: 59, seconds: 59 };
-        if (prev.hours > 0) return { hours: prev.hours - 1, minutes: 59, seconds: 59 };
-        return { hours: 12, minutes: 30, seconds: 0 };
-      });
+      setCountdown(getEventCountdown(event.endsAt));
     }, 1000);
     return () => clearInterval(timer);
-  }, []);
+  }, [event.endsAt]);
 
   return (
     <motion.div
@@ -253,7 +222,7 @@ function FeaturedEventSpotlight({ event }: { event: PublicEvent }) {
           <div className="absolute top-4 left-4 right-4 z-10 flex items-center justify-between gap-2">
             <span className="inline-flex items-center gap-1.5 rounded-full bg-[#0284c7] px-3.5 py-1 text-xs font-black uppercase tracking-wider text-white shadow-lg">
               <Flame className="h-3.5 w-3.5 fill-white" />
-              <span>{scarcity.percent}% Booked</span>
+              <span>Featured Event</span>
             </span>
 
             <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-[#090d16]/90 backdrop-blur-md px-3.5 py-1 text-xs font-black uppercase tracking-wider text-emerald-400 shadow-md">
@@ -310,26 +279,6 @@ function FeaturedEventSpotlight({ event }: { event: PublicEvent }) {
             <div className="mt-4 text-xs sm:text-sm leading-relaxed text-slate-300 font-medium whitespace-pre-line line-clamp-4">
               {event.description || event.highlight}
             </div>
-
-            {/* Progress Scarcity Bar */}
-            <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.04] p-4 space-y-2">
-              <div className="flex items-center justify-between text-xs">
-                <span className="font-bold text-sky-400 flex items-center gap-1.5">
-                  <Zap className="h-3.5 w-3.5" /> Only {scarcity.bibsLeft} bibs left in current batch!
-                </span>
-                <span className="text-slate-400 font-mono font-bold">
-                  {scarcity.percent}% full
-                </span>
-              </div>
-              <div className="h-2.5 w-full overflow-hidden rounded-full bg-slate-800 p-0.5 border border-white/10">
-                <motion.div
-                  initial={{ width: 0 }}
-                  animate={{ width: `${scarcity.percent}%` }}
-                  transition={{ duration: 1, ease: "easeOut" }}
-                  className="h-full rounded-full bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-500"
-                />
-              </div>
-            </div>
           </div>
 
           {/* Footer Action Strip */}
@@ -339,7 +288,8 @@ function FeaturedEventSpotlight({ event }: { event: PublicEvent }) {
                 <Timer className="h-4 w-4 text-[#38bdf8]" />
                 <span>Registration Closes in:</span>
                 <span className="font-mono font-bold text-white">
-                  {timeLeft.hours}h {String(timeLeft.minutes).padStart(2, "0")}m {String(timeLeft.seconds).padStart(2, "0")}s
+                  {countdown.days > 0 ? `${countdown.days}d ` : ""}
+                  {countdown.hours}h {String(countdown.minutes).padStart(2, "0")}m
                 </span>
               </div>
               <div className="mt-1 flex items-baseline gap-2">

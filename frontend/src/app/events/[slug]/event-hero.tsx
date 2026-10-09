@@ -269,13 +269,8 @@ export function EventHero({
               <div className="flex items-center gap-2.5 mb-2">
                 <span className="inline-flex items-center gap-1 rounded-md bg-[#0284c7] px-2.5 py-0.5 text-[0.65rem] font-black uppercase tracking-wider text-white shadow-md">
                   <Flame className="h-3 w-3 fill-white" />
-                  {isPast ? "OFFICIAL RECAP" : `${scarcity.percent}% Booked`}
+                  {isPast ? "OFFICIAL RECAP" : "Registration Open"}
                 </span>
-                {!isPast && (
-                  <span className="text-[0.7rem] font-bold text-sky-700 flex items-center gap-1 font-mono">
-                    <Zap className="h-3 w-3 text-[#0284c7]" /> Only {scarcity.bibsLeft} bibs left in current slot
-                  </span>
-                )}
               </div>
 
               <h1 className="font-bold text-3xl sm:text-4xl lg:text-5xl uppercase tracking-tight text-[#090d16] leading-tight">
