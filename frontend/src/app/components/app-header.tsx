@@ -184,28 +184,28 @@ function DashboardProfileDropdown({ isMobile = false }: { isMobile?: boolean }) 
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -6 }}
             transition={{ duration: 0.15, ease: [0.22, 1, 0.36, 1] }}
-            className="absolute right-0 top-[calc(100%+10px)] z-50 w-64 origin-top-right overflow-hidden rounded-2xl border border-white/20 bg-slate-950/60 backdrop-blur-3xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.35),0_20px_50px_rgba(0,0,0,0.7),0_0_20px_rgba(56,189,248,0.15)]"
+            className="absolute right-0 top-[calc(100%+10px)] z-[100] w-68 origin-top-right overflow-hidden rounded-2xl border border-white/20 bg-[#0b101d] shadow-[0_20px_60px_rgba(0,0,0,0.95),0_0_25px_rgba(56,189,248,0.2)]"
           >
             <div className="h-[2px] w-full bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-500" />
             
             {/* Athlete Header */}
-            <div className="border-b border-white/10 bg-white/[0.06] p-3.5 backdrop-blur-md">
-              <div className="flex items-center justify-between">
+            <div className="border-b border-white/10 bg-[#131b2e] p-3.5">
+              <div className="flex items-center justify-between gap-2">
                 <p className="truncate text-xs font-black uppercase tracking-wider text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">{name}</p>
-                <span className="rounded-full bg-sky-500/25 border border-sky-400/40 px-1.5 py-0.5 text-[0.55rem] font-black uppercase tracking-wider text-sky-300">
+                <span className="shrink-0 rounded-full bg-sky-500/25 border border-sky-400/40 px-2 py-0.5 text-[0.6rem] font-black uppercase tracking-wider text-sky-300">
                   Athlete ⚡
                 </span>
               </div>
-              <p className="truncate text-[0.65rem] text-slate-300 font-medium mt-0.5">
+              <p className="truncate text-[0.7rem] text-slate-300 font-medium mt-1">
                 {user?.primaryEmailAddress?.emailAddress}
               </p>
             </div>
 
-            <div className="p-2 space-y-1">
+            <div className="p-2 space-y-1 bg-[#0b101d]">
               <Link
                 href="/dashboard"
                 onClick={() => setOpen(false)}
-                className="flex items-center gap-2.5 rounded-xl border border-transparent bg-white/[0.04] px-3 py-2 text-xs font-bold text-white transition-all duration-200 hover:bg-white/10 hover:border-white/15 hover:text-sky-300"
+                className="flex items-center gap-2.5 rounded-xl border border-transparent bg-white/[0.05] px-3 py-2.5 text-xs font-bold text-white transition-all duration-200 hover:bg-white/15 hover:border-white/20 hover:text-sky-300"
               >
                 <LayoutDashboard className="h-4 w-4 text-sky-400" />
                 Athlete Dashboard
@@ -217,7 +217,7 @@ function DashboardProfileDropdown({ isMobile = false }: { isMobile?: boolean }) 
                   setOpen(false);
                   openUserProfile();
                 }}
-                className="flex w-full items-center gap-2.5 rounded-xl border border-transparent px-3 py-2 text-xs font-medium text-slate-300 transition-all duration-200 hover:bg-white/10 hover:text-white cursor-pointer"
+                className="flex w-full items-center gap-2.5 rounded-xl border border-transparent px-3 py-2.5 text-xs font-medium text-slate-200 transition-all duration-200 hover:bg-white/10 hover:text-white cursor-pointer"
               >
                 <Settings className="h-3.5 w-3.5 text-slate-400" />
                 Account Settings
@@ -231,7 +231,7 @@ function DashboardProfileDropdown({ isMobile = false }: { isMobile?: boolean }) 
                   setOpen(false);
                   void signOut(() => router.push("/"));
                 }}
-                className="flex w-full items-center gap-2.5 rounded-xl border border-rose-500/30 bg-rose-500/15 px-3 py-2 text-xs font-black uppercase tracking-wider text-rose-200 transition-all duration-200 hover:bg-rose-500/25 hover:border-rose-400/60 hover:text-white cursor-pointer"
+                className="flex w-full items-center justify-center gap-2 rounded-xl border border-rose-500/40 bg-rose-500/20 px-3 py-2.5 text-xs font-black uppercase tracking-wider text-rose-200 transition-all duration-200 hover:bg-rose-500/30 hover:border-rose-400 hover:text-white cursor-pointer"
               >
                 <LogOut className="h-3.5 w-3.5 text-rose-300" />
                 Sign out
