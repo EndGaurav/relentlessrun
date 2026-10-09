@@ -54,8 +54,9 @@ export function EventCountdown({
 
   if (compact) {
     return (
-      <div className="inline-flex items-center gap-2">
-        <span className="font-bold tabular-nums text-white">
+      <div className="inline-flex items-center gap-1.5 rounded-lg bg-slate-900 border border-slate-800 px-2.5 py-1 text-xs font-mono font-bold text-sky-400 shadow-sm">
+        <Timer className="h-3.5 w-3.5 text-sky-400 animate-pulse" />
+        <span className="tabular-nums">
           {parts.days > 0 ? `${parts.days}d ` : ""}
           {pad(parts.hours)}:{pad(parts.minutes)}:{pad(parts.seconds)}
         </span>
