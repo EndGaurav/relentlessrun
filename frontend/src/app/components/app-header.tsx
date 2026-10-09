@@ -19,6 +19,8 @@ import {
   Zap,
   X,
   ArrowRight,
+  Sparkles,
+  Info,
 } from "lucide-react";
 import { BrandText } from "./brand-text";
 import { ThemeToggle } from "./theme-toggle";
@@ -427,141 +429,178 @@ export function AppHeader() {
       </div>
     </header>
 
-    {/* ─── Production-Grade Slide-Over Mobile Drawer Sheet (Portaled to document.body) ─── */}
+    {/* ─── Ultra-Modern Full-Screen Mobile Navigation Overlay (Portaled to document.body) ─── */}
     {mounted && typeof document !== "undefined" && createPortal(
       <AnimatePresence>
         {open && (
-          <div className="fixed inset-0 z-[99999] md:hidden pointer-events-auto">
-            {/* Backdrop Overlay with Blur */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.25, ease: "easeOut" }}
-              className="fixed inset-0 bg-black/75 backdrop-blur-md"
-              onClick={() => setOpen(false)}
-              onTouchMove={(e) => e.preventDefault()}
-            />
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.22, ease: "easeInOut" }}
+            className="fixed inset-0 z-[99999] md:hidden flex flex-col h-[100dvh] w-full bg-[#070b14]/98 backdrop-blur-3xl text-white select-none overflow-hidden"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Mobile Navigation"
+          >
+            {/* Ambient Background Aura Glows */}
+            <div className="pointer-events-none absolute -top-20 -left-20 h-72 w-72 rounded-full bg-sky-500/15 blur-[100px]" />
+            <div className="pointer-events-none absolute top-1/2 -right-20 h-80 w-80 rounded-full bg-blue-600/15 blur-[120px]" />
+            <div className="pointer-events-none absolute -bottom-20 left-1/3 h-64 w-64 rounded-full bg-cyan-500/10 blur-[90px]" />
 
-            {/* Glowing Accent Orb behind drawer */}
-            <div className="pointer-events-none fixed right-0 top-1/3 -z-10 h-80 w-80 rounded-full bg-sky-500/20 blur-[120px]" />
-
-            {/* Slide-Over Drawer Sheet */}
-            <motion.nav
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ type: "spring", damping: 28, stiffness: 280 }}
-              className="fixed inset-y-0 right-0 z-10 flex h-full h-[100dvh] w-[85%] max-w-[340px] flex-col overflow-hidden rounded-l-[32px] border-l border-white/20 bg-slate-950/98 backdrop-blur-3xl shadow-[-25px_0_60px_rgba(0,0,0,0.85)] text-white"
-              role="dialog"
-              aria-modal="true"
-              aria-label="Mobile Navigation"
-            >
-              {/* Top Neon Accent Line */}
-              <div className="h-1 w-full bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-500 shrink-0" />
-
-              {/* Drawer Header: Brand Logo + Close Pill */}
-              <div className="flex items-center justify-between px-5 pt-4 pb-3.5 border-b border-white/10 shrink-0">
-                <Link
-                  href="/"
-                  onClick={() => setOpen(false)}
-                  className="flex items-center gap-2.5 shrink-0"
-                >
-                  <img
-                    src="/3d-header-logo.png"
-                    alt="Relentless Run"
-                    style={{ height: "22px", width: "auto" }}
-                    className="h-5.5 max-h-[24px] w-auto object-contain shrink-0 drop-shadow-[0_2px_8px_rgba(56,189,248,0.35)]"
-                  />
-                </Link>
-
-                {/* Circular Glass Close Button */}
-                <button
-                  type="button"
-                  onClick={() => setOpen(false)}
-                  aria-label="Close menu"
-                  className="flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-white/[0.08] text-slate-300 transition-all duration-200 hover:border-white/40 hover:bg-white/20 hover:text-white active:scale-90 shadow-md cursor-pointer"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-              </div>
-
-              {/* Scrollable Body */}
-              <div
-                className="flex-1 overflow-y-auto overscroll-contain no-scrollbar p-5 space-y-4"
-                style={{ touchAction: "pan-y", WebkitOverflowScrolling: "touch" }}
+            {/* Top Navigation Bar: Brand + Close */}
+            <div className="flex items-center justify-between px-6 pt-5 pb-4 border-b border-white/[0.08] shrink-0 relative z-10">
+              <Link
+                href="/"
+                onClick={() => setOpen(false)}
+                className="flex items-center gap-2.5"
               >
-                {/* Athlete Profile (only shown when signed in) */}
-                {isLoaded && isSignedIn && user ? (
-                  <div className="flex items-center gap-3 rounded-2xl border border-sky-400/30 bg-sky-500/[0.08] p-3.5 backdrop-blur-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]">
-                    {user?.imageUrl ? (
-                      <img
-                        src={user.imageUrl}
-                        alt={user?.fullName ?? "Athlete"}
-                        className="h-10 w-10 rounded-full object-cover ring-2 ring-sky-400/60 shadow-lg shrink-0"
-                      />
-                    ) : (
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-tr from-sky-500 to-blue-700 text-xs font-black text-white ring-2 ring-sky-400/60 shadow-lg shrink-0">
-                        {(user?.fullName ?? user?.firstName ?? "A").charAt(0).toUpperCase()}
-                      </div>
-                    )}
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-1.5">
-                        <p className="truncate text-xs font-black uppercase tracking-wider text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
-                          {user?.fullName ?? user?.firstName ?? "Athlete"}
-                        </p>
-                        <span className="rounded-full bg-sky-500/25 border border-sky-400/50 px-1.5 py-0.2 text-[0.52rem] font-black uppercase tracking-wider text-sky-300">
-                          PRO ⚡
-                        </span>
-                      </div>
-                      <p className="truncate text-[0.68rem] text-slate-300 font-medium mt-0.5">
-                        {user?.primaryEmailAddress?.emailAddress}
-                      </p>
+                <img
+                  src="/3d-header-logo.png"
+                  alt="Relentless Run"
+                  style={{ height: "24px", width: "auto" }}
+                  className="h-6 w-auto object-contain drop-shadow-[0_2px_10px_rgba(56,189,248,0.4)]"
+                />
+              </Link>
+
+              {/* Close Button with Subtle Rotation & Glass Glow */}
+              <button
+                type="button"
+                onClick={() => setOpen(false)}
+                aria-label="Close menu"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/[0.06] text-slate-300 transition-all duration-200 hover:border-white/30 hover:bg-white/15 hover:text-white active:scale-90 shadow-md cursor-pointer"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            {/* Scrollable / Centered Body */}
+            <div
+              className="flex-1 overflow-y-auto overscroll-contain no-scrollbar px-6 py-6 flex flex-col justify-between space-y-6 relative z-10"
+              style={{ touchAction: "pan-y", WebkitOverflowScrolling: "touch" }}
+            >
+              {/* Athlete Profile Card (when signed in) */}
+              {isLoaded && isSignedIn && user ? (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="flex items-center gap-3.5 rounded-2xl border border-sky-400/25 bg-gradient-to-r from-sky-500/10 via-blue-600/5 to-transparent p-4 backdrop-blur-xl shadow-lg"
+                >
+                  {user?.imageUrl ? (
+                    <img
+                      src={user.imageUrl}
+                      alt={user?.fullName ?? "Athlete"}
+                      className="h-11 w-11 rounded-full object-cover ring-2 ring-sky-400/60 shadow-md shrink-0"
+                    />
+                  ) : (
+                    <div className="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-tr from-sky-500 to-blue-700 text-sm font-bold text-white ring-2 ring-sky-400/60 shadow-md shrink-0">
+                      {(user?.fullName ?? user?.firstName ?? "A").charAt(0).toUpperCase()}
                     </div>
+                  )}
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2">
+                      <p className="truncate font-semibold text-sm text-white">
+                        {user?.fullName ?? user?.firstName ?? "Athlete"}
+                      </p>
+                      <span className="rounded-full bg-sky-500/20 border border-sky-400/40 px-2 py-0.2 text-[0.6rem] font-bold uppercase tracking-wider text-sky-300">
+                        Athlete
+                      </span>
+                    </div>
+                    <p className="truncate text-xs text-slate-400 font-normal mt-0.5">
+                      {user?.primaryEmailAddress?.emailAddress}
+                    </p>
                   </div>
-                ) : null}
+                </motion.div>
+              ) : null}
 
-                {/* Section Header */}
-                <div className="px-1 pt-1">
-                  <span className="text-[0.65rem] font-black uppercase tracking-widest text-slate-400">
-                    Menu Navigation
-                  </span>
-                </div>
+              {/* Main Navigation Items - Refined Typography & Clean Cards */}
+              <div className="space-y-3 my-auto">
+                {[
+                  {
+                    label: "Events & Challenges",
+                    href: "/events",
+                    desc: "Explore upcoming & active virtual marathons",
+                    icon: Calendar,
+                    badge: "Active",
+                  },
+                  {
+                    label: "Verified Leaderboard",
+                    href: "/leaderboard",
+                    desc: "Live timings, podiums & finisher ranks",
+                    icon: Trophy,
+                  },
+                  {
+                    label: "Finisher Gallery",
+                    href: "/gallery",
+                    desc: "Medal moments & runner community proofs",
+                    icon: Camera,
+                  },
+                  ...(isLoaded && isSignedIn
+                    ? [
+                        {
+                          label: "Athlete Dashboard",
+                          href: "/dashboard",
+                          desc: "Submit GPS proof, get certificates & track kit",
+                          icon: LayoutDashboard,
+                          badge: "Portal",
+                        },
+                      ]
+                    : []),
+                  {
+                    label: "About Relentless Run",
+                    href: "/about",
+                    desc: "Our mission, rules & how it works",
+                    icon: Sparkles,
+                  },
+                ].map((item, idx) => {
+                  const active = isActive(item.href);
+                  const Icon = item.icon;
 
-                {/* Navigation Links */}
-                <div className="space-y-2">
-                  {publicNav.map(([label, href, Icon]) => {
-                    const active = isActive(href);
-                    return (
+                  return (
+                    <motion.div
+                      key={item.href}
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.25, delay: idx * 0.04 }}
+                    >
                       <Link
-                        key={href}
-                        href={href}
+                        href={item.href}
                         onClick={() => setOpen(false)}
-                        className={`group flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs font-bold uppercase tracking-wider transition-all duration-200 active:scale-[0.98] ${
+                        className={`group flex items-center gap-4 rounded-2xl p-3.5 transition-all duration-200 active:scale-[0.98] ${
                           active
-                            ? "bg-gradient-to-r from-sky-500/30 via-blue-600/25 to-sky-500/15 border border-sky-400/60 text-white shadow-[0_0_16px_rgba(56,189,248,0.25)] backdrop-blur-xl"
-                            : "border border-white/10 bg-white/[0.04] text-slate-200 hover:bg-white/[0.1] hover:text-white hover:border-white/20 backdrop-blur-xl"
+                            ? "bg-sky-500/15 border border-sky-400/50 shadow-md shadow-sky-500/10"
+                            : "bg-white/[0.03] border border-white/[0.07] hover:bg-white/[0.07] hover:border-white/15"
                         }`}
                       >
                         <span
-                          className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-all duration-200 ${
+                          className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl transition-all duration-200 ${
                             active
-                              ? "bg-gradient-to-tr from-sky-400 to-blue-600 text-white shadow-[0_0_10px_rgba(56,189,248,0.5)]"
-                              : "bg-white/[0.08] text-sky-400 border border-white/10 group-hover:bg-white/15 group-hover:text-white"
+                              ? "bg-gradient-to-tr from-sky-400 to-blue-600 text-white shadow-lg shadow-sky-500/30"
+                              : "bg-white/[0.06] text-sky-400 border border-white/10 group-hover:bg-white/10 group-hover:text-white"
                           }`}
                         >
-                          <Icon className="h-4 w-4" strokeWidth={2.2} />
+                          <Icon className="h-5 w-5" strokeWidth={2} />
                         </span>
-                        <div className="flex-1 flex items-center justify-between">
-                          <span>{label}</span>
-                          {href === "/events" && (
-                            <span className="rounded-full bg-emerald-500/20 border border-emerald-400/40 px-2 py-0.5 text-[0.55rem] font-black uppercase tracking-wider text-emerald-300">
-                              Active Races
+
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-2">
+                            <span className="font-semibold text-base text-white tracking-tight group-hover:text-sky-300 transition-colors">
+                              {item.label}
                             </span>
-                          )}
+                            {item.badge && (
+                              <span className="rounded-full bg-emerald-500/20 border border-emerald-400/40 px-2 py-0.2 text-[0.6rem] font-bold uppercase tracking-wider text-emerald-300">
+                                {item.badge}
+                              </span>
+                            )}
+                          </div>
+                          <p className="truncate text-xs text-slate-400 font-normal mt-0.5">
+                            {item.desc}
+                          </p>
                         </div>
+
                         <svg
-                          className={`h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-1 ${
+                          className={`h-4 w-4 shrink-0 transition-transform duration-200 group-hover:translate-x-1 ${
                             active ? "text-sky-400" : "text-slate-500 group-hover:text-white"
                           }`}
                           viewBox="0 0 16 16"
@@ -574,48 +613,13 @@ export function AppHeader() {
                           <path d="m6 4 4 4-4 4" />
                         </svg>
                       </Link>
-                    );
-                  })}
-
-                  {/* Dashboard Link (if signed in) */}
-                  {isLoaded && isSignedIn && (
-                    <Link
-                      href="/dashboard"
-                      onClick={() => setOpen(false)}
-                      className={`group flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs font-bold uppercase tracking-wider transition-all duration-200 active:scale-[0.98] ${
-                        isActive("/dashboard")
-                          ? "bg-gradient-to-r from-sky-500/30 via-blue-600/25 to-sky-500/15 border border-sky-400/60 text-white shadow-[0_0_16px_rgba(56,189,248,0.25)] backdrop-blur-xl"
-                          : "border border-white/10 bg-white/[0.04] text-slate-200 hover:bg-white/[0.1] hover:text-white hover:border-white/20 backdrop-blur-xl"
-                      }`}
-                    >
-                      <span
-                        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-all duration-200 ${
-                          isActive("/dashboard")
-                            ? "bg-gradient-to-tr from-sky-400 to-blue-600 text-white shadow-[0_0_10px_rgba(56,189,248,0.5)]"
-                            : "bg-white/[0.08] text-sky-400 border border-white/10 group-hover:bg-white/15 group-hover:text-white"
-                        }`}
-                      >
-                        <LayoutDashboard className="h-4 w-4" strokeWidth={2.2} />
-                      </span>
-                      <span className="flex-1">Athlete Dashboard</span>
-                      <svg
-                        className="h-3.5 w-3.5 text-slate-500 transition-transform duration-200 group-hover:translate-x-1 group-hover:text-white"
-                        viewBox="0 0 16 16"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <path d="m6 4 4 4-4 4" />
-                      </svg>
-                    </Link>
-                  )}
-                </div>
+                    </motion.div>
+                  );
+                })}
               </div>
 
-              {/* Drawer Footer Actions - Sleek & Production Grade */}
-              <div className="p-5 border-t border-white/10 bg-slate-950/80 backdrop-blur-xl shrink-0 space-y-2.5">
+              {/* Bottom Actions - Sign Out / Auth Buttons */}
+              <div className="space-y-3 pt-2">
                 {isLoaded && isSignedIn ? (
                   <button
                     type="button"
@@ -623,37 +627,45 @@ export function AppHeader() {
                       setOpen(false);
                       void signOut(() => router.push("/"));
                     }}
-                    className="group flex w-full items-center justify-center gap-2 rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-rose-300 backdrop-blur-xl transition-all duration-200 hover:bg-rose-500/20 hover:border-rose-400/50 hover:text-white active:scale-[0.98] cursor-pointer"
+                    className="flex w-full items-center justify-center gap-2 rounded-xl border border-rose-500/25 bg-rose-500/10 px-4 py-3 text-xs font-semibold text-rose-300 transition-all hover:bg-rose-500/20 hover:border-rose-400/40 active:scale-[0.98] cursor-pointer"
                   >
-                    <LogOut className="h-3.5 w-3.5 text-rose-300 transition-transform group-hover:-translate-x-0.5" />
+                    <LogOut className="h-4 w-4" />
                     <span>Sign Out</span>
                   </button>
                 ) : (
-                  <div className="grid grid-cols-2 gap-2.5 w-full">
+                  <div className="grid grid-cols-2 gap-3 w-full">
                     <Link
                       href="/sign-in"
                       onClick={() => setOpen(false)}
-                      className="flex items-center justify-center rounded-xl border border-white/15 bg-white/[0.06] px-3.5 py-2.5 text-xs font-bold uppercase tracking-wider text-slate-200 backdrop-blur-md transition-all hover:bg-white/12 hover:border-white/25 hover:text-white active:scale-95"
+                      className="flex items-center justify-center rounded-xl border border-white/15 bg-white/[0.05] px-4 py-3 text-xs font-semibold text-slate-200 transition-all hover:bg-white/10 hover:text-white active:scale-95"
                     >
                       Sign In
                     </Link>
                     <Link
                       href="/register"
                       onClick={() => setOpen(false)}
-                      className="group relative inline-flex items-center justify-center gap-1.5 overflow-hidden rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 px-3.5 py-2.5 text-xs font-extrabold uppercase tracking-wider text-white shadow-md shadow-sky-500/25 active:scale-95 transition-all hover:from-sky-400 hover:to-blue-500"
+                      className="flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 px-4 py-3 text-xs font-bold text-white shadow-lg shadow-sky-500/25 transition-all hover:from-sky-400 hover:to-blue-500 active:scale-95"
                     >
                       <span>Register</span>
-                      <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+                      <ArrowRight className="h-3.5 w-3.5" />
                     </Link>
                   </div>
                 )}
-                
-                <p className="text-center text-[0.62rem] text-slate-500 font-medium pt-0.5">
-                  Relentless Run © 2026 • Virtual Marathon Platform
-                </p>
+
+                <div className="flex items-center justify-between text-[0.68rem] text-slate-500 pt-1">
+                  <span>Relentless Run © 2026</span>
+                  <a
+                    href="https://wa.me/918287491957"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-slate-400 hover:text-sky-300 transition-colors"
+                  >
+                    WhatsApp Support 💬
+                  </a>
+                </div>
               </div>
-            </motion.nav>
-          </div>
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>,
       document.body
