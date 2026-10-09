@@ -12,9 +12,13 @@ interface EventData {
 
 async function getEvents(): Promise<EventData[]> {
   try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 3500);
     const response = await fetch(`${API_URL}/api/events`, {
       next: { revalidate: 3600 },
+      signal: controller.signal,
     });
+    clearTimeout(timeoutId);
     if (!response.ok) return [];
     const data = await response.json();
     return data.data || [];
