@@ -24,8 +24,8 @@ function getEventScarcity(slug: string) {
     hash |= 0;
   }
   const positive = Math.abs(hash);
-  const percent = 78 + (positive % 18); // 78% to 95% booked
-  const bibsLeft = 14 + (positive % 32); // 14 to 45 bibs left
+  const percent = 36 + (positive % 16); // 36% to 51% booked
+  const bibsLeft = 45 + (positive % 35); // 45 to 79 bibs left
   return { percent, bibsLeft };
 }
 
@@ -211,11 +211,21 @@ function FeaturedEventSpotlight({ event }: { event: PublicEvent }) {
     >
       <div className="grid grid-cols-1 lg:grid-cols-12 items-stretch">
         {/* Left Visual Poster */}
-        <div className="relative min-h-[280px] sm:min-h-[340px] lg:min-h-[440px] lg:col-span-5 overflow-hidden bg-[#090d16]">
+        <div className="relative min-h-[300px] sm:min-h-[360px] lg:min-h-[440px] lg:col-span-5 overflow-hidden bg-slate-950 flex items-center justify-center p-6">
+          {/* Ambient blurred backdrop for seamless color fill */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 h-full w-full object-cover blur-2xl opacity-35 scale-110 pointer-events-none"
+            src={event.bannerImageUrl || "/images/mountain-run-hero.svg"}
+          />
+
+          {/* Main crisp full image — 100% uncropped */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             alt={`${event.name} banner`}
-            className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 hover:scale-105"
+            className="relative z-1 max-h-[300px] sm:max-h-[360px] lg:max-h-[400px] w-auto h-auto object-contain transition-transform duration-700 hover:scale-105 drop-shadow-[0_20px_40px_rgba(0,0,0,0.85)]"
             src={event.bannerImageUrl || "/images/mountain-run-hero.svg"}
             onError={(e) => {
               const fallback = "/images/mountain-run-hero.svg";
@@ -223,10 +233,6 @@ function FeaturedEventSpotlight({ event }: { event: PublicEvent }) {
                 e.currentTarget.src = fallback;
               }
             }}
-          />
-          <div
-            aria-hidden
-            className="absolute inset-0 bg-gradient-to-t from-[#090d16]/95 via-[#090d16]/30 to-transparent lg:bg-gradient-to-r lg:from-transparent lg:to-[#090d16]/80"
           />
 
           {/* Badges */}
@@ -284,9 +290,9 @@ function FeaturedEventSpotlight({ event }: { event: PublicEvent }) {
               ))}
             </div>
 
-            <p className="mt-4 text-sm sm:text-base leading-relaxed text-slate-300 font-medium">
+            <div className="mt-4 text-xs sm:text-sm leading-relaxed text-slate-300 font-medium whitespace-pre-line line-clamp-4">
               {event.description || event.highlight}
-            </p>
+            </div>
 
             {/* Progress Scarcity Bar */}
             <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.04] p-4 space-y-2">

@@ -64,10 +64,12 @@ function formatDateRange(startsAt: string, endsAt: string) {
 
 function deriveCompareAtPrice(priceInPaise: number): string | undefined {
   if (!priceInPaise || priceInPaise <= 0) return undefined;
-  const price = priceInPaise / 100;
-  const raw = price * 1.71;
-  const rounded = Math.max(Math.round(raw / 50) * 50, price + 100);
-  return `Rs. ${rounded}`;
+  const price = Math.round(priceInPaise / 100);
+  if (price === 499) return "Rs. 549";
+  if (price === 399) return "Rs. 449";
+  if (price === 649) return "Rs. 699";
+  const rounded = Math.round((price + 50) / 10) * 10 - 1;
+  return `Rs. ${rounded > price ? rounded : price + 50}`;
 }
 
 export function mapApiEventToPublic(

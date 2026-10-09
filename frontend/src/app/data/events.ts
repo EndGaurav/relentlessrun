@@ -68,7 +68,7 @@ export const allPublicEvents: PublicEvent[] = [
     bannerImageUrl: "/images/trail-summit.svg",
     reward: "Medal + certificate",
     status: "upcoming",
-    compareAtPrice: "Rs. 850",
+    compareAtPrice: "Rs. 549",
   },
   {
     name: "Independence Endurance Run",
