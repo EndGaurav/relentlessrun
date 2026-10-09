@@ -655,10 +655,11 @@ function PaymentRegistrationFormInner() {
               <input
                 aria-invalid={Boolean(errors.email)}
                 autoComplete="email"
-                className={`${inputClass} bg-(--panel-soft)`}
+                className={inputClass}
                 defaultValue={defaultEmail}
+                key={defaultEmail}
                 name="email"
-                readOnly
+                placeholder="e.g. runner@example.com"
                 required
                 type="email"
               />
