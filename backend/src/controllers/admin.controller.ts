@@ -189,7 +189,7 @@ export async function adminOverview(request: AuthenticatedRequest, response: Res
   // Per-Event Breakdown
   const eventBreakdown = allEventsList.map((ev) => {
     const regs = ev.registrations;
-    const paidRegs = regs.filter((r) => r.payment?.status === "PAID" || r.status === "CONFIRMED");
+    const paidRegs = regs.filter((r) => r.payment?.status === "PAID" || r.status === "CONFIRMED" || r.status === "COMPLETED");
     const pendingRegs = regs.filter((r) => r.status === "PENDING_PAYMENT");
     const eventRevenuePaise = regs.reduce((sum, r) => {
       if (r.payment && r.payment.status === "PAID") return sum + r.payment.amountInPaise;

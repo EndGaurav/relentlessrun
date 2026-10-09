@@ -120,7 +120,11 @@ function isEligible(reg: Registration) {
   return (
     reg.status === "CONFIRMED" ||
     reg.status === "COMPLETED" ||
-    reg.payment?.status === "PAID"
+    reg.payment?.status === "PAID" ||
+    reg.proofStatus === "SUBMITTED" ||
+    reg.proofStatus === "APPROVED" ||
+    Boolean(reg.certificate) ||
+    Boolean(reg.medalDelivery)
   );
 }
 
@@ -748,7 +752,7 @@ export function DashboardClient() {
                 </div>
               ) : (
                 activeRegistrations.map((reg) => {
-                  const isPaid = reg.payment?.status === "PAID" || reg.status === "CONFIRMED";
+                  const isPaid = isEligible(reg);
                   const isProofSubmitted = reg.proofStatus === "SUBMITTED";
                   const isVerified = reg.proofStatus === "APPROVED";
                   const isCertReady = Boolean(reg.certificate && reg.certificate.status !== "QUEUED");

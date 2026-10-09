@@ -624,7 +624,7 @@ export async function getLeaderboard(request: AuthenticatedRequest, response: Re
         ? "Verified Finisher"
         : p.proofStatus === "SUBMITTED"
           ? "Under Review"
-          : p.status === "CONFIRMED"
+          : p.status === "CONFIRMED" || p.status === "COMPLETED"
             ? "Confirmed Runner"
             : "Registered",
     proofStatus: p.proofStatus,
