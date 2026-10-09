@@ -19,17 +19,20 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 export const metadata: Metadata = {
-  title: "Virtual Running Events India 2026 | Real Medals & GPS Verified Races — Peak Run",
+  title: "Relentless Run | India's #1 Virtual Marathon & Running Challenges (Real Medals)",
   description:
-    "Join India's premier virtual running events. Run 1.5K, 5K, 10K, 21K marathons from anywhere. Track with Strava, Garmin, Nike, earn authentic metal finisher medals, t-shirts, and instant E-certificates.",
+    "Join Relentless Run — India's premier virtual running platform. Participate in 1.5K, 5K, 10K, and 21K virtual marathon challenges from anywhere in India. Track with Strava, Garmin, or Nike, and earn heavy metal finisher medals & instant verified E-certificates.",
   keywords: [
-    "virtual running",
-    "virtual running events india",
+    "relentless run",
+    "relentlessrun",
+    "relentless run india",
+    "relentless run marathon",
     "virtual marathon india",
-    "online running challenge",
+    "virtual running events india",
+    "online running challenge india",
     "virtual 5k run",
     "virtual 10k race",
-    "half marathon virtual",
+    "half marathon virtual 2026",
     "running events india",
     "strava virtual marathon india",
     "garmin running challenges",
@@ -40,9 +43,9 @@ export const metadata: Metadata = {
     "virtual race registration",
   ],
   openGraph: {
-    title: "Virtual Running Events India 2026 | Real Medals & GPS Verified Races — Peak Run",
+    title: "Relentless Run | India's #1 Virtual Marathon & Running Challenges",
     description:
-      "Join India's premier virtual running events. Run anywhere with Strava/Garmin, earn authentic metal finisher medals and digital certificates.",
+      "Join Relentless Run — India's premier virtual running platform. Run anywhere with Strava/Garmin, earn authentic metal finisher medals and digital certificates.",
     url: "/",
     type: "website",
   },

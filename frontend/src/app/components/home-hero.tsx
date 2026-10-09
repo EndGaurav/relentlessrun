@@ -79,11 +79,12 @@ export function HomeHero() {
           {/* Badge */}
           <div className="inline-flex items-center gap-1.5 sm:gap-2 rounded-full border border-sky-400/40 bg-slate-950/80 px-3 sm:px-4.5 py-1 sm:py-1.5 text-[0.68rem] sm:text-xs font-black uppercase tracking-wider text-sky-300 sm:text-sky-400 backdrop-blur-md mb-2.5 sm:mb-6 shadow-xl shadow-black/50 max-w-full">
             <Zap className="h-3.5 w-3.5 sm:h-4 sm:w-4 fill-sky-400 text-sky-400 shrink-0" />
-            <span className="truncate">INDIA&apos;S #1 VIRTUAL RUNNING PLATFORM</span>
+            <span className="truncate">RELENTLESS RUN · INDIA&apos;S #1 VIRTUAL RUNNING PLATFORM</span>
           </div>
 
           {/* Catchy Hook Line - Sleek, athletic, and beautifully proportioned */}
           <h1 className="font-extrabold text-[2.25rem] leading-[1.02] tracking-tight sm:text-6xl md:text-7xl lg:text-8xl uppercase sm:leading-[0.95] text-white drop-shadow-[0_4px_24px_rgba(0,0,0,0.95)]">
+            <span className="sr-only">Relentless Run — India&apos;s Premier Virtual Marathon and Running Platform. </span>
             <span className="block sm:whitespace-nowrap">CHASE THE</span>
             <span className="block text-[#38bdf8] italic font-black drop-shadow-[0_0_25px_rgba(56,189,248,0.6)] mt-0.5 sm:mt-0 sm:whitespace-nowrap">
               FINISH LINE

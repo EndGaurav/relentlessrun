@@ -3,10 +3,10 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://relentlessrun.in';
 const organizationSchema = {
   '@context': 'https://schema.org',
   '@type': 'SportsOrganization',
-  name: 'RelentlessRun',
-  alternateName: ['RelentlessRun India', 'RelentlessRun Virtual Races'],
+  name: 'Relentless Run',
+  alternateName: ['RelentlessRun', 'Relentless Run India', 'RelentlessRun.in', 'Relentless Run Virtual Marathon', 'Relentless Running'],
   url: SITE_URL,
-  logo: `${SITE_URL}/logo-mark.svg`,
+  logo: `${SITE_URL}/3d-header-logo.png`,
   image: `${SITE_URL}/og-image.png`,
   description:
     "India's premier GPS-verified virtual running events platform. Register with UPI, run anywhere with Strava or Garmin, earn heavy metal finisher medals, DRI-FIT t-shirts, and instant verified E-certificates.",
@@ -34,8 +34,8 @@ const organizationSchema = {
 const websiteSchema = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
-  name: 'RelentlessRun',
-  alternateName: 'RelentlessRun - Virtual Running Events India',
+  name: 'Relentless Run',
+  alternateName: ['RelentlessRun', 'Relentless Run - Virtual Running Events India', 'RelentlessRun India'],
   url: SITE_URL,
   description:
     'Join India’s top virtual running challenges, marathons, 5K, 10K, and 21K races. Run anywhere across India, submit GPS tracking proof, and receive authentic metal medals and digital certificates.',

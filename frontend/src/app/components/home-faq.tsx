@@ -12,7 +12,7 @@ type FaqItem = {
 
 const homeFaqs: FaqItem[] = [
   {
-    question: "What is virtual running and how does Peak Run work?",
+    question: "What is virtual running and how does Relentless Run work?",
     answer:
       "Virtual running lets you compete anywhere on your terms. Choose an event distance (1.5K, 5K, 10K, 21K), run on your favorite route, and track with Strava or Garmin. Upload a screenshot to claim your verified metal medal and E-certificate.",
   },
