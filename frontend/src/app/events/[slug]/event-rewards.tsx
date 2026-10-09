@@ -11,8 +11,8 @@ const items = [
   },
   {
     icon: Shirt,
-    title: "Performance Event T-Shirt",
-    desc: "Exclusive athletic-fit quick-dry tee included with every kit, in a special-edition print.",
+    title: "Performance Event T-Shirt (Free for 1st 100)",
+    desc: "Exclusive athletic quick-dry performance tee included 100% free with your race kit for the first 100 registered athletes.",
   },
   {
     icon: FileBadge,
