@@ -4,6 +4,9 @@ import { allPublicEvents } from './data/events';
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://relentlessrun.in';
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.relentlessrun.in';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 3600;
+
 interface EventData {
   id?: string;
   slug: string;
