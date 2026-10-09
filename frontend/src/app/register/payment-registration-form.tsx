@@ -335,6 +335,52 @@ function PaymentRegistrationFormInner() {
     }
   }, [distanceOptions, distanceFromQuery, selectedDistance, activityOptions, activityFromQuery, selectedActivity]);
 
+  // LocalStorage runner profile auto-load
+  const [savedAddressLoaded, setSavedAddressLoaded] = useState(false);
+  const [streetAddress, setStreetAddress] = useState("");
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("rr_athlete_profile");
+      if (saved) {
+        const parsed = JSON.parse(saved) as {
+          pincode?: string;
+          city?: string;
+          state?: string;
+          address?: string;
+          tshirtSize?: string;
+          name?: string;
+        };
+        if (parsed.pincode && !pincode) setPincode(parsed.pincode);
+        if (parsed.city && !city) setCity(parsed.city);
+        if (parsed.state && !stateVal) setStateVal(parsed.state);
+        if (parsed.address && !streetAddress) setStreetAddress(parsed.address);
+        if (parsed.tshirtSize) setSelectedTshirt(parsed.tshirtSize);
+        if (parsed.name && !runnerName) setRunnerName(parsed.name);
+        setSavedAddressLoaded(true);
+      }
+    } catch {
+      // ignore
+    }
+  }, []);
+
+  function normalizeIndianState(rawState: string): string | null {
+    const clean = rawState.trim().toLowerCase();
+    if (clean.includes("delhi")) return "Delhi";
+    if (clean.includes("kashmir") || clean.includes("jammu")) return "Jammu and Kashmir";
+    if (clean.includes("odisha") || clean.includes("orissa")) return "Odisha";
+    if (clean.includes("uttarakhand") || clean.includes("uttaranchal")) return "Uttarakhand";
+    if (clean.includes("puducherry") || clean.includes("pondicherry")) return "Puducherry";
+    if (clean.includes("andaman")) return "Andaman and Nicobar Islands";
+    if (clean.includes("daman") || clean.includes("diu") || clean.includes("dadra") || clean.includes("haveli")) {
+      return "Dadra and Nagar Haveli and Daman and Diu";
+    }
+    const matched = INDIAN_STATES.find((s) => s.toLowerCase() === clean);
+    if (matched) return matched;
+    const partial = INDIAN_STATES.find((s) => clean.includes(s.toLowerCase()) || s.toLowerCase().includes(clean));
+    return partial || null;
+  }
+
   // Pincode auto-lookup handler
   async function handlePincodeChange(code: string) {
     const clean = code.replace(/\D/g, "").slice(0, 6);
@@ -351,13 +397,27 @@ function PaymentRegistrationFormInner() {
             const po = data[0].PostOffice[0];
             const detectedCity = po.District || po.Block || po.Circle;
             const detectedState = po.State;
-            if (detectedCity) setCity(detectedCity);
+            if (detectedCity) {
+              setCity(detectedCity);
+              setErrors((prev) => {
+                const next = { ...prev };
+                delete next.city;
+                delete next.pincode;
+                return next;
+              });
+            }
             if (detectedState) {
-              const matched = INDIAN_STATES.find(
-                (s) => s.toLowerCase() === detectedState.toLowerCase(),
-              );
-              if (matched) setStateVal(matched);
-              else setStateVal(detectedState);
+              const normalized = normalizeIndianState(detectedState);
+              if (normalized) {
+                setStateVal(normalized);
+                setErrors((prev) => {
+                  const next = { ...prev };
+                  delete next.state;
+                  return next;
+                });
+              } else {
+                setStateVal(detectedState);
+              }
             }
             setPincodeSuccess(true);
           }
@@ -407,7 +467,7 @@ function PaymentRegistrationFormInner() {
   // Live Bib Number Generator Preview
   const previewBibNumber = useMemo(() => {
     const distNum = selectedDistance.match(/[0-9]+/)?.[0] || "5";
-    return `MR-${distNum}K-${Math.floor(100 + (runnerName.length * 17) % 899)}`;
+    return `RR-${distNum}K-${Math.floor(100 + (runnerName.length * 17) % 899)}`;
   }, [selectedDistance, runnerName]);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
@@ -434,11 +494,27 @@ function PaymentRegistrationFormInner() {
     const fullName = asString(formData.get("name"));
     const phoneVal = asString(formData.get("phone"));
     const emailVal = asString(formData.get("email"));
-    const streetAddress = asString(formData.get("address"));
+    const streetAddressVal = (streetAddress || asString(formData.get("address"))).trim();
     const landmarkVal = asString(formData.get("landmark"));
     const cityVal = (city || asString(formData.get("city"))).trim();
     const stateValue = (stateVal || asString(formData.get("state"))).trim();
     const pincodeVal = (pincode || asString(formData.get("pincode"))).trim();
+
+    try {
+      localStorage.setItem(
+        "rr_athlete_profile",
+        JSON.stringify({
+          name: fullName,
+          pincode: pincodeVal,
+          city: cityVal,
+          state: stateValue,
+          address: streetAddressVal,
+          tshirtSize: selectedTshirt,
+        })
+      );
+    } catch {
+      // ignore
+    }
 
     const payload = {
       name: fullName,
@@ -451,12 +527,12 @@ function PaymentRegistrationFormInner() {
       tshirtSize: selectedTshirt,
       shippingName: fullName,
       shippingPhone: phoneVal,
-      shippingLine1: streetAddress,
+      shippingLine1: streetAddressVal,
       shippingLine2: landmarkVal || undefined,
       shippingCity: cityVal,
       shippingState: stateValue,
       shippingPincode: pincodeVal,
-      address: streetAddress,
+      address: streetAddressVal,
       city: cityVal,
       state: stateValue,
       pincode: pincodeVal,
@@ -622,13 +698,20 @@ function PaymentRegistrationFormInner() {
           className="rounded-3xl border border-(--line) bg-(--panel) p-5 sm:p-7 shadow-xs space-y-4"
           noValidate
         >
-          <div className="border-b border-(--line) pb-4">
-            <h2 className="text-lg font-black tracking-tight text-foreground">
-              Athlete Information
-            </h2>
-            <p className="text-xs text-(--muted)">
-              Enter your official race details for Bib & Certificate generation.
-            </p>
+          <div className="border-b border-(--line) pb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+            <div>
+              <h2 className="text-lg font-black tracking-tight text-foreground">
+                Athlete Information
+              </h2>
+              <p className="text-xs text-(--muted)">
+                Enter your official race details for Bib & Certificate generation.
+              </p>
+            </div>
+            {savedAddressLoaded && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-1 text-[0.68rem] font-bold text-emerald-600 dark:text-emerald-400">
+                <Sparkles className="h-3 w-3" /> Auto-filled from saved details
+              </span>
+            )}
           </div>
 
           <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2">
@@ -842,6 +925,8 @@ function PaymentRegistrationFormInner() {
                 name="address"
                 placeholder="Flat / House No., Building, Area"
                 required
+                value={streetAddress}
+                onChange={(e) => setStreetAddress(e.target.value)}
               />
               <FieldError message={errors.address} />
             </Field>
