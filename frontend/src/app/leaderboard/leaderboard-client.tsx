@@ -404,7 +404,9 @@ export function LeaderboardClient() {
         setAvailableDistances(distList);
       }
     } catch {
-      setError("Unable to load live leaderboard. Please check your connection.");
+      // If endpoint is unreachable or event is currently in progress, clear data gracefully
+      setEntries([]);
+      setParticipants([]);
     } finally {
       setLoading(false);
     }
@@ -719,8 +721,52 @@ export function LeaderboardClient() {
               {/* ── TAB 1: VERIFIED LEADERBOARD ─────────────────────── */}
               {activeTab === "verified" && (
                 <div className="mt-8 space-y-10">
-                  {/* Top 3 3D Stepped Podium */}
-                  {!searchQuery && entries.length >= 3 && (
+                  {entries.length === 0 ? (
+                    /* 🏃‍♂️ LIVE ACTIVE RACE WINDOW / ONGOING SUBMISSIONS STATE */
+                    <div className="relative overflow-hidden rounded-3xl border border-sky-500/30 bg-gradient-to-b from-[#0e172a] via-[#0b1222] to-[#070b14] p-6 sm:p-12 text-center shadow-2xl">
+                      <div className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 h-72 w-96 rounded-full bg-sky-500/15 blur-[90px]" />
+                      <div className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 h-40 w-80 rounded-full bg-emerald-500/10 blur-[80px]" />
+
+                      <div className="relative z-10 max-w-xl mx-auto space-y-4">
+                        <div className="inline-flex items-center gap-2 rounded-full border border-sky-400/40 bg-sky-500/10 px-4 py-1.5 text-xs font-black uppercase tracking-wider text-sky-300 shadow-inner">
+                          <span className="relative flex h-2.5 w-2.5">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                          </span>
+                          <span>Challenge Live &bull; GPS Verification Open</span>
+                        </div>
+
+                        <h2 className="font-extrabold text-2xl sm:text-3xl lg:text-4xl text-white tracking-tight">
+                          Runners Are On The Route! 🏃‍♂️💨
+                        </h2>
+
+                        <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-normal">
+                          This event is currently in progress. Athletes are recording runs on <strong>Strava</strong>, <strong>Garmin</strong>, and <strong>Nike Run Club</strong>. Verified rankings and podium positions will populate here in real-time as GPS proofs are submitted and approved.
+                        </p>
+
+                        <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
+                          <Link
+                            href="/dashboard"
+                            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 px-6 py-3 text-xs font-bold uppercase tracking-wider text-white shadow-lg shadow-sky-500/25 hover:from-sky-400 hover:to-blue-500 transition-all active:scale-95"
+                          >
+                            <Zap className="h-4 w-4" />
+                            Submit Your GPS Proof
+                          </Link>
+                          <button
+                            type="button"
+                            onClick={() => setActiveTab("participants")}
+                            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/[0.06] px-6 py-3 text-xs font-bold uppercase tracking-wider text-slate-200 hover:bg-white/10 hover:text-white transition-all active:scale-95"
+                          >
+                            <Users className="h-4 w-4" />
+                            View Event Roster ({participants.length})
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      {/* Top 3 3D Stepped Podium */}
+                      {!searchQuery && entries.length >= 3 && (
                     <div>
                       <div className="mb-4 text-center">
                         <span className="rounded-full border border-amber-500/30 bg-amber-500/10 px-3.5 py-1 text-xs font-bold uppercase tracking-widest text-amber-400">
@@ -927,14 +973,16 @@ export function LeaderboardClient() {
                       </table>
                     </div>
 
-                    {filteredEntries.length === 0 && (
+                    {filteredEntries.length === 0 && searchQuery && (
                       <div className="py-12 text-center text-sm font-medium text-slate-400">
                         No runners match &ldquo;{searchQuery}&rdquo;. Try another name or bib number.
                       </div>
                     )}
                   </div>
-                </div>
+                </>
               )}
+            </div>
+          )}
 
               {/* ── TAB 2: PARTICIPANTS ROSTER ─────────────────────── */}
               {activeTab === "participants" && (
