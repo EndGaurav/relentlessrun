@@ -5,6 +5,7 @@ import Link from "next/link";
 import {
   ArrowUpRight,
   Flame,
+  IndianRupee,
   Medal,
   Sparkles,
   Timer,
@@ -29,28 +30,34 @@ function getEventScarcity(slug: string) {
   return { percent, bibsLeft };
 }
 
+function getEventCountdown(endsAt?: string, index = 0) {
+  if (endsAt) {
+    const target = new Date(endsAt).getTime();
+    if (!Number.isNaN(target)) {
+      const total = Math.max(0, target - Date.now());
+      const days = Math.floor(total / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((total / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((total / (1000 * 60)) % 60);
+      const seconds = Math.floor((total / 1000) % 60);
+      return { days, hours, minutes, seconds, total };
+    }
+  }
+  const dummyHours = 14 + ((index * 6) % 24);
+  return { days: 0, hours: dummyHours, minutes: 32, seconds: 45, total: 10000 };
+}
+
 function EventCard({ event, index }: { event: PublicEvent; index: number }) {
   const hasBannerImage = Boolean(event.bannerImageUrl);
   const scarcity = useMemo(() => getEventScarcity(event.slug), [event.slug]);
 
-  // Live countdown state
-  const [timeLeft, setTimeLeft] = useState<{ hours: number; minutes: number; seconds: number }>({
-    hours: 14 + (index * 6) % 24,
-    minutes: 32,
-    seconds: 45,
-  });
+  const [countdown, setCountdown] = useState(() => getEventCountdown(event.endsAt, index));
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev.seconds > 0) return { ...prev, seconds: prev.seconds - 1 };
-        if (prev.minutes > 0) return { ...prev, minutes: 59, seconds: 59 };
-        if (prev.hours > 0) return { hours: prev.hours - 1, minutes: 59, seconds: 59 };
-        return { hours: 12, minutes: 30, seconds: 0 };
-      });
+      setCountdown(getEventCountdown(event.endsAt, index));
     }, 1000);
     return () => clearInterval(timer);
-  }, []);
+  }, [event.endsAt, index]);
 
   return (
     <motion.article
@@ -155,14 +162,21 @@ function EventCard({ event, index }: { event: PublicEvent; index: number }) {
             <Timer className="h-3.5 w-3.5 text-sky-600 shrink-0" />
             <span>Closes in:</span>
             <span className="font-mono font-bold text-[#090d16]">
-              {timeLeft.hours}h {String(timeLeft.minutes).padStart(2, "0")}m
+              {countdown.days > 0 ? `${countdown.days}d ` : ""}
+              {countdown.hours}h {String(countdown.minutes).padStart(2, "0")}m
             </span>
           </div>
 
-          <div className="text-right">
-            <span className="font-mono text-lg font-black text-[#090d16]">
-              {event.price.replace(/^Rs\.\s*/, "").replace(/^₹/, "₹")}
+          <div className="text-right flex items-baseline justify-end gap-1.5">
+            <span className="font-mono text-lg font-black text-[#090d16] flex items-center justify-end gap-0.5">
+              <IndianRupee className="h-3.5 w-3.5 text-[#0284c7]" />
+              {event.price.replace(/^Rs\.\s*/, "").replace(/^₹/, "")}
             </span>
+            {event.compareAtPrice && (
+              <span className="text-xs font-semibold text-slate-400 line-through">
+                {event.compareAtPrice.replace(/^Rs\.\s*/, "₹")}
+              </span>
+            )}
           </div>
         </div>
 

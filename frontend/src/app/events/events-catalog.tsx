@@ -33,9 +33,25 @@ function getEventScarcity(slug: string) {
     hash |= 0;
   }
   const positive = Math.abs(hash);
-  const percent = 78 + (positive % 18); // 78% to 95% booked
-  const bibsLeft = 14 + (positive % 32); // 14 to 45 bibs left
+  const percent = 36 + (positive % 16); // 36% to 51% booked (e.g. 43%)
+  const bibsLeft = 45 + (positive % 35); // 45 to 79 bibs left
   return { percent, bibsLeft };
+}
+
+function getEventCountdown(endsAt?: string, index = 0) {
+  if (endsAt) {
+    const target = new Date(endsAt).getTime();
+    if (!Number.isNaN(target)) {
+      const total = Math.max(0, target - Date.now());
+      const days = Math.floor(total / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((total / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((total / (1000 * 60)) % 60);
+      const seconds = Math.floor((total / 1000) % 60);
+      return { days, hours, minutes, seconds, total };
+    }
+  }
+  const dummyHours = 14 + ((index * 6) % 24);
+  return { days: 0, hours: dummyHours, minutes: 32, seconds: 45, total: 10000 };
 }
 
 function FadeIn({ children, className, delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
@@ -60,23 +76,14 @@ function OpenEventCard({ event, index = 0 }: { event: PublicEvent; index?: numbe
   const hasBannerImage = Boolean(event.bannerImageUrl);
   const scarcity = useMemo(() => getEventScarcity(event.slug), [event.slug]);
 
-  const [timeLeft, setTimeLeft] = useState<{ hours: number; minutes: number; seconds: number }>({
-    hours: 14 + (index * 6) % 24,
-    minutes: 32,
-    seconds: 45,
-  });
+  const [countdown, setCountdown] = useState(() => getEventCountdown(event.endsAt, index));
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev.seconds > 0) return { ...prev, seconds: prev.seconds - 1 };
-        if (prev.minutes > 0) return { ...prev, minutes: 59, seconds: 59 };
-        if (prev.hours > 0) return { hours: prev.hours - 1, minutes: 59, seconds: 59 };
-        return { hours: 12, minutes: 30, seconds: 0 };
-      });
+      setCountdown(getEventCountdown(event.endsAt, index));
     }, 1000);
     return () => clearInterval(timer);
-  }, []);
+  }, [event.endsAt, index]);
 
   return (
     <article className="group flex h-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-[#0d1322] shadow-2xl transition-all duration-300 hover:-translate-y-2 hover:border-[#38bdf8] hover:shadow-[0_12px_40px_rgba(56,189,248,0.25)]">
@@ -173,15 +180,21 @@ function OpenEventCard({ event, index = 0 }: { event: PublicEvent; index?: numbe
             <Timer className="h-3.5 w-3.5 text-sky-400 shrink-0" />
             <span>Closes in:</span>
             <span className="font-mono font-bold text-white">
-              {timeLeft.hours}h {String(timeLeft.minutes).padStart(2, "0")}m
+              {countdown.days > 0 ? `${countdown.days}d ` : ""}
+              {countdown.hours}h {String(countdown.minutes).padStart(2, "0")}m
             </span>
           </div>
 
-          <div className="text-right">
+          <div className="text-right flex items-baseline justify-end gap-1.5">
             <span className="text-lg sm:text-xl font-black font-mono text-white flex items-center justify-end gap-0.5">
               <IndianRupee className="h-4 w-4 text-[#38bdf8]" />
               {event.price.replace(/^Rs\.\s*/, "").replace(/^₹/, "")}
             </span>
+            {event.compareAtPrice && (
+              <span className="text-xs font-semibold text-slate-400 line-through">
+                {event.compareAtPrice.replace(/^Rs\.\s*/, "₹")}
+              </span>
+            )}
           </div>
         </div>
 
