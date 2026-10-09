@@ -429,7 +429,7 @@ export function AppHeader() {
       </div>
     </header>
 
-    {/* ─── Minimalist Mobile Navigation Overlay (Portaled to document.body) ─── */}
+    {/* ─── Dark Minimalist Mobile Navigation Overlay (Portaled to document.body) ─── */}
     {mounted && typeof document !== "undefined" && createPortal(
       <AnimatePresence>
         {open && (
@@ -438,13 +438,13 @@ export function AppHeader() {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.98 }}
             transition={{ duration: 0.2, ease: "easeInOut" }}
-            className="fixed inset-0 z-[99999] md:hidden flex flex-col h-[100dvh] w-full bg-[#fbfaf8] text-[#1a1a1a] select-none overflow-y-auto"
+            className="fixed inset-0 z-[99999] md:hidden flex flex-col h-[100dvh] w-full bg-[#060b17] text-white select-none overflow-y-auto"
             role="dialog"
             aria-modal="true"
             aria-label="Mobile Navigation"
           >
             {/* Top Bar: Brand Logo + Circular Close Button */}
-            <div className="flex items-center justify-between px-6 pt-5 pb-3 shrink-0">
+            <div className="flex items-center justify-between px-6 pt-5 pb-3 shrink-0 border-b border-white/[0.06]">
               <Link
                 href="/"
                 onClick={() => setOpen(false)}
@@ -455,23 +455,23 @@ export function AppHeader() {
                   alt="Relentless Run"
                   width={140}
                   height={32}
-                  className="h-7 w-auto object-contain"
+                  className="h-7 w-auto object-contain drop-shadow-[0_4px_16px_rgba(56,189,248,0.35)]"
                 />
               </Link>
 
-              {/* Circular Soft Gray Close Button */}
+              {/* Circular Close Button */}
               <button
                 type="button"
                 onClick={() => setOpen(false)}
                 aria-label="Close menu"
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors active:scale-90 cursor-pointer"
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white border border-white/15 hover:bg-white/20 transition-colors active:scale-90 cursor-pointer"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
 
             {/* Main Content Area */}
-            <div className="flex-1 flex flex-col justify-between px-6 py-4">
+            <div className="flex-1 flex flex-col justify-between px-6 py-5">
               <div className="space-y-6">
                 {/* User Card (If Signed In) */}
                 {isLoaded && isSignedIn && user && (
@@ -479,30 +479,30 @@ export function AppHeader() {
                     initial={{ opacity: 0, y: -8 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.25 }}
-                    className="flex items-center gap-3.5 rounded-2xl bg-white p-3.5 border border-slate-200/80 shadow-[0_4px_20px_rgba(0,0,0,0.04)]"
+                    className="flex items-center gap-3.5 rounded-2xl bg-[#0d1527]/90 p-4 border border-white/15 shadow-[0_8px_24px_rgba(0,0,0,0.4)] backdrop-blur-xl"
                   >
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#f97316] text-white font-extrabold text-lg shadow-sm">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#f97316] text-white font-extrabold text-lg shadow-md ring-2 ring-white/20">
                       {(user.firstName || user.fullName || "A").charAt(0).toUpperCase()}
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
-                        <p className="truncate text-sm font-extrabold uppercase tracking-wide text-slate-900">
+                        <p className="truncate text-sm font-extrabold uppercase tracking-wide text-white">
                           {user.fullName || user.firstName || "Athlete"}
                         </p>
-                        <span className="inline-flex items-center gap-0.5 rounded-full bg-sky-100 px-2 py-0.5 text-[0.6rem] font-black uppercase text-sky-700 border border-sky-200">
-                          PRO <span className="text-amber-500 text-[0.65rem]">⚡</span>
+                        <span className="inline-flex items-center gap-0.5 rounded-full bg-sky-500/20 px-2 py-0.5 text-[0.6rem] font-black uppercase text-sky-300 border border-sky-400/30">
+                          PRO <span className="text-amber-400 text-[0.65rem]">⚡</span>
                         </span>
                       </div>
-                      <p className="truncate text-xs font-medium text-slate-500 mt-0.5">
+                      <p className="truncate text-xs font-medium text-slate-400 mt-0.5">
                         {user.primaryEmailAddress?.emailAddress}
                       </p>
                     </div>
                   </motion.div>
                 )}
 
-                {/* Menu Navigation Title */}
+                {/* Menu Navigation Section */}
                 <div>
-                  <p className="text-[0.7rem] font-extrabold tracking-widest text-slate-400 uppercase mb-3 px-1">
+                  <p className="text-[0.7rem] font-extrabold tracking-widest text-slate-400 uppercase mb-3 px-1 text-center">
                     MENU NAVIGATION
                   </p>
 
@@ -546,32 +546,32 @@ export function AppHeader() {
                             onClick={() => setOpen(false)}
                             className={`flex items-center justify-between rounded-2xl p-4 transition-all duration-200 active:scale-[0.98] border ${
                               active
-                                ? "bg-white border-sky-300 text-sky-600 shadow-[0_4px_16px_rgba(2,132,199,0.08)]"
-                                : "bg-white/80 hover:bg-white border-slate-200/70 text-slate-800 shadow-sm"
+                                ? "bg-sky-500/15 border-sky-400/50 text-white shadow-[0_0_20px_rgba(56,189,248,0.2)]"
+                                : "bg-[#0d1527]/80 hover:bg-[#0d1527] border-white/10 hover:border-white/20 text-white shadow-md"
                             }`}
                           >
                             <div className="flex items-center gap-3.5">
                               <div
                                 className={`flex h-9 w-9 items-center justify-center rounded-xl transition-colors ${
                                   active
-                                    ? "bg-sky-500 text-white"
-                                    : "bg-slate-100 text-slate-600"
+                                    ? "bg-sky-500 text-white shadow-[0_0_12px_rgba(56,189,248,0.5)]"
+                                    : "bg-white/10 text-slate-300"
                                 }`}
                               >
                                 <Icon className="h-4.5 w-4.5" />
                               </div>
-                              <span className="text-sm font-black tracking-wider uppercase">
+                              <span className="text-sm font-black tracking-wider uppercase text-white">
                                 {item.label}
                               </span>
                             </div>
 
                             <div className="flex items-center gap-2">
                               {item.badge && (
-                                <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[0.6rem] font-extrabold uppercase tracking-wide text-emerald-700 border border-emerald-200">
+                                <span className="rounded-full bg-emerald-500/20 px-2 py-0.5 text-[0.6rem] font-extrabold uppercase tracking-wide text-emerald-300 border border-emerald-400/30">
                                   {item.badge}
                                 </span>
                               )}
-                              <ArrowRight className={`h-4 w-4 ${active ? "text-sky-500" : "text-slate-400"}`} />
+                              <ArrowRight className={`h-4 w-4 ${active ? "text-sky-400" : "text-slate-400"}`} />
                             </div>
                           </Link>
                         </motion.div>
@@ -590,9 +590,9 @@ export function AppHeader() {
                       setOpen(false);
                       void signOut(() => router.push("/"));
                     }}
-                    className="flex w-full items-center justify-center gap-2 rounded-2xl border border-rose-200 bg-rose-50/80 py-3.5 text-xs font-black uppercase tracking-wider text-rose-600 transition-all duration-200 hover:bg-rose-100 active:scale-[0.98] cursor-pointer"
+                    className="flex w-full items-center justify-center gap-2 rounded-2xl border border-rose-500/30 bg-rose-500/15 py-3.5 text-xs font-black uppercase tracking-wider text-rose-300 transition-all duration-200 hover:bg-rose-500/25 hover:border-rose-400 hover:text-white active:scale-[0.98] cursor-pointer"
                   >
-                    <LogOut className="h-4 w-4 text-rose-500" />
+                    <LogOut className="h-4 w-4 text-rose-400" />
                     SIGN OUT
                   </button>
                 ) : (
@@ -600,21 +600,21 @@ export function AppHeader() {
                     <Link
                       href="/sign-in"
                       onClick={() => setOpen(false)}
-                      className="flex-1 rounded-2xl border border-slate-200 bg-white py-3.5 text-xs font-black uppercase tracking-wider text-slate-800 text-center shadow-sm active:scale-[0.98]"
+                      className="flex-1 rounded-2xl border border-white/15 bg-white/10 py-3.5 text-xs font-black uppercase tracking-wider text-white text-center shadow-md active:scale-[0.98] hover:bg-white/15"
                     >
                       SIGN IN
                     </Link>
                     <Link
                       href="/register"
                       onClick={() => setOpen(false)}
-                      className="flex-1 rounded-2xl bg-sky-600 py-3.5 text-xs font-black uppercase tracking-wider text-white text-center shadow-md active:scale-[0.98]"
+                      className="neon-btn-blue flex-1 rounded-2xl py-3.5 text-xs font-black uppercase tracking-wider text-white text-center shadow-lg active:scale-[0.98]"
                     >
                       REGISTER
                     </Link>
                   </div>
                 )}
 
-                <p className="text-[0.65rem] font-medium text-slate-400">
+                <p className="text-[0.65rem] font-medium text-slate-500">
                   Relentless Run © 2026 • Virtual Marathon Platform
                 </p>
               </div>
