@@ -159,7 +159,6 @@ export default function RootLayout({
                   "bg-[var(--foreground)] hover:bg-[var(--accent-hover)] shadow-none",
                 footerActionLink: "text-[var(--foreground)] hover:text-[var(--muted)]",
                 socialButtonsBlockButton: "border border-[var(--line)]",
-                footer: "hidden",
               },
             }}
             signInUrl="/sign-in"

@@ -40,7 +40,6 @@ function ThemedSignIn() {
           rootBox: "mx-auto w-full",
           cardBox: "w-full shadow-none",
           card: "w-full shadow-none rounded-2xl border border-white/10 bg-[#0f172a]",
-          footer: "hidden",
           formButtonPrimary:
             "bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-700 hover:to-sky-600 text-white font-bold normal-case h-11 shadow-lg shadow-blue-500/25 transition-all rounded-xl",
           formFieldInput:
