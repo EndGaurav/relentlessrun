@@ -201,25 +201,16 @@ function DashboardProfileDropdown({ isMobile = false }: { isMobile?: boolean }) 
               </p>
             </div>
 
-            <div className="p-2 space-y-1 bg-[#0b101d]">
-              <Link
-                href="/dashboard"
-                onClick={() => setOpen(false)}
-                className="flex items-center gap-2.5 rounded-xl border border-transparent bg-white/[0.05] px-3 py-2.5 text-xs font-bold text-white transition-all duration-200 hover:bg-white/15 hover:border-white/20 hover:text-sky-300"
-              >
-                <LayoutDashboard className="h-4 w-4 text-sky-400" />
-                Athlete Dashboard
-              </Link>
-
+            <div className="p-2 space-y-1.5 bg-[#0b101d]">
               <button
                 type="button"
                 onClick={() => {
                   setOpen(false);
                   openUserProfile();
                 }}
-                className="flex w-full items-center gap-2.5 rounded-xl border border-transparent px-3 py-2.5 text-xs font-medium text-slate-200 transition-all duration-200 hover:bg-white/10 hover:text-white cursor-pointer"
+                className="flex w-full items-center gap-2.5 rounded-xl border border-transparent bg-white/[0.04] px-3 py-2.5 text-xs font-semibold text-slate-200 transition-all duration-200 hover:bg-white/10 hover:border-white/15 hover:text-white cursor-pointer"
               >
-                <Settings className="h-3.5 w-3.5 text-slate-400" />
+                <Settings className="h-4 w-4 text-slate-400" />
                 Account Settings
               </button>
 
