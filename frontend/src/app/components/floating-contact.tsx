@@ -57,9 +57,12 @@ export function FloatingContact() {
     return () => document.removeEventListener("mousedown", handleClick);
   }, [open]);
 
-  // Hide on admin and athlete dashboard to keep workspaces clean
-  const isAdminOrDashboard = pathname?.startsWith("/admin") || pathname?.startsWith("/dashboard");
-  if (isAdminOrDashboard) return null;
+  // Hide on admin, athlete dashboard, and registration checkout to keep inputs unblocked
+  const isExcluded =
+    pathname?.startsWith("/admin") ||
+    pathname?.startsWith("/dashboard") ||
+    pathname?.startsWith("/register");
+  if (isExcluded) return null;
 
   return (
     <div
