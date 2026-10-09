@@ -429,7 +429,7 @@ export function AppHeader() {
       </div>
     </header>
 
-    {/* ─── Exact Minimalist Centered Mobile Navigation Overlay (Portaled to document.body) ─── */}
+    {/* ─── Minimalist Mobile Navigation Overlay (Portaled to document.body) ─── */}
     {mounted && typeof document !== "undefined" && createPortal(
       <AnimatePresence>
         {open && (
@@ -438,24 +438,25 @@ export function AppHeader() {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.98 }}
             transition={{ duration: 0.2, ease: "easeInOut" }}
-            className="fixed inset-0 z-[99999] md:hidden flex flex-col h-[100dvh] w-full bg-[#fbfaf8] text-[#1a1a1a] select-none overflow-hidden"
+            className="fixed inset-0 z-[99999] md:hidden flex flex-col h-[100dvh] w-full bg-[#fbfaf8] text-[#1a1a1a] select-none overflow-y-auto"
             role="dialog"
             aria-modal="true"
             aria-label="Mobile Navigation"
           >
-            {/* Top Bar: Brand + Close Button */}
-            <div className="flex items-center justify-between px-6 pt-5 pb-4 shrink-0">
+            {/* Top Bar: Brand Logo + Circular Close Button */}
+            <div className="flex items-center justify-between px-6 pt-5 pb-3 shrink-0">
               <Link
                 href="/"
                 onClick={() => setOpen(false)}
                 className="flex items-center gap-2"
               >
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-black text-white font-black text-xs">
-                  ⚡
-                </div>
-                <span className="font-extrabold text-lg tracking-tight text-slate-900">
-                  Relentless <span className="text-[#059669]">Run</span>
-                </span>
+                <img
+                  src="/3d-header-logo.png"
+                  alt="Relentless Run"
+                  width={140}
+                  height={32}
+                  className="h-7 w-auto object-contain"
+                />
               </Link>
 
               {/* Circular Soft Gray Close Button */}
@@ -469,101 +470,154 @@ export function AppHeader() {
               </button>
             </div>
 
-            {/* Vertically Centered Navigation Stack */}
-            <div className="flex-1 flex flex-col items-center justify-center px-6 py-4 space-y-5.5 text-center">
-              {[
-                { label: "Challenges", href: "/events" },
-                { label: "Gallery", href: "/gallery" },
-                { label: "Dashboard", href: "/dashboard" },
-                {
-                  label: "❤️ WhatsApp Support",
-                  href: "https://wa.me/918287491957",
-                  isExternal: true,
-                  highlight: true,
-                },
-                { label: "Leaderboard", href: "/leaderboard" },
-                { label: "About Us", href: "/about" },
-                { label: "FAQ", href: "/events#faq" },
-              ].map((item, idx) => {
-                const isHighlight = Boolean(item.highlight);
-
-                if (item.isExternal) {
-                  return (
-                    <motion.a
-                      key={item.label}
-                      href={item.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={() => setOpen(false)}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.25, delay: idx * 0.03 }}
-                      className="block text-xl font-bold tracking-tight text-[#ea580c] hover:opacity-85 active:scale-95 transition-all"
-                    >
-                      {item.label}
-                    </motion.a>
-                  );
-                }
-
-                return (
+            {/* Main Content Area */}
+            <div className="flex-1 flex flex-col justify-between px-6 py-4">
+              <div className="space-y-6">
+                {/* User Card (If Signed In) */}
+                {isLoaded && isSignedIn && user && (
                   <motion.div
-                    key={item.href}
-                    initial={{ opacity: 0, y: 10 }}
+                    initial={{ opacity: 0, y: -8 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.25, delay: idx * 0.03 }}
+                    transition={{ duration: 0.25 }}
+                    className="flex items-center gap-3.5 rounded-2xl bg-white p-3.5 border border-slate-200/80 shadow-[0_4px_20px_rgba(0,0,0,0.04)]"
                   >
-                    <Link
-                      href={item.href}
-                      onClick={() => setOpen(false)}
-                      className={`block text-xl font-bold tracking-tight transition-all active:scale-95 ${
-                        isHighlight
-                          ? "text-[#ea580c]"
-                          : isActive(item.href)
-                            ? "text-[#0284c7] font-extrabold"
-                            : "text-[#262626] hover:text-[#0284c7]"
-                      }`}
-                    >
-                      {item.label}
-                    </Link>
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#f97316] text-white font-extrabold text-lg shadow-sm">
+                      {(user.firstName || user.fullName || "A").charAt(0).toUpperCase()}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        <p className="truncate text-sm font-extrabold uppercase tracking-wide text-slate-900">
+                          {user.fullName || user.firstName || "Athlete"}
+                        </p>
+                        <span className="inline-flex items-center gap-0.5 rounded-full bg-sky-100 px-2 py-0.5 text-[0.6rem] font-black uppercase text-sky-700 border border-sky-200">
+                          PRO <span className="text-amber-500 text-[0.65rem]">⚡</span>
+                        </span>
+                      </div>
+                      <p className="truncate text-xs font-medium text-slate-500 mt-0.5">
+                        {user.primaryEmailAddress?.emailAddress}
+                      </p>
+                    </div>
                   </motion.div>
-                );
-              })}
-            </div>
+                )}
 
-            {/* Bottom Footer: Trust Badges & Sign In / Out */}
-            <div className="px-6 pb-8 pt-4 flex flex-col items-center gap-3 shrink-0 text-center">
-              {/* Trust Badges */}
-              <div className="flex items-center justify-center gap-2 text-xs font-semibold text-slate-600">
-                <span className="flex items-center gap-1">
-                  <span className="text-emerald-600 text-sm">🛡️</span> GPS Anti-Cheat
-                </span>
-                <span className="text-slate-300">·</span>
-                <span className="flex items-center gap-1">
-                  <span className="text-amber-500 text-sm">🏆</span> Metal Medals
-                </span>
+                {/* Menu Navigation Title */}
+                <div>
+                  <p className="text-[0.7rem] font-extrabold tracking-widest text-slate-400 uppercase mb-3 px-1">
+                    MENU NAVIGATION
+                  </p>
+
+                  {/* Navigation Links Stack */}
+                  <div className="space-y-2.5">
+                    {[
+                      {
+                        label: "EVENTS",
+                        href: "/events",
+                        icon: Calendar,
+                        badge: "ACTIVE RACES",
+                      },
+                      {
+                        label: "GALLERY",
+                        href: "/gallery",
+                        icon: Camera,
+                      },
+                      {
+                        label: "LEADERBOARD",
+                        href: "/leaderboard",
+                        icon: Trophy,
+                      },
+                      {
+                        label: "ATHLETE DASHBOARD",
+                        href: "/dashboard",
+                        icon: LayoutDashboard,
+                      },
+                    ].map((item, idx) => {
+                      const active = isActive(item.href);
+                      const Icon = item.icon;
+
+                      return (
+                        <motion.div
+                          key={item.href}
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.25, delay: idx * 0.04 }}
+                        >
+                          <Link
+                            href={item.href}
+                            onClick={() => setOpen(false)}
+                            className={`flex items-center justify-between rounded-2xl p-4 transition-all duration-200 active:scale-[0.98] border ${
+                              active
+                                ? "bg-white border-sky-300 text-sky-600 shadow-[0_4px_16px_rgba(2,132,199,0.08)]"
+                                : "bg-white/80 hover:bg-white border-slate-200/70 text-slate-800 shadow-sm"
+                            }`}
+                          >
+                            <div className="flex items-center gap-3.5">
+                              <div
+                                className={`flex h-9 w-9 items-center justify-center rounded-xl transition-colors ${
+                                  active
+                                    ? "bg-sky-500 text-white"
+                                    : "bg-slate-100 text-slate-600"
+                                }`}
+                              >
+                                <Icon className="h-4.5 w-4.5" />
+                              </div>
+                              <span className="text-sm font-black tracking-wider uppercase">
+                                {item.label}
+                              </span>
+                            </div>
+
+                            <div className="flex items-center gap-2">
+                              {item.badge && (
+                                <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[0.6rem] font-extrabold uppercase tracking-wide text-emerald-700 border border-emerald-200">
+                                  {item.badge}
+                                </span>
+                              )}
+                              <ArrowRight className={`h-4 w-4 ${active ? "text-sky-500" : "text-slate-400"}`} />
+                            </div>
+                          </Link>
+                        </motion.div>
+                      );
+                    })}
+                  </div>
+                </div>
               </div>
 
-              {/* Sign In / Sign Out Link */}
-              {isLoaded && isSignedIn ? (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setOpen(false);
-                    void signOut(() => router.push("/"));
-                  }}
-                  className="text-xs font-extrabold uppercase tracking-widest text-slate-800 hover:text-rose-600 active:scale-95 transition-colors cursor-pointer pt-1"
-                >
-                  SIGN OUT ({user?.firstName ?? "ATHLETE"})
-                </button>
-              ) : (
-                <Link
-                  href="/sign-in"
-                  onClick={() => setOpen(false)}
-                  className="text-xs font-extrabold uppercase tracking-widest text-slate-800 hover:text-sky-600 active:scale-95 transition-colors pt-1"
-                >
-                  SIGN IN
-                </Link>
-              )}
+              {/* Bottom Footer: Sign Out / Sign In & Copyright */}
+              <div className="pt-6 pb-2 space-y-3 text-center">
+                {isLoaded && isSignedIn ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setOpen(false);
+                      void signOut(() => router.push("/"));
+                    }}
+                    className="flex w-full items-center justify-center gap-2 rounded-2xl border border-rose-200 bg-rose-50/80 py-3.5 text-xs font-black uppercase tracking-wider text-rose-600 transition-all duration-200 hover:bg-rose-100 active:scale-[0.98] cursor-pointer"
+                  >
+                    <LogOut className="h-4 w-4 text-rose-500" />
+                    SIGN OUT
+                  </button>
+                ) : (
+                  <div className="flex gap-2.5">
+                    <Link
+                      href="/sign-in"
+                      onClick={() => setOpen(false)}
+                      className="flex-1 rounded-2xl border border-slate-200 bg-white py-3.5 text-xs font-black uppercase tracking-wider text-slate-800 text-center shadow-sm active:scale-[0.98]"
+                    >
+                      SIGN IN
+                    </Link>
+                    <Link
+                      href="/register"
+                      onClick={() => setOpen(false)}
+                      className="flex-1 rounded-2xl bg-sky-600 py-3.5 text-xs font-black uppercase tracking-wider text-white text-center shadow-md active:scale-[0.98]"
+                    >
+                      REGISTER
+                    </Link>
+                  </div>
+                )}
+
+                <p className="text-[0.65rem] font-medium text-slate-400">
+                  Relentless Run © 2026 • Virtual Marathon Platform
+                </p>
+              </div>
             </div>
           </motion.div>
         )}
