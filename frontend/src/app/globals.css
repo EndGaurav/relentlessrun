@@ -1926,55 +1926,114 @@ html[data-theme="dark"] .cl-userButtonPopoverCard {
 
 /* Authentication entry pages */
 .auth-classic {
-  --background: #101a20;
-  --panel: #142129;
-  --panel-soft: #192a32;
-  --line: rgba(238,223,190,.14);
-  --line-strong: rgba(238,223,190,.28);
-  --foreground: #f4f0e5;
-  --muted: #adbbb6;
-  --muted-soft: #7f918d;
-  --sage: #d9ae58;
-  --sage-soft: rgba(217,174,88,.12);
-  background: #101a20;
+  --background: #090d16;
+  --panel: #0f172a;
+  --panel-soft: #1e293b;
+  --line: rgba(255, 255, 255, 0.08);
+  --line-strong: rgba(255, 255, 255, 0.15);
+  --foreground: #f8fafc;
+  --muted: #94a3b8;
+  --muted-soft: #64748b;
+  --sage: #38bdf8;
+  --sage-soft: rgba(56, 189, 248, 0.12);
+  background: #090d16;
 }
 .auth-classic-shell {
   position: relative;
   overflow: hidden;
   background:
-    radial-gradient(circle at 18% 20%, rgba(224,183,94,.16), transparent 23rem),
-    linear-gradient(135deg, #13242c, #101a20 62%, #142129);
+    radial-gradient(circle at 18% 20%, rgba(56, 189, 248, 0.12), transparent 28rem),
+    radial-gradient(circle at 85% 75%, rgba(59, 130, 246, 0.08), transparent 25rem),
+    linear-gradient(135deg, #090d16, #0b1120 62%, #0f172a);
 }
 .auth-classic-shell::before {
-  content: "MOUNTAIN RUN • RUN YOUR WAY • MOUNTAIN RUN • RUN YOUR WAY";
+  content: "RELENTLESS RUN • RUN ANYWHERE • RELENTLESS RUN • VIRTUAL MARATHON";
   position: absolute;
   right: -7rem;
   top: 50%;
-  color: rgba(231,190,102,.09);
+  color: rgba(56, 189, 248, 0.06);
   font-size: .62rem;
   font-weight: 800;
   letter-spacing: .25em;
   transform: rotate(-90deg);
   white-space: nowrap;
 }
-.auth-classic-kicker { color: #e0b75e; font-size: .68rem; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; }
-.auth-classic-title { color: #f4f0e5; font-family: Georgia, "Times New Roman", serif; font-size: clamp(3.25rem, 5vw, 5.25rem); font-weight: 700; letter-spacing: -.065em; line-height: .94; }
+.auth-classic-kicker { 
+  color: #38bdf8; 
+  font-size: .72rem; 
+  font-weight: 800; 
+  letter-spacing: .18em; 
+  text-transform: uppercase; 
+}
+.auth-classic-title { 
+  color: #f8fafc; 
+  font-family: inherit; 
+  font-size: clamp(2.75rem, 4.5vw, 4.25rem); 
+  font-weight: 900; 
+  letter-spacing: -.03em; 
+  line-height: 1.05; 
+}
 .auth-classic-form {
   position: relative;
-  border: 1px solid rgba(235,210,145,.38);
-  background: #15242b;
-  box-shadow: 12px 12px 0 rgba(190,142,49,.16), 0 25px 60px rgba(0,0,0,.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #0f172a;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(56, 189, 248, 0.08);
+  border-radius: 1.25rem;
   padding: 2rem;
 }
-.auth-classic-form-title { color: #f4f0e5; font-family: Georgia, "Times New Roman", serif; font-size: clamp(1.85rem, 3vw, 2.45rem); font-weight: 700; letter-spacing: -.045em; line-height: 1; }
-.auth-classic .cl-card { border-color: rgba(235,210,145,.2) !important; background: #192a32 !important; border-radius: .65rem !important; }
-.auth-classic .cl-formButtonPrimary { background: #e0b75e !important; color: #132027 !important; }
-.auth-classic .cl-formButtonPrimary:hover { background: #f0c974 !important; }
-.auth-classic .cl-socialButtonsBlockButton { border-color: rgba(235,210,145,.22) !important; background: #142129 !important; }
-.auth-classic .cl-dividerLine { background: rgba(238,223,190,.15) !important; }
+.auth-classic-form-title { 
+  color: #f8fafc; 
+  font-family: inherit; 
+  font-size: clamp(1.65rem, 2.5vw, 2.15rem); 
+  font-weight: 800; 
+  letter-spacing: -.02em; 
+  line-height: 1.15; 
+}
+.auth-classic .cl-card { 
+  border-color: rgba(255, 255, 255, 0.08) !important; 
+  background: #1e293b !important; 
+  border-radius: 0.85rem !important; 
+  box-shadow: none !important;
+}
+.auth-classic .cl-formButtonPrimary { 
+  background: linear-gradient(135deg, #2563eb, #0284c7) !important; 
+  color: #ffffff !important; 
+  font-weight: 700 !important;
+  border-radius: 0.75rem !important;
+  transition: all 0.2s ease !important;
+}
+.auth-classic .cl-formButtonPrimary:hover { 
+  background: linear-gradient(135deg, #1d4ed8, #0369a1) !important; 
+  box-shadow: 0 4px 15px rgba(37, 99, 235, 0.35) !important;
+}
+.auth-classic .cl-socialButtonsBlockButton { 
+  border-color: rgba(255, 255, 255, 0.12) !important; 
+  background: #1e293b !important; 
+  color: #f8fafc !important;
+  border-radius: 0.75rem !important;
+}
+.auth-classic .cl-socialButtonsBlockButton:hover {
+  background: #334155 !important;
+}
+.auth-classic .cl-dividerLine { 
+  background: rgba(255, 255, 255, 0.1) !important; 
+}
+.auth-classic .cl-formFieldInput {
+  background: #0f172a !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  color: #f8fafc !important;
+  border-radius: 0.65rem !important;
+}
+.auth-classic .cl-formFieldInput:focus {
+  border-color: #38bdf8 !important;
+  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2) !important;
+}
 
 @media (max-width: 639px) {
-  .auth-classic-form { padding: 1.35rem; box-shadow: 6px 6px 0 rgba(190,142,49,.14), 0 18px 42px rgba(0,0,0,.28); }
+  .auth-classic-form { 
+    padding: 1.35rem; 
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); 
+  }
 }
 
 /* Runner dashboard — operational information with the same composed race-club finish. */
