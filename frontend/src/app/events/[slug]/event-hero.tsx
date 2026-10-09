@@ -396,22 +396,26 @@ export function EventHero({
             className="flex flex-col gap-4 lg:sticky lg:top-24"
           >
             {/* Cinematic Poster Box */}
-            <div className="relative overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl">
+            <div className="relative overflow-hidden rounded-3xl border border-slate-200 bg-slate-950 shadow-2xl flex items-center justify-center min-h-[360px] sm:min-h-[420px]">
+              {/* Ambient blurred backdrop for seamless color fill */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={imageSrc}
+                alt=""
+                aria-hidden="true"
+                className="absolute inset-0 w-full h-full object-cover blur-2xl opacity-35 scale-110 pointer-events-none"
+              />
+
+              {/* Main crisp full image — 100% uncropped */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={imageSrc}
                 alt={`${event.name} official poster`}
-                className="w-full h-auto object-cover aspect-[16/10] max-h-[480px] transition-transform duration-700 hover:scale-105"
+                className="relative z-1 max-w-full max-h-[420px] sm:max-h-[460px] w-auto h-auto object-contain p-2 sm:p-4 transition-transform duration-700 hover:scale-105 drop-shadow-[0_15px_30px_rgba(0,0,0,0.8)]"
                 onError={() => {
                   const fallback = "/images/mountain-run-hero.svg";
                   if (imageSrc !== fallback) setImageSrc(fallback);
                 }}
-              />
-
-              {/* Gradient Scrim */}
-              <div
-                aria-hidden
-                className="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/10 to-transparent"
               />
 
               {/* Status Badge */}
@@ -427,7 +431,7 @@ export function EventHero({
 
               {/* Bottom Poster Tag */}
               <div className="absolute bottom-4 left-4 right-4 z-10 flex items-center justify-between">
-                <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/75 backdrop-blur-md px-3.5 py-1.5 text-xs font-bold text-white shadow-lg">
+                <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/80 backdrop-blur-md px-3.5 py-1.5 text-xs font-bold text-white shadow-lg">
                   <Medal className="h-4 w-4 text-[#38bdf8]" />
                   <span>Heavyweight Finisher Medal Included</span>
                 </div>
