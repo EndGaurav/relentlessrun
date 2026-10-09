@@ -40,6 +40,7 @@ import {
   adminUpdatePayment,
   adminUpdateRegistration,
   adminUpdateUserRole,
+  adminTriggerAbandonedRecovery,
 } from "../controllers/admin.controller.js";
 import { requireAdmin, requireClerkAuth } from "../middleware/clerk-auth.js";
 import { asyncHandler } from "../utils/async-handler.js";
@@ -103,3 +104,4 @@ adminRouter.delete("/coupons/:id", asyncHandler(adminDeleteCoupon));
 
 adminRouter.get("/subscribers", asyncHandler(adminListSubscribers));
 adminRouter.post("/newsletter/send", asyncHandler(adminSendNewsletter));
+adminRouter.post("/abandoned-recovery/trigger", asyncHandler(adminTriggerAbandonedRecovery));

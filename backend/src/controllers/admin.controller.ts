@@ -21,6 +21,7 @@ import {
   toCertificateRenderData,
 } from "../services/certificate.service.js";
 import { sendRegistrationConfirmationEmail } from "../services/email.service.js";
+import { processAbandonedRegistrations } from "../services/abandoned-recovery.service.js";
 import { fetchPaymentsForOrder } from "../services/razorpay.service.js";
 import { ensureDefaultEvents } from "../services/event.service.js";
 import { ApiError } from "../utils/api-error.js";
@@ -1839,3 +1840,24 @@ export async function adminSendNewsletter(request: AuthenticatedRequest, respons
     },
   });
 }
+
+export async function adminTriggerAbandonedRecovery(
+  request: AuthenticatedRequest,
+  response: Response,
+) {
+  const result = await processAbandonedRegistrations();
+
+  await writeAdminAudit(request, {
+    action: "abandoned_recovery.trigger",
+    entityType: "Registration",
+    summary: `Triggered abandoned registration recovery: Step 1 sent ${result.step1Sent}, Step 2 sent ${result.step2Sent}`,
+  });
+
+  response.json({
+    data: {
+      ...result,
+      message: `Abandoned recovery completed: ${result.step1Sent} Step 1 reminders and ${result.step2Sent} Step 2 reminders sent.`,
+    },
+  });
+}
+

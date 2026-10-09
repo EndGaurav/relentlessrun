@@ -1,6 +1,7 @@
 import { app } from "./app.js";
 import { env } from "./config/env.js";
 import { prisma } from "./lib/prisma.js";
+import { startAbandonedRecoveryCron } from "./services/abandoned-recovery.service.js";
 import { logger } from "./utils/logger.js";
 
 const server = app.listen(env.port, "0.0.0.0", () => {
@@ -8,6 +9,9 @@ const server = app.listen(env.port, "0.0.0.0", () => {
     port: env.port,
     env: env.nodeEnv,
   });
+
+  // Start background abandoned registration recovery worker
+  startAbandonedRecoveryCron();
 });
 
 async function shutdown(signal: string) {

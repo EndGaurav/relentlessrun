@@ -75,6 +75,8 @@ model Registration {
   shippingState     String
   shippingPincode   String
   adminNote         String?
+  abandonedReminder1SentAt DateTime?
+  abandonedReminder2SentAt DateTime?
   certificate       Certificate?
   medalDelivery     MedalDelivery?
   payment           Payment?
