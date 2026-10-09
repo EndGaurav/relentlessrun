@@ -164,7 +164,7 @@ function ShieldIcon() {
 function BrandMark({ size = 28 }: { size?: number }) {
   return (
     // eslint-disable-next-line @next/next/no-img-element
-    <img alt="Mountain Run" height={size} src="/logo-mark.svg" width={size} />
+    <img alt="Relentless Run" height={size} src="/logo-mark.svg" width={size} />
   );
 }
 
@@ -356,7 +356,7 @@ function SidebarNav({
 }) {
   return (
     <>
-      <Link href="/" className="admin-sidebar-brand" aria-label="Go to Mountain Run homepage">
+      <Link href="/" className="admin-sidebar-brand" aria-label="Go to Relentless Run homepage">
         <div className="admin-sidebar-brand-icon">
           <BrandMark size={20} />
         </div>

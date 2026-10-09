@@ -329,7 +329,7 @@ export default function AdminEventsPage() {
 
             <label className="block text-sm">
               <span className="field-label">Event title *</span>
-              <input className="input" placeholder="e.g. Monsoon Mountain Miles"
+              <input className="input" placeholder="e.g. Monsoon Relentless Miles"
                 onChange={(e) => setForm((f) => ({ ...f, title: e.target.value, slug: slugify(e.target.value) }))}
                 required value={form.title} />
             </label>

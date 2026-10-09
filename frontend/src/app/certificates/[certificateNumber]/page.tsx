@@ -168,7 +168,7 @@ export default function CertificateVerifyPage() {
             <div>
               <p className="eyebrow text-[#c9a227]">Official E-Certificate</p>
               <h1 className="heading text-2xl sm:text-3xl mt-1">Certificate of Achievement</h1>
-              <p className="lede text-xs sm:text-sm mt-1">Verified Mountain Run finisher credential.</p>
+              <p className="lede text-xs sm:text-sm mt-1">Verified Relentless Run finisher credential.</p>
             </div>
             {data && (
               <div className="flex gap-2">
@@ -197,7 +197,7 @@ export default function CertificateVerifyPage() {
             <div className="card p-12 text-center">
               <div className="text-4xl mb-3">⚠️</div>
               <p className="text-base font-semibold text-(--danger)">{error}</p>
-              <p className="text-xs text-(--muted) mt-1">Please verify the certificate URL or contact Mountain Run support.</p>
+              <p className="text-xs text-(--muted) mt-1">Please verify the certificate URL or contact Relentless Run support.</p>
               <Link className="btn btn-secondary mt-5" href="/">Back to Home</Link>
             </div>
           )}
@@ -365,11 +365,11 @@ export default function CertificateVerifyPage() {
                       className="text-2xl sm:text-3xl text-[#1a3a2e] font-bold"
                       style={{ fontFamily: "'Dancing Script', cursive" }}
                     >
-                      Mountain Run Team
+                      Relentless Run Team
                     </p>
                     <div className="h-0.5 w-32 bg-[#c9a227] my-1" />
                     <p className="text-[0.6rem] font-black uppercase tracking-[0.15em] text-[#1a3a2e]">
-                      MOUNTAIN RUN TEAM
+                      RELENTLESS RUN TEAM
                     </p>
                     <p className="text-[0.55rem] text-[#7a6e5a]">Organizer</p>
                   </div>
@@ -377,7 +377,7 @@ export default function CertificateVerifyPage() {
                   {/* Center-Left: Official Wax / Stamp Seal */}
                   <div className="flex flex-col items-center">
                     <div className="w-18 h-18 rounded-full bg-[#1a3a2e] border-2 border-dashed border-[#c9a227] flex flex-col items-center justify-center p-2 shadow-md">
-                      <p className="text-[0.5rem] font-black uppercase tracking-wider text-[#f5f5f0] leading-none">MOUNTAIN RUN</p>
+                      <p className="text-[0.5rem] font-black uppercase tracking-wider text-[#f5f5f0] leading-none">RELENTLESS RUN</p>
                       <p className="text-[0.45rem] font-bold tracking-wider text-[#c9a227] uppercase mt-0.5">RUN ANYWHERE</p>
                       <p className="text-[0.4rem] tracking-widest text-[#c9a227] uppercase">ANYTIME</p>
                       <p className="text-[0.65rem] text-[#c9a227] leading-none mt-0.5">★★★</p>

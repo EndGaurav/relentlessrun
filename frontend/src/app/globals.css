@@ -1662,7 +1662,7 @@ html[data-theme="dark"] .cl-userButtonPopoverCard {
   box-shadow: 14px 14px 0 rgba(190,142,49,.2), 0 28px 65px rgba(0,0,0,.38) !important;
 }
 .event-classic-poster::before {
-  content: "OFFICIAL MOUNTAIN RUN • EST. 2026";
+  content: "OFFICIAL RELENTLESS RUN • EST. 2026";
   position: absolute;
   z-index: 2;
   top: .85rem;
@@ -1730,7 +1730,7 @@ html[data-theme="dark"] .cl-userButtonPopoverCard {
     linear-gradient(135deg, #13242c, #101a20 68%);
 }
 .events-classic-hero::after {
-  content: "MOUNTAIN RUN • OPEN RACES • MOUNTAIN RUN • OPEN RACES • MOUNTAIN RUN";
+  content: "RELENTLESS RUN • OPEN RACES • RELENTLESS RUN • OPEN RACES • RELENTLESS RUN";
   position: absolute;
   bottom: .45rem;
   left: 0;
@@ -1803,7 +1803,7 @@ html[data-theme="dark"] .cl-userButtonPopoverCard {
     linear-gradient(135deg, #13242c, #101a20 70%);
 }
 .gallery-classic-hero::after {
-  content: "THE MOUNTAIN RUN ALBUM • THE MOUNTAIN RUN ALBUM • THE MOUNTAIN RUN ALBUM";
+  content: "THE RELENTLESS RUN ALBUM • THE RELENTLESS RUN ALBUM • THE RELENTLESS RUN ALBUM";
   position: absolute;
   bottom: .45rem;
   left: 0;
@@ -1836,7 +1836,7 @@ html[data-theme="dark"] .cl-userButtonPopoverCard {
 /* Make catalogue cards feel like a selected race kit: brighter poster crop,
    brass details, clear hierarchy and friendlier actions. */
 .events-classic-card > div:first-child::after {
-  content: "MOUNTAIN RUN";
+  content: "RELENTLESS RUN";
   position: absolute;
   right: .85rem;
   bottom: .7rem;

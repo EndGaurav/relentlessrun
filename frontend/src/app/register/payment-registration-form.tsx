@@ -504,7 +504,7 @@ function PaymentRegistrationFormInner() {
         key: order.keyId,
         amount: order.amount,
         currency: order.currency ?? "INR",
-        name: "Mountain Run",
+        name: "Relentless Run",
         description: `${activeEvent.label} · ${selectedDistance}`,
         image: "https://relentlessrun.in/icon.png",
         order_id: order.orderId,
@@ -902,7 +902,7 @@ function PaymentRegistrationFormInner() {
                   MR
                 </span>
                 <span className="text-xs font-black tracking-widest uppercase text-white/90">
-                  MOUNTAIN RUN
+                  RELENTLESS RUN
                 </span>
               </div>
               <span className="rounded-full bg-amber-500/20 border border-amber-500/40 px-2.5 py-0.5 text-[0.6rem] font-black uppercase tracking-wider text-amber-400">
@@ -966,7 +966,7 @@ function PaymentRegistrationFormInner() {
             </p>
             <p className="flex items-center gap-2">
               <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
-              <span>Ranked position on the Mountain Run Official Leaderboard</span>
+              <span>Ranked position on the Relentless Run Official Leaderboard</span>
             </p>
           </div>
         </div>

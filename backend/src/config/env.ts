@@ -67,7 +67,7 @@ const allowedOrigins = Array.from(
  * Broken env values (unquoted spaces, stripped <email>, extra quotes) are normalized.
  */
 function normalizeResendFrom(raw: string | undefined): string {
-  const fallback = "Mountain Run <onboarding@resend.dev>";
+  const fallback = "Relentless Run <onboarding@resend.dev>";
   if (!raw) return fallback;
 
   let value = raw.trim();
@@ -86,7 +86,7 @@ function normalizeResendFrom(raw: string | undefined): string {
 
   // Bare email
   if (/^[^\s<>]+@[^\s<>]+\.[^\s<>]+$/.test(value)) {
-    return `Mountain Run <${value}>`;
+    return `Relentless Run <${value}>`;
   }
 
   // Recover email if present anywhere in the string
@@ -98,7 +98,7 @@ function normalizeResendFrom(raw: string | undefined): string {
       .replace(email, " ")
       .replace(/\s+/g, " ")
       .trim();
-    return name ? `${name} <${email}>` : `Mountain Run <${email}>`;
+    return name ? `${name} <${email}>` : `Relentless Run <${email}>`;
   }
 
   logger.warn(

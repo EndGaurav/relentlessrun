@@ -66,7 +66,7 @@
     <g transform="translate(140, 45)">
       <polygon points="0,-16 -12,4 12,4" fill="#10b981" />
       <polygon points="0,-16 -4,4 4,4" fill="#ffffff" />
-      <text x="0" y="24" fill="#f8fafc" font-family="system-ui, sans-serif" font-size="11" font-weight="800" text-anchor="middle" letter-spacing="2">MOUNTAIN RUN</text>
+      <text x="0" y="24" fill="#f8fafc" font-family="system-ui, sans-serif" font-size="11" font-weight="800" text-anchor="middle" letter-spacing="2">RELENTLESS RUN</text>
       <text x="0" y="38" fill="#38bdf8" font-family="system-ui, sans-serif" font-size="8" font-weight="700" text-anchor="middle" letter-spacing="1.5">OFFICIAL CERTIFICATE</text>
     </g>
 
@@ -143,7 +143,7 @@
     <!-- Inner Dark Core Face -->
     <circle cx="0" cy="0" r="112" fill="#0f172a" stroke="url(#rwGold)" stroke-width="4" />
 
-    <!-- Embossed Mountain Emblem -->
+    <!-- Embossed Relentless Emblem -->
     <polygon points="0,-55 -38,15 38,15" fill="#78350f" stroke="url(#rwGold)" stroke-width="1.5" />
     <polygon points="0,-55 0,15 38,15" fill="#92400e" />
     <polygon points="0,-55 -12,-30 -4,-26 0,-34 5,-28 12,-30" fill="#ffffff" />
@@ -157,7 +157,7 @@
     <text x="0" y="43" fill="#fef08a" font-family="system-ui, sans-serif" font-size="10" font-weight="900" text-anchor="middle" letter-spacing="1.5">FINISHER 2026</text>
 
     <!-- Top Text inside Medal -->
-    <text x="0" y="-72" fill="#fef08a" font-family="system-ui, sans-serif" font-size="9" font-weight="800" text-anchor="middle" letter-spacing="2">MOUNTAIN RUN</text>
+    <text x="0" y="-72" fill="#fef08a" font-family="system-ui, sans-serif" font-size="9" font-weight="800" text-anchor="middle" letter-spacing="2">RELENTLESS RUN</text>
 
     <!-- Glint Sparkle -->
     <g transform="translate(80, -65)" filter="url(#rwGlow)">

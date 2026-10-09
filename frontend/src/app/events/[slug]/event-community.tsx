@@ -32,7 +32,7 @@ export function EventCommunity() {
               <span className="text-[#0284c7]">Real moments.</span>
             </>
           }
-          lead="Join 25,000+ runners across India who made Mountain Run a key part of their fitness journey."
+          lead="Join 25,000+ runners across India who made Relentless Run a key part of their fitness journey."
         />
 
         <div className="mt-10 grid grid-cols-2 gap-3 sm:mt-14 sm:grid-cols-4 sm:gap-4">

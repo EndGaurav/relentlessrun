@@ -19,7 +19,7 @@ export function createCertificateNumber(bibNumber: string) {
 export function createCertificateQrPayload(certificateNumber: string) {
   const verifyUrl = buildCertificatePublicUrl(certificateNumber);
   return JSON.stringify({
-    issuer: "Mountain Run",
+    issuer: "Relentless Run",
     certificateNumber,
     verifyUrl,
   });
@@ -85,7 +85,7 @@ export function buildCertificateEmailHtml(data: CertificateRenderData) {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Your Mountain Run Certificate of Achievement</title>
+  <title>Your Relentless Run Certificate of Achievement</title>
   <style type="text/css">
     @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Outfit:wght@400;600;700;800;900&display=swap');
     
@@ -148,11 +148,11 @@ export function buildCertificateEmailHtml(data: CertificateRenderData) {
                     </table>
                   </td>
 
-                  <!-- Center: Mountain Run Logo -->
+                  <!-- Center: Relentless Run Logo -->
                   <td width="40%" align="center" valign="top">
                     <div style="display:inline-block;text-align:center;">
                       <div style="font-size:24px;line-height:1;margin-bottom:4px;">🏔️</div>
-                      <p style="margin:0;font-size:16px;font-weight:900;letter-spacing:0.18em;text-transform:uppercase;color:${DARK_GREEN};line-height:1.1;">MOUNTAIN <span style="color:#d97706;">RUN</span></p>
+                      <p style="margin:0;font-size:16px;font-weight:900;letter-spacing:0.18em;text-transform:uppercase;color:${DARK_GREEN};line-height:1.1;">RELENTLESS <span style="color:#d97706;">RUN</span></p>
                       <p style="margin:3px 0 0;font-size:8px;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;color:${MUTED};">— RUN ANYWHERE, ANYTIME —</p>
                     </div>
                   </td>
@@ -256,16 +256,16 @@ export function buildCertificateEmailHtml(data: CertificateRenderData) {
                 <tr>
                   <!-- Left: Organizer Signature -->
                   <td class="sign-col" width="28%" align="center" valign="bottom">
-                    <p style="margin:0;font-family:'Dancing Script', cursive;font-size:20px;color:${DARK_GREEN};font-weight:700;">Mountain Run Team</p>
+                    <p style="margin:0;font-family:'Dancing Script', cursive;font-size:20px;color:${DARK_GREEN};font-weight:700;">Relentless Run Team</p>
                     <div style="height:1px;background:#c9a227;margin:4px auto;width:120px;"></div>
-                    <p style="margin:0;font-size:9px;font-weight:900;letter-spacing:0.15em;text-transform:uppercase;color:${DARK_GREEN};">MOUNTAIN RUN TEAM</p>
+                    <p style="margin:0;font-size:9px;font-weight:900;letter-spacing:0.15em;text-transform:uppercase;color:${DARK_GREEN};">RELENTLESS RUN TEAM</p>
                     <p style="margin:2px 0 0;font-size:8px;color:${MUTED};text-transform:uppercase;">Organizer</p>
                   </td>
 
                   <!-- Center-Left: Official Round Stamp -->
                   <td class="sign-col" width="22%" align="center" valign="middle">
                     <div style="width:68px;height:68px;border-radius:50%;background:#1a3a2e;border:2px dashed #c9a227;display:inline-block;text-align:center;padding-top:10px;">
-                      <p style="margin:0;font-size:7px;font-weight:900;letter-spacing:0.15em;text-transform:uppercase;color:#f5f5f0;">MOUNTAIN RUN</p>
+                      <p style="margin:0;font-size:7px;font-weight:900;letter-spacing:0.15em;text-transform:uppercase;color:#f5f5f0;">RELENTLESS RUN</p>
                       <p style="margin:2px 0;font-size:6px;letter-spacing:0.1em;text-transform:uppercase;color:#c9a227;">RUN ANYWHERE</p>
                       <p style="margin:0;font-size:11px;color:#c9a227;">★★★</p>
                     </div>
@@ -312,7 +312,7 @@ export function buildCertificateEmailHtml(data: CertificateRenderData) {
                 THIS IS AN E-CERTIFICATE AND DOES NOT REQUIRE A PHYSICAL SIGNATURE.
               </p>
               <p style="margin:0;font-size:9px;color:rgba(255,255,255,0.4);line-height:1.5;">
-                © ${new Date().getFullYear()} Mountain Run India. All rights reserved.<br/>
+                © ${new Date().getFullYear()} Relentless Run India. All rights reserved.<br/>
                 Verify authenticity anytime at <a href="${escapeHtml(data.verifyUrl)}" style="color:#c9a227;text-decoration:none;">${escapeHtml(data.verifyUrl)}</a>
               </p>
             </td>

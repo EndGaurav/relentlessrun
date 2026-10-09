@@ -15,7 +15,7 @@ const faqs = [
   },
   {
     q: "How do I submit proof of my run?",
-    a: "Once finished, log in to your Mountain Run dashboard, select your event, and upload a screenshot or GPX/activity export. Our team manually reviews and verifies each submission within 24 hours.",
+    a: "Once finished, log in to your Relentless Run dashboard, select your event, and upload a screenshot or GPX/activity export. Our team manually reviews and verifies each submission within 24 hours.",
   },
   {
     q: "When will I receive my medal and kit rewards?",
