@@ -204,9 +204,9 @@ export function EventHero({
                 {event.name}
               </h1>
 
-              <p className="mt-3 text-sm sm:text-base text-slate-600 font-medium leading-relaxed">
+              <div className="mt-3.5 text-sm sm:text-base text-slate-600 font-medium leading-relaxed whitespace-pre-line">
                 {event.description || event.highlight || "Run, walk, or cycle anywhere in your city. Finish at your own pace, submit GPS proof, and receive an official heavyweight finisher medal delivered to your door."}
-              </p>
+              </div>
 
               {/* Rating */}
               <div className="mt-3.5 flex items-center gap-2">
