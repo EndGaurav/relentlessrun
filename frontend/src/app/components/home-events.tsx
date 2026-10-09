@@ -251,12 +251,15 @@ function FeaturedEventSpotlight({ event }: { event: PublicEvent }) {
             </span>
           </div>
 
-          {/* Reward strip on image */}
-          <div className="absolute bottom-4 left-4 right-4 z-10">
-            <div className="inline-flex items-center gap-2 rounded-2xl border border-white/20 bg-slate-950/80 backdrop-blur-md px-3.5 py-2 text-xs font-bold text-white shadow-xl">
-              <Medal className="h-4 w-4 text-[#38bdf8] shrink-0" />
-              <span className="truncate">{event.reward}</span>
-            </div>
+          {/* Reward strip on image — Clickable Link */}
+          <div className="absolute bottom-4 left-4 z-10">
+            <Link
+              href={`/events/${event.slug}`}
+              className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-slate-950/90 backdrop-blur-md px-3.5 py-1.5 text-xs font-bold text-white shadow-xl hover:border-sky-400 hover:bg-slate-900 hover:scale-105 active:scale-95 transition-all cursor-pointer group/badge"
+            >
+              <Medal className="h-4 w-4 text-[#38bdf8] shrink-0 group-hover/badge:rotate-12 transition-transform" />
+              <span className="truncate">{event.reward && event.reward !== "Register now" ? event.reward : "Heavyweight Finisher Medal Included"}</span>
+            </Link>
           </div>
         </div>
 

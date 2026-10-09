@@ -103,7 +103,7 @@ export function mapApiEventToPublic(
         : "Open for registration · Choose distance and join."),
     banner: staticMatch?.banner ?? (isPast ? "Past race" : "Open event"),
     bannerImageUrl: event.bannerImageUrl ?? staticMatch?.bannerImageUrl ?? undefined,
-    reward: staticMatch?.reward ?? (isPast ? "Medal + certificate" : "Register now"),
+    reward: staticMatch?.reward ?? (isPast ? "Medal + certificate" : "Heavyweight Finisher Medal Included"),
     couponCode: event.couponCode ?? undefined,
     showCouponOnCard: event.showCouponOnCard ?? undefined,
     activityTypes: event.activityTypes ?? ["running"],
