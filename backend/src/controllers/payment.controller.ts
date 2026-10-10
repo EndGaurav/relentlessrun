@@ -5,6 +5,7 @@ import { sendRegistrationConfirmationEmail } from "../services/email.service.js"
 import {
   createRazorpayOrder,
   fetchPaymentsForOrder,
+  fetchRazorpayOrder,
   verifyCheckoutSignature,
   verifyWebhookSignature,
 } from "../services/razorpay.service.js";
@@ -269,21 +270,28 @@ export async function checkPaymentStatus(request: Request, response: Response) {
 
   // Fetch live payment status from Razorpay API
   try {
-    const razorpayPayments = await fetchPaymentsForOrder(orderId);
+    const [razorpayPayments, razorpayOrder] = await Promise.all([
+      fetchPaymentsForOrder(orderId).catch(() => null),
+      fetchRazorpayOrder(orderId).catch(() => null),
+    ]);
+
     const successfulPayment = razorpayPayments?.find(
       (p) => p.status === "captured" || p.status === "authorized",
     );
+    const orderPaid =
+      razorpayOrder?.status === "paid" || Number(razorpayOrder?.amount_paid ?? 0) > 0;
 
-    if (successfulPayment) {
+    if (successfulPayment || orderPaid) {
+      const paymentId = successfulPayment?.id ?? `rzp_verified_${orderId}`;
       logger.info("[Payment] Order verified as paid via Razorpay API", {
         orderId,
-        paymentId: successfulPayment.id,
+        paymentId,
       });
 
       const updatedPayment = await prisma.payment.update({
         where: { razorpayOrderId: orderId },
         data: {
-          razorpayPaymentId: successfulPayment.id,
+          razorpayPaymentId: paymentId,
           status: "PAID",
           paidAt: new Date(),
         },
@@ -314,7 +322,7 @@ export async function checkPaymentStatus(request: Request, response: Response) {
           status: "PAID",
           bibNumber: updatedReg.bibNumber,
           registrationId: updatedReg.id,
-          paymentId: successfulPayment.id,
+          paymentId,
         },
       });
     }
@@ -327,7 +335,7 @@ export async function checkPaymentStatus(request: Request, response: Response) {
           status: "FAILED",
           bibNumber: payment.registration.bibNumber,
           registrationId: payment.registrationId,
-          message: "Payment attempt failed at bank. Please retry payment.",
+          message: "Payment attempt failed at bank or was cancelled. Click 'Pay Now' below to complete payment.",
         },
       });
     }
@@ -341,7 +349,7 @@ export async function checkPaymentStatus(request: Request, response: Response) {
       status: payment.status,
       bibNumber: payment.registration.bibNumber,
       registrationId: payment.registrationId,
-      message: "Payment confirmation not received from bank yet.",
+      message: "Payment confirmation not received from bank yet. If money was not debited, click 'Pay Now' below.",
     },
   });
 }

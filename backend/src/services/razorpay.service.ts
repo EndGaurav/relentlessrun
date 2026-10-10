@@ -86,6 +86,25 @@ export async function fetchPaymentsForOrder(orderId: string) {
   return json.items ?? [];
 }
 
+export async function fetchRazorpayOrder(orderId: string) {
+  requireRazorpayCredentials();
+
+  const auth = Buffer.from(`${env.razorpayKeyId}:${env.razorpayKeySecret}`).toString("base64");
+  const response = await fetch(`https://api.razorpay.com/v1/orders/${orderId}`, {
+    headers: { Authorization: `Basic ${auth}` },
+  });
+
+  if (!response.ok) {
+    return null;
+  }
+
+  return (await response.json()) as {
+    id: string;
+    status: string;
+    amount_paid?: number;
+  };
+}
+
 export function verifyWebhookSignature(rawBody: Buffer, signature: string | undefined) {
   if (!env.razorpayWebhookSecret) {
     throw new ApiError(500, "Razorpay webhook secret is not configured");

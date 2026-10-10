@@ -3,6 +3,7 @@
 import { useAuth, useUser } from "@clerk/nextjs";
 import { motion } from "framer-motion";
 import {
+  AlertCircle,
   CheckCircle2,
   CreditCard,
   Lock,
@@ -213,6 +214,10 @@ function PaymentRegistrationFormInner() {
   // Confetti modal state
   const [confirmedBib, setConfirmedBib] = useState<string | null>(null);
   const [checkingStatus, setCheckingStatus] = useState(false);
+  const [verifyFeedback, setVerifyFeedback] = useState<{
+    type: "success" | "pending" | "failed";
+    message: string;
+  } | null>(null);
   const [lastOrderInfo, setLastOrderInfo] = useState<{
     orderId: string;
     registrationId: string;
@@ -224,14 +229,28 @@ function PaymentRegistrationFormInner() {
       if (!orderId && !regId) return false;
       try {
         setCheckingStatus(true);
+        setVerifyFeedback(null);
         const token = await getToken();
-        if (!token) return false;
+        if (!token) {
+          setVerifyFeedback({
+            type: "failed",
+            message: "Session expired. Please sign in again.",
+          });
+          return false;
+        }
         const res = await fetch(getApiUrl("/api/payments/check-status"), {
           method: "POST",
           headers: authHeaders(token),
           body: JSON.stringify({ orderId, registrationId: regId }),
         });
-        if (!res.ok) return false;
+        if (!res.ok) {
+          const errText = await readApiError(res, "Could not verify payment status");
+          setVerifyFeedback({
+            type: "failed",
+            message: errText,
+          });
+          return false;
+        }
         const json = await res.json();
         if (json.data?.paid || json.data?.status === "PAID") {
           paidRef.current = true;
@@ -239,10 +258,27 @@ function PaymentRegistrationFormInner() {
           if (json.data?.bibNumber || bib) {
             setConfirmedBib(json.data.bibNumber || bib);
           }
+          setVerifyFeedback({
+            type: "success",
+            message: "Payment verified successfully! Welcome to the race.",
+          });
           return true;
         }
-      } catch {
-        // non-blocking
+
+        setVerifyFeedback({
+          type: "pending",
+          message:
+            json.data?.message ||
+            "Payment confirmation not received from bank yet. If money was not deducted, click 'Pay Now' below to complete payment.",
+        });
+      } catch (err) {
+        setVerifyFeedback({
+          type: "failed",
+          message:
+            err instanceof Error
+              ? err.message
+              : "Unable to check payment status. Please try again or complete payment below.",
+        });
       } finally {
         setCheckingStatus(false);
       }
@@ -488,27 +524,29 @@ function PaymentRegistrationFormInner() {
     clerkId: user?.id,
   });
 
-  const registeredKeys = useMemo(() => {
+  const confirmedKeys = useMemo(() => {
     const set = new Set<string>();
     for (const reg of existingRegs) {
-      if (reg.status !== "CANCELLED") {
+      if (reg.status === "CONFIRMED" || reg.payment?.status === "PAID") {
         set.add(`${reg.event?.slug}::${reg.distance}`);
       }
     }
     return set;
   }, [existingRegs]);
 
-  const distanceAlreadyTaken = Boolean(
-    selectedEvent && selectedDistance && registeredKeys.has(`${selectedEvent}::${selectedDistance}`),
+  const confirmedDistanceTaken = Boolean(
+    selectedEvent && selectedDistance && confirmedKeys.has(`${selectedEvent}::${selectedDistance}`),
   );
 
-  const pendingSame = Boolean(
-    existingRegs.find(
-      (r) =>
-        r.event?.slug === selectedEvent &&
-        r.distance === selectedDistance &&
-        r.payment?.status === "CREATED",
-    ),
+  const pendingSame = useMemo(
+    () =>
+      existingRegs.find(
+        (r) =>
+          r.event?.slug === selectedEvent &&
+          r.distance === selectedDistance &&
+          (r.status === "PENDING_PAYMENT" || r.payment?.status === "CREATED"),
+      ),
+    [existingRegs, selectedEvent, selectedDistance],
   );
 
   // Live Bib Number Generator Preview
@@ -863,10 +901,10 @@ function PaymentRegistrationFormInner() {
                 value={selectedDistance}
               >
                 {distanceOptions.map((distance) => {
-                  const taken = registeredKeys.has(`${selectedEvent}::${distance}`);
+                  const taken = confirmedKeys.has(`${selectedEvent}::${distance}`);
                   return (
                     <option disabled={taken} key={distance} value={distance}>
-                      {distance} {taken ? "(Already Registered)" : ""}
+                      {distance} {taken ? "(Already Confirmed)" : ""}
                     </option>
                   );
                 })}
@@ -1026,27 +1064,49 @@ function PaymentRegistrationFormInner() {
               <div className="space-y-0.5">
                 <p className="font-bold text-amber-300">Previous Registration Pending Payment</p>
                 <p className="text-[0.75rem] text-amber-200/80">
-                  If you already paid for this race, verify your payment status or proceed to checkout.
+                  Did you already pay for this race? Click &apos;Verify Status&apos;. If you haven&apos;t paid yet, click &apos;Complete Payment&apos; below.
                 </p>
               </div>
               <button
                 type="button"
                 onClick={async () => {
-                  const pending = existingRegs.find(
-                    (r) =>
-                      r.event?.slug === selectedEvent &&
-                      r.distance === selectedDistance &&
-                      r.payment?.status === "CREATED",
-                  );
-                  if (pending) {
-                    await checkStatusSilently(pending.payment?.razorpayOrderId, pending.id, pending.bibNumber);
-                  }
+                  await checkStatusSilently(pendingSame.payment?.razorpayOrderId, pendingSame.id, pendingSame.bibNumber);
                 }}
                 disabled={checkingStatus}
                 className="shrink-0 px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition-all cursor-pointer disabled:opacity-50"
               >
                 {checkingStatus ? "Checking..." : "Verify Status"}
               </button>
+            </div>
+          )}
+
+          {verifyFeedback && (
+            <div
+              className={cn(
+                "rounded-2xl p-4 text-xs shadow-md border flex items-start gap-3",
+                verifyFeedback.type === "success" && "border-emerald-500/40 bg-emerald-500/10 text-emerald-200",
+                verifyFeedback.type === "pending" && "border-amber-500/40 bg-amber-500/10 text-amber-200",
+                verifyFeedback.type === "failed" && "border-red-500/40 bg-red-500/10 text-red-200",
+              )}
+            >
+              <AlertCircle
+                className={cn(
+                  "h-4 w-4 shrink-0 mt-0.5",
+                  verifyFeedback.type === "success" && "text-emerald-400",
+                  verifyFeedback.type === "pending" && "text-amber-400",
+                  verifyFeedback.type === "failed" && "text-red-400",
+                )}
+              />
+              <div className="space-y-1">
+                <p className="font-bold">
+                  {verifyFeedback.type === "pending"
+                    ? "Payment Not Received Yet"
+                    : verifyFeedback.type === "success"
+                      ? "Payment Verified"
+                      : "Verification Notice"}
+                </p>
+                <p className="text-[0.75rem] leading-relaxed opacity-90">{verifyFeedback.message}</p>
+              </div>
             </div>
           )}
 
@@ -1058,14 +1118,18 @@ function PaymentRegistrationFormInner() {
 
           <button
             className="btn btn-primary w-full h-12 text-sm font-black tracking-wide shadow-lg shadow-(--sage)/20 cursor-pointer disabled:opacity-50"
-            disabled={status === "creating" || status === "paying" || distanceAlreadyTaken}
+            disabled={status === "creating" || status === "paying" || confirmedDistanceTaken}
             type="submit"
           >
             {status === "creating"
               ? "Generating Order..."
               : status === "paying"
                 ? "Opening Razorpay..."
-                : `Pay ${selectedAmount} & Claim Digital Bib`}
+                : confirmedDistanceTaken
+                  ? "Already Registered & Confirmed"
+                  : pendingSame
+                    ? `Complete Payment (${selectedAmount}) & Claim Digital Bib`
+                    : `Pay ${selectedAmount} & Claim Digital Bib`}
           </button>
         </form>
       </div>
