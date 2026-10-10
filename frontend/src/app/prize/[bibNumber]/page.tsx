@@ -231,7 +231,7 @@ export default function PrizeBibPage() {
                   autoComplete="off"
                   className="input h-12 w-full pl-10 text-base"
                   onChange={(e) => setSearchBib(e.target.value)}
-                  placeholder="Enter bib number (e.g. MR-2026-0042)"
+                  placeholder="Enter bib number (e.g. RR-2026-0042)"
                   type="text"
                   value={searchBib}
                 />

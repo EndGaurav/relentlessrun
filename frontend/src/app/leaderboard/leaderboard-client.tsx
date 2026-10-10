@@ -108,7 +108,7 @@ function formatPace(seconds: number | null | undefined, distanceStr: string): st
 }
 
 function getInitials(name: string): string {
-  if (!name) return "MR";
+  if (!name) return "RR";
   const parts = name.trim().split(/\s+/);
   if (parts.length >= 2) {
     return (parts[0][0] + parts[1][0]).toUpperCase();
@@ -553,7 +553,7 @@ export function LeaderboardClient() {
                   />
                   <input
                     type="text"
-                    placeholder="Search runner name, city, or bib (e.g. MR-5K-101)..."
+                    placeholder="Search runner name, city, or bib (e.g. RR-5K-101)..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="w-full rounded-2xl border border-slate-200 bg-slate-50 pl-11 pr-10 py-3 text-sm text-[#090d16] placeholder-slate-400 outline-none transition focus:border-[#0284c7] focus:ring-2 focus:ring-[#0284c7]/20"
@@ -841,7 +841,7 @@ export function LeaderboardClient() {
                                     )}
                                   </p>
                                   <p className="text-[0.65rem] text-slate-400 font-mono mt-0.5 truncate">
-                                    {row.bibNumber || `MR-${parseKm(selectedDistance)}K-${100 + row.rank}`}
+                                    {row.bibNumber || `RR-${parseKm(selectedDistance)}K-${100 + row.rank}`}
                                     {row.city && ` · ${row.city}`}
                                   </p>
                                 </div>
@@ -937,7 +937,7 @@ export function LeaderboardClient() {
 
                                 {/* Bib */}
                                 <td className="px-4 py-3.5 font-mono text-xs text-slate-400 font-semibold">
-                                  {row.bibNumber || `MR-${parseKm(selectedDistance)}K-${100 + row.rank}`}
+                                  {row.bibNumber || `RR-${parseKm(selectedDistance)}K-${100 + row.rank}`}
                                 </td>
 
                                 {/* City */}

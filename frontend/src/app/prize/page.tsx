@@ -43,7 +43,7 @@ export default function PrizeSearchPage() {
                 autoComplete="off"
                 className="input flex-1 h-12 px-4 text-base"
                 onChange={(e) => setBib(e.target.value)}
-                placeholder="e.g. MR-2026-0042"
+                placeholder="e.g. RR-2026-0042"
                 type="text"
                 value={bib}
               />

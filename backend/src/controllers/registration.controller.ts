@@ -428,7 +428,7 @@ function generatePaddedLeaderboard(eventSlug: string, distance: string, minCount
     const paceSec = Math.max(190, basePaces[idx % basePaces.length] + variance);
     const finishSeconds = Math.round(km * paceSec);
     const bibNum = 101 + idx;
-    const bibNumber = `MR-${cleanCode}-${String(bibNum).padStart(3, "0")}`;
+    const bibNumber = `RR-${cleanCode}-${String(bibNum).padStart(3, "0")}`;
 
     return {
       runnerName: profile.name,

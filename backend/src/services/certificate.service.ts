@@ -13,7 +13,7 @@ export type CertificateRenderData = {
 
 export function createCertificateNumber(bibNumber: string) {
   const year = new Date().getFullYear();
-  return `MR-${year}-${bibNumber.replace(/[^A-Z0-9]/gi, "").toUpperCase()}`;
+  return `RR-${year}-${bibNumber.replace(/[^A-Z0-9]/gi, "").toUpperCase()}`;
 }
 
 export function createCertificateQrPayload(certificateNumber: string) {

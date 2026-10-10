@@ -982,7 +982,7 @@ function PaymentRegistrationFormInner() {
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <div className="flex items-center gap-2">
                 <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-(--sage) text-slate-950 font-black text-xs">
-                  MR
+                  RR
                 </span>
                 <span className="text-xs font-black tracking-widest uppercase text-white/90">
                   RELENTLESS RUN
