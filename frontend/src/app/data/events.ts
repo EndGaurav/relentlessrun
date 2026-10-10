@@ -43,6 +43,8 @@ export const allPublicEvents: PublicEvent[] = [
     name: "Independence Day Virtual Run 2026 🇮🇳",
     slug: "independence-day-virtual-run-2026",
     date: "15-20 Aug 2026",
+    startsAt: "2026-08-15T00:00:00.000Z",
+    endsAt: "2026-08-20T23:59:59.000Z",
     distance: "1.5 km / 3 km / 5 km / 10 km / 15 km / 20 km / 25 km / 30 km",
     price: "Rs. 349",
     description:
@@ -59,6 +61,8 @@ export const allPublicEvents: PublicEvent[] = [
     name: "Monsoon Mountain Miles",
     slug: "monsoon-mountain-miles",
     date: "11-17 Jul 2026",
+    startsAt: "2026-07-11T00:00:00.000Z",
+    endsAt: "2026-07-17T23:59:59.000Z",
     distance: "3 km / 5 km / 10 km / 21 km",
     price: "Rs. 499",
     description:
@@ -74,6 +78,8 @@ export const allPublicEvents: PublicEvent[] = [
     name: "Independence Endurance Run",
     slug: "independence-endurance-run",
     date: "10-16 Aug 2026",
+    startsAt: "2026-08-10T00:00:00.000Z",
+    endsAt: "2026-08-16T23:59:59.000Z",
     distance: "5 km / 10 km / 25 km",
     price: "Rs. 649",
     description:
@@ -89,6 +95,8 @@ export const allPublicEvents: PublicEvent[] = [
     name: "Himalayan Winter Sprint",
     slug: "himalayan-winter-sprint",
     date: "5-9 Dec 2026",
+    startsAt: "2026-12-05T00:00:00.000Z",
+    endsAt: "2026-12-09T23:59:59.000Z",
     distance: "2 km / 5 km / 10 km",
     price: "Rs. 399",
     description:

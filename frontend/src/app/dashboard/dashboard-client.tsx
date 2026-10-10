@@ -38,6 +38,7 @@ import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from "re
 import { authHeaders, getApiUrl, readApiError } from "../../lib/api";
 import { cn } from "../../lib/cn";
 import { parseTimeToSeconds, validateProofForm } from "../../lib/validation";
+import { allPublicEvents } from "../data/events";
 
 type Registration = {
   id: string;
@@ -47,7 +48,14 @@ type Registration = {
   proofStatus: string;
   finishTimeSeconds?: number | null;
   registeredAt: string;
-  event: { title: string; slug: string; benefits?: string[] };
+  event: {
+    title: string;
+    slug: string;
+    benefits?: string[];
+    startsAt?: string | null;
+    endsAt?: string | null;
+    proofClosesAt?: string | null;
+  };
   payment: { status: string; amountInPaise: number } | null;
   proofUpload?: {
     activityImageUrl: string;
@@ -133,6 +141,50 @@ function canUpload(reg: Registration) {
     isEligible(reg) &&
     (reg.proofStatus === "NOT_SUBMITTED" || reg.proofStatus === "REJECTED")
   );
+}
+
+function getEventWindowStatus(event: Registration["event"]) {
+  let startsAt = event.startsAt ? new Date(event.startsAt) : null;
+  let endsAt = event.proofClosesAt || event.endsAt ? new Date(event.proofClosesAt || event.endsAt!) : null;
+
+  if (!startsAt || Number.isNaN(startsAt.getTime())) {
+    const local = allPublicEvents.find((e) => e.slug === event.slug);
+    if (local?.startsAt) startsAt = new Date(local.startsAt);
+    if (local?.endsAt && (!endsAt || Number.isNaN(endsAt.getTime()))) {
+      endsAt = new Date(local.endsAt);
+    }
+  }
+
+  const now = new Date();
+  const isUpcoming = Boolean(startsAt && !Number.isNaN(startsAt.getTime()) && now.getTime() < startsAt.getTime());
+  const isClosed = Boolean(endsAt && !Number.isNaN(endsAt.getTime()) && now.getTime() > endsAt.getTime());
+  const isOpen = (!startsAt || !isUpcoming) && (!endsAt || !isClosed);
+
+  const startFormatted = startsAt && !Number.isNaN(startsAt.getTime())
+    ? startsAt.toLocaleDateString("en-IN", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      })
+    : null;
+
+  const endFormatted = endsAt && !Number.isNaN(endsAt.getTime())
+    ? endsAt.toLocaleDateString("en-IN", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      })
+    : null;
+
+  return {
+    isUpcoming,
+    isClosed,
+    isOpen,
+    startsAt,
+    endsAt,
+    startFormatted,
+    endFormatted,
+  };
 }
 
 function dedupe(rows: Registration[]) {
@@ -372,6 +424,24 @@ export function DashboardClient() {
   async function submitProof(e: FormEvent) {
     e.preventDefault();
     if (!proofRegId) return;
+
+    const targetReg = registrations.find((r) => r.id === proofRegId);
+    if (targetReg) {
+      const windowStatus = getEventWindowStatus(targetReg.event);
+      if (windowStatus.isUpcoming) {
+        setProofError(
+          `Proof submission for ${targetReg.event.title} is not open yet. It will open on ${windowStatus.startFormatted}. Proof can only be submitted during the event window (${windowStatus.startFormatted} to ${windowStatus.endFormatted || "event completion"}).`
+        );
+        return;
+      }
+      if (windowStatus.isClosed) {
+        setProofError(
+          `Proof submission window for this event closed on ${windowStatus.endFormatted}.`
+        );
+        return;
+      }
+    }
+
     setProofBusy(true);
     setProofMessage(null);
     setProofError(null);
@@ -758,6 +828,7 @@ export function DashboardClient() {
                   const isCertReady = Boolean(reg.certificate && reg.certificate.status !== "QUEUED");
                   const isMedalDispatched = Boolean(reg.medalDelivery && (reg.medalDelivery.status === "DISPATCHED" || reg.medalDelivery.status === "DELIVERED"));
                   const formOpen = proofRegId === reg.id;
+                  const windowStatus = getEventWindowStatus(reg.event);
 
                   return (
                     <div
@@ -846,7 +917,9 @@ export function DashboardClient() {
                                 ? "border-emerald-500/40 bg-emerald-500/15 text-emerald-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.15)]"
                                 : isProofSubmitted
                                   ? "border-amber-500/40 bg-amber-500/15 text-amber-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.15)]"
-                                  : "border-white/10 bg-white/[0.04] text-slate-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]"
+                                  : windowStatus.isUpcoming
+                                    ? "border-sky-500/40 bg-sky-500/15 text-sky-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]"
+                                    : "border-white/10 bg-white/[0.04] text-slate-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]"
                             }`}
                           >
                             <div className="flex items-center gap-1.5 sm:gap-2">
@@ -856,7 +929,9 @@ export function DashboardClient() {
                                     ? "bg-emerald-500 text-slate-950"
                                     : isProofSubmitted
                                       ? "bg-amber-500 text-slate-950"
-                                      : "bg-white/10 text-slate-300"
+                                      : windowStatus.isUpcoming
+                                        ? "bg-sky-400 text-slate-950"
+                                        : "bg-white/10 text-slate-300"
                                 }`}
                               >
                                 2
@@ -868,7 +943,11 @@ export function DashboardClient() {
                                 ? "Proof Approved"
                                 : isProofSubmitted
                                   ? "Under Review (24-48h)"
-                                  : "Upload Activity"}
+                                  : windowStatus.isUpcoming
+                                    ? `Opens: ${windowStatus.startFormatted}`
+                                    : windowStatus.isClosed
+                                      ? "Window Closed"
+                                      : "Upload Activity"}
                             </p>
                           </div>
 
@@ -977,12 +1056,18 @@ export function DashboardClient() {
                               className={`w-full sm:w-auto justify-center rounded-full px-5 py-2.5 text-xs font-black uppercase tracking-wider transition-all cursor-pointer inline-flex items-center gap-1.5 shadow-lg ${
                                 formOpen
                                   ? "border border-white/20 bg-white/15 text-white backdrop-blur-xl"
-                                  : "neon-btn-blue text-white"
+                                  : windowStatus.isUpcoming
+                                    ? "border border-amber-400/50 bg-amber-500/20 text-amber-200 hover:bg-amber-500/30 backdrop-blur-xl shadow-[0_0_15px_rgba(251,191,36,0.15)]"
+                                    : "neon-btn-blue text-white"
                               }`}
                               type="button"
                             >
-                              <UploadCloud className="h-4 w-4" />
-                              {formOpen ? "Close Uploader" : "Upload GPS Run Proof"}
+                              {windowStatus.isUpcoming ? <Clock className="h-4 w-4 text-amber-300" /> : <UploadCloud className="h-4 w-4" />}
+                              {formOpen
+                                ? "Close Uploader"
+                                : windowStatus.isUpcoming
+                                  ? `Submit Proof (Opens ${windowStatus.startFormatted})`
+                                  : "Upload GPS Run Proof"}
                             </button>
                           ) : isProofSubmitted ? (
                             <span className="w-full sm:w-auto justify-center inline-flex items-center gap-1.5 rounded-full border border-amber-500/40 bg-amber-500/20 px-4 py-2 text-xs font-black uppercase tracking-wider text-amber-300 backdrop-blur-xl">
@@ -1014,6 +1099,46 @@ export function DashboardClient() {
                               </button>
                             </div>
 
+                            {/* Event Window Notice Banner */}
+                            {windowStatus.isUpcoming ? (
+                              <div className="rounded-2xl border border-amber-400/50 bg-amber-500/15 p-4 sm:p-5 backdrop-blur-xl shadow-[0_0_20px_rgba(251,191,36,0.15)] flex flex-col sm:flex-row items-start sm:items-center gap-3.5">
+                                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-amber-500/25 border border-amber-400/60 text-amber-300 shadow-[0_0_12px_rgba(251,191,36,0.3)]">
+                                  <Clock className="h-5 w-5" />
+                                </div>
+                                <div className="min-w-0 flex-1">
+                                  <h4 className="text-xs sm:text-sm font-black uppercase tracking-wide text-amber-200">
+                                    Proof Sirf Event Window Mein Submit Hoga
+                                  </h4>
+                                  <p className="mt-1 text-xs text-amber-100/95 leading-relaxed">
+                                    Run proof can only be submitted during the official event window (
+                                    <span className="font-bold text-white underline underline-offset-2">
+                                      {windowStatus.startFormatted}
+                                    </span>{" "}
+                                    to{" "}
+                                    <span className="font-bold text-white underline underline-offset-2">
+                                      {windowStatus.endFormatted || "event completion"}
+                                    </span>
+                                    ). Please complete your run during the event dates and upload your GPS screenshot once the window opens on{" "}
+                                    <span className="font-bold text-amber-300">{windowStatus.startFormatted}</span>.
+                                  </p>
+                                </div>
+                              </div>
+                            ) : windowStatus.isClosed ? (
+                              <div className="rounded-2xl border border-rose-500/40 bg-rose-500/15 p-4 backdrop-blur-xl flex items-center gap-3">
+                                <AlertCircle className="h-5 w-5 text-rose-400 shrink-0" />
+                                <p className="text-xs text-rose-200">
+                                  Proof submission window for this event closed on <span className="font-bold text-white">{windowStatus.endFormatted}</span>.
+                                </p>
+                              </div>
+                            ) : (
+                              <div className="rounded-2xl border border-emerald-500/40 bg-emerald-500/15 p-3.5 backdrop-blur-xl flex items-center gap-2.5 text-xs text-emerald-200">
+                                <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
+                                <span>
+                                  Event window is active ({windowStatus.startFormatted} – {windowStatus.endFormatted}). You can upload your GPS screenshot now!
+                                </span>
+                              </div>
+                            )}
+
                             {proofError && (
                               <div className="rounded-2xl border border-rose-500/40 bg-rose-500/20 p-3.5 text-xs font-bold text-rose-200 backdrop-blur-xl">
                                 {proofError}
@@ -1026,8 +1151,8 @@ export function DashboardClient() {
                               </span>
                               <input
                                 accept="image/*"
-                                className="w-full rounded-2xl border border-white/15 bg-white/[0.06] p-3 text-xs text-white file:mr-3 file:rounded-xl file:border-0 file:bg-sky-600 file:px-3 file:py-1.5 file:text-xs file:font-black file:text-white cursor-pointer backdrop-blur-xl"
-                                disabled={proofBusy}
+                                className="w-full rounded-2xl border border-white/15 bg-white/[0.06] p-3 text-xs text-white file:mr-3 file:rounded-xl file:border-0 file:bg-sky-600 file:px-3 file:py-1.5 file:text-xs file:font-black file:text-white cursor-pointer backdrop-blur-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                                disabled={proofBusy || windowStatus.isUpcoming || windowStatus.isClosed}
                                 onChange={(e) => void onPickFile(e.target.files?.[0] ?? null)}
                                 type="file"
                               />
@@ -1131,11 +1256,21 @@ export function DashboardClient() {
 
                             <div className="flex items-center gap-2.5 pt-2">
                               <button
-                                className="neon-btn-blue rounded-full px-6 py-2.5 text-xs font-black uppercase tracking-wider text-white shadow-lg cursor-pointer disabled:opacity-50"
-                                disabled={proofBusy}
+                                className={`rounded-full px-6 py-2.5 text-xs font-black uppercase tracking-wider transition-all shadow-lg ${
+                                  windowStatus.isUpcoming || windowStatus.isClosed
+                                    ? "bg-slate-800 text-slate-400 border border-white/10 cursor-not-allowed"
+                                    : "neon-btn-blue text-white cursor-pointer disabled:opacity-50"
+                                }`}
+                                disabled={proofBusy || windowStatus.isUpcoming || windowStatus.isClosed}
                                 type="submit"
                               >
-                                {proofBusy ? "Submitting..." : "Submit Proof"}
+                                {proofBusy
+                                  ? "Submitting..."
+                                  : windowStatus.isUpcoming
+                                    ? `Window Opens on ${windowStatus.startFormatted}`
+                                    : windowStatus.isClosed
+                                      ? "Submission Closed"
+                                      : "Submit Proof"}
                               </button>
                               <button
                                 className="rounded-full border border-white/20 bg-white/[0.08] px-4 py-2.5 text-xs font-bold text-slate-300 hover:text-white backdrop-blur-xl cursor-pointer"

@@ -241,6 +241,39 @@ export async function submitProof(request: AuthenticatedRequest, response: Respo
     throw new ApiError(422, "Complete payment before uploading GPS proof");
   }
 
+  const now = new Date();
+  if (existing.event.startsAt && now.getTime() < existing.event.startsAt.getTime()) {
+    const startStr = existing.event.startsAt.toLocaleDateString("en-IN", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+    const endStr = existing.event.endsAt
+      ? existing.event.endsAt.toLocaleDateString("en-IN", {
+          day: "numeric",
+          month: "short",
+          year: "numeric",
+        })
+      : "event completion";
+    throw new ApiError(
+      422,
+      `Run proof can only be submitted during the event window (${startStr} to ${endStr}). Please complete your run during the event dates and submit your GPS proof then!`,
+    );
+  }
+
+  const proofDeadline = existing.event.proofClosesAt || existing.event.endsAt;
+  if (proofDeadline && now.getTime() > proofDeadline.getTime()) {
+    const deadlineStr = proofDeadline.toLocaleDateString("en-IN", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+    throw new ApiError(
+      422,
+      `Proof submission window for this event closed on ${deadlineStr}.`,
+    );
+  }
+
   if (existing.proofStatus === "APPROVED") {
     throw new ApiError(409, "Proof already approved. Contact support to re-submit.");
   }
