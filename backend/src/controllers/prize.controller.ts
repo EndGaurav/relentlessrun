@@ -96,17 +96,6 @@ function buildPrizeItems(
     });
   }
 
-  // T-shirt if in benefits
-  const hasTshirt = benefits.some((b) => b.toLowerCase().includes("shirt") || b.toLowerCase().includes("tshirt") || b.toLowerCase().includes("t-shirt") || b.toLowerCase().includes("merch"));
-  if (hasTshirt) {
-    items.push({
-      type: "tshirt",
-      name: "Event T-Shirt",
-      icon: "tshirt",
-      status: medalStatus === "DISPATCHED" || medalStatus === "DELIVERED" ? "processing" as PrizeStatus : "pending" as PrizeStatus,
-      statusLabel: medalStatus === "DISPATCHED" || medalStatus === "DELIVERED" ? "Preparing" : "After verification",
-    });
-  }
 
   return items;
 }

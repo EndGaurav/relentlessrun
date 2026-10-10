@@ -112,7 +112,7 @@ export function EventSelect({ event }: { event: PublicEvent }) {
                   <ul className="mt-3 space-y-2 text-xs font-medium text-slate-300">
                     <li className="flex items-center gap-2">
                       <Sparkles className="h-3.5 w-3.5 shrink-0 text-[#38bdf8]" />
-                      Finisher medal + DRI-FIT T-shirt + E-Certificate
+                      Finisher medal + Official E-Certificate
                     </li>
                     <li className="flex items-center gap-2">
                       <Sparkles className="h-3.5 w-3.5 shrink-0 text-[#38bdf8]" />

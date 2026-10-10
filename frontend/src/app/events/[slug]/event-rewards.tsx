@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowUpRight, FileBadge, Medal, Shirt, Sparkles, Trophy, Truck } from "lucide-react";
+import { ArrowUpRight, FileBadge, Medal, Sparkles, Trophy, Truck } from "lucide-react";
 import { Medal3D } from "./medal";
 import { Reveal, SectionHeader } from "./reveal";
 
@@ -8,11 +8,6 @@ const items = [
     icon: Medal,
     title: "Finisher Medal",
     desc: "A heavyweight metal medal with a premium ribbon, designed to be proudly displayed.",
-  },
-  {
-    icon: Shirt,
-    title: "Performance Event T-Shirt (Free for 1st 100)",
-    desc: "Exclusive athletic quick-dry performance tee included 100% free with your race kit for the first 100 registered athletes.",
   },
   {
     icon: FileBadge,
@@ -87,8 +82,8 @@ export function EventRewards() {
 
               {/* Floating mini chips */}
               <div className="absolute left-4 top-8 inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white/95 px-3 py-1.5 text-[0.7rem] font-bold text-slate-800 shadow-md backdrop-blur-md sm:left-7 sm:top-10">
-                <Shirt className="h-3.5 w-3.5 text-[#0284c7]" />
-                Premium T-shirt
+                <Medal className="h-3.5 w-3.5 text-[#0284c7]" />
+                Heavy metal medal
               </div>
               <div
                 className="absolute bottom-24 right-3 inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white/95 px-3 py-1.5 text-[0.7rem] font-bold text-slate-800 shadow-md backdrop-blur-md sm:bottom-28 sm:right-6"

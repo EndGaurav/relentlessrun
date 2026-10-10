@@ -4,7 +4,7 @@ export const eventBenefits = [
   "Public leaderboard ranking",
   "Real finisher certificate",
   "Finisher medal delivery",
-  "Event merch and T-shirt options",
+  "Tracked Pan-India delivery",
   "Email and WhatsApp updates",
 ];
 
@@ -46,12 +46,12 @@ export const allPublicEvents: PublicEvent[] = [
     distance: "1.5 km / 3 km / 5 km / 10 km / 15 km / 20 km / 25 km / 30 km",
     price: "Rs. 349",
     description:
-      "Celebrate India's Independence Day by running from anywhere in the country. Complete your chosen distance at your own pace during the event window. Every finisher receives an official digital certificate, premium finisher medal, exclusive event T-shirt and exciting goodies.",
+      "Celebrate India's Independence Day by running from anywhere in the country. Complete your chosen distance at your own pace during the event window. Every finisher receives an official digital certificate, premium finisher medal, and exciting goodies.",
     highlight: "Flagship virtual run with official finisher medals and e-certificates.",
     banner: "Flagship run",
     bannerImageUrl:
       "https://res.cloudinary.com/yppcqzt6/image/upload/v1785155314/mountainrun/admin/uvujs4wpdunrnmz9rfqt.jpg",
-    reward: "Premium medal + T-shirt + certificate",
+    reward: "Premium medal + certificate",
     status: "upcoming",
     compareAtPrice: "Rs. 699",
   },
@@ -81,7 +81,7 @@ export const allPublicEvents: PublicEvent[] = [
     highlight: "Built for runners chasing a longer verified effort.",
     banner: "Flagship endurance week",
     bannerImageUrl: "/images/weekend-long-run.svg",
-    reward: "Premium medal + T-shirt",
+    reward: "Premium medal + certificate",
     status: "upcoming",
     compareAtPrice: "Rs. 1100",
   },

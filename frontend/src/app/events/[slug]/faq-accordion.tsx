@@ -19,7 +19,7 @@ const faqs = [
   },
   {
     q: "When will I receive my medal and kit rewards?",
-    a: "As soon as your run proof is verified, your official finisher medal, certificate, and performance t-shirt are carefully packed and dispatched with tracked courier delivery straight to your doorstep.",
+    a: "As soon as your run proof is verified, your official finisher medal and certificate are carefully packed and dispatched with tracked courier delivery straight to your doorstep.",
   },
   {
     q: "Is my payment safe & secure?",

@@ -70,7 +70,7 @@ export function EventStickyCta({
             </div>
             <p className="mt-0.5 inline-flex items-center gap-1 truncate text-[0.58rem] font-bold uppercase tracking-wider text-amber-400">
               <Sparkles className="h-2.5 w-2.5 shrink-0 text-amber-400" />
-              Medal + Free Tee (1st 100)
+              Medal + E-Certificate Included
             </p>
           </div>
 

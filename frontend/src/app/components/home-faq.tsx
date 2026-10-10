@@ -24,7 +24,7 @@ const homeFaqs: FaqItem[] = [
   {
     question: "When & how will I receive my finisher medal?",
     answer:
-      "Heavy embossed metal finisher medals and DRI-FIT t-shirts are dispatched via express tracked courier partners (Delhivery, Shiprocket) within 7-10 business days of GPS proof approval.",
+      "Heavy embossed metal finisher medals are dispatched via express tracked courier partners (Delhivery, Shiprocket) within 7-10 business days of GPS proof approval.",
   },
   {
     question: "How do I get my official E-Certificate?",

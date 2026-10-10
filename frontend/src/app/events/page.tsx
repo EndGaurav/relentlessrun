@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { FileText, Medal, Shirt, Trophy } from "lucide-react";
+import { FileText, Medal, Trophy, Truck } from "lucide-react";
 import { PageShell } from "../components/app-shell";
 import { EventsCatalog } from "./events-catalog";
 
@@ -8,7 +8,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://relentlessrun.in";
 export const metadata: Metadata = {
   title: "Upcoming Virtual Running Events India 2026 | 5K, 10K, 21K Races — RelentlessRun",
   description:
-    "Explore and register for upcoming virtual running events across India. Complete 1.5K, 5K, 10K, or 21K half marathons from anywhere. GPS verification, custom metal medals, DRI-FIT t-shirts, and instant E-certificates.",
+    "Explore and register for upcoming virtual running events across India. Complete 1.5K, 5K, 10K, or 21K half marathons from anywhere. GPS verification, custom metal medals, and instant E-certificates.",
   keywords: [
     "virtual running events",
     "virtual running events india",
@@ -62,7 +62,7 @@ export default function EventsPage() {
               <div className="mt-7 flex flex-wrap justify-center gap-2 sm:gap-3">
                 {[
                   { label: "Heavy Medals", icon: Medal },
-                  { label: "DRI-FIT T-shirts", icon: Shirt },
+                  { label: "Free Delivery", icon: Truck },
                   { label: "E-Certificates", icon: FileText },
                   { label: "Live Leaderboard", icon: Trophy },
                 ].map(({ label, icon: Icon }) => (

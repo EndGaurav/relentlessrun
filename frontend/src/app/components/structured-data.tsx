@@ -9,7 +9,7 @@ const organizationSchema = {
   logo: `${SITE_URL}/3d-header-logo.png`,
   image: `${SITE_URL}/og-image.png`,
   description:
-    "India's premier GPS-verified virtual running events platform. Register with UPI, run anywhere with Strava or Garmin, earn heavy metal finisher medals, DRI-FIT t-shirts, and instant verified E-certificates.",
+    "India's premier GPS-verified virtual running events platform. Register with UPI, run anywhere with Strava or Garmin, earn heavy metal finisher medals and instant verified E-certificates.",
   sport: ['Running', 'Marathon', 'Trail Running', 'Cycling', 'Walking'],
   sameAs: [
     'https://instagram.com/relentlessrunofficial',

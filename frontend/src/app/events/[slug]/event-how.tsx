@@ -22,7 +22,7 @@ export function EventHow({ event }: { event: PublicEvent }) {
     {
       icon: Truck,
       title: "Receive Rewards",
-      desc: "Your premium medal, official certificate, and t-shirt ship free to your doorstep.",
+      desc: "Your premium medal and official certificate ship free to your doorstep.",
     },
   ];
 

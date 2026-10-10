@@ -324,7 +324,7 @@ function buildAbandonedReminderHtml(payload: AbandonedReminderEmailPayload) {
 
   const introText = isStep1
     ? `We noticed you started registering for <strong>${payload.eventTitle}</strong> (${payload.distance}) but couldn't complete the checkout. If you faced any payment issue or got interrupted, we've kept your Bib temporarily reserved so you don't lose your spot.`
-    : `Slots and finisher medal kits for <strong>${payload.eventTitle}</strong> are filling up quickly! Complete your entry now to secure your personalized race kit, custom t-shirt, and leaderboard ranking.`;
+    : `Slots and finisher medal kits for <strong>${payload.eventTitle}</strong> are filling up quickly! Complete your entry now to secure your personalized race kit and leaderboard ranking.`;
 
   const ctaText = isStep1
     ? "Complete Registration & Lock Your Bib →"
@@ -452,7 +452,6 @@ function buildAbandonedReminderHtml(payload: AbandonedReminderEmailPayload) {
                       </p>
                       <p style="margin:0;font-size:13px;color:#555;line-height:1.6;">
                         🏅 Premium Heavy Finisher Medal delivered to your home<br/>
-                        👕 Custom Dri-Fit Performance Running T-Shirt<br/>
                         📜 Official E-Certificate with QR verification<br/>
                         📊 Leaderboard ranking & runner analytics
                       </p>

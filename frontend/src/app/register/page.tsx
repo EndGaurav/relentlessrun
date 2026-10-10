@@ -31,7 +31,7 @@ export default function RegisterPage() {
               Join The Challenge
             </h1>
             <p className="lede mx-auto mt-2.5 max-w-lg text-xs sm:text-sm text-slate-400">
-              Pick your event & distance, enter shipping details for your Finisher Medal & T-Shirt, and pay securely via UPI.
+              Pick your event & distance, enter shipping details for your Finisher Medal, and pay securely via UPI.
             </p>
           </div>
         </div>

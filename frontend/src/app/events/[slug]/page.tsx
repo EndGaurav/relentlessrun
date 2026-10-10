@@ -142,7 +142,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
         name: `When will I receive my finisher medal for ${event.name}?`,
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Finisher medals and performance t-shirts are dispatched to your registered postal address via tracked courier within 7-10 business days after your GPS run proof is verified.",
+          text: "Finisher medals and official certificates are dispatched to your registered postal address via tracked courier within 7-10 business days after your GPS run proof is verified.",
         },
       },
       {

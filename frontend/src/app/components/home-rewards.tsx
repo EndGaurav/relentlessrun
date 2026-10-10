@@ -1,6 +1,6 @@
 "use client";
 
-import { FileBadge, Medal, Shirt, Trophy } from "lucide-react";
+import { FileBadge, Medal, Trophy, Truck } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 const rewards: { title: string; text: string; icon: LucideIcon }[] = [
@@ -15,9 +15,9 @@ const rewards: { title: string; text: string; icon: LucideIcon }[] = [
     icon: FileBadge,
   },
   {
-    title: "DRI-FIT Performance Shirt",
-    text: "Breathable technical running tee included in premium event registration packages.",
-    icon: Shirt,
+    title: "Free Pan-India Delivery",
+    text: "Tracked express courier delivery straight to your doorstep across 19,000+ pincodes.",
+    icon: Truck,
   },
   {
     title: "Leaderboard & Stats",

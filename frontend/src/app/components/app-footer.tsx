@@ -268,7 +268,7 @@ export function AppFooter() {
                   className="h-8 sm:h-9 w-auto shrink-0 object-contain transition-transform duration-300 group-hover:scale-105 drop-shadow-[0_4px_16px_rgba(56,189,248,0.35)]" />
               </Link>
               <p className="mt-4 text-xs leading-relaxed text-slate-400 max-w-xs font-medium">
-                India&apos;s premier virtual running platform. GPS-verified races, custom metal medals, DRI-FIT apparel, and live national leaderboards.
+                India&apos;s premier virtual running platform. GPS-verified races, custom metal medals, verified certificates, and live national leaderboards.
               </p>
               <div className="mt-4 flex items-center gap-2.5">
                 {socials.map(({ label, href, icon }) => (

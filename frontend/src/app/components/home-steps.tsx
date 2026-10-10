@@ -19,7 +19,7 @@ const steps: { step: string; title: string; text: string; icon: LucideIcon }[] =
   {
     step: "03",
     title: "Earn Finisher Medals",
-    text: "Get instantly verified to claim your official metal medal, DRI-FIT t-shirt, and E-certificate.",
+    text: "Get instantly verified to claim your official metal medal and verified E-certificate.",
     icon: Award,
   },
 ];

@@ -14,7 +14,6 @@ import {
   MessageCircle,
   Route,
   ShieldCheck,
-  Shirt,
   Sparkles,
   Star,
   Timer,
@@ -177,84 +176,6 @@ export function EventHero({
           </div>
         </div>
 
-        {/* ─── High-Converting Early Bird Free T-Shirt Headline Banner ─── */}
-        {!isPast && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
-            className="mt-6 overflow-hidden rounded-3xl border-2 border-amber-400/80 bg-gradient-to-r from-amber-500/15 via-amber-400/10 to-sky-500/15 p-4 sm:p-5 shadow-[0_12px_35px_rgba(245,158,11,0.15)] relative isolate"
-          >
-            {/* Ambient Background Aura */}
-            <div
-              aria-hidden
-              className="pointer-events-none absolute -right-12 -top-12 h-44 w-44 rounded-full bg-amber-400/30 blur-3xl"
-            />
-            <div
-              aria-hidden
-              className="pointer-events-none absolute -left-12 -bottom-12 h-44 w-44 rounded-full bg-sky-400/20 blur-3xl"
-            />
-
-            <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
-              {/* Left: Icon & High-Impact Copy */}
-              <div className="flex items-center gap-3.5 sm:gap-4">
-                <div className="relative flex h-13 w-13 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-400 via-amber-500 to-amber-600 text-slate-950 shadow-lg ring-4 ring-amber-400/30">
-                  <Shirt className="h-7 w-7 stroke-[2.5]" />
-                  <span className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-emerald-600 text-[0.6rem] font-black text-white shadow-sm ring-2 ring-white">
-                    FREE
-                  </span>
-                </div>
-
-                <div>
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="inline-flex items-center gap-1 rounded-full bg-amber-500 px-2.5 py-0.5 text-[0.65rem] font-black uppercase tracking-wider text-slate-950 shadow-xs">
-                      <Flame className="h-3 w-3 fill-slate-950" />
-                      Early Bird Special
-                    </span>
-                    <span className="text-[0.68rem] font-extrabold uppercase tracking-widest text-amber-800 font-mono">
-                      First 100 Registrations Only
-                    </span>
-                  </div>
-
-                  <h2 className="mt-1 text-base sm:text-xl font-black uppercase tracking-tight text-slate-950 leading-snug">
-                    First 100 Runners Get a{" "}
-                    <span className="bg-gradient-to-r from-amber-600 to-amber-700 bg-clip-text text-transparent underline decoration-amber-400 decoration-2 underline-offset-4">
-                      Free Official Dri-Fit Event T-Shirt
-                    </span>
-                  </h2>
-                  <p className="text-xs sm:text-sm text-slate-700 font-semibold mt-0.5">
-                    100% Free inside your race kit along with Heavyweight Medal & Certificate.
-                  </p>
-                </div>
-              </div>
-
-              {/* Right: Live Micro Progress / Slot Tracker */}
-              <div className="shrink-0 flex items-center gap-3 self-start md:self-center bg-white/90 backdrop-blur-md rounded-2xl px-4 py-3 border border-amber-300/70 shadow-sm">
-                <div className="flex flex-col">
-                  <div className="flex items-center justify-between gap-3 text-xs font-black font-mono text-slate-900">
-                    <span className="text-amber-700">{scarcity.percent}/100 Claimed</span>
-                    <span className="text-emerald-700 font-bold text-[0.7rem]">
-                      {100 - scarcity.percent} Slots Left
-                    </span>
-                  </div>
-                  <div className="mt-1.5 h-2 w-32 sm:w-36 overflow-hidden rounded-full bg-slate-200">
-                    <div
-                      className="h-full rounded-full bg-gradient-to-r from-amber-500 via-amber-600 to-emerald-500 transition-all duration-700"
-                      style={{ width: `${scarcity.percent}%` }}
-                    />
-                  </div>
-                </div>
-
-                <div className="hidden sm:flex h-8 w-px bg-slate-200" />
-
-                <span className="hidden sm:inline-flex items-center gap-1 rounded-lg bg-emerald-50 px-2 py-1 text-[0.68rem] font-bold text-emerald-700 border border-emerald-200">
-                  <Sparkles className="h-3 w-3 text-emerald-600" /> Free Tee Auto-Applied
-                </span>
-              </div>
-            </div>
-          </motion.div>
-        )}
-
         {/* ─── Main Unified Hero Grid ─── */}
         <div className="mt-8 grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-12 items-start">
           {/* ── Left Column: Event Title, Details & Interactive Selector ── */}
@@ -321,7 +242,7 @@ export function EventHero({
                 </div>
                 <div className="min-w-0">
                   <p className="text-[0.65rem] uppercase font-bold text-slate-500">Finisher Kit</p>
-                  <p className="text-xs font-bold text-[#090d16] truncate">Medal + Tee Included</p>
+                  <p className="text-xs font-bold text-[#090d16] truncate">Medal + Certificate</p>
                 </div>
               </div>
             </div>
@@ -513,18 +434,13 @@ export function EventHero({
 
             {/* Quick Finisher Kit Badge Grid */}
             <div className="grid grid-cols-2 gap-2.5">
-              <div className="flex items-center gap-2.5 rounded-2xl border-2 border-amber-400/70 bg-gradient-to-br from-amber-50 to-amber-100/60 p-3 shadow-xs relative overflow-hidden">
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 text-slate-950 font-black shadow-xs">
-                  <Shirt className="h-4 w-4 stroke-[2.5]" />
+              <div className="flex items-center gap-2.5 rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-sky-50 border border-sky-200 text-[#0284c7]">
+                  <Medal className="h-4 w-4" />
                 </span>
                 <div className="min-w-0">
-                  <p className="text-xs font-black text-slate-900 truncate flex items-center gap-1">
-                    Dri-Fit Event Tee
-                    <span className="rounded bg-amber-500 text-slate-950 px-1.5 py-0.2 text-[0.52rem] font-black uppercase">
-                      FREE (1st 100)
-                    </span>
-                  </p>
-                  <p className="text-[0.65rem] font-bold text-amber-800">Special Edition Included</p>
+                  <p className="text-xs font-bold text-slate-900 truncate">Finisher Metal Medal</p>
+                  <p className="text-[0.65rem] text-slate-500">Custom Embossed</p>
                 </div>
               </div>
 
