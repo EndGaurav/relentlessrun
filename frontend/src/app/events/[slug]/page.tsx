@@ -219,7 +219,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
                       Everything you need to <span className="text-[#0284c7]">know</span>
                     </>
                   }
-                  lead="If it's not covered here, our athlete support team is one WhatsApp message away."
+                  lead="Everything you need to know about bib allocation, distance rules, and medal delivery."
                 />
                 <div className="mt-10 sm:mt-14">
                   <EventFaq />

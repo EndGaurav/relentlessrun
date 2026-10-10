@@ -1445,18 +1445,16 @@ export function DashboardClient() {
                 Need Help With GPS Proof or Strava Sync?
               </h3>
               <p className="mt-1 text-xs sm:text-sm text-slate-300 font-medium">
-                Our verification team reviews runs within 24 hours. Contact our official WhatsApp runner support desk anytime.
+                Our verification team reviews runs within 24 hours. Contact our official runner support helpline anytime.
               </p>
             </div>
 
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2.5 sm:gap-3 w-full md:w-auto">
               <a
-                href="https://wa.me/918287491957"
-                target="_blank"
-                rel="noopener noreferrer"
+                href="tel:+918287491957"
                 className="neon-btn-blue justify-center rounded-full px-5 sm:px-6 py-2.5 sm:py-3 text-xs font-black uppercase tracking-wider text-white shadow-lg flex items-center gap-2"
               >
-                <span>WhatsApp Runner Desk</span>
+                <span>Call Support Desk</span>
                 <ArrowRight className="h-4 w-4" />
               </a>
               <Link

@@ -8,8 +8,6 @@ import { RegisterCta } from "../../components/register-cta";
 import { EventCountdown } from "./countdown";
 import { SectionHeader } from "./reveal";
 
-const WHATSAPP_URL = "https://wa.me/918287491957";
-
 type Activity = { key: string; label: string; icon: typeof Footprints; active: string };
 
 const activities: Activity[] = [
@@ -40,7 +38,6 @@ function formatPrice(price: string) {
 export function EventSelect({ event }: { event: PublicEvent }) {
   const [activity, setActivity] = useState(activities[0].key);
   const distances = event.distance.split(" / ");
-  const whatsappUrl = `${WHATSAPP_URL}?text=${encodeURIComponent(`Hi! I'm interested in ${event.name}. Can you help me with registration?`)}`;
   const amount = event.price.toLowerCase().includes("free") ? "Free" : formatPrice(event.price);
   const mrp = event.compareAtPrice ? formatPrice(event.compareAtPrice) : null;
 
@@ -133,14 +130,6 @@ export function EventSelect({ event }: { event: PublicEvent }) {
                     signedOutLabel={`Register now — ${amount}`}
                     slug={event.slug}
                   />
-                  <Link
-                    className="w-full inline-flex items-center justify-center gap-2 rounded-full border border-white/20 bg-white/5 py-3 text-xs font-bold text-slate-200 hover:bg-white/10 hover:text-white transition-all"
-                    href={whatsappUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Have questions? Ask on WhatsApp
-                  </Link>
                 </div>
 
                 <p className="mt-4 flex items-center justify-center gap-1.5 text-center text-[0.68rem] font-medium text-slate-400">

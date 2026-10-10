@@ -11,7 +11,6 @@ import {
   Footprints,
   IndianRupee,
   Medal,
-  MessageCircle,
   Route,
   ShieldCheck,
   Sparkles,
@@ -25,8 +24,6 @@ import { RegisterCta } from "../../components/register-cta";
 import { EventCountdown } from "./countdown";
 import { getApiUrl, resolveImageUrl } from "../../../lib/api";
 import { type ApiEvent, mapApiEventToPublic } from "../../../lib/events-api";
-
-const WHATSAPP_URL = "https://wa.me/918287491957";
 
 type Activity = { key: string; label: string; icon: typeof Footprints };
 
@@ -147,9 +144,6 @@ export function EventHero({
 
   const amount = event.price.toLowerCase().includes("free") ? "Free" : formatPrice(event.price);
   const mrp = event.compareAtPrice ? formatPrice(event.compareAtPrice) : null;
-  const whatsappUrl = `${WHATSAPP_URL}?text=${encodeURIComponent(
-    `Hi! I'm interested in ${event.name} (${selectedDistance}). Can you help me with registration?`,
-  )}`;
 
   return (
     <section className="relative overflow-hidden border-b border-slate-200 bg-[#f8fafc] text-[#090d16] pt-24 pb-12 sm:pt-28 sm:pb-16 isolate">
@@ -356,15 +350,6 @@ export function EventHero({
                       distance={selectedDistance}
                       activity={activity}
                     />
-                    <Link
-                      className="inline-flex h-9 items-center justify-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 text-[0.7rem] font-bold text-slate-700 hover:bg-slate-100 hover:text-slate-900 transition-all shadow-sm"
-                      href={whatsappUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <MessageCircle className="h-3.5 w-3.5 text-emerald-600" />
-                      Questions? Chat on WhatsApp
-                    </Link>
                   </div>
                 </div>
 

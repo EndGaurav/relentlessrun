@@ -1,21 +1,15 @@
-import Link from "next/link";
-import { MessageCircle, ShieldCheck, Sparkles } from "lucide-react";
+import { ShieldCheck, Sparkles } from "lucide-react";
 import type { PublicEvent } from "../../data/events";
 import { RegisterCta } from "../../components/register-cta";
 import { Medal3D } from "./medal";
 import { EventCountdown } from "./countdown";
 import { Reveal } from "./reveal";
 
-const WHATSAPP_URL = "https://wa.me/918287491957";
-
 function formatPrice(price: string) {
   return price.replace(/^Rs\.\s*/, "₹");
 }
 
 export function EventCta({ event }: { event: PublicEvent }) {
-  const whatsappUrl = `${WHATSAPP_URL}?text=${encodeURIComponent(
-    `Hi! I'm interested in ${event.name}. Can you help me with registration?`,
-  )}`;
   const priceLabel = event.price.toLowerCase().includes("free")
     ? "Register Now"
     : `Register Now — ${formatPrice(event.price)}`;
@@ -61,15 +55,6 @@ export function EventCta({ event }: { event: PublicEvent }) {
                   signedOutLabel={priceLabel}
                   slug={event.slug}
                 />
-                <Link
-                  className="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-white/15 bg-white/[0.05] px-6 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition-all hover:border-cyan-500/40 hover:bg-white/[0.1] hover:text-[#38bdf8]"
-                  href={whatsappUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <MessageCircle className="h-4 w-4" />
-                  Ask a Question
-                </Link>
               </div>
 
               <p className="mt-6 flex items-center gap-1.5 text-xs text-slate-400">

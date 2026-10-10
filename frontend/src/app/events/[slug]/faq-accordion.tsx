@@ -35,7 +35,7 @@ const faqs = [
   },
   {
     q: "What if I need help during the event?",
-    a: "Our support team is available via WhatsApp (+91 8287 491 957) and email throughout the event. We are happy to assist with registration, distance questions, or proof submissions.",
+    a: "Our support team is available via phone (+91 8287 491 957) and email (support@relentlessrun.com) throughout the event. We are happy to assist with registration, distance questions, or proof submissions.",
   },
 ];
 
