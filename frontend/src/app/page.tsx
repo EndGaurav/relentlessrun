@@ -84,7 +84,7 @@ export default async function Home() {
               }
               align="split"
               eyebrow="Upcoming Races"
-              lead="Featured virtual challenges. Choose your target distance and claim your official bib & finisher medal kit."
+              lead="Featured virtual challenges. Choose your target distance and claim your digital bib & finisher medal kit."
               title="Open Challenges"
             />
 

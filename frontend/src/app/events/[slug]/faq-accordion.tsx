@@ -18,6 +18,10 @@ const faqs = [
     a: "Once finished, log in to your Relentless Run dashboard, select your event, and upload a screenshot or GPX/activity export. Our team manually reviews and verifies each submission within 24 hours.",
   },
   {
+    q: "Is the race bib delivered physically or digitally?",
+    a: "Your official race bib is 100% digital and available for instant download from your runner dashboard right after registration! It comes already sized for Instagram Stories and WhatsApp. Only your physical heavy metal finisher medal is shipped to your doorstep once your run proof is verified.",
+  },
+  {
     q: "When will I receive my medal and kit rewards?",
     a: "As soon as your run proof is verified, your official finisher medal and certificate are carefully packed and dispatched with tracked courier delivery straight to your doorstep.",
   },

@@ -4,6 +4,7 @@ import { useAuth, useUser } from "@clerk/nextjs";
 import { motion } from "framer-motion";
 import {
   CheckCircle2,
+  CreditCard,
   Lock,
   MapPin,
   RefreshCw,
@@ -670,9 +671,14 @@ function PaymentRegistrationFormInner() {
 
               {/* Official Bib Pass */}
               <div className="mt-5 rounded-2xl border-2 border-dashed border-emerald-500/40 bg-emerald-500/5 p-4">
-                <p className="text-[0.65rem] font-bold uppercase tracking-wider text-(--muted)">
-                  Your Official Race Bib
-                </p>
+                <div className="flex items-center justify-between mb-1">
+                  <p className="text-[0.65rem] font-bold uppercase tracking-wider text-(--muted)">
+                    Your Official Digital Bib
+                  </p>
+                  <span className="text-[0.6rem] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full">
+                    Ready in Dashboard
+                  </span>
+                </div>
                 <p className="mt-1 font-mono text-3xl font-black text-emerald-600 dark:text-emerald-400">
                   {confirmedBib || previewBibNumber}
                 </p>
@@ -681,6 +687,9 @@ function PaymentRegistrationFormInner() {
                   <span>·</span>
                   <span>{selectedDistance}</span>
                 </div>
+                <p className="mt-2 text-[0.7rem] text-(--muted)">
+                  📱 Your digital bib is available to download in your runner dashboard for WhatsApp & Instagram Stories. Only physical medal is delivered to your doorstep after run verification.
+                </p>
               </div>
 
               <div className="mt-6 flex flex-col gap-2">
@@ -709,7 +718,7 @@ function PaymentRegistrationFormInner() {
                 Athlete Information
               </h2>
               <p className="text-xs text-(--muted)">
-                Enter your official race details for Bib & Certificate generation.
+                Enter your official race details for Instant Digital Bib & Certificate generation.
               </p>
             </div>
             {savedAddressLoaded && (
@@ -942,7 +951,7 @@ function PaymentRegistrationFormInner() {
               ? "Generating Order..."
               : status === "paying"
                 ? "Opening Razorpay..."
-                : `Pay ${selectedAmount} & Claim Official Bib`}
+                : `Pay ${selectedAmount} & Claim Digital Bib`}
           </button>
         </form>
       </div>
@@ -950,9 +959,14 @@ function PaymentRegistrationFormInner() {
       {/* ── RIGHT COLUMN: LIVE INTERACTIVE RACING BIB PREVIEW ── */}
       <div className="lg:col-span-5 space-y-4">
         <div className="sticky top-24 space-y-4">
-          <p className="text-xs font-bold uppercase tracking-wider text-(--muted) flex items-center gap-1.5">
-            <Sparkles className="h-3.5 w-3.5 text-amber-500" /> Live Racing Bib Preview
-          </p>
+          <div className="flex items-center justify-between">
+            <p className="text-xs font-bold uppercase tracking-wider text-(--muted) flex items-center gap-1.5">
+              <Sparkles className="h-3.5 w-3.5 text-amber-500" /> Live Racing Bib Preview
+            </p>
+            <span className="rounded-full bg-emerald-500/10 border border-emerald-500/25 px-2.5 py-0.5 text-[0.62rem] font-bold text-emerald-400">
+              Digital E-Bib
+            </span>
+          </div>
 
           {/* Virtual Race Bib Card */}
           <div className="relative overflow-hidden rounded-3xl border-2 border-slate-800 bg-linear-to-b from-slate-900 via-slate-950 to-slate-950 p-6 text-white shadow-2xl">
@@ -975,7 +989,7 @@ function PaymentRegistrationFormInner() {
                 </span>
               </div>
               <span className="rounded-full bg-amber-500/20 border border-amber-500/40 px-2.5 py-0.5 text-[0.6rem] font-black uppercase tracking-wider text-amber-400">
-                OFFICIAL ATHLETE
+                OFFICIAL DIGITAL BIB
               </span>
             </div>
 
@@ -1016,6 +1030,26 @@ function PaymentRegistrationFormInner() {
             </div>
           </div>
 
+          {/* Digital Bib Info Card (from user reference) */}
+          <div className="rounded-2xl border border-(--line) bg-(--panel) p-4 flex items-start gap-3.5 shadow-xs">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-amber-500/30 bg-amber-500/10 text-amber-400">
+              <CreditCard className="h-5 w-5" />
+            </span>
+            <div className="min-w-0 space-y-1">
+              <p className="text-sm font-bold text-foreground">
+                A race bib you can post
+              </p>
+              <p className="text-xs leading-relaxed text-(--muted)">
+                Your own numbered bib plus a finisher card already sized for Instagram Stories and WhatsApp.
+              </p>
+              <div className="pt-1">
+                <span className="inline-flex items-center rounded-full border border-(--line) bg-(--panel-soft) px-2.5 py-0.5 text-[0.58rem] font-mono font-bold tracking-widest uppercase text-(--muted)">
+                  Downloads from your dashboard
+                </span>
+              </div>
+            </div>
+          </div>
+
           {/* Benefits Check List */}
           <div className="rounded-2xl border border-(--line) bg-(--panel) p-4 text-xs text-(--muted) space-y-2">
             <p className="font-bold text-foreground flex items-center gap-1.5">
@@ -1024,6 +1058,10 @@ function PaymentRegistrationFormInner() {
             <p className="flex items-center gap-2">
               <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
               <span>Heavy Finisher Metal Medal delivered to your doorstep</span>
+            </p>
+            <p className="flex items-center gap-2">
+              <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
+              <span>Official Digital Race Bib (Downloads from Dashboard for Instagram & WhatsApp)</span>
             </p>
             <p className="flex items-center gap-2">
               <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 shrink-0" />

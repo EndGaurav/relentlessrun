@@ -22,6 +22,11 @@ const homeFaqs: FaqItem[] = [
       "We support all major running platforms including Strava, Garmin Connect, Nike Run Club (NRC), Adidas Running, Apple Fitness, Samsung Health, Google Fit, Coros, and treadmill console photos.",
   },
   {
+    question: "Is the official race bib delivered physically or digitally?",
+    answer:
+      "Your official numbered race bib and social finisher card are 100% digital — available for instant download from your dashboard to post on WhatsApp and Instagram Stories. Only your physical heavy metal finisher medal is delivered to your doorstep.",
+  },
+  {
     question: "When & how will I receive my finisher medal?",
     answer:
       "Heavy embossed metal finisher medals are dispatched via express tracked courier partners (Delhivery, Shiprocket) within 7-10 business days of GPS proof approval.",

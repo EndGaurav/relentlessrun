@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowUpRight, FileBadge, Medal, Sparkles, Trophy, Truck } from "lucide-react";
+import { ArrowUpRight, CreditCard, FileBadge, Medal, Sparkles, Trophy, Truck } from "lucide-react";
 import { Medal3D } from "./medal";
 import { Reveal, SectionHeader } from "./reveal";
 
@@ -10,9 +10,14 @@ const items = [
     desc: "A heavyweight metal medal with a premium ribbon, designed to be proudly displayed.",
   },
   {
+    icon: CreditCard,
+    title: "A Race Bib You Can Post",
+    desc: "Your own numbered digital bib plus a finisher card already sized for Instagram Stories and WhatsApp. Downloads directly from your dashboard.",
+  },
+  {
     icon: FileBadge,
-    title: "Official Printed Certificate",
-    desc: "Your name, distance, and verified finish time on a verified certificate, delivered to your door.",
+    title: "Official Verified Certificate",
+    desc: "Your name, distance, and verified finish time on a verified certificate with QR authentication.",
   },
   {
     icon: Trophy,
