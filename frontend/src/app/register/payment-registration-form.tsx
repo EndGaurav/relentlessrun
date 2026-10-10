@@ -24,6 +24,7 @@ import {
   type FieldErrors,
   validateRegistrationForm,
 } from "../../lib/validation";
+import { allPublicEvents } from "../data/events";
 
 type CheckoutResponse = {
   razorpay_order_id: string;
@@ -48,6 +49,7 @@ type RegisterEventOption = {
   label: string;
   value: string;
   amount: string;
+  compareAtAmount?: string;
   distances: string[];
   activityTypes?: string[];
 };
@@ -66,6 +68,7 @@ const fallbackEvents: RegisterEventOption[] = [
     label: "Monsoon Mountain Miles",
     value: "monsoon-mountain-miles",
     amount: "₹499",
+    compareAtAmount: "₹549",
     distances: ["3 km", "5 km", "10 km", "21 km"],
     activityTypes: ["running", "cycling", "walking"],
   },
@@ -73,6 +76,7 @@ const fallbackEvents: RegisterEventOption[] = [
     label: "Independence Endurance Run",
     value: "independence-endurance-run",
     amount: "₹649",
+    compareAtAmount: "₹1,100",
     distances: ["5 km", "10 km", "25 km"],
     activityTypes: ["running", "cycling", "walking"],
   },
@@ -80,6 +84,7 @@ const fallbackEvents: RegisterEventOption[] = [
     label: "Himalayan Winter Sprint",
     value: "himalayan-winter-sprint",
     amount: "₹399",
+    compareAtAmount: "₹700",
     distances: ["2 km", "5 km", "10 km"],
     activityTypes: ["running", "cycling", "walking"],
   },
@@ -225,13 +230,20 @@ function PaymentRegistrationFormInner() {
 
         const open = rows
           .filter((row) => row.registrationOpen !== false)
-          .map((row) => ({
-            label: row.title,
-            value: row.slug,
-            amount: `₹${Math.round(row.priceInPaise / 100)}`,
-            distances: row.distances?.length ? row.distances : ["5 km"],
-            activityTypes: (row as { activityTypes?: string[] }).activityTypes ?? ["running"],
-          }));
+          .map((row) => {
+            const staticMatch = allPublicEvents.find((e) => e.slug === row.slug);
+            const compareAt = staticMatch?.compareAtPrice
+              ? staticMatch.compareAtPrice.replace(/^Rs\.\s*/, "₹")
+              : undefined;
+            return {
+              label: row.title,
+              value: row.slug,
+              amount: `₹${Math.round(row.priceInPaise / 100)}`,
+              compareAtAmount: compareAt ?? "₹549",
+              distances: row.distances?.length ? row.distances : ["5 km"],
+              activityTypes: (row as { activityTypes?: string[] }).activityTypes ?? ["running"],
+            };
+          });
 
         if (cancelled || open.length === 0) return;
         setEvents(open);
@@ -419,6 +431,14 @@ function PaymentRegistrationFormInner() {
   }
 
   const selectedAmount = activeEvent?.amount ?? "₹499";
+  const matchedStaticEvent = allPublicEvents.find(
+    (e) => e.slug === selectedEvent || e.slug === activeEvent?.value,
+  );
+  const compareAtAmount =
+    activeEvent?.compareAtAmount ??
+    (matchedStaticEvent?.compareAtPrice
+      ? matchedStaticEvent.compareAtPrice.replace(/^Rs\.\s*/, "₹")
+      : "₹549");
   const defaultName = profileName || user?.fullName || user?.firstName || "";
   const defaultEmail = user?.primaryEmailAddress?.emailAddress ?? "";
   const defaultPhone = user?.primaryPhoneNumber?.phoneNumber ?? "";
@@ -895,9 +915,16 @@ function PaymentRegistrationFormInner() {
               <Lock className="h-4 w-4 text-(--sage)" />
               <span>Instant UPI, Cards & Netbanking with Razorpay</span>
             </div>
-            <span className="font-mono text-lg font-black text-foreground">
-              {selectedAmount}
-            </span>
+            <div className="flex items-baseline gap-2 shrink-0">
+              {compareAtAmount && (
+                <span className="font-mono text-sm font-semibold text-(--muted) line-through">
+                  {compareAtAmount}
+                </span>
+              )}
+              <span className="font-mono text-lg font-black text-foreground">
+                {selectedAmount}
+              </span>
+            </div>
           </div>
 
           {status === "error" && (
