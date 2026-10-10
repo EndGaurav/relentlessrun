@@ -56,7 +56,7 @@ type Registration = {
     endsAt?: string | null;
     proofClosesAt?: string | null;
   };
-  payment: { status: string; amountInPaise: number } | null;
+  payment: { status: string; amountInPaise: number; razorpayOrderId?: string } | null;
   proofUpload?: {
     activityImageUrl: string;
     sourceApp: string;
@@ -264,6 +264,7 @@ export function DashboardClient() {
   const [proofBusy, setProofBusy] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [copiedCode, setCopiedCode] = useState(false);
+  const [verifyingPaymentId, setVerifyingPaymentId] = useState<string | null>(null);
   const seq = useRef(0);
 
   const hoursInputRef = useRef<HTMLInputElement | null>(null);
@@ -403,6 +404,34 @@ export function DashboardClient() {
     setRefreshing(true);
     await load();
     setRefreshing(false);
+  }
+
+  async function handleVerifyPayment(reg: Registration) {
+    try {
+      setVerifyingPaymentId(reg.id);
+      const token = await getToken();
+      if (!token) return;
+      const res = await fetch(getApiUrl("/api/payments/check-status"), {
+        method: "POST",
+        headers: authHeaders(token),
+        body: JSON.stringify({
+          orderId: reg.payment?.razorpayOrderId,
+          registrationId: reg.id,
+        }),
+      });
+      if (res.ok) {
+        const json = await res.json();
+        if (json.data?.paid || json.data?.status === "PAID") {
+          await load();
+          return;
+        }
+      }
+      alert("Payment status: Not confirmed yet by bank/UPI. If money was deducted, it usually syncs within a couple of minutes.");
+    } catch {
+      alert("Could not verify status. Please try again.");
+    } finally {
+      setVerifyingPaymentId(null);
+    }
   }
 
   async function onPickFile(file: File | null) {
@@ -1042,10 +1071,24 @@ export function DashboardClient() {
                         {/* Primary Action */}
                         <div className="w-full sm:w-auto">
                           {!isPaid ? (
-                            <Link className="neon-btn-blue w-full sm:w-auto justify-center rounded-full px-5 py-2.5 text-xs font-black uppercase tracking-wider text-white shadow-lg inline-flex items-center gap-1" href="/register">
-                              <span>Complete Payment</span>
-                              <ArrowRight className="h-3.5 w-3.5" />
-                            </Link>
+                            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                              <button
+                                type="button"
+                                onClick={() => void handleVerifyPayment(reg)}
+                                disabled={verifyingPaymentId === reg.id}
+                                className="w-full sm:w-auto justify-center rounded-full px-4 py-2 text-xs font-bold uppercase tracking-wider border border-amber-400/50 bg-amber-500/20 text-amber-200 hover:bg-amber-500/30 transition-all cursor-pointer inline-flex items-center gap-1.5 backdrop-blur-xl disabled:opacity-50"
+                              >
+                                <RefreshCw className={cn("h-3.5 w-3.5 text-amber-300", verifyingPaymentId === reg.id && "animate-spin")} />
+                                <span>{verifyingPaymentId === reg.id ? "Checking..." : "Verify Payment"}</span>
+                              </button>
+                              <Link
+                                className="neon-btn-blue w-full sm:w-auto justify-center rounded-full px-5 py-2.5 text-xs font-black uppercase tracking-wider text-white shadow-lg inline-flex items-center gap-1"
+                                href={`/register?event=${reg.event.slug}&distance=${encodeURIComponent(reg.distance)}`}
+                              >
+                                <span>Complete Payment</span>
+                                <ArrowRight className="h-3.5 w-3.5" />
+                              </Link>
+                            </div>
                           ) : canUpload(reg) ? (
                             <button
                               onClick={() => {

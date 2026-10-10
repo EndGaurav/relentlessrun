@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  checkPaymentStatus,
   createPaymentOrder,
   handleRazorpayWebhook,
   verifyPayment,
@@ -11,4 +12,5 @@ export const paymentRouter = Router();
 
 paymentRouter.post("/create-order", requireClerkAuth, asyncHandler(createPaymentOrder));
 paymentRouter.post("/verify", requireClerkAuth, asyncHandler(verifyPayment));
+paymentRouter.post("/check-status", requireClerkAuth, asyncHandler(checkPaymentStatus));
 paymentRouter.post("/webhook", asyncHandler(handleRazorpayWebhook));

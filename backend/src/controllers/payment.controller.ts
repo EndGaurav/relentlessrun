@@ -4,13 +4,18 @@ import { prisma } from "../lib/prisma.js";
 import { sendRegistrationConfirmationEmail } from "../services/email.service.js";
 import {
   createRazorpayOrder,
+  fetchPaymentsForOrder,
   verifyCheckoutSignature,
   verifyWebhookSignature,
 } from "../services/razorpay.service.js";
 import { ApiError } from "../utils/api-error.js";
 import { logger } from "../utils/logger.js";
 import { validateBody } from "../utils/validate.js";
-import { createPaymentOrderSchema, verifyPaymentSchema } from "../validators/payment.validator.js";
+import {
+  checkPaymentStatusSchema,
+  createPaymentOrderSchema,
+  verifyPaymentSchema,
+} from "../validators/payment.validator.js";
 
 export async function createPaymentOrder(request: Request, response: Response) {
   const payload = validateBody(createPaymentOrderSchema, request);
@@ -61,6 +66,7 @@ export async function createPaymentOrder(request: Request, response: Response) {
     data: {
       keyId: env.razorpayKeyId,
       orderId: order.id,
+      amount: order.amount,
       amountInPaise: order.amount,
       currency: order.currency,
       registrationId: registration.id,
@@ -221,3 +227,122 @@ export async function handleRazorpayWebhook(request: Request, response: Response
 
   response.json({ received: true });
 }
+
+export async function checkPaymentStatus(request: Request, response: Response) {
+  const payload = validateBody(checkPaymentStatusSchema, request);
+  const payment = payload.orderId
+    ? await prisma.payment.findUnique({
+        where: { razorpayOrderId: payload.orderId },
+        include: {
+          registration: {
+            include: { user: true, event: true },
+          },
+        },
+      })
+    : await prisma.payment.findUnique({
+        where: { registrationId: payload.registrationId! },
+        include: {
+          registration: {
+            include: { user: true, event: true },
+          },
+        },
+      });
+
+  if (!payment) {
+    throw new ApiError(404, "Payment record not found");
+  }
+
+  const orderId = payment.razorpayOrderId;
+
+  // If already confirmed as PAID
+  if (payment.status === "PAID") {
+    return response.json({
+      data: {
+        paid: true,
+        status: "PAID",
+        bibNumber: payment.registration.bibNumber,
+        registrationId: payment.registrationId,
+        paymentId: payment.razorpayPaymentId,
+      },
+    });
+  }
+
+  // Fetch live payment status from Razorpay API
+  try {
+    const razorpayPayments = await fetchPaymentsForOrder(orderId);
+    const successfulPayment = razorpayPayments?.find(
+      (p) => p.status === "captured" || p.status === "authorized",
+    );
+
+    if (successfulPayment) {
+      logger.info("[Payment] Order verified as paid via Razorpay API", {
+        orderId,
+        paymentId: successfulPayment.id,
+      });
+
+      const updatedPayment = await prisma.payment.update({
+        where: { razorpayOrderId: orderId },
+        data: {
+          razorpayPaymentId: successfulPayment.id,
+          status: "PAID",
+          paidAt: new Date(),
+        },
+      });
+
+      const updatedReg = await prisma.registration.update({
+        where: { id: payment.registrationId },
+        data: { status: "CONFIRMED" },
+        include: { user: true, event: true },
+      });
+
+      try {
+        await sendRegistrationConfirmationEmail({
+          to: updatedReg.user.email,
+          runnerName: updatedReg.user.name,
+          eventTitle: updatedReg.event.title,
+          distance: updatedReg.distance,
+          bibNumber: updatedReg.bibNumber,
+          amountInPaise: updatedPayment.amountInPaise,
+        });
+      } catch (err) {
+        logger.error("[checkPaymentStatus] Email send failed", err);
+      }
+
+      return response.json({
+        data: {
+          paid: true,
+          status: "PAID",
+          bibNumber: updatedReg.bibNumber,
+          registrationId: updatedReg.id,
+          paymentId: successfulPayment.id,
+        },
+      });
+    }
+
+    const failedPayment = razorpayPayments?.find((p) => p.status === "failed");
+    if (failedPayment) {
+      return response.json({
+        data: {
+          paid: false,
+          status: "FAILED",
+          bibNumber: payment.registration.bibNumber,
+          registrationId: payment.registrationId,
+          message: "Payment attempt failed at bank. Please retry payment.",
+        },
+      });
+    }
+  } catch (err) {
+    logger.warn("[checkPaymentStatus] Could not query Razorpay API", { error: String(err) });
+  }
+
+  return response.json({
+    data: {
+      paid: false,
+      status: payment.status,
+      bibNumber: payment.registration.bibNumber,
+      registrationId: payment.registrationId,
+      message: "Payment confirmation not received from bank yet.",
+    },
+  });
+}
+

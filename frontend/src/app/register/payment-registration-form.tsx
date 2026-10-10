@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { FormEvent, Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { FormEvent, Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Field, inputClass } from "../components/app-shell";
 import { PhoneInput } from "../components/phone-input";
 import { SearchableSelect } from "../components/searchable-select";
@@ -61,7 +61,7 @@ type ExistingReg = {
   status: string;
   bibNumber?: string;
   event: { slug: string; title: string };
-  payment?: { status: string } | null;
+  payment?: { status: string; razorpayOrderId?: string } | null;
 };
 
 const fallbackEvents: RegisterEventOption[] = [
@@ -212,6 +212,44 @@ function PaymentRegistrationFormInner() {
 
   // Confetti modal state
   const [confirmedBib, setConfirmedBib] = useState<string | null>(null);
+  const [checkingStatus, setCheckingStatus] = useState(false);
+  const [lastOrderInfo, setLastOrderInfo] = useState<{
+    orderId: string;
+    registrationId: string;
+    bib: string;
+  } | null>(null);
+
+  const checkStatusSilently = useCallback(
+    async (orderId?: string, regId?: string, bib?: string) => {
+      if (!orderId && !regId) return false;
+      try {
+        setCheckingStatus(true);
+        const token = await getToken();
+        if (!token) return false;
+        const res = await fetch(getApiUrl("/api/payments/check-status"), {
+          method: "POST",
+          headers: authHeaders(token),
+          body: JSON.stringify({ orderId, registrationId: regId }),
+        });
+        if (!res.ok) return false;
+        const json = await res.json();
+        if (json.data?.paid || json.data?.status === "PAID") {
+          paidRef.current = true;
+          setStatus("paid");
+          if (json.data?.bibNumber || bib) {
+            setConfirmedBib(json.data.bibNumber || bib);
+          }
+          return true;
+        }
+      } catch {
+        // non-blocking
+      } finally {
+        setCheckingStatus(false);
+      }
+      return false;
+    },
+    [getToken],
+  );
 
   // Load events
   useEffect(() => {
@@ -579,12 +617,19 @@ function PaymentRegistrationFormInner() {
       const payJson = await payRes.json();
       const order = payJson.data;
 
+      const payAmount = Number(order.amount ?? order.amountInPaise ?? 49900);
+      setLastOrderInfo({
+        orderId: order.orderId,
+        registrationId,
+        bib: assignedBib,
+      });
+
       setStatus("paying");
       setMessage("Complete payment in the Razorpay window...");
 
       const checkout = new window.Razorpay!({
         key: order.keyId,
-        amount: order.amount,
+        amount: payAmount,
         currency: order.currency ?? "INR",
         name: "Relentless Run",
         description: `${activeEvent.label} · ${selectedDistance}`,
@@ -595,7 +640,16 @@ function PaymentRegistrationFormInner() {
           email: payload.email,
           contact: payload.phone,
         },
+        notes: {
+          registrationId,
+          bibNumber: assignedBib,
+        },
         theme: { color: "#10b981" },
+        retry: {
+          enabled: true,
+          max_count: 3,
+        },
+        timeout: 900,
         handler: async (response: CheckoutResponse) => {
           const freshToken = await getToken();
           if (!freshToken) {
@@ -619,25 +673,36 @@ function PaymentRegistrationFormInner() {
             setStatus("paid");
             setConfirmedBib(assignedBib);
           } catch {
-            paidRef.current = true;
-            setStatus("paid");
-            setConfirmedBib(assignedBib);
+            // Check status directly with backend to be 100% sure
+            const confirmed = await checkStatusSilently(order.orderId, registrationId, assignedBib);
+            if (!confirmed) {
+              paidRef.current = true;
+              setStatus("paid");
+              setConfirmedBib(assignedBib);
+            }
           }
         },
         modal: {
-          ondismiss: () => {
+          ondismiss: async () => {
             if (paidRef.current || failedRef.current) return;
-            setStatus("idle");
-            setMessage("Checkout paused. You can resume whenever you're ready.");
+            setMessage("Checking payment confirmation with bank...");
+            const confirmed = await checkStatusSilently(order.orderId, registrationId, assignedBib);
+            if (!confirmed) {
+              setStatus("idle");
+              setMessage("Payment window closed. If money was debited from your UPI or bank, verify below.");
+            }
           },
         },
       });
 
-      checkout.on("payment.failed", (response: unknown) => {
+      checkout.on("payment.failed", async (response: unknown) => {
         const err = response as { error?: { description?: string } };
-        failedRef.current = true;
-        setStatus("error");
-        setMessage(err?.error?.description ?? "Payment failed. Please try UPI or Netbanking.");
+        const confirmed = await checkStatusSilently(order.orderId, registrationId, assignedBib);
+        if (!confirmed) {
+          failedRef.current = true;
+          setStatus("error");
+          setMessage(err?.error?.description ?? "Payment could not be completed. If money was deducted, click 'Verify Payment Status'.");
+        }
       });
 
       checkout.open();
@@ -935,6 +1000,55 @@ function PaymentRegistrationFormInner() {
               </span>
             </div>
           </div>
+
+          {/* Status Verification Card if last order attempted or pending registration exists */}
+          {lastOrderInfo && status !== "paid" && (
+            <div className="rounded-2xl border border-amber-500/40 bg-amber-500/10 p-4 text-xs text-amber-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md">
+              <div className="space-y-0.5">
+                <p className="font-bold text-amber-300">Payment already made or debited from UPI?</p>
+                <p className="text-[0.75rem] text-amber-200/80">
+                  If money was deducted from your account, click here to verify and instantly confirm your registration.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => void checkStatusSilently(lastOrderInfo.orderId, lastOrderInfo.registrationId, lastOrderInfo.bib)}
+                disabled={checkingStatus}
+                className="shrink-0 px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition-all cursor-pointer disabled:opacity-50"
+              >
+                {checkingStatus ? "Verifying..." : "Verify Payment Status"}
+              </button>
+            </div>
+          )}
+
+          {pendingSame && !lastOrderInfo && status !== "paid" && (
+            <div className="rounded-2xl border border-amber-500/40 bg-amber-500/10 p-4 text-xs text-amber-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md">
+              <div className="space-y-0.5">
+                <p className="font-bold text-amber-300">Previous Registration Pending Payment</p>
+                <p className="text-[0.75rem] text-amber-200/80">
+                  If you already paid for this race, verify your payment status or proceed to checkout.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={async () => {
+                  const pending = existingRegs.find(
+                    (r) =>
+                      r.event?.slug === selectedEvent &&
+                      r.distance === selectedDistance &&
+                      r.payment?.status === "CREATED",
+                  );
+                  if (pending) {
+                    await checkStatusSilently(pending.payment?.razorpayOrderId, pending.id, pending.bibNumber);
+                  }
+                }}
+                disabled={checkingStatus}
+                className="shrink-0 px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition-all cursor-pointer disabled:opacity-50"
+              >
+                {checkingStatus ? "Checking..." : "Verify Status"}
+              </button>
+            </div>
+          )}
 
           {status === "error" && (
             <div className="rounded-2xl border border-red-200 bg-red-50 p-3.5 text-xs text-red-700">
